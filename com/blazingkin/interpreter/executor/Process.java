@@ -28,10 +28,12 @@ public class Process {
 		}
 		readingFrom = runFile;
 		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
-		for (String s: new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n?\\r")){
-			System.out.println(s);
-		}
 		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n?\\r");
+		for (int i = 0 ; i < lines.length; i++){
+			if (lines.length > 0 && lines[i].substring(0, 1).equals(":")){
+				Executor.functionLines.put(new FunctionLine(UUID,lines[i].substring(1)), i+1);
+			}
+		}
 	}
 	public String getLine(int lineNumber){
 		return lines[lineNumber-1];

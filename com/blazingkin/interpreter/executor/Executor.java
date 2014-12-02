@@ -33,7 +33,7 @@ public class Executor {
 		}
 	}
 	public static int numLines = 0;
-	public static HashMap<String, Integer> functionLines = new HashMap<String, Integer>();
+	public static HashMap<FunctionLine, Integer> functionLines = new HashMap<FunctionLine, Integer>();
 	public static boolean closeRequested = false;
 	public static Stack<Integer> lineReturns = new Stack<Integer>();
 	public static void setLine(int num){
@@ -50,11 +50,7 @@ public class Executor {
 		}
 		s.close();
 		runningProcesses.push(new Process(runFile));
-		for (int i = 0 ; i < file.size(); i++){
-			if (file.get(i).length() > 0 && file.get(i).substring(0, 1).equals(":")){
-				functionLines.put(file.get(i).substring(1), i);
-			}
-		}
+		//I STOPPED FIXING HERE
 		for (;(Integer)Variable.getValue("pc").value < file.size();){
 			String split[] = file.get((Integer)Variable.getValue("pc").value).split(" ");
 			String newSplit[] = new String[split.length-1];
