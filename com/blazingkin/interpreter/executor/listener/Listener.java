@@ -29,7 +29,7 @@ public class Listener implements InstructionExecutor {
 	public static synchronized void fireEvent(ListenerTypes lt){
 		for (int i = 0; i < listeners.size(); i++){
 			if (listeners.get(i).listenerType.equals(lt)){
-				Executor.eventsToBeHandled.add(Executor.functionLines.get(listeners.get(i).eventHandler)+1);
+				Executor.eventsToBeHandled.add(Executor.functionLines.get(listeners.get(i).eventHandler).lineNumber+1);
 			}
 		}
 	}

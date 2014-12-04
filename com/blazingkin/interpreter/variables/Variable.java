@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 //DO NOT MESS WITH THIS CLASS, IT DOES SOME INTERESTING VOODOO MAGIC AND IF YOU MESS WITH IT YOU WILL SCREW IT UP!!!!
 
@@ -178,6 +179,9 @@ public class Variable {
 			break;
 		case cursorPosY:
 			replaced = MouseInfo.getPointerInfo().getLocation().y+"";
+			break;
+		case processUUID:
+			replaced = Executor.getCurrentProcess().UUID+"";
 			break;
 		default:
 			break;

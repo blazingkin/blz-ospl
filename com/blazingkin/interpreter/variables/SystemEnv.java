@@ -15,7 +15,11 @@ public enum SystemEnv {
 	//system
 	time("system.time.currenttimemillis"),
 	osName("system.os.name"),
-	osVersion("system.os.version");
+	osVersion("system.os.version"),
+	
+	
+	//env variables
+	processUUID("process.current.uuid");
 	
 	SystemEnv(String st){
 		name = st;

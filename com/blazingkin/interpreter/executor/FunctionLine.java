@@ -2,9 +2,9 @@ package com.blazingkin.interpreter.executor;
 
 public class FunctionLine {
 	public int UUID;
-	public String functionName;
-	public FunctionLine(int UUID, String fName){
+	public int lineNumber;
+	public FunctionLine(int UUID, int lineNumber){
 		this.UUID = UUID;
-		functionName = fName;
+		this.lineNumber = lineNumber;
 	}
 }

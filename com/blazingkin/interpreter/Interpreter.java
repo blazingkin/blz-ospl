@@ -63,7 +63,7 @@ public class Interpreter {
 		Translator.run(path, args);
 	}
 	
-	public void runExecutor(File path, List<String> args) throws FileNotFoundException{
+	public void runExecutor(File path, List<String> args) throws Exception{
 		Executor.run(path, args);
 	}
 	

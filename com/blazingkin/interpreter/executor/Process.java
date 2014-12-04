@@ -22,21 +22,29 @@ public class Process {
 	public Process(File runFile) throws FileNotFoundException{
 		do{
 			UUID = r.nextInt(Integer.MAX_VALUE);
-		}while(!Process.UUIDsUsed.contains(UUID));
+		}while(Process.UUIDsUsed.contains(UUID));
+		System.out.println("UUID: "+UUID);
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
 		readingFrom = runFile;
 		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
-		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n?\\r");
+
+		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r");
+
+		String[] temp = new String[(lines.length/2)+1];
+		for (int i = 0; i < lines.length; i+=2){
+			temp[i/2] = lines[i];
+		}
+		lines = temp;
 		for (int i = 0 ; i < lines.length; i++){
-			if (lines.length > 0 && lines[i].substring(0, 1).equals(":")){
-				Executor.functionLines.put(new FunctionLine(UUID,lines[i].substring(1)), i+1);
+			if (lines[i].length() > 0 && lines[i].substring(0, 1).equals(":")){
+				Executor.functionLines.put(lines[i].substring(1),new FunctionLine(UUID,i+1));
 			}
 		}
 	}
 	public String getLine(int lineNumber){
-		return lines[lineNumber-1];
+		return lines[lineNumber];
 	}
 	
 	public int getLine(){
@@ -44,7 +52,7 @@ public class Process {
 	}
 	@SuppressWarnings("resource")
 	public int getSize() throws IOException{
-		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n?\\r").length;
+		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r").length;
 	}
 	
 	

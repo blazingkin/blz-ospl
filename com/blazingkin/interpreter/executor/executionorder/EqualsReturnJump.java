@@ -19,10 +19,10 @@ public class EqualsReturnJump implements InstructionExecutor {
 		 * 
 		 */
 		if ((Variable.parseString((args[1]))).equals((Variable.parseString((args[2])))) == appositive){
-			Executor.lineReturns.add((Integer)Variable.getValue("pc").value+2);
+			Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 			String fName = (String) args[0];
 			if (Executor.functionLines.get(fName) != null){
-				Executor.setLine(Executor.functionLines.get(fName)+2);
+				Executor.setLine(Executor.functionLines.get(fName).lineNumber+2, Executor.functionLines.get(fName).UUID);
 			}
 		}
 	}
