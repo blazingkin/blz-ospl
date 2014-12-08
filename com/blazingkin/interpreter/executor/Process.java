@@ -42,6 +42,7 @@ public class Process {
 				Executor.functionLines.put(lines[i].substring(1),new FunctionLine(UUID,i+1));
 			}
 		}
+		processes.add(this);
 	}
 	public String getLine(int lineNumber){
 		return lines[lineNumber];
@@ -54,6 +55,9 @@ public class Process {
 	public int getSize() throws IOException{
 		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r").length;
 	}
+	public void setLine(int lineNumber){
+		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, lineNumber));
+	}
 	
 	
 	public static Process getProcessByUUID(int UUID){
@@ -65,7 +69,7 @@ public class Process {
 		return null;
 	}
 	
-	static ArrayList<Process> processes = new ArrayList<Process>();
+	public static ArrayList<Process> processes = new ArrayList<Process>();
 	static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	static Random r = new Random(System.currentTimeMillis());
 	

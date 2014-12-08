@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.executor.data.Push;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Set;
 import com.blazingkin.interpreter.executor.data.SetString;
+import com.blazingkin.interpreter.executor.executionorder.ChangeProcess;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.EqualsJump;
 import com.blazingkin.interpreter.executor.executionorder.EqualsReturnJump;
@@ -93,7 +94,8 @@ public enum Instruction {
 	CLEAR("CLEAR", "", new GraphicsExecutor(GraphicsTask.clear)),
 	SETGRAPHICSPROPERTY("GRAPHICSPROPERTY", "", new GraphicsExecutor(GraphicsTask.setProperty)),
 	ADDLISTENER("ADDLISTENER", "", new Listener()),
-	CLEARLAST("CLEARLAST", "", new GraphicsExecutor(GraphicsTask.clearLast));
+	CLEARLAST("CLEARLAST", "", new GraphicsExecutor(GraphicsTask.clearLast)),
+	ADDPROCESS("ADDPROCESS", "", new ChangeProcess());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

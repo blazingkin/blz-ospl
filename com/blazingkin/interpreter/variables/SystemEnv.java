@@ -17,7 +17,6 @@ public enum SystemEnv {
 	osName("system.os.name"),
 	osVersion("system.os.version"),
 	
-	
 	//env variables
 	processUUID("process.current.uuid");
 	

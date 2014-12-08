@@ -25,11 +25,14 @@ public class Executor {
 		}else{
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
-				Executor.setLine(Executor.getCurrentProcess().getLine());
+				Executor.setLine(Executor.getCurrentProcess().getLine()+1);
 			}else{
 				Executor.closeRequested = true;
 			}
 		}
+	}
+	public static void addProcess(Process p){
+		runningProcesses.push(p);
 	}
 	public static int numLines = 0;
 	public static HashMap<String, FunctionLine> functionLines = new HashMap<String, FunctionLine>();
@@ -44,10 +47,8 @@ public class Executor {
 			Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-1));
 		}
 	}
-	
 	public static void run(File runFile, List<String> args) throws IOException{
 		runningProcesses.push(new Process(runFile));
-		//I STOPPED FIXING HERE
 		while (!runningProcesses.isEmpty()){
 			for (;(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value < getCurrentProcess().getSize();){
 				String split[] = getCurrentProcess().getLine(getCurrentProcess().getLine()).split(" ");
