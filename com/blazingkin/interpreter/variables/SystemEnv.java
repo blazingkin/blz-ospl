@@ -18,7 +18,13 @@ public enum SystemEnv {
 	osVersion("system.os.version"),
 	
 	//env variables
-	processUUID("process.current.uuid");
+	processUUID("process.current.uuid"),
+	processesRunning("process.all"),
+	lineReturns("process.lines.returns"),
+	
+	
+	//blz variables
+	version("blz.version");
 	
 	SystemEnv(String st){
 		name = st;

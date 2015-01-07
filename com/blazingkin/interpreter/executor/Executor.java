@@ -15,18 +15,19 @@ import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Executor {
-	public static Stack<Process> runningProcesses = new Stack<Process>();
+	public static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
 	public static Process getCurrentProcess(){
 		return runningProcesses.peek();
 	}
-	public static void popStack(){
-		if (!Executor.getCurrentProcess().lineReturns.isEmpty()){
+	public static void popStack(){									// This is used to return to the previous process or function
+		if (!Executor.getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
+			System.out.println("changing line");
 			Executor.setLine(Executor.lineReturns.pop());
-		}else{
+		}else{											// If there is not a function in the current process, go to the previous process
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
 				Executor.setLine(Executor.getCurrentProcess().getLine()+1);
-			}else{
+			}else{										// If there is not a previous process, request a close
 				Executor.closeRequested = true;
 			}
 		}
@@ -34,22 +35,36 @@ public class Executor {
 	public static void addProcess(Process p){
 		runningProcesses.push(p);
 	}
-	public static int numLines = 0;
-	public static HashMap<String, FunctionLine> functionLines = new HashMap<String, FunctionLine>();
+	public static HashMap<String, FunctionLine> functionLines = new HashMap<String, FunctionLine>();	// List of all functions within their respective processes
 	public static boolean closeRequested = false;
 	public static Stack<Integer> lineReturns = new Stack<Integer>();
-	public static void setLine(int num){
-		Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-1));
+	public static String startingMethod;
+	public static void setLine(int num){				// Sets line within the current process
+		Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-2));
 	}
 	
 	public static void setLine(int num, int UUID){
 		if (UUID == getCurrentProcess().UUID){
-			Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-1));
+			Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-2));
 		}
 	}
-	public static void run(File runFile, List<String> args) throws IOException{
-		runningProcesses.push(new Process(runFile));
-		while (!runningProcesses.isEmpty()){
+	
+	
+	
+	public static void run(File runFile, List<String> args) throws IOException{			// runs the executor
+		for (int i = 0; i < args.size(); i+=2){
+			String s = args.get(i);
+			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
+				startingMethod = args.get(i+1);
+			}
+		}
+		runningProcesses.push(new Process(runFile));		// puts the file passed to us as the current process
+		if (startingMethod != null){
+			if (Executor.functionLines.get(startingMethod) != null){
+				Executor.setLine(Executor.functionLines.get(startingMethod).lineNumber);		//if there is a starting method and we can find it, set the line number to it
+			}
+		}
+		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
 			for (;(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value < getCurrentProcess().getSize();){
 				String split[] = getCurrentProcess().getLine(getCurrentProcess().getLine()).split(" ");
 				String newSplit[] = new String[split.length-1];
@@ -83,7 +98,7 @@ public class Executor {
 					eventsToBeHandled.remove(0);
 				}
 				if (closeRequested){
-					System.exit(1);
+					System.exit(0);
 				}
 			}
 		}

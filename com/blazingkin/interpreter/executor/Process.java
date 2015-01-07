@@ -23,7 +23,6 @@ public class Process {
 		do{
 			UUID = r.nextInt(Integer.MAX_VALUE);
 		}while(Process.UUIDsUsed.contains(UUID));
-		System.out.println("UUID: "+UUID);
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}

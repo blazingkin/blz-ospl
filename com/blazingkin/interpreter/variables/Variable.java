@@ -183,6 +183,15 @@ public class Variable {
 		case processUUID:
 			replaced = Executor.getCurrentProcess().UUID+"";
 			break;
+		case processesRunning:
+			replaced = Executor.runningProcesses.size()+"";
+			break;
+		case lineReturns:
+			replaced = Executor.lineReturns.size()+"";
+			break;
+		case version:
+			replaced = "pre-release build 1/7/15";
+			break;
 		default:
 			break;
 		}

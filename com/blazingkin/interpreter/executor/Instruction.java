@@ -25,6 +25,7 @@ import com.blazingkin.interpreter.executor.executionorder.MoreThanJump;
 import com.blazingkin.interpreter.executor.executionorder.MoreThanReturnJump;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentGoto;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentJump;
+import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
@@ -54,7 +55,7 @@ public enum Instruction {
 	SUBTRACTVARIABLE("SUB", "SUBTRACT VARIABLES", new SubVars()),					// Sub - subtract two replacing strings and sets a variable to them
 	MULTIPLYVARIABLE("MUL", "MULTIPLE VARIABLES", new MultiplyVars()),				// Mul - multiply two replacing strings and sets a variable to them
 	DIVIDEVARIABLE("DIV", "DIVIDE VARIABLES", new DivideVars()),					// Div - divide two replacing strings and sets a variable to them
-	POWVARIABLE("POW", "EXPONENTIAL VARIABLES", new ExponentVars()),
+	POWVARIABLE("POW", "EXPONENTIAL VARIABLES", new ExponentVars()),				// Pow - put one replacing string to the power of another replacing string and sets a variable to them
 	EQUALGOTO("EGO", "Equal GOTO", new EquivalentGoto()),							// Equals goto - If Equals Goto
 	NOTEQUALGOTO("NGO", "Nonequal GOTO", new NonEquivalentGoto()),					// Not Equals goto - If not equals goto
 	LESSTHANGOTO("LGO", "Less than GOTO", new LessThanGoto()),						// Less Than Goto - If less then goto
@@ -95,7 +96,8 @@ public enum Instruction {
 	SETGRAPHICSPROPERTY("GRAPHICSPROPERTY", "", new GraphicsExecutor(GraphicsTask.setProperty)),
 	ADDLISTENER("ADDLISTENER", "", new Listener()),
 	CLEARLAST("CLEARLAST", "", new GraphicsExecutor(GraphicsTask.clearLast)),
-	ADDPROCESS("ADDPROCESS", "", new ChangeProcess());
+	ADDPROCESS("ADDPROCESS", "", new ChangeProcess()),
+	RETURNPROCESS("RETPRO", "", new ReturnProcess());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
