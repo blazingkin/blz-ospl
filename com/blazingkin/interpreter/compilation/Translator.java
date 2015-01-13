@@ -12,7 +12,7 @@ import com.blazingkin.interpreter.executor.Instruction;
 
 public class Translator {
 		
-		
+		//This goes through and replaces all lines with ones that are readable by the executor
 	final static String[][] replace = 
 		{
 			{"function",			":"},

@@ -21,22 +21,22 @@ public class Process {
 	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
 		do{
-			UUID = r.nextInt(Integer.MAX_VALUE);
+			UUID = r.nextInt(Integer.MAX_VALUE);		//generate a Unique Id for this process
 		}while(Process.UUIDsUsed.contains(UUID));
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
-		readingFrom = runFile;
+		readingFrom = runFile;			//the file passed to us exists and we can use it
 		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
 
-		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r");
+		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r");	// Gets all of the lines into a string array
 
 		String[] temp = new String[(lines.length/2)+1];
 		for (int i = 0; i < lines.length; i+=2){
 			temp[i/2] = lines[i];
 		}
 		lines = temp;
-		for (int i = 0 ; i < lines.length; i++){
+		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0 && lines[i].substring(0, 1).equals(":")){
 				Executor.functionLines.put(lines[i].substring(1),new FunctionLine(UUID,i+1));
 			}
@@ -44,6 +44,11 @@ public class Process {
 		processes.add(this);
 	}
 	public String getLine(int lineNumber){
+		if (lineNumber >= lines.length){
+			Executor.closeRequested = true;
+			System.exit(0);
+			
+		}
 		return lines[lineNumber];
 	}
 	

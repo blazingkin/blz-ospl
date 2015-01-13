@@ -54,6 +54,7 @@ public class Variable {
 		return getValue(key);
 	}
 	
+	
 	public static void setValueOfArray(String key, Value value){
 		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
 			String[] split = key.toLowerCase().split("\\[");
