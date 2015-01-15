@@ -7,20 +7,35 @@ import java.util.HashMap;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 //DO NOT MESS WITH THIS CLASS, IT DOES SOME INTERESTING VOODOO MAGIC AND IF YOU MESS WITH IT YOU WILL SCREW IT UP!!!!
 
 public class Variable {
 	public static HashMap<String, Value> variables = new HashMap<String,Value>();
 	public static HashMap<String, List> lists = new HashMap<String, List>();
-	public static Value getValue(String key){
-		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
-			return getValueOfArray(key);
+	public static Value getGlobalValue(String k){
+		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
+			return getValueOfArray(k);
 		}
 		
-		if (variables.containsKey(key))
+		if (variables.containsKey(k))
 		{
-			return variables.get(key);
+			return variables.get(k);
+		}else{
+			return new Value(VariableTypes.Integer, 0);
+		}
+		
+	}
+	public static Value getValue(String key){	//gets local only
+		String k = Executor.getCurrentMethod().UUID + key;
+		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
+			return getValueOfArray(k);
+		}
+		
+		if (variables.containsKey(k))
+		{
+			return variables.get(k);
 		}else{
 			return new Value(VariableTypes.Integer, 0);
 		}
@@ -53,6 +68,7 @@ public class Variable {
 		}
 		return getValue(key);
 	}
+	
 	
 	
 	public static void setValueOfArray(String key, Value value){
@@ -94,12 +110,13 @@ public class Variable {
 		return variables.containsKey(key.toLowerCase());
 	}
 	
-	public static void setValue(String key, Value value){
-		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
-			setValueOfArray(key, value);
+	public static void setValue(String key, Value value){		//sets a local variable
+		String k = Executor.getCurrentMethod().UUID + key;
+		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
+			setValueOfArray(k, value);
 			return;
 		}
-		variables.put(key.toLowerCase(), value);
+		variables.put(k.toLowerCase(), value);
 	}
 	
 	public static String[] splits(String parse){
@@ -198,6 +215,18 @@ public class Variable {
 		}
 		
 		return replaced;
+	}
+	
+	public static void clearLocalVariables(Method m){
+		ArrayList<String> toBeCleared = new ArrayList<String>();
+		for (int i = 0; i < variables.keySet().size(); i++){
+			if ((variables.keySet().toArray()[i]+"").contains(m.UUID+"")){
+				toBeCleared.add(variables.keySet().toArray()[i]+"");
+			}
+		}
+		for (int i = 0; i < toBeCleared.size(); i++){
+			variables.remove(toBeCleared.get(i));
+		}
 	}
 	
 	public static String parseString(String parse){

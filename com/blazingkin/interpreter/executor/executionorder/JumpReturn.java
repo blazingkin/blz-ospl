@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class JumpReturn implements InstructionExecutor {
@@ -11,8 +12,8 @@ public class JumpReturn implements InstructionExecutor {
 	public void run(String[] args) {
 		String fName = args[0];
 		Executor.lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
-		if (Executor.functionLines.get(fName) != null){
-			Executor.setLine(Executor.functionLines.get(fName).lineNumber+2, Executor.functionLines.get(fName).UUID);
+		if (Method.contains(Executor.methods, fName) != null){
+			Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
 		}
 	}
 

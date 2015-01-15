@@ -37,7 +37,7 @@ public class ChangeProcess implements InstructionExecutor {
 				
 			}
 		}
-		p.setLine(Executor.functionLines.get(args[args.length-1]).lineNumber);
+		p.setLine(Executor.methods.get(Executor.methods.size()-1).lineNumber);
 		Executor.addProcess(p);
 		
 		

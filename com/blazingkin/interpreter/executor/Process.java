@@ -18,6 +18,8 @@ public class Process {
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
 	public String[] lines;
+	
+	
 	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
 		do{
@@ -38,7 +40,8 @@ public class Process {
 		lines = temp;
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0 && lines[i].substring(0, 1).equals(":")){
-				Executor.functionLines.put(lines[i].substring(1),new FunctionLine(UUID,i+1));
+				Method nM = new Method(this, i+1,lines[i].substring(1));
+				Executor.methods.add(nM);
 			}
 		}
 		processes.add(this);

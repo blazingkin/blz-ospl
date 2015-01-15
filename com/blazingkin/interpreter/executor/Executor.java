@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -16,12 +15,45 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Executor {
 	public static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
+	public static Stack<Method> runningMethods = new Stack<Method>();
 	public static Process getCurrentProcess(){
 		return runningProcesses.peek();
 	}
+	public static Method getCurrentMethod(){
+		return runningMethods.peek();
+	}
+	public static Method getMethodInCurrentProcess(String methodName){
+		for (int i = 0; i < methods.size(); i++){
+			if (methods.get(i).isItThis(methodName, getCurrentProcess().UUID)){
+				return methods.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public static Method getMethod(String methodName, int processID){
+		for (int i = 0; i < methods.size(); i++){
+			if (methods.get(i).isItThis(methodName, processID)){
+				return methods.get(i);
+			}
+		}
+		return null;	
+	}
+	public static void executeMethod(Method m){
+		getCurrentProcess().lineReturns.add((Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1);
+		runningMethods.push(m);
+		if (getCurrentProcess().UUID == m.parent.UUID){
+			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
+		}else{
+			addProcess(m.parent);
+			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
+		}
+	}
 	public static void popStack(){									// This is used to return to the previous process or function
-		if (!Executor.getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
-			System.out.println("changing line");
+		if (!runningMethods.isEmpty()){
+			Variable.clearLocalVariables(runningMethods.pop());
+		}
+		if (!Executor.lineReturns.isEmpty()){		// If there is a function in the current process, go to it
 			Executor.setLine(Executor.lineReturns.pop());
 		}else{											// If there is not a function in the current process, go to the previous process
 			if (Executor.runningProcesses.size() > 1){
@@ -35,7 +67,7 @@ public class Executor {
 	public static void addProcess(Process p){
 		runningProcesses.push(p);
 	}
-	public static HashMap<String, FunctionLine> functionLines = new HashMap<String, FunctionLine>();	// List of all functions within their respective processes
+	public static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
 	public static boolean closeRequested = false;
 	public static Stack<Integer> lineReturns = new Stack<Integer>();
 	public static String startingMethod;
@@ -60,8 +92,9 @@ public class Executor {
 		}
 		runningProcesses.push(new Process(runFile));		// puts the file passed to us as the current process
 		if (startingMethod != null){
-			if (Executor.functionLines.get(startingMethod) != null){
-				Executor.setLine(Executor.functionLines.get(startingMethod).lineNumber);		//if there is a starting method and we can find it, set the line number to it
+			if (!(Method.contains(methods, startingMethod) == null)){
+				runningMethods.push(Method.contains(methods, startingMethod));
+				Executor.setLine(getCurrentMethod().lineNumber);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
@@ -72,7 +105,9 @@ public class Executor {
 					newSplit[i-1] = split[i];
 				}
 				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-					functionLines.put(split[0].substring(1),new FunctionLine(getCurrentProcess().UUID, (Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value));
+					Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
+					methods.add(nM);
+					runningMethods.push(nM);
 					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,(Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
 					continue;
 				}
@@ -106,6 +141,16 @@ public class Executor {
 			
 	}
 	
+	public static int getUUID(){
+		int id;
+		do{
+			id = (int) (Math.random() * Integer.MAX_VALUE);
+			
+		}while(UUIDsUsed.contains(id));
+		return id;
+	}
+	
+	public static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	public static long timeStarted = 0;
 	public static int frames = 0;
 	public static ArrayList<Integer> eventsToBeHandled = new ArrayList<Integer>();

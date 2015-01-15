@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class EqualsReturnJump implements InstructionExecutor {
@@ -21,8 +22,8 @@ public class EqualsReturnJump implements InstructionExecutor {
 		if ((Variable.parseString((args[1]))).equals((Variable.parseString((args[2])))) == appositive){
 			Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 			String fName = (String) args[0];
-			if (Executor.functionLines.get(fName) != null){
-				Executor.setLine(Executor.functionLines.get(fName).lineNumber+2, Executor.functionLines.get(fName).UUID);
+			if (Method.contains(Executor.methods, fName) != null){
+				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
 			}
 		}
 	}

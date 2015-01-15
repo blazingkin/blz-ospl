@@ -1,5 +1,7 @@
 package com.blazingkin.interpreter.executor;
 
+@Deprecated
+//@TODO delete when done implementing process
 public class FunctionLine {
 	public int UUID;
 	public int lineNumber;
