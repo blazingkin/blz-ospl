@@ -16,7 +16,7 @@ public class Variable {
 	public static HashMap<String, List> lists = new HashMap<String, List>();
 	public static Value getGlobalValue(String k){
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
-			return getValueOfArray(k);
+			return   getValueOfArray(k);
 		}
 		
 		if (variables.containsKey(k))
@@ -27,7 +27,17 @@ public class Variable {
 		}
 		
 	}
+	public static void setGlobalValue(String key, Value value){
+		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
+			setValueOfArray(key, value);
+			return;
+		}
+		variables.put(key, value);
+	}
 	public static Value getValue(String key){	//gets local only
+		if (Executor.getCurrentMethod() == null || key.charAt(0) == '*'){
+			return getGlobalValue(key);
+		}
 		String k = Executor.getCurrentMethod().UUID + key;
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			return getValueOfArray(k);
@@ -111,6 +121,10 @@ public class Variable {
 	}
 	
 	public static void setValue(String key, Value value){		//sets a local variable
+		if (Executor.getCurrentMethod() == null || key.charAt(0) == '*'){
+			setGlobalValue(key, value);
+			return;
+		}
 		String k = Executor.getCurrentMethod().UUID + key;
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			setValueOfArray(k, value);

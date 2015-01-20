@@ -17,10 +17,18 @@ public class Executor {
 	public static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
 	public static Stack<Method> runningMethods = new Stack<Method>();
 	public static Process getCurrentProcess(){
+		try{
 		return runningProcesses.peek();
+		}catch(Exception e){
+			return null;
+		}
 	}
 	public static Method getCurrentMethod(){
+		try{
 		return runningMethods.peek();
+		}catch(Exception e){
+			return null;
+		}
 	}
 	public static Method getMethodInCurrentProcess(String methodName){
 		for (int i = 0; i < methods.size(); i++){
@@ -94,7 +102,7 @@ public class Executor {
 		if (startingMethod != null){
 			if (!(Method.contains(methods, startingMethod) == null)){
 				runningMethods.push(Method.contains(methods, startingMethod));
-				Executor.setLine(getCurrentMethod().lineNumber);		//if there is a starting method and we can find it, set the line number to it
+				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
@@ -145,7 +153,6 @@ public class Executor {
 		int id;
 		do{
 			id = (int) (Math.random() * Integer.MAX_VALUE);
-			
 		}while(UUIDsUsed.contains(id));
 		return id;
 	}
