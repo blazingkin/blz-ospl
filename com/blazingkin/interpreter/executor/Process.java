@@ -22,9 +22,7 @@ public class Process {
 	
 	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
-		do{
-			UUID = r.nextInt(Integer.MAX_VALUE);		//generate a Unique Id for this process
-		}while(Process.UUIDsUsed.contains(UUID));
+		UUID = Executor.getUUID();
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
@@ -77,7 +75,6 @@ public class Process {
 	}
 	
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	static Random r = new Random(System.currentTimeMillis());
 	
 }
