@@ -8,11 +8,24 @@ public class Method {
 	public Process parent;
 	public int lineNumber;
 	public String functionName;
+	public boolean takesVariables = false;
+	public String[] variables = {};
 	
-	public Method(Process parent, int line, String name){
+	//initLine does not contain the : that makes it a function
+	public Method(Process parent, int line, String initLine){
 		this.parent = parent;
 		lineNumber = line;
-		functionName = name;
+		String ln = initLine.split(":")[initLine.split(":").length - 1];
+		functionName = ln.split("\\(")[0];
+		if (ln.contains("(") && ln.contains(")")){
+			takesVariables = true;
+			String vars = ln.split("\\(")[ln.split("\\(").length-1].split("\\)")[0];
+			String vNames[] = vars.split(",");
+			variables = new String[vNames.length];
+			for (int i = 0; i < vNames.length; i++){
+				variables[i] = vNames[i].trim();
+			}
+		}
 	}
 	
 	public boolean isItThis(String name, int parentID){

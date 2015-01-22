@@ -57,6 +57,18 @@ public class Executor {
 			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
 		}
 	}
+	public static void executeMethod(Method m, String[] args){
+		Value[] values = new Value[args.length];
+		for (int i = 0; i < values.length; i++){
+			values[i] = Variable.getValue(Variable.parseString(args[i]));
+		}
+		executeMethod(m);
+		if (m.takesVariables){
+			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				Variable.setValue(m.variables[i], values[i]);
+			}
+		}
+	}
 	public static void popStack(){									// This is used to return to the previous process or function
 		if (!runningMethods.isEmpty()){
 			Variable.clearLocalVariables(runningMethods.pop());

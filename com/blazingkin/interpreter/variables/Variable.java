@@ -51,6 +51,14 @@ public class Variable {
 		}
 	}
 	
+	public static String[] getArguments(String[] args){
+		String[] done = new String[args.length];
+		for (int i = 0; i < args.length; i++){
+			done[i] = args[i].replace(",", "").replace("\\(", "").replace("\\)", "").trim();
+		}
+		return done;
+	}
+	
 	public static Value getValueOfArray(String key){
 
 		if (key.contains("[")){
