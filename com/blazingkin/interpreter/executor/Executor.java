@@ -58,9 +58,10 @@ public class Executor {
 		}
 	}
 	public static void executeMethod(Method m, String[] args){
+
 		Value[] values = new Value[args.length];
 		for (int i = 0; i < values.length; i++){
-			values[i] = Variable.getValue(Variable.parseString(args[i]));
+			values[i] = new Value(VariableTypes.Integer, Variable.parseString(args[i]));
 		}
 		executeMethod(m);
 		if (m.takesVariables){

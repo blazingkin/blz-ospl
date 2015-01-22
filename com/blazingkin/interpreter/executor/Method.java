@@ -16,7 +16,7 @@ public class Method {
 		this.parent = parent;
 		lineNumber = line;
 		String ln = initLine.split(":")[initLine.split(":").length - 1];
-		functionName = ln.split("\\(")[0];
+		functionName = ln.split("\\(")[0].trim();
 		if (ln.contains("(") && ln.contains(")")){
 			takesVariables = true;
 			String vars = ln.split("\\(")[ln.split("\\(").length-1].split("\\)")[0];

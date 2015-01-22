@@ -1,5 +1,7 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
+import java.util.Arrays;
+
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.executor.Method;
@@ -17,6 +19,16 @@ public class LessThanReturnJump implements InstructionExecutor {
 			Executor.lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 			String fName = (String) args[0];
 			if (Method.contains(Executor.methods, fName) != null){
+				int start = -1;
+				for (int i = 0; i < args.length; i++){
+					if (args[i].charAt(0) == '('){
+						start = i;
+					}
+				}
+				if (start != -1){
+					Executor.executeMethod(Executor.getMethodInCurrentProcess(fName), Variable.getArguments(Arrays.copyOfRange(args, start, args.length)));
+					return;		
+				}
 				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
 			}
 		}
