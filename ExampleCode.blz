@@ -1,0 +1,29 @@
+:main
+
+SET a 5
+ECHO Input a number
+NIN b
+ADD |a| |b| c
+ECHO the sum of |a| and |b| is |c|
+SET *f 0
+RJP loop
+
+
+END
+
+
+:loop
+IFN |*f| 20
+JMP method
+
+
+
+
+END
+
+
+:method
+ECHO |*f| nth iteration says hello
+INC *f
+JMP loop
+END
