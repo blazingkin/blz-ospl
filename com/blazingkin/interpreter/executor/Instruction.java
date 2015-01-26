@@ -26,6 +26,7 @@ import com.blazingkin.interpreter.executor.executionorder.MoreThanReturnJump;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentGoto;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentJump;
 import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
+import com.blazingkin.interpreter.executor.executionorder.While;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
@@ -97,7 +98,8 @@ public enum Instruction {
 	ADDLISTENER("ADDLISTENER", "", new Listener()),
 	CLEARLAST("CLEARLAST", "", new GraphicsExecutor(GraphicsTask.clearLast)),
 	ADDPROCESS("ADDPROCESS", "", new ChangeProcess()),
-	RETURNPROCESS("RETPRO", "", new ReturnProcess());
+	RETURNPROCESS("RETPRO", "", new ReturnProcess()),
+	WHILE("WHL", "", new While());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

@@ -162,6 +162,30 @@ public class Executor {
 			
 	}
 	
+	public static void executeLineInCurrentProcess(int lineNumber){
+		String split[] = getCurrentProcess().getLine(lineNumber).split(" ");
+		String newSplit[] = new String[split.length-1];
+		for (int i = 1; i < split.length; i++){
+			newSplit[i-1] = split[i];
+		}
+		if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
+			Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
+			methods.add(nM);
+			runningMethods.push(nM);
+
+			return;
+		}
+		if (split.length == 1 && split[0].equals("")){
+			return;
+		}
+		Instruction it = InstructionType.getInstructionType(split[0]);
+		if (it.name.equals(Instruction.INVALID.name)){
+			
+			Interpreter.throwError("Invalid instruction "+split[0]);
+		}
+		it.executor.run(newSplit);
+	}
+	
 	public static int getUUID(){
 		int id;
 		do{

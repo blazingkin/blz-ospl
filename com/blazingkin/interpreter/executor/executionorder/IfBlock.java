@@ -16,7 +16,9 @@ public class IfBlock implements InstructionExecutor {
 	}
 	
 	public void run(String args[]){
+	//	System.out.println(Variable.parseString(args[0]) + " "+Variable.parseString(args[1]));
 		if (!Variable.parseString(args[0]).equals(Variable.parseString(args[1])) == appositive){
+
 			Executor.setLine((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+3);
 		}
 	}
