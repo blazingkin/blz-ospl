@@ -1,0 +1,65 @@
+**** FOR THIS DOCUMENT ONLY ****
+{variable replaced strings are put in curly brackets}
+[a variable address are put in square brackets]
+(A Non-parsed value will be in parenthesis)
+********************************
+
+:(function name)
+ECHO {echoed string}
+SET {Key} {Value}
+GOTO (line number)
+ADD {value 1} {value 2} [address]
+SUB {value 1} {value 2} [address]
+MUL {value 1} {value 2} [address]
+DIV {value 1} {value 2} [address]
+MOD {value 1} {value 2} [address]
+POW {value 1} {value 2} [address]
+AND {value 1} {value 2} [address]
+EGO (line number) {condition 1} {condition 2}
+NGO (line number) {condition 1} {condition 2}
+LGO (line number) {condition 1} {condition 2}
+GGO (line number) {condition 1} {condition 2}
+NIN [address]
+JMP (function name)
+EXT
+EJP (function name) {condition 1} {condition 2}
+NJP (function name) {condition 1} {condition 2}
+LJP (function name) {condition 1} {condition 2}
+MJP (function name) {condition 1} {condition 2}
+MOV [initial address] [final address]
+DEC [address]
+INC [address]
+PUSH {value}
+POP [address]
+PEEK [address]
+RAND [address]
+STR [address] (any) (number) (of) (arguments) ...
+SIN [address]
+UNS [address]
+RJP (function name)
+END
+ERJ (function name) {condition 1} {condition 2}
+NRJ (function name) {condition 1} {condition 2}
+MRJ (function name) {condition 1} {condition 2}
+CON [address] (any) (number) (of) (arguments) ...
+IFE {condition 1} {condition 2}
+IFN {condition 1} {condition 2}
+WAIT {time}
+ADDPROCESS (path name that may contain spaces)
+RETPRO
+
+
+
+**********************
+Non-Functional or Experimental Instructions
+
+GRT
+GRASS [array with x and y value]
+GRASS {x value} {y value}
+TDRAW {color} [array with points]
+TDRAW {color} {any} {number} {of} {points} {x} {y} ...
+CLEAR
+GRAPHICSPROPERTY (property)
+ADDLISTENER (type) (function name)
+CLEARLAST
+WHL {condition 1} (>|<|=|!=) {condition 2}
