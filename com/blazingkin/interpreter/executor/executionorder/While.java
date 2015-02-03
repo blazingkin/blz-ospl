@@ -12,25 +12,21 @@ public class While implements InstructionExecutor {
 		boolean shouldRun = false;
 		switch (args[1]){
 		case ">":
-			System.out.println("ran >");
 			if (Integer.parseInt(Variable.parseString(args[0])) > Integer.parseInt(Variable.parseString(args[2]))){
 				shouldRun = true;
 			}
 			break;
 		case "<":
-			//System.out.println(Integer.parseInt(Variable.parseString(args[0])) + " "+Integer.parseInt(Variable.parseString(args[2])));
 			if (Integer.parseInt(Variable.parseString(args[0])) < Integer.parseInt(Variable.parseString(args[2]))){
 				shouldRun = true;
 			}
 			break;
 		case "=":
-			System.out.println("ran =");
 			if (Integer.parseInt(Variable.parseString(args[0])) == Integer.parseInt(Variable.parseString(args[2]))){
 				shouldRun = true;
 			}
 			break;
 		case "!=":
-			System.out.println("ran !=");
 			if (Integer.parseInt(Variable.parseString(args[0])) != Integer.parseInt(Variable.parseString(args[2]))){
 				shouldRun = true;
 			}
