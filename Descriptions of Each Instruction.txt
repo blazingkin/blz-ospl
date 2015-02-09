@@ -1,0 +1,137 @@
+Key -
+@ - Deprecated
+
+
+--------------------------------------
+
+**Invalid - 
+This should never be called
+
+**Function - :
+Declares the beginning of a function named (function name)
+
+**Echo - ECHO
+Echoes a statement {echoed string}
+
+**Set - SET
+Sets the variable {key} to {value}
+
+**Add - ADD
+Sets variable [address] to the sum of {value 1} and {value 2}
+
+**Subtract - SUB
+Sets variable [address] to the difference of {value 1} and {value 2}
+
+**Multiply - MUL
+Sets variable [address] to the product of {value 1} and {value 2}
+
+**Division - DIV
+Sets variable [address] to the quotient of {value 1} and {value 2}
+
+**Modulus - MOD
+Sets variable [address] to the remainder of {value 1} and {value 2}
+
+**Exponential - POW
+Sets variable [address] to {value 1} to the power of {value 2}
+
+**Binary AND - AND
+Sets variable [address] to the single digit Binary AND of {value 1} and {value 2}
+
+@**If Equals; Goto - EGO
+If {condition 1} is equal to {condition 2} then set program counter to (line number)
+
+@**If Not Equals; Goto - NGO
+If {condition 1} is not equal to {condition 2} then set program counter to (line number)
+
+@**If Less Than; Goto - LGO
+If {condition 1} is less than {condition 2} then set program counter to (line number)
+
+@**If Greater Than; Goto - GGO
+If {condition 1} is greater than {condition 2} then set program counter to (line number)
+
+**Number Input - NIN
+Get a valid number input from the user and set the variable at [address] to it
+
+@**Jump - JMP
+Sets the program counter to the line where (function name) begins
+
+**Exit - EXT
+Exits the program
+
+@**Equals Jump - EJP
+If {condition 1} is equal to {condition 2} then set program counter to the line where (function name) begins
+
+@**Not Equals Jump - NJP
+If {condition 1} is not equal to {condition 2} then set program counter to the line where (function name) begins
+
+@**Less Than Jump - LJP
+If {condition 1} is less than {condition 2} then set program counter to the line where (function name) begins
+
+@**More Than Jump - MJP
+If {condition 1} is more than {condition 2} then set program counter to the line where (function name) begins
+
+**Move (copy) - MOV
+Copies the value in [initial address] and sets [final address] to it
+
+**Decrement - DEC
+Decrements the value of the variable at [address]
+
+**Increment - INC
+Increments the value of the variable at [address]
+
+**Push - PUSH
+Pushes {value} to the top of the global stack
+
+**Pop - POP
+Pops the top of the stack and sets variable [address] to the value
+
+**Peek - PEEK
+Sets variable [address] to the top value of the stack
+
+**Random - RAND
+Sets variable at [address] to a random value 0-99 inclusive
+
+**Set String - STR
+Sets variable at [address] to whatever is in the arguments as a non-replacing string
+
+**String Input - SIN
+Gets a string input from the user and sets it to the variable at [address]
+
+**Absolute Value - UNS
+Sets the value at [address] to the absolute value of that value
+
+**Return Jump - RJP
+Sets program counter to the line where (function name) begins and sets a return point to go back to at the next END
+
+**End Function - END
+Sets the program counter to the place where a return jump was last initialized, if there is none; instead end the program
+
+**If Equal; Return Jump - ERJ
+If {condition 1} is equal to {condition 2}, set program counter to the line where (function name) begins and sets a return point to go back to at the next END
+
+**If Not Equal; Return Jump - NRJ
+If {condition 1} is not equal to {condition 2}, set program counter to the line where (function name) begins and sets a return point to go back to at the next END
+
+**If Less Than; Return Jump - ERJ
+If {condition 1} is less than {condition 2}, set program counter to the line where (function name) begins and sets a return point to go back to at the next END
+
+**If More Than; Return Jump - ERJ
+If {condition 1} is more than {condition 2}, set program counter to the line where (function name) begins and sets a return point to go back to at the next END
+
+**Concatenate Strings - CON
+Sets the variable at [address] to the parsed arguments without any spaces; uses "" to give phrases
+
+**If Equal - IFE
+If {condition 1} is equal to {condition 2} run the next line of code, otherwise skip it
+
+**If Not Equal - IFN
+If {condition 1} is not equal to {condition 2} run the next line of code, otherwise skip it
+
+**Wait - WAIT
+Pauses the thread for {time} milliseconds
+
+**Add Process (new class) - ADDPROCESS
+Find and read the file at (path) and then execute it beginning at the first line of function (function name)
+
+**Return Process - RETPRO
+Will force a return to the previous process. This can be done with END, but only if everything is done executing in the process, this forces it.
