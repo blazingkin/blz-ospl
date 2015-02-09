@@ -20,7 +20,7 @@ public class EqualsJump implements InstructionExecutor {
 			if (Method.contains(Executor.methods, fName) != null){
 				int start = -1;
 				for (int i = 0; i < args.length; i++){
-					if (args[i].charAt(0) == '('){
+					if (args[i].charAt(0) == '('){	//passes arguments
 						start = i;
 					}
 				}
