@@ -38,7 +38,7 @@ public class While implements InstructionExecutor {
 			System.out.println("skipped");
 			Executor.setLine((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+3);
 		}else{
-			Executor.executeLineInCurrentProcess((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
+			Executor.executeLineInCurrentProcess((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2,(Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value);
 			run(args);
 		}
 		

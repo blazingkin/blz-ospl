@@ -185,6 +185,10 @@ public class Executor {
 		}
 		it.executor.run(newSplit);
 	}
+	public static void executeLineInCurrentProcess(int i, int returnLine) {
+		executeLineInCurrentProcess(i);
+		
+	}
 	
 	public static int getUUID(){
 		int id;
@@ -198,6 +202,7 @@ public class Executor {
 	public static long timeStarted = 0;
 	public static int frames = 0;
 	public static ArrayList<Integer> eventsToBeHandled = new ArrayList<Integer>();
+
 	
 	
 	

@@ -285,6 +285,8 @@ public class GraphicsExecutor implements InstructionExecutor {
 				break;
 			case visible:
 				jf.setVisible(true);
+				jf.toFront();
+				jf.repaint();
 				break;
 			case invisible:
 				jf.setVisible(false);
