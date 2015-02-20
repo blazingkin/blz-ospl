@@ -37,7 +37,10 @@ public class Translator {
 			{"wait",				Instruction.WAIT.instruction},
 			{"setgraphicssize",		Instruction.SETGRAPHICSSIZE.instruction},
 			{"setgraphicsproperty",	Instruction.SETGRAPHICSPROPERTY.instruction},
-			{"addlistener",			Instruction.ADDLISTENER.instruction}		
+			{"addlistener",			Instruction.ADDLISTENER.instruction},
+			{"clearlast",			Instruction.CLEARLAST.instruction},
+			{"return",				Instruction.RETURNPROCESS.instruction},
+			{"while",				Instruction.WHILE.instruction}
 		};
 	
 	public static void run(File f, List<String> args) throws Exception{
