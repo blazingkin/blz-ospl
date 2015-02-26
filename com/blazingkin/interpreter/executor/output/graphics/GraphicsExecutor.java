@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,7 +19,6 @@ import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.listener.ListenerTypes;
-import com.blazingkin.interpreter.variables.List;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -225,9 +225,9 @@ public class GraphicsExecutor implements InstructionExecutor {
 			for (int i = 1; i < args.length; i++){
 				if (args[i].contains("[]")){
 					String str = args[i].replace("[]", "");
-					List lst = Variable.lists.get(str);
-					for (int y = 0; y < lst.lst.size(); y+=2){
-						points.add(new Point( (Integer) ((Value) lst.lst.values().toArray()[y]).value, (Integer) ((Value) lst.lst.values().toArray()[y+1]).value));
+					HashMap<Integer, Value> lst = Variable.lists.get(str);
+					for (int y = 0; y < lst.size(); y+=2){
+						points.add(new Point( (Integer) ((Value) lst.values().toArray()[y]).value, (Integer) ((Value) lst.values().toArray()[y+1]).value));
 					}
 				}else{
 					points.add(new Point(Integer.parseInt(Variable.parseString(args[i])), Integer.parseInt(Variable.parseString(args[i+1]))));

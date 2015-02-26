@@ -13,7 +13,7 @@ import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 
 public class Variable {
 	public static HashMap<String, Value> variables = new HashMap<String,Value>();
-	public static HashMap<String, List> lists = new HashMap<String, List>();
+	public static HashMap<String, HashMap<Integer, Value>> lists = new HashMap<String, HashMap<Integer, Value>>();
 	public static Value getGlobalValue(String k){
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			return   getValueOfArray(k);
@@ -81,7 +81,7 @@ public class Variable {
 				}
 				return lists.get(split[0]).get(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))));
 			}
-			lists.put(split[0], new List());
+			lists.put(split[0], new HashMap<Integer, Value>());
 			return new Value(VariableTypes.Integer, 0);
 		}
 		return getValue(key);
@@ -106,14 +106,14 @@ public class Variable {
 						split[1] = split[1].substring(1,split[1].length()-1);
 					}
 					int val = (Integer)getValueOfArray(split[1].substring(0,split[1].length()-1)).value;
-					lists.get(split[0]).setElement(val, value);
+					lists.get(split[0]).put(val, value);
 					return;
 				}
-				lists.get(split[0]).setElement(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))), value);
+				lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))), value);
 				return;
 			}
-			lists.put(split[0], new List());
-			lists.get(split[0]).setElement(Integer.parseInt(parseString(split[1].substring(0,split[1].length()-1))), value);
+			lists.put(split[0], new HashMap<Integer, Value>());
+			lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0,split[1].length()-1))), value);
 			return;
 		}
 		setValue(key, value);
