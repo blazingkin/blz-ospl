@@ -15,6 +15,10 @@ public class Set implements InstructionExecutor {
 		if (Variable.isInteger(Variable.parseString(args[1]))){
 			Variable.setValue(args[0], new Value(VariableTypes.Integer, Integer.parseInt(Variable.parseString(args[1]))));
 			return;
+		}
+		else if (Variable.isDouble(Variable.parseString(args[1]))){
+			Variable.setValue(args[0], new Value(VariableTypes.Double, Double.parseDouble(Variable.parseString(args[1]))));
+			return;
 		}else{
 			Instruction.STRINGSET.executor.run(args);
 			return;

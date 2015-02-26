@@ -10,9 +10,7 @@ public class Unsign implements InstructionExecutor {
 	 * 	Unsigns a variable
 	 */
 	public void run(String[] args) {
-		int x = (Integer) Variable.getValue(args[0]).value;
-		x = Math.abs(x);
-		Variable.setValue(args[0], new Value(VariableTypes.Integer, x));
+		Variable.setValue(args[0], new Value(VariableTypes.Integer, Math.abs((Integer) Variable.getValue(args[0]).value)));
 	}
 
 }

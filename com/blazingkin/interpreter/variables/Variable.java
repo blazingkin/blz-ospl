@@ -180,6 +180,14 @@ public class Variable {
 	    }
 	    return true;
 	}
+	public static boolean isDouble(String s){
+		try{
+			Double.parseDouble(s);
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
 	
 	public static String getEnvVariable(SystemEnv se){
 		String replaced = "";

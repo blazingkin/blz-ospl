@@ -10,9 +10,7 @@ public class ModVars implements InstructionExecutor {
 	 * 	Gets the remainder of 2 values
 	 */
 	public void run(String args[]){
-		int i1 = Integer.parseInt(Variable.parseString(args[0]));
-		int i2 = Integer.parseInt(Variable.parseString(args[1]));
-		Value v = new Value(VariableTypes.Integer, i1%i2);
+		Value v = new Value(VariableTypes.Integer, Integer.parseInt(Variable.parseString(args[0]))%Integer.parseInt(Variable.parseString(args[1])));
 		Variable.setValue(args[2], v);
 	}
 	

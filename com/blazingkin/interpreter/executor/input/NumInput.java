@@ -15,7 +15,12 @@ public class NumInput implements InstructionExecutor {
 	public Scanner s = new Scanner(System.in);
 	public void run(String[] vars){
 		try{
-		Variable.setValue(vars[0], new Value(VariableTypes.Integer,Integer.parseInt(s.nextLine())));
+		String str = s.nextLine();
+		if (Variable.isInteger(str)){
+			Variable.setValue(vars[0], new Value(VariableTypes.Integer,Integer.parseInt(str)));
+		}else{
+			Variable.setValue(vars[0], new Value(VariableTypes.Double,Double.parseDouble(str)));
+		}
 		}catch(Exception e){
 			System.err.println("Invalid Input, Please Input A Number");
 			run(vars);

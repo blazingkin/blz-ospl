@@ -10,9 +10,7 @@ public class SubVars implements InstructionExecutor {
 	 * 	Subtracts two numbers and stores them in a third variable
 	 */
 	public void run(String[] args) {
-		long i1 = Long.parseLong(Variable.parseString(args[0]));
-		long i2 = Long.parseLong(Variable.parseString(args[1]));
-		Value v = new Value(VariableTypes.Integer, i1-i2);
+		Value v = new Value(VariableTypes.Integer, Long.parseLong(Variable.parseString(args[0]))-Long.parseLong(Variable.parseString(args[1])));
 		Variable.setValue(args[2], v);
 	}
 

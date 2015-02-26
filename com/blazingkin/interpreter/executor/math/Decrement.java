@@ -12,8 +12,7 @@ public class Decrement implements InstructionExecutor {
 
 	public void run(String[] args){
 		if (Variable.contains(args[0])){
-			Value v = new Value(VariableTypes.Integer, (Integer)(Variable.getValue(args[0]).value)-1);
-			Variable.setValue(args[0], v);
+			Variable.setValue(args[0], new Value(VariableTypes.Integer, (Integer)(Variable.getValue(args[0]).value)-1));
 		}
 	}
 	

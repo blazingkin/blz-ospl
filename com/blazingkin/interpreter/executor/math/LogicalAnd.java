@@ -11,9 +11,7 @@ public class LogicalAnd implements InstructionExecutor {
 	 */
 	
 	public void run(String[] args){
-		int i1 = Integer.parseInt(Variable.parseString(args[0]));
-		int i2 = Integer.parseInt(Variable.parseString(args[1]));
-		Value v = new Value(VariableTypes.Boolean, (i1==1)&&(i2==1));
+		Value v = new Value(VariableTypes.Boolean, (Integer.parseInt(Variable.parseString(args[0]))==1)&&(Integer.parseInt(Variable.parseString(args[1]))==1));
 		Variable.setValue(args[2], v);
 	}
 

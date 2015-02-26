@@ -10,9 +10,7 @@ public class DivideVars implements InstructionExecutor {
 	 * 	Divides two numbers and puts the output as a variable
 	 */
 	public void run(String[] args) {
-		long i1 = Long.parseLong(Variable.parseString(args[0]));
-		long i2 = Long.parseLong(Variable.parseString(args[1]));
-		Value v = new Value(VariableTypes.Integer, i1/i2);
+		Value v = new Value(VariableTypes.Double, (long)Long.parseLong(Variable.parseString(args[0]))/(long)Long.parseLong(Variable.parseString(args[1])));
 		Variable.setValue(args[2], v);
 	}
 	

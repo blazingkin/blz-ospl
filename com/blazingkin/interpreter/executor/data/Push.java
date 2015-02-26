@@ -8,7 +8,6 @@ public class Push implements InstructionExecutor {
 	/*	Push
 	 * 	Pushes a value onto the stack
 	 */
-
 	public void run(String args[]){
 			LocalStack.push(Integer.parseInt(Variable.parseString(args[0])));
 	}
