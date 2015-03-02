@@ -31,13 +31,16 @@ import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.math.AddVars;
+import com.blazingkin.interpreter.executor.math.Ceiling;
 import com.blazingkin.interpreter.executor.math.Decrement;
 import com.blazingkin.interpreter.executor.math.DivideVars;
 import com.blazingkin.interpreter.executor.math.ExponentVars;
+import com.blazingkin.interpreter.executor.math.Floor;
 import com.blazingkin.interpreter.executor.math.Increment;
 import com.blazingkin.interpreter.executor.math.LogicalAnd;
 import com.blazingkin.interpreter.executor.math.ModVars;
 import com.blazingkin.interpreter.executor.math.MultiplyVars;
+import com.blazingkin.interpreter.executor.math.Round;
 import com.blazingkin.interpreter.executor.math.SubVars;
 import com.blazingkin.interpreter.executor.math.Unsign;
 import com.blazingkin.interpreter.executor.output.Echo;
@@ -99,7 +102,10 @@ public enum Instruction {
 	CLEARLAST("CLEARLAST", "", new GraphicsExecutor(GraphicsTask.clearLast)),
 	ADDPROCESS("ADDPROCESS", "", new ChangeProcess()),
 	RETURNPROCESS("RETPRO", "", new ReturnProcess()),
-	WHILE("WHL", "", new While());
+	WHILE("WHL", "", new While()),
+	ROUND("ROUND", "", new Round()),
+	FLOOR("FLOOR", "", new Floor()),
+	CEILING("CEIL", "", new Ceiling());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
