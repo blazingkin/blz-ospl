@@ -79,7 +79,7 @@ public class Executor {
 		}else{											// If there is not a function in the current process, go to the previous process
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
-				Executor.setLine(Executor.getCurrentProcess().getLine()+1);
+				Executor.setLine(Executor.getCurrentProcess().getLine()+2);
 			}else{										// If there is not a previous process, request a close
 				Executor.closeRequested = true;
 			}

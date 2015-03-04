@@ -37,8 +37,8 @@ public class ChangeProcess implements InstructionExecutor {
 				
 			}
 		}
-		p.setLine(Executor.methods.get(Executor.methods.size()-1).lineNumber);
 		Executor.addProcess(p);
+		Executor.executeMethod(Executor.getMethod(args[args.length-1], p.UUID));
 		
 		
 	}
