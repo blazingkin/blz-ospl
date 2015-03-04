@@ -307,29 +307,24 @@ public class Variable {
 
 		String veryFinalString = parse;
 		if (parse.contains("|")){
+			boolean flag = false;
 			if (parse.charAt(0) == '|'){
-				String split[] = splits(parse);
-				for (int i = 0; i < split.length; i+=2){
-					split[i+1] = split[i+1].substring(0,split[i+1].length());
-					split[i+1] = getValue(split[i+1]).value+"";
-				}
-				String finalString = "";
-				for (int i = 0; i < split.length; i++){
-					finalString = finalString+split[i];
-				}
-				veryFinalString = finalString;
-			}else{
-				String split[] = splits(parse);	
-				for (int i = 1; i < split.length; i+=2){
-					split[i] = split[i].substring(0,split[i].length());
-					split[i] = getValue(split[i]).value+"";
-				}
-				String finalString = "";
-				for (int i = 0; i < split.length; i++){
-					finalString = finalString+split[i];
-				}
-				veryFinalString = finalString;
+				flag = true;
+				parse = " "+parse;
 			}
+			String split[] = splits(parse);	
+			for (int i = 1; i < split.length; i+=2){
+				split[i] = split[i].substring(0,split[i].length());
+				split[i] = getValue(split[i]).value+"";
+			}
+			if (flag){
+				split[0] = split[0].substring(1);
+			}
+			String finalString = "";
+			for (int i = 0; i < split.length; i++){
+				finalString = finalString+split[i];
+			}
+			veryFinalString = finalString;
 		}
 		return veryFinalString;
 			
