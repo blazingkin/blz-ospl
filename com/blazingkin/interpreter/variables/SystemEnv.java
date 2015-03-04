@@ -17,6 +17,12 @@ public enum SystemEnv {
 	osName("system.os.name"),
 	osVersion("system.os.version"),
 	
+	
+	//Running Location
+	runningFileLocation("file.location"),		//returns the path to the folder it is in
+	runningFileName("file.name"),
+	runningFilePath("file.path"),
+	
 	//env variables
 	processUUID("process.current.uuid"),
 	processesRunning("process.all"),

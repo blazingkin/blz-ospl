@@ -240,6 +240,15 @@ public class Variable {
 		case version:
 			replaced = "pre-release build 1/7/15";
 			break;
+		case runningFileLocation:
+			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
+			break;
+		case runningFileName:
+			replaced = Executor.getCurrentProcess().readingFrom.getName();
+			break;
+		case runningFilePath:
+			replaced = Executor.getCurrentProcess().readingFrom.getAbsolutePath();
+			break;
 		default:
 			break;
 		}
@@ -265,25 +274,34 @@ public class Variable {
 		}
 		if (parse.contains("{") && parse.contains("}")){
 			String[] split = parse.split("\\{|\\}");
-			String expression = split[1].toLowerCase();
-			if (expression.contains("|")){
-				expression = parseString(expression);
-			}
-			SystemEnv se = null;
-			try{
-				for (int i = 0; i < SystemEnv.values().length; i++){
-					if (expression.equals(SystemEnv.values()[i].name)){
-						se = SystemEnv.values()[i];
+			int cases = split.length / 2;
+			parse = split[0];
+			for (int i = 0; i < cases; i++){
+				String expression = split[1+(i*2)].toLowerCase();
+				if (expression.contains("|")){
+					expression = parseString(expression);
+				}
+				SystemEnv se = null;
+				try{
+					for (int j = 0; j < SystemEnv.values().length; j++){
+						if (expression.equals(SystemEnv.values()[j].name)){
+							se = SystemEnv.values()[j];
+						}
 					}
+					if (se == null){
+						throw new Exception();
+					}
+				}catch(Exception e){Interpreter.throwError("Invalid System Variable: "+expression);}
+				if (!(i == cases-1)){
+					parse = parse+getEnvVariable(se)+split[(2*i)+2];	
+				}else{
+					parse = parse + getEnvVariable(se);
 				}
-				if (se == null){
-					throw new Exception();
+				if (cases == 1 && split.length > 2){
+					parse = parse + split[split.length-1];
 				}
-			}catch(Exception e){Interpreter.throwError("Invalid System Variable: "+expression);}
-			parse = split[0]+getEnvVariable(se);
-			for (int i = 2; i < split.length; i++){
-				parse = parse+split[i];
 			}
+
 		}
 		
 
