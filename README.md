@@ -2,7 +2,33 @@ blz-ospl
 ===
 An open source programming language written as an attempt to learn the fundamentals behind programming languages.
 
-It will be extremely rough in the early versions and will be revised as I try to implement new features.
+Hello World Sample
+
+===
+ECHO Hello World!
+===
+or
+===
+:main
+ECHO Hello World!
+END
+===
+
+BizBuzz Sample (Biz as multiples of 3, Buzz as multiples of 5)
+===
+:main
+ADD |*i| 1 *i
+ECHO |*i|
+MOD |*i| 3.0 biz
+MOD |*i| 5.0 buzz
+IFE |biz| 0.0
+ECHO biz
+IFE |buzz| 0.0
+ECHO buzz
+IFN |*i| 50
+RJP main
+END
+===
 
 For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or caalex101 [at] gmail [dot] com
 
