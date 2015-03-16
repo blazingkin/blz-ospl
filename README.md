@@ -3,19 +3,25 @@ blz-ospl
 An open source programming language written as an attempt to learn the fundamentals behind programming languages.
 
 Hello World Sample
+===
+
+ECHO Hello World!
 
 ===
-ECHO Hello World!
-===
+
 or
+
 ===
+
 :main
 ECHO Hello World!
 END
+
 ===
 
 BizBuzz Sample (Biz as multiples of 3, Buzz as multiples of 5)
 ===
+
 :main
 ADD |*i| 1 *i
 ECHO |*i|
@@ -28,6 +34,7 @@ ECHO buzz
 IFN |*i| 50
 RJP main
 END
+
 ===
 
 For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or caalex101 [at] gmail [dot] com
