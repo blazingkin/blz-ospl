@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.executor.data.Push;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Set;
 import com.blazingkin.interpreter.executor.data.SetString;
+import com.blazingkin.interpreter.executor.executionorder.BooleanIfBlock;
 import com.blazingkin.interpreter.executor.executionorder.ChangeProcess;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.EqualsJump;
@@ -44,6 +45,7 @@ import com.blazingkin.interpreter.executor.math.Round;
 import com.blazingkin.interpreter.executor.math.SubVars;
 import com.blazingkin.interpreter.executor.math.Unsign;
 import com.blazingkin.interpreter.executor.output.Echo;
+import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
 import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
@@ -53,6 +55,7 @@ import com.blazingkin.interpreter.executor.timing.Wait;
 public enum Instruction {
 	INVALID("","INVALID", null),													// INVALID - Not for use
 	ECHO("ECHO", "ECHO", new Echo()),												// Echo - prints a replacing string
+	SAMELINEECHO("SECHO", "SAME LINE ECHO", new SameLineEcho()),
 	STORE("SET", "STORE", new Set()),												// Store - Stores an int as a variable
 	GOTO("GOTO", "GOTO", new Goto()),												// Goto - Goes to a line number
 	ADDVARIABLE("ADD", "ADD VARIABLES", new AddVars()),								// Add - adds two replacing strings and sets a variable to them
@@ -90,8 +93,9 @@ public enum Instruction {
 	LESSTHANRETURNJUMP("LRJ", "LESS THAN RETURN JUMP", new LessThanReturnJump()),	// Less than return jump - Jumps if statement is less than, then returns after this at the relevant END
 	MORETHANRETURNJUMP("MRJ", "MORE THAN RETURN JUMP", new MoreThanReturnJump()),	// More than return jumo - Jumps if statement is more than, then returns after this at the relevant END
 	CONCATENATE("CON", "CONCATENATE", new ConcatenateStrings()),					// Concatenate Strings - Concatenate Strings, removes "'s
-	IFBLOCK("IFE", "IF BLOCK", new IfBlock(true)),									// If block - Executes the next line if condition is true
-	NOTIFBLOCK("IFN", "IF BLOCK", new IfBlock(false)),								// Not If Block - Executres the next line if conditin is false
+	IFBLOCK("IFE", "IF BLOCK", new BooleanIfBlock(true)),									// If block - Executes the next line if condition is true
+	IF("IF", "IF STATEMENT", new IfBlock()),
+	NOTIFBLOCK("IFN", "IF BLOCK", new BooleanIfBlock(false)),								// Not If Block - Executres the next line if conditin is false
 	GRAPHICSTEST("GRT", "GRAPHICS TEST", new GraphicsExecutor(GraphicsTask.init)),
 	WAIT("WAIT", "WAIT", new Wait()),
 	SETGRAPHICSSIZE("GRASS", "GRAPHICS SET SIZE", new GraphicsExecutor(GraphicsTask.setSize)),

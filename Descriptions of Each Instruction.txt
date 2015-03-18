@@ -13,6 +13,9 @@ Declares the beginning of a function named (function name)
 **Echo - ECHO
 Echoes a statement {echoed string}
 
+**Same-Line Echo - SECHO
+Echoes a statement {echoed string} without a new line
+
 **Set - SET
 Sets the variable {key} to {value}
 
@@ -121,11 +124,14 @@ If {condition 1} is more than {condition 2}, set program counter to the line whe
 **Concatenate Strings - CON
 Sets the variable at [address] to the parsed arguments without any spaces; uses "" to give phrases
 
-**If Equal - IFE
+@**If Equal - IFE
 If {condition 1} is equal to {condition 2} run the next line of code, otherwise skip it
 
-**If Not Equal - IFN
+@**If Not Equal - IFN
 If {condition 1} is not equal to {condition 2} run the next line of code, otherwise skip it
+
+**If Block - IF
+IF {condition 1} is (==/>/</!=) to {condition 2} run the next line of code, otherwise skip it
 
 **Wait - WAIT
 Pauses the thread for {time} milliseconds

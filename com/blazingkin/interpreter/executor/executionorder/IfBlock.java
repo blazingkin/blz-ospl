@@ -5,22 +5,49 @@ import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class IfBlock implements InstructionExecutor {
-	/*	If statements
-	 * 	The appositive will matter if it checks for true or false
-	 * 	If the statement is not true then it will skip to the line past the executed one
-	 * 	If the statement is true then it will continue and this will not do anything
-	 */
-	private final boolean appositive;
-	public IfBlock(boolean appositive){
-		this.appositive = appositive;
-	}
-	
-	public void run(String args[]){
-	//	System.out.println(Variable.parseString(args[0]) + " "+Variable.parseString(args[1]));
-		if (!Variable.parseString(args[0]).equals(Variable.parseString(args[1])) == appositive){
 
+	public void run(String[] args) {
+		boolean flag = false;
+		String v1 = Variable.parseString(args[0]);
+		String v2 = Variable.parseString(args[2]);
+		String operant = args[1];
+		switch(operant){
+		case "==":
+			if (compare(v1,v2) == 0){
+				flag = true;
+			}
+			break;
+		case ">":
+			if (compare(v1, v2) > 0){
+				flag = true;
+			}
+			break;
+		case "<":
+			if (compare(v1,v2) < 0){
+				flag = true;
+			}
+			break;
+		case "!=":
+			if (compare(v1, v2) != 0){
+				flag = true;
+			}
+			break;
+		default:
+			break;
+		}
+		if (!flag){
 			Executor.setLine((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+3);
 		}
+		
 	}
+	
+	public int compare(String v1, String v2){
+		if (Variable.isDouble(v1) && Variable.isDouble(v2)){
+			return ((Double)Double.parseDouble(v1)).compareTo(Double.parseDouble(v2));
+		}
+		return v1.compareTo(v2);
+	}
+
+	
 	
 }
