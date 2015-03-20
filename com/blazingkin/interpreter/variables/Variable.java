@@ -14,6 +14,17 @@ import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 public class Variable {
 	public static HashMap<String, Value> variables = new HashMap<String,Value>();
 	public static HashMap<String, HashMap<Integer, Value>> lists = new HashMap<String, HashMap<Integer, Value>>();
+	public static HashMap<Integer, Value> getArray(String k){
+		if (Executor.getCurrentMethod() == null || k.charAt(0) == '*'){
+			return getGlobalArray(k);
+		}
+		return lists.get(Executor.getCurrentMethod().UUID+k);
+	}
+	public static HashMap<Integer, Value> getGlobalArray(String k){
+		return lists.get(k);
+	}
+	
+	
 	public static Value getGlobalValue(String k){
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			return   getValueOfArray(k);

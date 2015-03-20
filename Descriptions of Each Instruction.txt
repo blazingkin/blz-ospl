@@ -141,3 +141,9 @@ Find and read the file at (path) and then execute it beginning at the first line
 
 **Return Process - RETPRO
 Will force a return to the previous process. This can be done with END, but only if everything is done executing in the process, this forces it.
+
+**File In - FILEIN
+Will copy a file into an array with each index in the array being each line in the file
+
+**File Out - FILEOUT
+Copies an array to a file, each line is each newline in the file

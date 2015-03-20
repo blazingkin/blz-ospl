@@ -28,6 +28,7 @@ import com.blazingkin.interpreter.executor.executionorder.NonEquivalentGoto;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentJump;
 import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
 import com.blazingkin.interpreter.executor.executionorder.While;
+import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
@@ -45,6 +46,7 @@ import com.blazingkin.interpreter.executor.math.Round;
 import com.blazingkin.interpreter.executor.math.SubVars;
 import com.blazingkin.interpreter.executor.math.Unsign;
 import com.blazingkin.interpreter.executor.output.Echo;
+import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
@@ -109,7 +111,9 @@ public enum Instruction {
 	WHILE("WHL", "", new While()),
 	ROUND("ROUND", "", new Round()),
 	FLOOR("FLOOR", "", new Floor()),
-	CEILING("CEIL", "", new Ceiling());
+	CEILING("CEIL", "", new Ceiling()),
+	FILEINPUT("FILEIN", "", new FileInput()),
+	FILEOUTPUT("FILEOUT", "", new FileOutput());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
