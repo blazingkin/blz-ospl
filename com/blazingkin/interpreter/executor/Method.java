@@ -9,6 +9,7 @@ public class Method {
 	public int lineNumber;
 	public String functionName;
 	public boolean takesVariables = false;
+	public boolean interuptable = true;
 	public String[] variables = {};
 	
 	//initLine does not contain the : that makes it a function
@@ -17,6 +18,10 @@ public class Method {
 		lineNumber = line;
 		String ln = initLine.split(":")[initLine.split(":").length - 1];
 		functionName = ln.split("\\(")[0].trim();
+		if (functionName.contains("^")){
+			interuptable = false;
+			functionName = functionName.replace("^", "");
+		}
 		if (ln.contains("(") && ln.contains(")")){
 			takesVariables = true;
 			String vars = ln.split("\\(")[ln.split("\\(").length-1].split("\\)")[0];

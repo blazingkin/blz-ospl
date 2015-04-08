@@ -35,6 +35,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 	public static Image offScreen;
 	
 	public static ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+	public static ArrayList<TextLabel> textLabels = new ArrayList<TextLabel>();
 	public static boolean clearFlag = true;
 	public void run(String args[]){
 		switch(task){
@@ -92,6 +93,10 @@ public class GraphicsExecutor implements InstructionExecutor {
 		                bufferGraphics.setColor(p.color);
 		                bufferGraphics.fillPolygon(p.xPoints, p.yPoints, p.xPoints.length);
 	                }
+	                for (TextLabel tl: GraphicsExecutor.textLabels){
+	                	bufferGraphics.setColor(Color.black);
+	                	bufferGraphics.drawString(tl.text, tl.start.x, tl.start.y);
+	                }
 	                while(clearing);
 	                g.drawImage(offScreen, 0, 0, this);
 	               }catch(Exception e){}
@@ -103,15 +108,90 @@ public class GraphicsExecutor implements InstructionExecutor {
 	        
 	        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 
-	            @Override
+	            @SuppressWarnings("static-access")
+				@Override
 	            public boolean dispatchKeyEvent(KeyEvent ke) {
 	                    switch (ke.getID()) {
 	                    case KeyEvent.KEY_PRESSED:
-	                    	Listener.fireEvent(ListenerTypes.KeyboardKeyDown);
+	                    	String[] args = new String[1];
+	                    	args[0] = ke.getKeyChar()+"";
+	                    	if (ke.getKeyCode() == ke.VK_ENTER){
+	                    		String[] ffff = {"\n"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_SHIFT){
+	                    		String[] ffff = {"SHIFT"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_CAPS_LOCK){
+	                    		String[] ffff = {"CAPS_LOCK"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_TAB){
+	                    		String[] ffff = {"\t"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_ALT){
+	                    		String[] ffff = {"ALT"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_BACK_SPACE){
+	                    		String[] ffff = {"BACKSPACE"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_CONTROL){
+	                    		String[] ffff = {"CONTROL"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		break;
+	                    	}
+	                    	Listener.fireEvent(ListenerTypes.KeyboardKeyDown, args);
 	                        break;
 
 	                    case KeyEvent.KEY_RELEASED:
-	                    	Listener.fireEvent(ListenerTypes.KeyboardKeyUp);
+	                    	String[] argds = new String[1];
+	                    	argds[0] = ke.getKeyChar()+"";
+	                    	if (ke.getKeyCode() == ke.VK_ENTER){
+	                    		String[] ffff = {"\n"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_SHIFT){
+	                    		String[] ffff = {"SHIFT"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_CAPS_LOCK){
+	                    		String[] ffff = {"CAPS_LOCK"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_TAB){
+	                    		String[] ffff = {"\t"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_ALT){
+	                    		String[] ffff = {"ALT"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_BACK_SPACE){
+	                    		String[] ffff = {"BACKSPACE"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	if (ke.getKeyCode() == ke.VK_CONTROL){
+	                    		String[] ffff = {"CONTROL"};
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyUp, ffff);
+	                    		break;
+	                    	}
+	                    	Listener.fireEvent(ListenerTypes.KeyboardKeyUp, argds);
 	                        break;
 	                    }
 	                    return false;
@@ -180,7 +260,20 @@ public class GraphicsExecutor implements InstructionExecutor {
 
 			break;
 			
-			
+		case drawText:
+			int px = Integer.parseInt(Variable.parseString(args[0]));
+			int py = Integer.parseInt(Variable.parseString(args[1]));
+			String buS = "";
+			for (int i = 2; i < args.length; i++){
+				buS = buS + Variable.parseString(args[i]);
+				if (i != args.length-1){
+					buS = buS + " ";
+				}
+			}
+			TextLabel tl = new TextLabel(new Point(px,py), buS);
+			textLabels.add(tl);
+			jf.repaint();
+			break;
 		case setSize:
 			if (args[0].contains("[]")){
 				String s = args[0].replace("[", "").replace("]", "");

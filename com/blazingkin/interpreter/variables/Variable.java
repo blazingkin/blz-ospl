@@ -157,7 +157,6 @@ public class Variable {
 		String currentString = "";
 		int bracketCount = 0;
 		for (int i = 0; i < parse.length(); i++){
-
 			if ((parse.charAt(i)=='|' || parse.charAt(i)=='!') && bracketCount == 0){
 				a.add(currentString);
 				currentString = "";
@@ -249,7 +248,7 @@ public class Variable {
 			replaced = Executor.lineReturns.size()+"";
 			break;
 		case version:
-			replaced = "pre-release build 1/7/15";
+			replaced = "pre-release build 4/8/15";
 			break;
 		case runningFileLocation:
 			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
@@ -259,6 +258,27 @@ public class Variable {
 			break;
 		case runningFilePath:
 			replaced = Executor.getCurrentProcess().readingFrom.getAbsolutePath();
+			break;
+		case newline:
+			replaced = "\n";
+			break;
+		case alt:
+			replaced = "ALT";
+			break;
+		case back:
+			replaced = "BACKSPACE";
+			break;
+		case control:
+			replaced = "CONTROL";
+			break;
+		case shift:
+			replaced = "SHIFT";
+			break;
+		case systemKey:
+			replaced = "SYSTEM_KEY";
+			break;
+		case tab:
+			replaced = "\t";
 			break;
 		default:
 			break;

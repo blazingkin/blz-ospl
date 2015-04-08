@@ -101,6 +101,7 @@ public enum Instruction {
 	GRAPHICSTEST("GRT", "GRAPHICS TEST", new GraphicsExecutor(GraphicsTask.init)),
 	WAIT("WAIT", "WAIT", new Wait()),
 	SETGRAPHICSSIZE("GRASS", "GRAPHICS SET SIZE", new GraphicsExecutor(GraphicsTask.setSize)),
+	ADDTEXT("TEXT", "ADD TEXT", new GraphicsExecutor(GraphicsTask.drawText)),
 	TESTDRAW("TDRAW", "", new GraphicsExecutor(GraphicsTask.draw)),
 	CLEAR("CLEAR", "", new GraphicsExecutor(GraphicsTask.clear)),
 	SETGRAPHICSPROPERTY("GRAPHICSPROPERTY", "", new GraphicsExecutor(GraphicsTask.setProperty)),

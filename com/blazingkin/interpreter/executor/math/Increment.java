@@ -16,13 +16,8 @@ public class Increment implements InstructionExecutor {
 			case Integer:
 				v = new Value(VariableTypes.Integer, (Integer)(Variable.getValue(args[0]).value) + 1);
 				break;
-			case Boolean:
-				v = new Value(VariableTypes.Boolean, !(Boolean)(Variable.getValue(args[0]).value));
-				break;
 			case Double:
 				v = new Value(VariableTypes.Double, (Double)(Variable.getValue(args[0]).value) + 1);
-				break;
-			case String:
 				break;
 			default:
 				break;

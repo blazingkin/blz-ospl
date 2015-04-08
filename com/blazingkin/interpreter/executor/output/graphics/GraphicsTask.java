@@ -8,6 +8,7 @@ public enum GraphicsTask {
 	clear(),
 	close(),
 	setProperty(),
-	clearLast();
+	clearLast(),
+	drawText();
 
 }

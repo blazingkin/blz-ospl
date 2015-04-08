@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -137,6 +138,7 @@ public class Executor {
 					continue;
 				}
 				Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, (Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+				
 				Instruction it = InstructionType.getInstructionType(split[0]);
 				if (it.name.equals(Instruction.INVALID.name)){
 					
@@ -148,9 +150,9 @@ public class Executor {
 						c.repaint();
 					}
 				}
-				if (eventsToBeHandled.size() > 0){
-					lineReturns.add((Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value + 2);
-					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,eventsToBeHandled.get(0)));
+				if (eventsToBeHandled.size() > 0 && getCurrentMethod().interuptable){
+					Executor.lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
+					Executor.executeMethod(eventsToBeHandled.get(0).method, eventsToBeHandled.get(0).arguments);
 					eventsToBeHandled.remove(0);
 				}
 				if (closeRequested){
@@ -201,7 +203,7 @@ public class Executor {
 	public static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	public static long timeStarted = 0;
 	public static int frames = 0;
-	public static ArrayList<Integer> eventsToBeHandled = new ArrayList<Integer>();
+	public static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
 
 	
 	

@@ -30,7 +30,17 @@ public enum SystemEnv {
 	
 	
 	//blz variables
-	version("blz.version");
+	version("blz.version"),
+	
+	
+	//text special characters
+	newline("text.newline"),
+	shift("text.shift"),
+	control("text.control"),
+	alt("text.alt"),
+	systemKey("text.system.key"),
+	tab("text.tab"),
+	back("text.back");
 	
 	SystemEnv(String st){
 		name = st;
