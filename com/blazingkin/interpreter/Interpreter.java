@@ -56,7 +56,7 @@ public class Interpreter {
 					}
 				}
 			}
-		}catch(Exception e){e.printStackTrace();throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value));}
+		}catch(Exception e){e.printStackTrace();throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.runningProcesses.peek().readingFrom.getAbsolutePath());}
 	}
 	
 	public void runCompiler(File path, List<String> args) throws Exception {

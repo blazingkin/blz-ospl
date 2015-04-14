@@ -16,7 +16,7 @@ public class LessThanReturnJump implements InstructionExecutor {
 
 	public void run(String[] args){
 		if (Integer.parseInt(Variable.parseString((args[1]))) < Integer.parseInt(Variable.parseString((args[2])))){
-			Executor.lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
+			Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 			String fName = (String) args[0];
 			if (Method.contains(Executor.methods, fName) != null){
 				int start = -1;

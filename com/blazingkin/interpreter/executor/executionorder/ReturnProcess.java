@@ -7,7 +7,7 @@ public class ReturnProcess implements InstructionExecutor {
 
 	
 	public void run(String args[]){
-		Executor.lineReturns.clear();
+		Executor.getCurrentProcess().lineReturns.clear();
 		Executor.popStack();
 	}
 

@@ -49,12 +49,13 @@ public class Executor {
 		return null;	
 	}
 	public static void executeMethod(Method m){
-		getCurrentProcess().lineReturns.add((Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1);
 		runningMethods.push(m);
 		if (getCurrentProcess().UUID == m.parent.UUID){
+			
 			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
 		}else{
-			addProcess(m.parent);
+			//getCurrentProcess().lineReturns.add((Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1);
+			//addProcess(m.parent);
 			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
 		}
 	}
@@ -72,12 +73,14 @@ public class Executor {
 		}
 	}
 	public static void popStack(){									// This is used to return to the previous process or function
+
 		if (!runningMethods.isEmpty()){
 			Variable.clearLocalVariables(runningMethods.pop());
 		}
-		if (!Executor.lineReturns.isEmpty()){		// If there is a function in the current process, go to it
-			Executor.setLine(Executor.lineReturns.pop());
+		if (!getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
+			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
 		}else{											// If there is not a function in the current process, go to the previous process
+			//System.out.println("returning to previous process");
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
 				Executor.setLine(Executor.getCurrentProcess().getLine()+2);
@@ -91,7 +94,6 @@ public class Executor {
 	}
 	public static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
 	public static boolean closeRequested = false;
-	public static Stack<Integer> lineReturns = new Stack<Integer>();
 	public static String startingMethod;
 	public static void setLine(int num){				// Sets line within the current process
 		Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-2));
@@ -151,7 +153,7 @@ public class Executor {
 					}
 				}
 				if (eventsToBeHandled.size() > 0 && getCurrentMethod().interuptable){
-					Executor.lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
+					Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 					Executor.executeMethod(eventsToBeHandled.get(0).method, eventsToBeHandled.get(0).arguments);
 					eventsToBeHandled.remove(0);
 				}

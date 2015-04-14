@@ -51,6 +51,8 @@ import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
 import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
+import com.blazingkin.interpreter.executor.string.StringLength;
+import com.blazingkin.interpreter.executor.string.Substring;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
 @SuppressWarnings("deprecation")
@@ -114,7 +116,9 @@ public enum Instruction {
 	FLOOR("FLOOR", "", new Floor()),
 	CEILING("CEIL", "", new Ceiling()),
 	FILEINPUT("FILEIN", "", new FileInput()),
-	FILEOUTPUT("FILEOUT", "", new FileOutput());
+	FILEOUTPUT("FILEOUT", "", new FileOutput()),
+	STRINGLENGTH("SLEN", "", new StringLength()),
+	SUBSTRING("SUBS", "", new Substring());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

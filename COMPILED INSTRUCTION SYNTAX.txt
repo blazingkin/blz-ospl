@@ -53,7 +53,8 @@ ADDPROCESS (path name that may contain spaces) (function name)
 RETPRO
 FILEIN [array path] (path name that may contain spaces)
 FILEOUT [array path] (path name that may contain spaces)
-
+SUBS [oldstring] {start} {optional end}
+SLEN [string] [path to store length]
 
 
 **********************

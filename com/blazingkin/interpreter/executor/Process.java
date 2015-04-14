@@ -28,18 +28,25 @@ public class Process {
 		}
 		readingFrom = runFile;			//the file passed to us exists and we can use it
 		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
-
-		lines = new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r");	// Gets all of the lines into a string array
-
-		String[] temp = new String[(lines.length/2)+1];
-		for (int i = 0; i < lines.length; i+=2){
-			temp[i/2] = lines[i];
+		Scanner s = new Scanner(readingFrom);
+		ArrayList<String> li = new ArrayList<String>();
+		while (s.hasNextLine()){
+			//System.out.println("got line");
+			li.add(s.nextLine());
 		}
-		lines = temp;
+		lines = new String[li.size()];
+		for (int i = 0; i < li.size(); i++){
+			lines[i] = li.get(i);
+		}
+		if (lines.length == 0){
+			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
+		}
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
-			if (lines[i].length() > 0 && lines[i].substring(0, 1).equals(":")){
+			if (lines[i].length() > 0){
+				if (lines[i].substring(0,1).equals(":")){
 				Method nM = new Method(this, i+1,lines[i].substring(1));
 				Executor.methods.add(nM);
+				}
 			}
 		}
 		processes.add(this);

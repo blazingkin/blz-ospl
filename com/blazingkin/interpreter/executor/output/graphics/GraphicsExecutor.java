@@ -70,6 +70,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 	        			clearing = true;
 	                	bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
 	                	GraphicsExecutor.polygons.clear();
+	                	GraphicsExecutor.textLabels.clear();
 	                	GraphicsExecutor.clearFlag = false;
 	                	clearing = false;
 	                }

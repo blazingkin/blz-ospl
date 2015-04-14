@@ -147,3 +147,9 @@ Will copy a file into an array with each index in the array being each line in t
 
 **File Out - FILEOUT
 Copies an array to a file, each line is each newline in the file
+
+**String Length - SLEN
+Puts the size of a string into a variable
+
+**Substring - SUBS
+Shortens a string based on the given parameters

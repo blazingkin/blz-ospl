@@ -245,10 +245,10 @@ public class Variable {
 			replaced = Executor.runningProcesses.size()+"";
 			break;
 		case lineReturns:
-			replaced = Executor.lineReturns.size()+"";
+			replaced = Executor.getCurrentProcess().lineReturns.size()+"";
 			break;
 		case version:
-			replaced = "pre-release build 4/8/15";
+			replaced = "pre-release build 4/14/15";
 			break;
 		case runningFileLocation:
 			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
@@ -279,6 +279,12 @@ public class Variable {
 			break;
 		case tab:
 			replaced = "\t";
+			break;
+		case boundCursorPosX:
+			replaced = (MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left)+"";
+			break;
+		case boundCursorPosY:
+			replaced = (MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top)+"";
 			break;
 		default:
 			break;

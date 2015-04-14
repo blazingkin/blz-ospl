@@ -1,0 +1,69 @@
+:main
+GRT
+GRASS 800 800
+GRAPHICSPROPERTY visible
+ADDLISTENER keyboard.keydown print
+ADDLISTENER mouse.mouseonedown mousedown
+SET *a 100
+STR *buildingstring
+RJP loop
+END
+
+:loop
+TEXT 100 |*a| |*buildingstring|
+WAIT 50
+CLEAR
+WAIT 2
+RJP loop
+END
+
+:^print (key)
+CLEAR
+ECHO |key|
+SET *flag 0
+IF |key| == ~
+RJP fileout
+IF |key| == {text.tab}
+STR *buildingstring                                    
+IF |key| == {text.newline}
+RJP nl
+IF |key| == {text.shift}
+END
+if |key| == {text.back}
+RJP backspace
+IF |*flag| == 0
+ADD |*buildingstring| |key| *buildingstring
+END
+
+:^mousedown
+SET *mousex {screen.window.cursor.position.x}
+TDRAW Red |*mousex| |*mousey| {screen.window.cursor.position.x} |*mousey| {screen.window.cursor.position.x} {screen.window.cursor.position.y} |*mousex| {screen.window.cursor.position.y}
+SET *mousey {screen.window.cursor.position.y}
+END
+
+
+:^backspace
+SET *flag 1
+SLEN *buildingstring a
+IF |a| < 1
+END
+SUB |a| 1 a
+SUBS *buildingstring 0 |a|
+END
+
+:^nl
+SET *flag 1
+ADD |*a| 10 *a
+SET *fl[|*i|] |*buildingstring|
+ADD |*i| 1 *i
+STR *buildingstring
+END
+
+:^fileout
+RJP nl
+FILEOUT *fl {file.location}\runcode.blz
+WAIT 20
+ADDPROCESS {file.location}\runcode.blz main
+ECHO DONE EXECUTING THE FILE
+EXT
+END

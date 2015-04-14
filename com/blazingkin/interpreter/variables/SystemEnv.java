@@ -10,6 +10,8 @@ public enum SystemEnv {
 	screenResY("screen.resolution.size.y"),
 	cursorPosX("screen.cursor.position.x"),
 	cursorPosY("screen.cursor.position.y"),
+	boundCursorPosX("screen.window.cursor.position.x"),
+	boundCursorPosY("screen.window.cursor.position.y"),
 	FPS("screen.window.fps"),
 	
 	//system
