@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.executor;
 
 import com.blazingkin.interpreter.executor.data.MoveData;
+import com.blazingkin.interpreter.executor.data.Parse;
 import com.blazingkin.interpreter.executor.data.Peek;
 import com.blazingkin.interpreter.executor.data.Pop;
 import com.blazingkin.interpreter.executor.data.Push;
@@ -39,11 +40,14 @@ import com.blazingkin.interpreter.executor.math.DivideVars;
 import com.blazingkin.interpreter.executor.math.ExponentVars;
 import com.blazingkin.interpreter.executor.math.Floor;
 import com.blazingkin.interpreter.executor.math.Increment;
+import com.blazingkin.interpreter.executor.math.Logarithm;
 import com.blazingkin.interpreter.executor.math.LogicalAnd;
 import com.blazingkin.interpreter.executor.math.ModVars;
 import com.blazingkin.interpreter.executor.math.MultiplyVars;
 import com.blazingkin.interpreter.executor.math.Round;
 import com.blazingkin.interpreter.executor.math.SubVars;
+import com.blazingkin.interpreter.executor.math.TrigFunctions;
+import com.blazingkin.interpreter.executor.math.Trigonometry;
 import com.blazingkin.interpreter.executor.math.Unsign;
 import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FileOutput;
@@ -51,7 +55,7 @@ import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
 import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
-import com.blazingkin.interpreter.executor.string.StringLength;
+import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.string.Substring;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
@@ -87,7 +91,7 @@ public enum Instruction {
 	PEEK("PEEK", "PEEK", new Peek()),												// peek - peeks an integer into a variable
 	RANDOM("RAND", "RANDOM", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
 	STRINGSET("STR", "STRINGSET", new SetString()),									// Set String - Stores a string
-	STRINGINPUT("SIN", "STRINGIN", new StringInput()),								// Input String - gets a string through input
+	STRINGINPUT("STRIN", "STRINGIN", new StringInput()),								// Input String - gets a string through input
 	UNSIGN("UNS", "UNSIGN", new Unsign()),											// Unsign - Absolute values a variable
 	MODULUS("MOD", "MODULUS", new ModVars()),										// Modulus - Gets the remainder of a difference
 	RETURNJUMP("RJP", "RETURN JUMP", new JumpReturn()),								// Return Jump - Jumps, then returns after this at the relevant END
@@ -117,8 +121,20 @@ public enum Instruction {
 	CEILING("CEIL", "", new Ceiling()),
 	FILEINPUT("FILEIN", "", new FileInput()),
 	FILEOUTPUT("FILEOUT", "", new FileOutput()),
-	STRINGLENGTH("SLEN", "", new StringLength()),
-	SUBSTRING("SUBS", "", new Substring());
+	STRINGLENGTH("SLEN", "", new Length(true)),
+	ARRAYLENGTH("ALEN", "", new Length(false)),
+	SUBSTRING("SUBS", "", new Substring()),
+	Logarithm("LOG", "", new Logarithm()),
+	SIN("SIN", "", new Trigonometry(TrigFunctions.SIN)),
+	COS("COS", "", new Trigonometry(TrigFunctions.COS)),
+	TAN("TAN", "", new Trigonometry(TrigFunctions.TAN)),
+	CSC("CSC", "", new Trigonometry(TrigFunctions.CSC)),
+	SEC("SEC", "", new Trigonometry(TrigFunctions.SEC)),
+	COT("COT", "", new Trigonometry(TrigFunctions.COT)),
+	ARCSIN("ARCSIN", "", new Trigonometry(TrigFunctions.ARCSIN)),
+	ARCCOS("ARCCOS", "", new Trigonometry(TrigFunctions.ARCCOS)),
+	ARCTAN("ARCTAN", "", new Trigonometry(TrigFunctions.ARCTAN)),
+	PARSE("PARSE", "", new Parse());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

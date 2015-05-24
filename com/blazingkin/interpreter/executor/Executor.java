@@ -1,6 +1,5 @@
 package com.blazingkin.interpreter.executor;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.listener.Event;
-import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -17,11 +15,19 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 public class Executor {
 	public static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
 	public static Stack<Method> runningMethods = new Stack<Method>();
+	public static Stack<Integer> functionUUID = new Stack<Integer>();
 	public static Process getCurrentProcess(){
 		try{
 		return runningProcesses.peek();
 		}catch(Exception e){
 			return null;
+		}
+	}
+	public static int getCurrentMethodUUID(){
+		try{
+			return functionUUID.peek();
+		}catch(Exception e){
+			return 0;
 		}
 	}
 	public static Method getCurrentMethod(){
@@ -50,17 +56,14 @@ public class Executor {
 	}
 	public static void executeMethod(Method m){
 		runningMethods.push(m);
+		functionUUID.push(Executor.getUUID());
 		if (getCurrentProcess().UUID == m.parent.UUID){
-			
 			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
 		}else{
-			//getCurrentProcess().lineReturns.add((Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1);
-			//addProcess(m.parent);
 			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
 		}
 	}
 	public static void executeMethod(Method m, String[] args){
-
 		Value[] values = new Value[args.length];
 		for (int i = 0; i < values.length; i++){
 			values[i] = new Value(VariableTypes.Integer, Variable.parseString(args[i]));
@@ -75,12 +78,12 @@ public class Executor {
 	public static void popStack(){									// This is used to return to the previous process or function
 
 		if (!runningMethods.isEmpty()){
-			Variable.clearLocalVariables(runningMethods.pop());
+			runningMethods.pop();
+			Variable.clearLocalVariables(functionUUID.pop());
 		}
 		if (!getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
 			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
 		}else{											// If there is not a function in the current process, go to the previous process
-			//System.out.println("returning to previous process");
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
 				Executor.setLine(Executor.getCurrentProcess().getLine()+2);
@@ -118,6 +121,7 @@ public class Executor {
 		if (startingMethod != null){
 			if (!(Method.contains(methods, startingMethod) == null)){
 				runningMethods.push(Method.contains(methods, startingMethod));
+				functionUUID.push(Executor.getUUID());
 				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
@@ -132,6 +136,7 @@ public class Executor {
 					Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
 					methods.add(nM);
 					runningMethods.push(nM);
+					functionUUID.push(Executor.getUUID());
 					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,(Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
 					continue;
 				}
@@ -147,11 +152,6 @@ public class Executor {
 					Interpreter.throwError("Invalid instruction "+split[0]);
 				}
 				it.executor.run(newSplit);
-				if (GraphicsExecutor.jf != null){
-					for (Component c:GraphicsExecutor.jf.getComponents()){
-						c.repaint();
-					}
-				}
 				if (eventsToBeHandled.size() > 0 && getCurrentMethod().interuptable){
 					Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
 					Executor.executeMethod(eventsToBeHandled.get(0).method, eventsToBeHandled.get(0).arguments);
@@ -176,7 +176,7 @@ public class Executor {
 			Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
 			methods.add(nM);
 			runningMethods.push(nM);
-
+			functionUUID.push(Executor.getUUID());
 			return;
 		}
 		if (split.length == 1 && split[0].equals("")){

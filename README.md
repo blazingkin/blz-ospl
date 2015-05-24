@@ -35,15 +35,15 @@ MOD |*i| 3.0 biz
 
 MOD |*i| 5.0 buzz
 
-IFE |biz| 0.0
+IF |biz| == 0.0
 
 ECHO biz
 
-IFE |buzz| 0.0
+IF |buzz| == 0.0
 
 ECHO buzz
 
-IFN |*i| 50
+IF |*i| != 50
 
 RJP main
 

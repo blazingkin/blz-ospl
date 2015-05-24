@@ -21,7 +21,7 @@ public class Decrement implements InstructionExecutor {
 				v = new Value(VariableTypes.Boolean, !(Boolean)(Variable.getValue(args[0]).value));
 				break;
 			case Double:
-				v = new Value(VariableTypes.Double, (Double)(Variable.getValue(args[0]).value) - 1);
+				v = new Value(VariableTypes.Double, (Double)(Variable.getValue(args[0]).value) - 1.0d);
 				break;
 			case String:
 				break;

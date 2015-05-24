@@ -31,6 +31,10 @@ public enum SystemEnv {
 	lineReturns("process.lines.returns"),
 	
 	
+	//constants
+	pi("pi"),
+	euler("e"),
+	
 	//blz variables
 	version("blz.version"),
 	
@@ -42,7 +46,9 @@ public enum SystemEnv {
 	alt("text.alt"),
 	systemKey("text.system.key"),
 	tab("text.tab"),
-	back("text.back");
+	back("text.back"),
+	caps("text.caps"),
+	space("text.space");
 	
 	SystemEnv(String st){
 		name = st;

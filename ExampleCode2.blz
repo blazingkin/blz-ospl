@@ -1,69 +1,58 @@
 :main
-GRT
-GRASS 800 800
-GRAPHICSPROPERTY visible
-ADDLISTENER keyboard.keydown print
-ADDLISTENER mouse.mouseonedown mousedown
-SET *a 100
-STR *buildingstring
+ECHO Enter a number
+NIN *g
+SET *fibb[0] 0
+SET *fibb[1] 1
 RJP loop
+ADD |*g| 1 *g
+RJP finalprint
 END
 
 :loop
-TEXT 100 |*a| |*buildingstring|
-WAIT 50
-CLEAR
-WAIT 2
+SET time {system.time.currenttimemillis}
+
+ADD |*inc| 1 *inc
+IF |*inc| > |*g|
+END
+ECHO doing fibb of |*inc|
+RJP fibb (|*inc|)
+SUB {system.time.currenttimemillis} |time| timeexecuting
+DIV |timeexecuting| 1000 timeexecuting
+ECHO |*ans| took |timeexecuting| seconds to process{text.space}{text.space}{text.tab}|*step| steps
+SET *step 0
 RJP loop
+
 END
 
-:^print (key)
-CLEAR
-ECHO |key|
-SET *flag 0
-IF |key| == ~
-RJP fileout
-IF |key| == {text.tab}
-STR *buildingstring                                    
-IF |key| == {text.newline}
-RJP nl
-IF |key| == {text.shift}
-END
-if |key| == {text.back}
-RJP backspace
-IF |*flag| == 0
-ADD |*buildingstring| |key| *buildingstring
-END
-
-:^mousedown
-SET *mousex {screen.window.cursor.position.x}
-TDRAW Red |*mousex| |*mousey| {screen.window.cursor.position.x} |*mousey| {screen.window.cursor.position.x} {screen.window.cursor.position.y} |*mousex| {screen.window.cursor.position.y}
-SET *mousey {screen.window.cursor.position.y}
-END
-
-
-:^backspace
-SET *flag 1
-SLEN *buildingstring a
+:fibb (a)
+ADD |*step| 1 *step
 IF |a| < 1
+SET *ans 0
+IF |a| == 1
+SET *ans 1
+IF |a| < 2
 END
-SUB |a| 1 a
-SUBS *buildingstring 0 |a|
+SET *ans 0
+IF |*fibb[|a|]| != 0
+SET *ans |*fibb[|a|]|
+IF |*ans| != 0
+END
+SUB |a| 1 b
+RJP fibb (|b|)
+MOV *ans p
+SUB |b| 1 c
+RJP fibb (|c|)
+ADD |*ans| |p| *ans
+SET *fibb[|a|] |*ans|
 END
 
-:^nl
-SET *flag 1
-ADD |*a| 10 *a
-SET *fl[|*i|] |*buildingstring|
-ADD |*i| 1 *i
-STR *buildingstring
+:finalprint
+ADD |*in| 1 *in
+IF |*in| == |*g|
 END
-
-:^fileout
-RJP nl
-FILEOUT *fl {file.location}\runcode.blz
-WAIT 20
-ADDPROCESS {file.location}\runcode.blz main
-ECHO DONE EXECUTING THE FILE
-EXT
+SECHO |*fibb[|*in|]|
+SUB |*g| 1 z
+IF |z| != |*in|
+SECHO ,{text.space}
+RJP finalprint
 END

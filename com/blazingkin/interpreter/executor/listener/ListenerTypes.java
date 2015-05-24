@@ -10,7 +10,8 @@ public enum ListenerTypes {
 	MouseEntered("mouse.enter"),
 	MouseExited("mouse.exit"),
 	MouseOneClick("mouse.click"),
-	MouseTwoClick("mouse.clicktwo");
+	MouseTwoClick("mouse.clicktwo"),
+	MouseMotion("mouse.move");
 	
 	ListenerTypes(String name){
 		this.name = name;

@@ -25,7 +25,6 @@ public class FileOutput implements InstructionExecutor {
 		filePath = Variable.parseString(filePath);	
 		try{
 			File f = new File(filePath);
-			System.out.println(filePath);
 			if (!f.exists()){
 				f.createNewFile();
 			}

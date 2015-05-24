@@ -36,7 +36,7 @@ POP [address]
 PEEK [address]
 RAND [address]
 STR [address] (any) (number) (of) (arguments) ...
-SIN [address]
+STRIN [address]
 UNS [address]
 RJP (function name)
 END
@@ -55,7 +55,20 @@ FILEIN [array path] (path name that may contain spaces)
 FILEOUT [array path] (path name that may contain spaces)
 SUBS [oldstring] {start} {optional end}
 SLEN [string] [path to store length]
-
+ALEN [array] [path to store length]
+ADDLISTENER (type) (function name)
+LOG {input} [place to store result]
+LOG {input} {base} [place to store result]
+SIN {input} [place to store result]
+COS {input} [place to store result]
+TAN {input} [place to store result]
+CSC {input} [place to store result]
+SEC {input} [place to store result]
+COT {input} [place to store result]
+ARCSIN {input} [place to store result]
+ARCCOS {input} [place to store result]
+ARCTAN {input} [place to store result]
+PARSE [variable to be parsed]
 
 **********************
 Non-Functional or Experimental Instructions
@@ -67,6 +80,5 @@ TDRAW {color} [array with points]
 TDRAW {color} {any} {number} {of} {points} {x} {y} ...
 CLEAR
 GRAPHICSPROPERTY (property)
-ADDLISTENER (type) (function name)
 CLEARLAST
 WHL {condition 1} (>|<|=|!=) {condition 2}

@@ -8,6 +8,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -68,18 +69,18 @@ public class GraphicsExecutor implements InstructionExecutor {
 	        	try{
 	        		if (GraphicsExecutor.clearFlag){
 	        			clearing = true;
-	                	bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
+	                	//bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
 	                	GraphicsExecutor.polygons.clear();
 	                	GraphicsExecutor.textLabels.clear();
 	                	GraphicsExecutor.clearFlag = false;
 	                	clearing = false;
 	                }
 	        	}catch(Exception e){}
-	        	//paint(g);
 	        	}
 	        	
+	        	@Override
 	            public void paintComponent(Graphics g) {
-	            	
+	            	super.paintComponent(g);
 	            	update(g);
 	            	if (System.currentTimeMillis() - Executor.timeStarted > 1000){
 	            		GraphicsExecutor.lastFPS = Executor.frames;
@@ -89,16 +90,20 @@ public class GraphicsExecutor implements InstructionExecutor {
 	            	Executor.frames++;
 	               try{
 
-	            	super.paintComponent(g);	               
+	               bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
+	               g.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
+	               //System.out.println(System.currentTimeMillis()+" before");
 	                for (Polygon p: GraphicsExecutor.polygons){
 		                bufferGraphics.setColor(p.color);
 		                bufferGraphics.fillPolygon(p.xPoints, p.yPoints, p.xPoints.length);
 	                }
+	                //System.out.println(System.currentTimeMillis()+" after");
 	                for (TextLabel tl: GraphicsExecutor.textLabels){
 	                	bufferGraphics.setColor(Color.black);
 	                	bufferGraphics.drawString(tl.text, tl.start.x, tl.start.y);
 	                }
 	                while(clearing);
+
 	                g.drawImage(offScreen, 0, 0, this);
 	               }catch(Exception e){}
 
@@ -198,6 +203,22 @@ public class GraphicsExecutor implements InstructionExecutor {
 	                    return false;
 	            }
 	        });
+	        jf.addMouseMotionListener(
+	        		new MouseMotionListener() {
+
+						public void mouseDragged(MouseEvent arg0) {
+							Listener.fireEvent(ListenerTypes.MouseMotion);
+						}
+
+						public void mouseMoved(MouseEvent arg0) {
+							Listener.fireEvent(ListenerTypes.MouseMotion);
+						}
+	        			
+	        			
+	        		}
+	        		
+	        		);
+	        
 	        jf.addMouseListener(
 	        	new MouseListener() {
 
@@ -273,7 +294,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			}
 			TextLabel tl = new TextLabel(new Point(px,py), buS);
 			textLabels.add(tl);
-			jf.repaint();
+			jf.paintComponents(jf.getGraphics());
 			break;
 		case setSize:
 			if (args[0].contains("[]")){
@@ -333,7 +354,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 				p[i] = points.get(i);
 			}
 			polygons.add(new Polygon(c,p));
-			jf.repaint();
+			jf.paintComponents(jf.getGraphics());
 			break;
 			
 			

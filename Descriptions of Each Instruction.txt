@@ -97,7 +97,7 @@ Sets variable at [address] to a random value 0-99 inclusive
 **Set String - STR
 Sets variable at [address] to whatever is in the arguments as a non-replacing string
 
-**String Input - SIN
+**String Input - STRIN
 Gets a string input from the user and sets it to the variable at [address]
 
 **Absolute Value - UNS
@@ -151,5 +151,41 @@ Copies an array to a file, each line is each newline in the file
 **String Length - SLEN
 Puts the size of a string into a variable
 
+**Array Length - ALEN
+Puts the size of an array into a variable
+
 **Substring - SUBS
 Shortens a string based on the given parameters
+
+**Logarithm - LOG
+Finds the logarithm of a given number, the base given is by default 10, and e can be used as a base to find the natural logarithm
+
+**Sine - SIN
+Finds the sine of a given number in terms of radians
+
+**Cosine - COS
+Finds the cosine of a given number in terms of radians
+
+**Tangent - TAN
+Finds the tangent of a given number in terms of radians, this is also sin/cos
+
+**Cosecant - CSC
+Finds the cosecant of a given number in terms of radians, this is also 1/sin
+
+**Secant - SEC
+Finds the secant of a given number in terms of radians, this is also 1/cos
+
+**Cotangent - COT
+Finds the cotangent of a given number in terms of radians, this is also 1/tan or cos/sin
+
+**Inverse Sine - ARCSIN
+Finds the inverse of a sine, result is given in radians
+
+**Inverse Cosine - ARCCOS
+Finds the inverse of a cosine, result is given in radians
+
+**Inverse Tangent - ARCTAN
+Finds the inverse of a tangent, result is given in radians
+
+**Parse - PARSE
+Goes through a string and replaces variable notations with global and runtime variables

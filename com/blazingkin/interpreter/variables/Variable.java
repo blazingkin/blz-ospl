@@ -4,10 +4,11 @@ import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 //DO NOT MESS WITH THIS CLASS, IT DOES SOME INTERESTING VOODOO MAGIC AND IF YOU MESS WITH IT YOU WILL SCREW IT UP!!!!
 
@@ -49,7 +50,10 @@ public class Variable {
 		if (Executor.getCurrentMethod() == null || key.charAt(0) == '*'){
 			return getGlobalValue(key);
 		}
-		String k = Executor.getCurrentMethod().UUID + key;
+		String k = Executor.getCurrentMethodUUID() + key;
+		if (k.contains("|")){
+			k = parseString(k);
+		}
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			return getValueOfArray(k);
 		}
@@ -57,6 +61,7 @@ public class Variable {
 		if (variables.containsKey(k))
 		{
 			return variables.get(k);
+			
 		}else{
 			return new Value(VariableTypes.Integer, 0);
 		}
@@ -73,7 +78,9 @@ public class Variable {
 	public static Value getValueOfArray(String key){
 
 		if (key.contains("[")){
-
+			if (key.contains("|")){
+				key = parseString(key);
+			}
 			if (key.charAt(0) == '|'){
 				key = key.substring(1, key.length()-1);
 			}
@@ -90,7 +97,13 @@ public class Variable {
 				if (split[1].contains("[")){
 					return lists.get(split[0]).get((Integer) getValueOfArray(split[1].substring(0,split[1].length()-1)).value);
 				}
-				return lists.get(split[0]).get(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))));
+				if (lists.get(split[0]).containsKey(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))))){
+					return lists.get(split[0]).get(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))));
+				}else{
+					lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))), new Value(VariableTypes.Integer, 0));
+					return new Value(VariableTypes.Integer, 0);
+				}
+				
 			}
 			lists.put(split[0], new HashMap<Integer, Value>());
 			return new Value(VariableTypes.Integer, 0);
@@ -144,7 +157,7 @@ public class Variable {
 			setGlobalValue(key, value);
 			return;
 		}
-		String k = Executor.getCurrentMethod().UUID + key;
+		String k = Executor.getCurrentMethodUUID() + key;
 		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
 			setValueOfArray(k, value);
 			return;
@@ -157,7 +170,7 @@ public class Variable {
 		String currentString = "";
 		int bracketCount = 0;
 		for (int i = 0; i < parse.length(); i++){
-			if ((parse.charAt(i)=='|' || parse.charAt(i)=='!') && bracketCount == 0){
+			if ((parse.charAt(i)=='|') && bracketCount == 0){
 				a.add(currentString);
 				currentString = "";
 			}else{
@@ -248,7 +261,7 @@ public class Variable {
 			replaced = Executor.getCurrentProcess().lineReturns.size()+"";
 			break;
 		case version:
-			replaced = "pre-release build 4/14/15";
+			replaced = "release build 1.0 4/20/15";
 			break;
 		case runningFileLocation:
 			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
@@ -280,11 +293,23 @@ public class Variable {
 		case tab:
 			replaced = "\t";
 			break;
+		case caps:
+			replaced = "CAPS_LOCK";
+			break;
 		case boundCursorPosX:
 			replaced = (MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left)+"";
 			break;
 		case boundCursorPosY:
 			replaced = (MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top)+"";
+			break;
+		case space:
+			replaced = " ";
+			break;
+		case euler:
+			replaced = Math.E+"";
+			break;
+		case pi:
+			replaced = Math.PI+"";
 			break;
 		default:
 			break;
@@ -293,10 +318,10 @@ public class Variable {
 		return replaced;
 	}
 	
-	public static void clearLocalVariables(Method m){
+	public static void clearLocalVariables(int f){
 		ArrayList<String> toBeCleared = new ArrayList<String>();
 		for (int i = 0; i < variables.keySet().size(); i++){
-			if ((variables.keySet().toArray()[i]+"").contains(m.UUID+"")){
+			if ((variables.keySet().toArray()[i]+"").contains(f+"")){
 				toBeCleared.add(variables.keySet().toArray()[i]+"");
 			}
 		}
@@ -310,36 +335,27 @@ public class Variable {
 			return parse;										//If small or doesn't have | or ({ and })
 		}
 		if (parse.contains("{") && parse.contains("}")){
-			String[] split = parse.split("\\{|\\}");
-			int cases = split.length / 2;
-			parse = split[0];
-			for (int i = 0; i < cases; i++){
-				String expression = split[1+(i*2)].toLowerCase();
-				if (expression.contains("|")){
-					expression = parseString(expression);
-				}
+			Matcher bracketMatcher = bracketPattern.matcher(parse);
+			while (bracketMatcher.find()){
+				String replacing = bracketMatcher.group();
+				replacing = replacing.substring(1, replacing.length()-1);
+
 				SystemEnv se = null;
 				try{
 					for (int j = 0; j < SystemEnv.values().length; j++){
-						if (expression.equals(SystemEnv.values()[j].name)){
+						if (replacing.equals(SystemEnv.values()[j].name)){
 							se = SystemEnv.values()[j];
 						}
 					}
 					if (se == null){
 						throw new Exception();
 					}
-				}catch(Exception e){Interpreter.throwError("Invalid System Variable: "+expression);}
-				if (!(i == cases-1)){
-					parse = parse+getEnvVariable(se)+split[(2*i)+2];	
-				}else{
-					parse = parse + getEnvVariable(se);
-				}
-				if (cases == 1 && split.length > 2){
-					parse = parse + split[split.length-1];
-				}
+				}catch(Exception e){Interpreter.throwError("Invalid System Variable: "+replacing);}
+				parse = parse.substring(0, bracketMatcher.start()) + getEnvVariable(se) + parse.substring(bracketMatcher.end());
+				bracketMatcher = bracketPattern.matcher(parse);
 			}
-
 		}
+		
 		
 
 		String veryFinalString = parse;
@@ -349,10 +365,13 @@ public class Variable {
 				flag = true;
 				parse = " "+parse;
 			}
-			String split[] = splits(parse);	
+			String split[] = splits(parse);
 			for (int i = 1; i < split.length; i+=2){
 				split[i] = split[i].substring(0,split[i].length());
-				split[i] = getValue(split[i]).value+"";
+				String stra;
+				Value v = getValue(split[i]);
+				stra = v.value+"";
+				split[i] = stra;
 			}
 			if (flag){
 				split[0] = split[0].substring(1);
@@ -366,6 +385,6 @@ public class Variable {
 		return veryFinalString;
 			
 	}
-	
+	static Pattern bracketPattern = Pattern.compile("[{][^{|}]*[}]");
 	
 }
