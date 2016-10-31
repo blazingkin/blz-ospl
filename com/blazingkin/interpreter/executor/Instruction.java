@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.executionorder.EqualsJump;
 import com.blazingkin.interpreter.executor.executionorder.EqualsReturnJump;
 import com.blazingkin.interpreter.executor.executionorder.EquivalentGoto;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
+import com.blazingkin.interpreter.executor.executionorder.ForLoop;
 import com.blazingkin.interpreter.executor.executionorder.Goto;
 import com.blazingkin.interpreter.executor.executionorder.GreaterThanGoto;
 import com.blazingkin.interpreter.executor.executionorder.IfBlock;
@@ -23,6 +24,7 @@ import com.blazingkin.interpreter.executor.executionorder.JumpReturn;
 import com.blazingkin.interpreter.executor.executionorder.LessThanGoto;
 import com.blazingkin.interpreter.executor.executionorder.LessThanJump;
 import com.blazingkin.interpreter.executor.executionorder.LessThanReturnJump;
+import com.blazingkin.interpreter.executor.executionorder.LoopEnd;
 import com.blazingkin.interpreter.executor.executionorder.MoreThanJump;
 import com.blazingkin.interpreter.executor.executionorder.MoreThanReturnJump;
 import com.blazingkin.interpreter.executor.executionorder.NonEquivalentGoto;
@@ -134,7 +136,9 @@ public enum Instruction {
 	ARCSIN("ARCSIN", "", new Trigonometry(TrigFunctions.ARCSIN)),
 	ARCCOS("ARCCOS", "", new Trigonometry(TrigFunctions.ARCCOS)),
 	ARCTAN("ARCTAN", "", new Trigonometry(TrigFunctions.ARCTAN)),
-	PARSE("PARSE", "", new Parse());
+	PARSE("PARSE", "", new Parse()),
+	FORLOOP("FOR", "", new ForLoop()),
+	ENDLOOP("ENDLOOP", "", new LoopEnd());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

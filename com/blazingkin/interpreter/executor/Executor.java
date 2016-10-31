@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -16,6 +17,9 @@ public class Executor {
 	public static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
 	public static Stack<Method> runningMethods = new Stack<Method>();
 	public static Stack<Integer> functionUUID = new Stack<Integer>();
+	public static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
+	public static boolean loopIgnoreMode = false;
+	public static int loopsIgnored = 0;
 	public static Process getCurrentProcess(){
 		try{
 		return runningProcesses.peek();
@@ -131,6 +135,21 @@ public class Executor {
 				String newSplit[] = new String[split.length-1];
 				for (int i = 1; i < split.length; i++){
 					newSplit[i-1] = split[i];
+				}
+				if (loopIgnoreMode){
+					if (split[0].equals(Instruction.ENDLOOP.instruction)){
+						if (loopsIgnored > 0){
+							loopsIgnored--;
+						}else{
+							loopIgnoreMode = false;	
+							loopStack.pop();
+						}
+					}else if (split[0].equals(Instruction.FORLOOP) || split[0].equals(Instruction.WHILE)){
+						loopsIgnored++;
+					}
+					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,(Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+					//System.out.println(loopStack.size() +": ls size");
+					continue;
 				}
 				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
 					Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));

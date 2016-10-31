@@ -189,3 +189,9 @@ Finds the inverse of a tangent, result is given in radians
 
 **Parse - PARSE
 Goes through a string and replaces variable notations with global and runtime variables
+
+**For - FOR
+Loops until a ENDLOOP, uses an initializing line to run on the first iteration, a terminating case to check and an iterating line to run each time the loop iterates
+
+**End Loop - ENDLOOP
+Ends any kind of loop

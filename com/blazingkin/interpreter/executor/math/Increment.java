@@ -10,7 +10,7 @@ public class Increment implements InstructionExecutor {
 	 * 	Increments a variable
 	 */
 	public void run(String[] args){
-		if (Variable.contains(args[0])){
+
 			Value v = null;
 			switch(Variable.getValue(args[0]).type){
 			case Integer:
@@ -23,7 +23,6 @@ public class Increment implements InstructionExecutor {
 				break;
 			}
 			Variable.setValue(args[0], v);
-		}
 	}
 	
 }

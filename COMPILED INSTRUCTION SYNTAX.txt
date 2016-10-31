@@ -69,6 +69,8 @@ ARCSIN {input} [place to store result]
 ARCCOS {input} [place to store result]
 ARCTAN {input} [place to store result]
 PARSE [variable to be parsed]
+FOR (init statement),(terminating statement),(iterating statement)
+ENDLOOP
 
 **********************
 Non-Functional or Experimental Instructions
