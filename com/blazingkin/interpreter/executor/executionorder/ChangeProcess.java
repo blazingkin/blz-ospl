@@ -25,7 +25,7 @@ public class ChangeProcess implements InstructionExecutor {
 		boolean found = false;
 		Process p = null;
 		for (int i = 0; i < Process.processes.size(); i++){
-			if (Process.processes.get(i).readingFrom.getPath().equals(f.getPath())){
+			if (Process.processes.get(i).runningFromFile && Process.processes.get(i).readingFrom.getPath().equals(f.getPath())){
 				p = Process.processes.get(i);
 				found = true;
 			}

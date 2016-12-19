@@ -261,15 +261,28 @@ public class Variable {
 			replaced = Executor.getCurrentProcess().lineReturns.size()+"";
 			break;
 		case version:
-			replaced = "release build 1.0 4/20/15";
+			//TODO update this everytime
+			replaced = "Release Build 1.1 R1 12/19/16";
 			break;
 		case runningFileLocation:
+			if (!Executor.getCurrentProcess().runningFromFile){
+				replaced = "SOFTWARE";
+				break;
+			}
 			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
 			break;
 		case runningFileName:
+			if (!Executor.getCurrentProcess().runningFromFile){
+				replaced = "SOFTWARE";
+				break;
+			}
 			replaced = Executor.getCurrentProcess().readingFrom.getName();
 			break;
 		case runningFilePath:
+			if (!Executor.getCurrentProcess().runningFromFile){
+				replaced = "SOFTWARE";
+				break;
+			}
 			replaced = Executor.getCurrentProcess().readingFrom.getAbsolutePath();
 			break;
 		case newline:

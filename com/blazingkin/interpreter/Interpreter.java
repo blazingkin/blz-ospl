@@ -2,11 +2,13 @@ package com.blazingkin.interpreter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class Interpreter {
@@ -56,11 +58,34 @@ public class Interpreter {
 					}
 				}
 			}
-		}catch(Exception e){e.printStackTrace();throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.runningProcesses.peek().readingFrom.getAbsolutePath());}
+		}catch(Exception e){
+			e.printStackTrace();
+			if (!Executor.getCurrentProcess().runningFromFile){
+				throwError("Error, Executor was on line "+ (Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value)+" in a software environment");
+			}else{
+				throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.runningProcesses.peek().readingFrom.getAbsolutePath());
+				}		
+			}
+	}
+	
+	
+	//This is for when you want to run blz code from another program
+	public static void executeCodeAsLibrary(ArrayList<String> code, List<String> args, BlzEventHandler eventHandler) throws Exception{
+		try{
+			Executor.run(code, args, eventHandler);
+		}catch(Exception e){
+			if (!Executor.closeRequested){
+				throw e;
+			}
+		}
 	}
 	
 	public void runCompiler(File path, List<String> args) throws Exception {
 		Translator.run(path, args);
+	}
+	
+	public static void terminate(){
+		Executor.closeRequested = true;
 	}
 	
 	public void runExecutor(File path, List<String> args) throws Exception{
@@ -69,7 +94,7 @@ public class Interpreter {
 	
 	public static void throwError(String error){
 		System.err.println(error);
-		System.exit(0);
+		Executor.eventHandler.exitProgram("An Error Occured");
 	}
 
 }

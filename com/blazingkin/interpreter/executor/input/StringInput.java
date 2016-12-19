@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.input;
 
-import java.util.Scanner;
-
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -12,9 +11,8 @@ public class StringInput implements InstructionExecutor {
 	 * 	Gets a string as input
 	 * 
 	 */
-	public Scanner s = new Scanner(System.in);
 	public void run(String[] vars){
-		Variable.setValue(vars[0], new Value(VariableTypes.String, s.nextLine()));
+		Variable.setValue(vars[0], new Value(VariableTypes.String, Executor.eventHandler.getInput()));
 	}
 	
 }

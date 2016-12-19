@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.executor.output;
 
 
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -10,13 +11,15 @@ public class Echo implements InstructionExecutor {
 	 */
 
 	public void run(String[] args) {
+		String out = "";
 		for (int i = 0; i < args.length; i++){
-			System.out.print(Variable.parseString(args[i]));
+			out += Variable.parseString(args[i]);
 			if (i != args.length - 1){
-				System.out.print(" ");
+				out += " ";
 			}
 		}
-		System.out.println();
+		out += "\n";
+		Executor.eventHandler.print(out);
 	}
 
 }

@@ -14,6 +14,7 @@ import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Process {
+	public boolean runningFromFile = false;
 	public File readingFrom;
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
@@ -22,6 +23,7 @@ public class Process {
 	
 	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
+		runningFromFile = true;
 		UUID = Executor.getUUID();
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
@@ -41,6 +43,27 @@ public class Process {
 		if (lines.length == 0){
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
 		}
+		registerMethods();
+		processes.add(this);
+	}
+	
+	
+	public Process(ArrayList<String> code){
+		UUID = Executor.getUUID();
+		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
+		lines = new String[code.size()];
+		for (int i = 0; i < code.size(); i++){
+			lines[i] = code.get(i);
+		}
+		if (lines.length == 0){
+			Interpreter.throwError("The code recieved as a library argument did not contain any lines");
+			
+		}
+		registerMethods();
+		processes.add(this);
+	}
+	
+	public void registerMethods(){
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0){
 				if (lines[i].substring(0,1).equals(":")){
@@ -49,12 +72,13 @@ public class Process {
 				}
 			}
 		}
-		processes.add(this);
 	}
+	
+	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
 			Executor.closeRequested = true;
-			System.exit(0);
+			Executor.eventHandler.exitProgram("Attempted to get a line out of code range");
 			
 		}
 		return lines[lineNumber];
@@ -65,6 +89,9 @@ public class Process {
 	}
 	@SuppressWarnings("resource")
 	public int getSize() throws IOException{
+		if (!runningFromFile){
+			return lines.length;
+		}
 		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r").length;
 	}
 	public void setLine(int lineNumber){
