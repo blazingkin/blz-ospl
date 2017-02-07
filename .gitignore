@@ -3,3 +3,5 @@
 .metadata/*
 .recommenders/*
 *.project
+*.class
+*.classpath
