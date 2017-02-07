@@ -2,6 +2,7 @@
 {variable replaced strings are put in curly brackets}
 [a variable address are put in square brackets]
 (A Non-parsed value will be in parenthesis)
+<Things placed in angled brackets are run>
 @ means the function is deprecated
 ********************************
 
@@ -69,8 +70,11 @@ ARCSIN {input} [place to store result]
 ARCCOS {input} [place to store result]
 ARCTAN {input} [place to store result]
 PARSE [variable to be parsed]
-FOR (init statement),(terminating statement),(iterating statement)
+FOR <INIT STATEMENT>, <TERMINATING CONDITION>, <ITERATING STATEMENT>
 ENDLOOP
+TENSORI [Tensor Name] {Number of indices}
+TENSORSET [Tensor Name] {Value} {List} {Of} {Indexes} ...
+TENSORGET [Tensor Name] {List} {Of} {Indexes} ... [place to store result]
 
 **********************
 Non-Functional or Experimental Instructions

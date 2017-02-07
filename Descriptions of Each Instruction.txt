@@ -190,8 +190,17 @@ Finds the inverse of a tangent, result is given in radians
 **Parse - PARSE
 Goes through a string and replaces variable notations with global and runtime variables
 
-**For - FOR
-Loops until a ENDLOOP, uses an initializing line to run on the first iteration, a terminating case to check and an iterating line to run each time the loop iterates
+**For loop - FOR
+Starts a for loop with the given conditions
 
-**End Loop - ENDLOOP
-Ends any kind of loop
+**End loop - ENDLOOP
+Marks the end of a loop (nested loops work, so this refers to the most recently started loop)
+
+**Tensor Init - TENSORI
+Initializes a tensor with a determined rank
+
+**Tensor Set - TENSORSET
+Sets a particular value in a given tensor
+
+**Tensor Get - TENSORGET
+Puts the value at a particualr index in a tensor into a variable
