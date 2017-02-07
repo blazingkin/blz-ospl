@@ -1,0 +1,20 @@
+:main
+ECHO hello world
+SET a 1337
+ADD 1 3 b
+ADD |b| |a| c
+ECHO |c|
+ECHO |a|
+TENSORI ten 2
+FOR SET i 0, |i|<=20, INC i
+ECHO TEST |i|
+ADD |i| |i| f
+TENSORSET ten |f| |i| 0
+ENDLOOP
+
+FOR SET i 0,|i|<=20, ADD |i| 2 i
+TENSORGET ten |i| 0 g
+ECHO |g| is the |i|th index
+ENDLOOP
+
+END
