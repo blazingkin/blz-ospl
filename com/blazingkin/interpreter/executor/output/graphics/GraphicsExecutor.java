@@ -82,12 +82,12 @@ public class GraphicsExecutor implements InstructionExecutor {
 	            public void paintComponent(Graphics g) {
 	            	super.paintComponent(g);
 	            	update(g);
-	            	if (System.currentTimeMillis() - Executor.timeStarted > 1000){
-	            		GraphicsExecutor.lastFPS = Executor.frames;
-	            		Executor.frames = 0;
-	            		Executor.timeStarted = System.currentTimeMillis();
+	            	if (System.currentTimeMillis() - Executor.getTimeStarted() > 1000){
+	            		GraphicsExecutor.lastFPS = Executor.getFrames();
+	            		Executor.setFrames(0);
+	            		Executor.setTimeStarted(System.currentTimeMillis());
 	            	}
-	            	Executor.frames++;
+	            	Executor.setFrames(Executor.getFrames() + 1);
 	               try{
 
 	               bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());

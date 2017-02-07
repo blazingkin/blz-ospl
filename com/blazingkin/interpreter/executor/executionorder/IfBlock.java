@@ -60,9 +60,23 @@ public class IfBlock implements InstructionExecutor {
 	
 	public static boolean pureComparison(String[] args){
 		boolean flag = false;
-		String v1 = Variable.parseString(args[0]);
-		String v2 = Variable.parseString(args[2]);
-		String operant = args[1];
+		String v1 = "";
+		String v2 = "";
+		String operant = "";
+		if (args.length == 3){
+			v1 = Variable.parseString(args[0]);
+			v2 = Variable.parseString(args[2]);
+			operant = args[1];
+		}else{
+			String buildingString = "";
+			for (String s : args){
+				buildingString += s;
+			}
+			String splts[] = buildingString.split("==|!=|<=|>=|=<|=>|>|<");
+			v1 = Variable.parseString(splts[0]);
+			v2 = Variable.parseString(splts[1]);
+			operant = buildingString.substring(splts[0].length(),buildingString.length()-splts[1].length());
+		}
 		switch(operant){
 		case "==":
 			if (compare(v1,v2) == 0){
@@ -84,12 +98,22 @@ public class IfBlock implements InstructionExecutor {
 				flag = true;
 			}
 			break;
-		case "<=":
+		case "<=":	//Same case as =<
 			if (compare(v1,v2) <= 0){
 				flag = true;
 			}
 			break;
-		case ">=":
+		case "=<":	//Same case as <=
+			if (compare(v1,v2) <= 0){
+				flag = true;
+			}
+			break;
+		case ">=": //Same case as =>
+			if (compare(v1,v2) >= 0){
+				flag = true;
+			}
+			break;
+		case "=>": //Same case as >=
 			if (compare(v1,v2) >= 0){
 				flag = true;
 			}

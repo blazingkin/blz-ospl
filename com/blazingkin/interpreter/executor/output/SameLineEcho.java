@@ -16,7 +16,7 @@ public class SameLineEcho implements InstructionExecutor {
 				out += " ";
 			}
 		}
-		Executor.eventHandler.print(out);
+		Executor.getEventHandler().print(out);
 	}
 
 }

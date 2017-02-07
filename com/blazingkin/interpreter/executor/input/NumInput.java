@@ -13,7 +13,7 @@ public class NumInput implements InstructionExecutor {
 	 */
 	public void run(String[] vars){
 		try{
-		String str = Executor.eventHandler.getInput();
+		String str = Executor.getEventHandler().getInput();
 		if (Variable.isInteger(str)){
 			Variable.setValue(vars[0], new Value(VariableTypes.Integer,Integer.parseInt(str)));
 		}else{

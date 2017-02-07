@@ -68,7 +68,7 @@ public class Process {
 			if (lines[i].length() > 0){
 				if (lines[i].substring(0,1).equals(":")){
 				Method nM = new Method(this, i+1,lines[i].substring(1));
-				Executor.methods.add(nM);
+				Executor.getMethods().add(nM);
 				}
 			}
 		}
@@ -77,8 +77,8 @@ public class Process {
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
-			Executor.closeRequested = true;
-			Executor.eventHandler.exitProgram("Attempted to get a line out of code range");
+			Executor.setCloseRequested(true);
+			Executor.getEventHandler().exitProgram("Attempted to get a line out of code range");
 			
 		}
 		return lines[lineNumber];

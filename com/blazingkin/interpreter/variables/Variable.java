@@ -255,14 +255,14 @@ public class Variable {
 			replaced = Executor.getCurrentProcess().UUID+"";
 			break;
 		case processesRunning:
-			replaced = Executor.runningProcesses.size()+"";
+			replaced = Executor.getRunningProcesses().size()+"";
 			break;
 		case lineReturns:
 			replaced = Executor.getCurrentProcess().lineReturns.size()+"";
 			break;
 		case version:
 			//TODO update this everytime
-			replaced = "Release Build 1.1 R1 12/19/16";
+			replaced = "Release Build 1.1 R2 2/6/17";
 			break;
 		case runningFileLocation:
 			if (!Executor.getCurrentProcess().runningFromFile){

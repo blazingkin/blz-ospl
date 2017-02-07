@@ -11,7 +11,7 @@ public class Exit implements InstructionExecutor {
 		 * 	sets the closeRequested flag to true
 		 * 
 		 */
-		Executor.closeRequested = true;
+		Executor.setCloseRequested(true);
 	}
 
 }

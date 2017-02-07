@@ -12,7 +12,7 @@ public class StringInput implements InstructionExecutor {
 	 * 
 	 */
 	public void run(String[] vars){
-		Variable.setValue(vars[0], new Value(VariableTypes.String, Executor.eventHandler.getInput()));
+		Variable.setValue(vars[0], new Value(VariableTypes.String, Executor.getEventHandler().getInput()));
 	}
 	
 }

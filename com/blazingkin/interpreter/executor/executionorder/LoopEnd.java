@@ -7,15 +7,15 @@ public class LoopEnd implements InstructionExecutor {
 
 	@Override
 	public void run(String[] args) {
-		if (Executor.loopStack.size() == 0){
-			Executor.loopIgnoreMode = false;
+		if (Executor.getLoopStack().size() == 0){
+			Executor.setLoopIgnoreMode(false);
 			return;
 		}
-		if (Executor.loopIgnoreMode){
-			Executor.loopIgnoreMode = false;
-			Executor.loopStack.pop();
+		if (Executor.isLoopIgnoreMode()){
+			Executor.setLoopIgnoreMode(false);
+			Executor.getLoopStack().pop();
 		}else{
-			int newLine = Executor.loopStack.peek().startLine;
+			int newLine = Executor.getLoopStack().peek().startLine;
 			Executor.setLine(newLine + 1);
 		}
 	}

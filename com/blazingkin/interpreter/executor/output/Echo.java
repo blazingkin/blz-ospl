@@ -19,7 +19,7 @@ public class Echo implements InstructionExecutor {
 			}
 		}
 		out += "\n";
-		Executor.eventHandler.print(out);
+		Executor.getEventHandler().print(out);
 	}
 
 }

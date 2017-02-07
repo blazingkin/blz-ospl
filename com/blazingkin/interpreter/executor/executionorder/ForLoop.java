@@ -21,10 +21,10 @@ public class ForLoop extends LoopWrapper {
 	
 	
 	public void run(String[] args) {
-		if (!Executor.loopStack.isEmpty() && Executor.loopStack.peek().functionUUID == Executor.getCurrentMethodUUID()
-				&& Executor.loopStack.peek().startLine == 
+		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionUUID == Executor.getCurrentMethodUUID()
+				&& Executor.getLoopStack().peek().startLine == 
 				(int)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value){
-			LoopWrapper lw = Executor.loopStack.peek();
+			LoopWrapper lw = Executor.getLoopStack().peek();
 			
 			Instruction it = InstructionType.getInstructionType(lw.loopInstr.trim().split(" ")[0]);
 			if (it.name.equals(Instruction.INVALID.name)){
@@ -39,7 +39,7 @@ public class ForLoop extends LoopWrapper {
 			
 			
 			if (!IfBlock.pureComparison(lw.termInstr.trim().split(" "))){
-				Executor.loopIgnoreMode = true;
+				Executor.setLoopIgnoreMode(true);
 			}
 			
 		}else{
@@ -50,7 +50,7 @@ public class ForLoop extends LoopWrapper {
 			originalString.trim();
 			String[] splits = originalString.split(",");
 			
-			Executor.loopStack.push(new ForLoop(splits[0], splits[1], splits[2]));
+			Executor.getLoopStack().push(new ForLoop(splits[0], splits[1], splits[2]));
 			
 			Instruction it = InstructionType.getInstructionType(splits[0].split(" ")[0]);
 			if (it.name.equals(Instruction.INVALID.name)){
@@ -63,7 +63,8 @@ public class ForLoop extends LoopWrapper {
 			}
 			it.executor.run(nSplits);
 			if (!IfBlock.pureComparison(splits[1].trim().split(" "))){
-				Executor.loopIgnoreMode = true;
+				
+				Executor.setLoopIgnoreMode(true);
 			}
 		}
 	}

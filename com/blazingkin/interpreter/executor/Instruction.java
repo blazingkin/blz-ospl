@@ -59,6 +59,9 @@ import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
 import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.string.Substring;
+import com.blazingkin.interpreter.executor.tensor.GetTensorValue;
+import com.blazingkin.interpreter.executor.tensor.IntTensor;
+import com.blazingkin.interpreter.executor.tensor.SetTensorValue;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
 @SuppressWarnings("deprecation")
@@ -138,7 +141,10 @@ public enum Instruction {
 	ARCTAN("ARCTAN", "", new Trigonometry(TrigFunctions.ARCTAN)),
 	PARSE("PARSE", "", new Parse()),
 	FORLOOP("FOR", "", new ForLoop()),
-	ENDLOOP("ENDLOOP", "", new LoopEnd());
+	ENDLOOP("ENDLOOP", "", new LoopEnd()),
+	INTTENSOR("TENSORI", "DECLARE INTEGER TENSOR", new IntTensor()),
+	SETTENSORVALUE("TENSORSET", "SET TENSOR VALUE", new SetTensorValue()),
+	GETTENSORVALUE("TENSORGET", "GET TENSOR VALUE", new GetTensorValue());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

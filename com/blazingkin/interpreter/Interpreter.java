@@ -63,7 +63,7 @@ public class Interpreter {
 			if (!Executor.getCurrentProcess().runningFromFile){
 				throwError("Error, Executor was on line "+ (Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value)+" in a software environment");
 			}else{
-				throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.runningProcesses.peek().readingFrom.getAbsolutePath());
+				throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
 				}		
 			}
 	}
@@ -74,7 +74,7 @@ public class Interpreter {
 		try{
 			Executor.run(code, args, eventHandler);
 		}catch(Exception e){
-			if (!Executor.closeRequested){
+			if (!Executor.isCloseRequested()){
 				throw e;
 			}
 		}
@@ -85,7 +85,7 @@ public class Interpreter {
 	}
 	
 	public static void terminate(){
-		Executor.closeRequested = true;
+		Executor.setCloseRequested(true);
 	}
 	
 	public void runExecutor(File path, List<String> args) throws Exception{
@@ -94,7 +94,7 @@ public class Interpreter {
 	
 	public static void throwError(String error){
 		System.err.println(error);
-		Executor.eventHandler.exitProgram("An Error Occured");
+		Executor.getEventHandler().exitProgram("An Error Occured");
 	}
 
 }

@@ -14,7 +14,7 @@ public class Jump implements InstructionExecutor {
 
 	public void run(String[] args) {
 		String fName = args[0];
-		if (Method.contains(Executor.methods, fName) != null){
+		if (Method.contains(Executor.getMethods(), fName) != null){
 			int start = -1;
 			for (int i = 0; i < args.length; i++){
 				if (args[i].charAt(0) == '('){	//passes arguments
