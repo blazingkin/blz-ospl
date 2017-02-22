@@ -49,10 +49,10 @@ public class BLZInt {
 			Stack<Integer> in1 = new Stack<Integer>();	//These have top of the stack as least signifigant bit
 			Stack<Integer> in2 = new Stack<Integer>();
 			for (byte b : int1.value){
-				in1.add((int)b);
+				in1.push((int)b);
 			}
 			for (byte b : int2.value){
-				in2.add((int)b);
+				in2.push((int)b);
 			}
 			Stack<Byte> out = new Stack<Byte>();
 			while (!in1.isEmpty() || !in2.isEmpty() || carry != 0){
@@ -70,8 +70,26 @@ public class BLZInt {
 			return new BLZInt(newVal, int1.isNegative());
 		}else{
 			//TODO handle negative case
+			BLZInt greater = int1.compareInt(int2)>0?int1:int2;
+			BLZInt lesser = int1.compareInt(int2)>0?int2:int1;
+			Stack<Integer> gre = new Stack<Integer>();
+			Stack<Integer> les = new Stack<Integer>();
+			for (byte b : greater.value){
+				gre.push((int)b);
+			}
+			for (byte b : lesser.value){
+				les.push((int)b);
+			}
+			Stack<Byte> out = new Stack<Byte>();
+			
 			return new BLZInt(convertBLZIntToJavaInt(int1) + convertBLZIntToJavaInt(int2));
 		}
+	}
+	
+	public static BLZInt mulBLZInt(BLZInt int1, BLZInt int2){
+		boolean neg = int1.isNegative() ^ int2.isNegative(); //XOR Them to get sign
+		//TODO implement int multiplication
+		return null;
 	}
 	
 	public int compareInt(BLZInt otherInt){	//Returns 1 if current int is bigger, 0 if they are the same, -1 if current int is smaller
@@ -87,7 +105,7 @@ public class BLZInt {
 		}
 		for (int i = 0; i < value.length; i++){
 			if (value[i] > otherInt.getValue()[i]){
-				
+				return negative?-1:1;
 			}
 		}
 		return 0;

@@ -1,3 +1,3 @@
 @Echo off
-java -jar "blz-ospl v1.1r2.jar" -e ExampleCode.blz -m main
+java -jar "blz-ospl v2.0RC1.jar" -e ExampleCode2.blz -m main
 pause

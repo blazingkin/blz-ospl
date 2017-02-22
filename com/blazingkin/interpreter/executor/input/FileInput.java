@@ -22,7 +22,7 @@ public class FileInput implements InstructionExecutor {
 				filePath = filePath + "";
 			}
 		}
-		filePath = Variable.parseString(filePath);
+		filePath = (String) Variable.getValue(filePath).value;
 		try{
 			File f = new File(filePath);
 			Scanner s = new Scanner(f);

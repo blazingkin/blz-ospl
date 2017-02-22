@@ -22,7 +22,7 @@ public class FileOutput implements InstructionExecutor {
 				filePath = filePath + "";
 			}
 		}
-		filePath = Variable.parseString(filePath);	
+		filePath = Variable.getValue(filePath).value.toString();	
 		try{
 			File f = new File(filePath);
 			if (!f.exists()){

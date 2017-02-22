@@ -16,14 +16,12 @@ public class Translator {
 	final static String[][] replace = 
 		{
 			{"function",			":"},
-			{"goto", 				Instruction.JUMP.instruction},
 			{"print", 				Instruction.ECHO.instruction},
 			{"inputnum", 			Instruction.NUMINPUT.instruction},
 			{"exit",				Instruction.EXIT.instruction},
 			{"copy",				Instruction.MOVE.instruction},
 			{"done", 				Instruction.END.instruction},
 			{"rand",				Instruction.RANDOM.instruction},
-			{"setstr",				Instruction.STRINGSET.instruction},
 			{"strin",				Instruction.STRINGINPUT.instruction},
 			{"absvalue",			Instruction.UNSIGN.instruction},
 			{"remainder",			Instruction.MODULUS.instruction},
@@ -40,7 +38,6 @@ public class Translator {
 			{"addlistener",			Instruction.ADDLISTENER.instruction},
 			{"clearlast",			Instruction.CLEARLAST.instruction},
 			{"return",				Instruction.RETURNPROCESS.instruction},
-			{"while",				Instruction.WHILE.instruction},
 			{"endloop",				Instruction.ENDLOOP.instruction}
 		};
 	
@@ -137,62 +134,6 @@ public class Translator {
 			Instruction.INCREMENT.instruction+" "+jnkVarName);
 			newLine.add(Instruction.ADDVARIABLE.instruction+" "+instr+" |"+varName+"| "+varName);
 			newLine.add(Instruction.ENDLOOP.instruction);
-			return newLine;
-		}
-		//Things of the form: if a == b
-		if (!line.contains("call") && line.contains("if") && line.contains("==")){
-			String[] splits = line.split("==");
-			String b = splits[1].trim();
-			String a = splits[0].split(" ")[1].trim();
-			newLine.add(Instruction.IFBLOCK.instruction+" "+a+" "+b);
-			return newLine;
-		}
-		//Things of the form: if a != b
-		if (!line.contains("call") && line.contains("if") && line.contains("!=")){
-			String[] splits = line.split("!=");
-			String b = splits[1].trim();
-			String a = splits[0].split(" ")[1].trim();
-			newLine.add(Instruction.NOTIFBLOCK.instruction+" "+a+" "+b);
-			return newLine;
-		}
-		//Things of the form: call f if a == b
-		if (line.contains("call") && line.contains(" if ") && line.contains("==")){
-			String[] splitsa = line.split(" if ");
-			String[] splitsb = splitsa[1].split("==");
-			String a = splitsb[1].trim();
-			String c = splitsb[0].trim();
-			String b = splitsa[0].split(" ")[1];
-			newLine.add(Instruction.EQUALSRETURNJUMP.instruction+" "+b+" "+c+" "+a);
-			return newLine;
-		}
-		//Things of the form: call f if a != b
-		if (line.contains("call") && line.contains(" if ") && line.contains("!=")){
-			String[] splitsa = line.split(" if ");
-			String[] splitsb = splitsa[1].split("!=");
-			String a = splitsb[1].trim();
-			String c = splitsb[0].trim();
-			String b = splitsa[0].split(" ")[1];
-			newLine.add(Instruction.NOTEQUALSRETURNJUMP.instruction+" "+b+" "+c+" "+a);
-			return newLine;
-		}
-		//Things of the form: call f if a < b
-		if (line.contains("call") && line.contains(" if ") && line.contains("<")){
-			String[] splitsa = line.split(" if ");
-			String[] splitsb = splitsa[1].split("<");
-			String a = splitsb[1].trim();
-			String c = splitsb[0].trim();
-			String b = splitsa[0].split(" ")[1];
-			newLine.add(Instruction.LESSTHANRETURNJUMP.instruction+" "+b+" "+c+" "+a);
-			return newLine;
-		}
-		//Things of the form: call f is a > b
-		if (line.contains("call") && line.contains(" if ") && line.contains(">")){
-			String[] splitsa = line.split(" if ");
-			String[] splitsb = splitsa[1].split(">");
-			String a = splitsb[1].trim();
-			String c = splitsb[0].trim();
-			String b = splitsa[0].split(" ")[1];
-			newLine.add(Instruction.MORETHANRETURNJUMP.instruction+" "+b+" "+c+" "+a);
 			return newLine;
 		}
 		//Things of the form: call f

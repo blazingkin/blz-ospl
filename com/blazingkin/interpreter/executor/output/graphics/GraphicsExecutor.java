@@ -22,6 +22,7 @@ import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.listener.ListenerTypes;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class GraphicsExecutor implements InstructionExecutor {
 	public static JFrame jf;
@@ -283,11 +284,11 @@ public class GraphicsExecutor implements InstructionExecutor {
 			break;
 			
 		case drawText:
-			int px = Integer.parseInt(Variable.parseString(args[0]));
-			int py = Integer.parseInt(Variable.parseString(args[1]));
+			int px = (int) Variable.getValue(args[0]).value;
+			int py = (int) Variable.getValue(args[1]).value;
 			String buS = "";
 			for (int i = 2; i < args.length; i++){
-				buS = buS + Variable.parseString(args[i]);
+				buS = buS + Variable.getValue(args[i]).value;
 				if (i != args.length-1){
 					buS = buS + " ";
 				}
@@ -299,14 +300,14 @@ public class GraphicsExecutor implements InstructionExecutor {
 		case setSize:
 			if (args[0].contains("[]")){
 				String s = args[0].replace("[", "").replace("]", "");
-				dimX = (Integer) Variable.getValueOfArray(s+"[0]").value;
-				dimY = (Integer) Variable.getValueOfArray(s+"[1]").value;
+				dimX = (Integer) Variable.getValueOfArray(s, 0).value;
+				dimY = (Integer) Variable.getValueOfArray(s, 1).value;
 				jf.setSize(dimX,dimY);
 				break;
 			}
-			if (Variable.isInteger(Variable.parseString(args[0])) && Variable.isInteger(Variable.parseString(args[1]))){
-				dimX = Integer.parseInt(Variable.parseString(args[0]));
-				dimY = Integer.parseInt(Variable.parseString(args[1]));
+			if (Variable.getValue(args[0]).type == VariableTypes.Integer && Variable.getValue(args[1]).type == VariableTypes.Integer){
+				dimX = (int) Variable.getValue(args[0]).value;
+				dimY = (int) Variable.getValue(args[1]).value;;
 				jf.setSize(dimX, dimY);
 			}
 			break;
@@ -317,7 +318,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			}
 			break;
 		case draw:
-			String s = Variable.parseString(args[0]);
+			String s = (String)Variable.getValue(args[0]).value;
 			final Color c;
 			Color co;
 			try{
@@ -340,12 +341,12 @@ public class GraphicsExecutor implements InstructionExecutor {
 			for (int i = 1; i < args.length; i++){
 				if (args[i].contains("[]")){
 					String str = args[i].replace("[]", "");
-					HashMap<Integer, Value> lst = Variable.lists.get(str);
+					HashMap<Integer, Value> lst = Variable.getArray(str);
 					for (int y = 0; y < lst.size(); y+=2){
 						points.add(new Point( (Integer) ((Value) lst.values().toArray()[y]).value, (Integer) ((Value) lst.values().toArray()[y+1]).value));
 					}
 				}else{
-					points.add(new Point(Integer.parseInt(Variable.parseString(args[i])), Integer.parseInt(Variable.parseString(args[i+1]))));
+					points.add(new Point((int) Variable.getValue(args[i]).value, (int) Variable.getValue(args[i+1]).value));
 					i++;
 				}
 			}
@@ -371,7 +372,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 		case setProperty:
 			GraphicsProperty gp = null;
 			try{
-				String str = Variable.parseString(args[0]);
+				String str = (String) Variable.getValue(args[0]).value;
 				for (int i = 0; i < GraphicsProperty.values().length; i++){
 					if (str.equals(GraphicsProperty.values()[i].name)){
 						gp = GraphicsProperty.values()[i];

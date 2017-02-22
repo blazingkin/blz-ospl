@@ -1,12 +1,14 @@
 package com.blazingkin.interpreter.executor.math;
 
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Instruction;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class AddVars implements InstructionExecutor {
+public class AddVars implements InstructionExecutor, LambdaFunction {
 
 	public void run(String[] args) {
 		/*	Add Vars
@@ -16,15 +18,18 @@ public class AddVars implements InstructionExecutor {
 		 * 
 		 * 
 		 */
-		
-		if (Variable.isInteger(Variable.parseString(args[0])) && Variable.isInteger(Variable.parseString(args[1]))){
-			Value v = new Value(VariableTypes.Integer, Integer.parseInt(Variable.parseString(args[0]))+Integer.parseInt(Variable.parseString(args[1])));
-			Variable.setValue(args[2], v);
+		Value v1 = Variable.getValue(args[0]);
+		Value v2 = Variable.getValue(args[1]);
+		if (Variable.isValInt(v1) && Variable.isValInt(v2)){
+			int i1 = Variable.getIntValue(v1);
+			int i2 = Variable.getIntValue(v2);
+			Variable.setValue(args[2], new Value(VariableTypes.Integer, i1+i2));
 			return;
-		}
-		else if (Variable.isDouble(Variable.parseString(args[0])) && Variable.isDouble(Variable.parseString(args[1]))){
-			Value v = new Value(VariableTypes.Double, Double.parseDouble(Variable.parseString(args[0]))+Double.parseDouble(Variable.parseString(args[1])));
-			Variable.setValue(args[2], v);
+		}else if ((Variable.isValDouble(v1) || Variable.isValInt(v1))
+				&& (Variable.isValDouble(v2) || Variable.isValInt(v2))){
+			double d1 = Variable.getDoubleVal(v1);
+			double d2 = Variable.getDoubleVal(v2);
+			Variable.setValue(args[2], new Value(VariableTypes.Double, d1+d2));
 			return;
 		}
 		String arr[] = new String[args.length];
@@ -41,5 +46,25 @@ public class AddVars implements InstructionExecutor {
 		}
 		Instruction.CONCATENATE.executor.run(arr);
 	}
+
+	@Override
+	public Value evaluate(String[] args) {
+		Value v1 = Variable.getValue(args[0]);
+		Value v2 = Variable.getValue(args[1]);
+		if (Variable.isValInt(v1) && Variable.isValInt(v2)){
+			int i1 = Variable.getIntValue(v1);
+			int i2 = Variable.getIntValue(v2);
+			return new Value(VariableTypes.Integer, i1+i2);
+		}else if ((Variable.isValDouble(v1) || Variable.isValInt(v1))
+				&& (Variable.isValDouble(v2) || Variable.isValInt(v2))){
+			double d1 = Variable.getDoubleVal(v1);
+			double d2 = Variable.getDoubleVal(v2);
+			return new Value(VariableTypes.Double, d1+d2);
+		}
+		Interpreter.throwError("Invalid arguments "+v1.value+" and "+v2.value+" passed to adding vars");
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	
 
 }

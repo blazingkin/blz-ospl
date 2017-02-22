@@ -4,13 +4,13 @@ import com.blazingkin.interpreter.executor.Method;
 
 public class Value {
 	public VariableTypes type;
-	public Object value = new BLZInt(0);
+	public Object value = null;
 	public boolean isGlobal = false;
 	public Method parent = null;
 	public Value(VariableTypes t, Object val){	//This stores the value and the type of value that it is
 		if (val == null){
-			type = VariableTypes.Integer;
-			value = new Integer(0);
+			type = VariableTypes.Nil;
+			value = null;
 			return;
 		}
 		type = t;
@@ -18,8 +18,10 @@ public class Value {
 	}
 	public Value(VariableTypes t, Object val, Method par, boolean global){
 		if (val == null){
-			type = VariableTypes.Integer;
-			value = new BLZInt(0);
+			type = VariableTypes.Nil;
+			value = null;
+			isGlobal = global;
+			parent = par;
 			return;
 		}
 		type = t;
@@ -29,8 +31,9 @@ public class Value {
 	}
 	public Value(VariableTypes t, Object val, Method par){
 		if (val == null){
-			type = VariableTypes.Integer;
-			value = new BLZInt(0);
+			type = VariableTypes.Nil;
+			value = null;
+			parent = par;
 			return;
 		}
 		type = t;

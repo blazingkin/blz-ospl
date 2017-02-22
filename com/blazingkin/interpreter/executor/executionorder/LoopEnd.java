@@ -16,7 +16,8 @@ public class LoopEnd implements InstructionExecutor {
 			Executor.getLoopStack().pop();
 		}else{
 			int newLine = Executor.getLoopStack().peek().startLine;
-			Executor.setLine(newLine + 1);
+			Executor.setLine(newLine-1);
+			Executor.pushContext(Executor.getLoopStack().peek().functionContext);
 		}
 	}
 

@@ -4,7 +4,6 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Instruction;
 import com.blazingkin.interpreter.executor.InstructionType;
-import com.blazingkin.interpreter.variables.Variable;
 
 public class ForLoop extends LoopWrapper {
 	
@@ -15,15 +14,15 @@ public class ForLoop extends LoopWrapper {
 		initInstr = init.trim();
 		loopInstr = loop.trim();
 		termInstr = term.trim();
-		startLine = (int)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value;
-		functionUUID = Executor.getCurrentMethodUUID();
+		startLine = Executor.getLine();
+		functionContext = Executor.getCurrentContext();
 	}
 	
 	
 	public void run(String[] args) {
-		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionUUID == Executor.getCurrentMethodUUID()
+		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionContext == Executor.getCurrentContext()
 				&& Executor.getLoopStack().peek().startLine == 
-				(int)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value){
+				Executor.getLine()){
 			LoopWrapper lw = Executor.getLoopStack().peek();
 			
 			Instruction it = InstructionType.getInstructionType(lw.loopInstr.trim().split(" ")[0]);
@@ -31,6 +30,7 @@ public class ForLoop extends LoopWrapper {
 				
 				Interpreter.throwError("Invalid instruction "+lw.loopInstr.trim().split(" ")[0]);
 			}
+			
 			String[] nSplits = new String[lw.loopInstr.trim().split(" ").length - 1];
 			for (int i = 0; i < nSplits.length; i++){
 				nSplits[i] = lw.loopInstr.split(" ")[i + 1];

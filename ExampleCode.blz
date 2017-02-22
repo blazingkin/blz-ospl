@@ -1,20 +1,22 @@
 :main
 SET a 5
-ECHO Input a number
+ECHO "Input a number"
 NIN b
-ADD |a| |b| c
-ECHO the sum of |a| and |b| is |c|
+ADD a b c
+ECHO "the sum of " a " and " b " is " c
+
 SET *f 0
 RJP loop
+
 END
 
 :loop
-IFN |*f| 20
-JMP method
+IF *f < 20
+RJP method
 END
 
 :method
-ECHO |*f| nth iteration says hello
-INC *f
-JMP loop
+ECHO *f "nth iteration says hello"
+ADD *f 1 *f
+RJP loop
 END

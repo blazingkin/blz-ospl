@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.timing;
 
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Wait implements InstructionExecutor {
 	/*
@@ -10,8 +11,8 @@ public class Wait implements InstructionExecutor {
 	 * This only for single threaded processes
 	 */
 	public void run(String args[]){
-		if (Variable.isInteger(Variable.parseString(args[0]))){
-			int time = Integer.parseInt(Variable.parseString(args[0]));
+		if (Variable.getValue(args[0]).type == VariableTypes.Integer){
+			int time = (int) Variable.getValue(args[0]).value;
 			long startTime = System.currentTimeMillis();
 			while ((System.currentTimeMillis() - startTime) < time){
 				

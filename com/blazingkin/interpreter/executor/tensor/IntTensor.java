@@ -16,7 +16,7 @@ public class IntTensor implements InstructionExecutor {
 			Interpreter.throwError("Wrong number of arguments to create tensor");
 		}
 		try{
-			int rank = Integer.parseInt(Variable.parseString(args[1]));
+			int rank = (int) Variable.getValue(args[1]).value;
 			if (rank < 1){
 				throw new Exception();
 			}

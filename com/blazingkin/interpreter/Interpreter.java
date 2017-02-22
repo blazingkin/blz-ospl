@@ -12,10 +12,13 @@ import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class Interpreter {
+	public static boolean logging = true;
+	
 	public static void main(String args[]){
 		try{
 			switch(args.length){
 			case 0:
+				printHelp();
 				throwError("Not Enough Arguments");
 				break;
 			default: 
@@ -26,13 +29,31 @@ public class Interpreter {
 		
 	}
 	
+	public static void printHelp(){
+		System.out.println("How to use BLZ-OSPL:");
+		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
+		System.out.println();
+		System.out.println("Compile a pre-blz file (typically .pblz extension)");
+		System.out.println("-c *INPATH* *OUTPATH*");
+		System.out.println();
+		System.out.println("Execute a blz file (typically .blz extension)");
+		System.out.println("-e *PATH*");
+		System.out.println();
+		System.out.println("See this help message");
+		System.out.println("-h");
+	}
+	
 	
 	public void run(String args[]) throws FileNotFoundException{
 		try{
 			for (int i = 0; i < args.length; i++){
 				if (args[i].charAt(0) == '-'){
 					switch(args[i].charAt(1)){
-					case 'c':						// - c *PATHNAME*	COMPILE
+					case 'h':
+						Interpreter.printHelp();
+						System.exit(0);
+						break;
+					case 'c':						// - c *INPUT* *OUTPUT*	COMPILE
 					String path = args[i+1];
 					File pth = new File(path);
 					
@@ -93,8 +114,11 @@ public class Interpreter {
 	}
 	
 	public static void throwError(String error){
-		System.err.println(error);
-		Executor.getEventHandler().exitProgram("An Error Occured");
+		if (logging){
+			System.err.println(error);
+			System.err.println("You were on line "+Executor.getLine());
+			Executor.getEventHandler().exitProgram("An Error Occured");
+		}
 	}
 
 }

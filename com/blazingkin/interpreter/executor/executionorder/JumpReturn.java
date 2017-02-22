@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
-import java.util.Arrays;
-
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.executor.Method;
@@ -10,23 +9,28 @@ import com.blazingkin.interpreter.variables.Variable;
 public class JumpReturn implements InstructionExecutor {
 	/*	JumpReturn
 	 * 	Jumps to a function and then returns on the following line at the next end
+	 * 	Args are fName, [(args, to, pass)]
 	 */
 	public void run(String[] args) {
 		String fName = args[0];
-		Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
+		Executor.getCurrentProcess().lineReturns.add(Executor.getLine());
+		
 		if (Method.contains(Executor.getMethods(), fName) != null){
-			int start = -1;
-			for (int i = 0; i < args.length; i++){
-				if (args[i].charAt(0) == '('){	// passes arguments
-					start = i;
+			Method m = Executor.getMethodInCurrentProcess(fName);
+			if (m.takesVariables){
+				if (args.length != 2){
+					Interpreter.throwError("Was expecting arguments for function: "+fName);
 				}
+				args[1] = args[1].replace("(", "").replace(")", "").replace(",", "");
+				String[] vars = args[1].split(" ");
+				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName), Variable.getValuesFromList(vars));
+				return;
 			}
-			if (start != -1){
-				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName), Variable.getArguments(Arrays.copyOfRange(args, start, args.length)));
-				return;		
-			}
-			Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
+				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
+				return;			
 		}
+		
+
 	}
 
 }

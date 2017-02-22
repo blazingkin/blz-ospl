@@ -8,17 +8,17 @@ public class LocalStack {
 	 * This is the stack that the user puts variables on to
 	 */
 	
-	private static Stack<Integer> theStack = new Stack<Integer>();
+	private static Stack<Value> theStack = new Stack<Value>();
 	
-	public static void push(int o){
+	public static void push(Value o){
 		theStack.push(o);
 	}
 	
-	public static int pop(){
+	public static Value pop(){
 		return theStack.pop();
 	}
 	
-	public static int peek(){
+	public static Value peek(){
 		return theStack.peek();
 	}
 }
