@@ -9,6 +9,11 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Define implements InstructionExecutor, LambdaFunction {
 
+	private boolean registerFunctions;
+	public Define(boolean shouldRegister){
+		registerFunctions = shouldRegister;
+	}
+	
 	@Override
 	//arg1 is function name
 	//arg2 is the list of variables
@@ -19,7 +24,9 @@ public class Define implements InstructionExecutor, LambdaFunction {
 			newArgs[i-1] = args[i];
 		}
 		LambdaExpression le = new LambdaExpression(RuntimeLambda.staticRuntimeLambda, newArgs);
-		LambdaRegistrar.registerLambdaExpression(le, args[0]);
+		if (registerFunctions){
+			LambdaRegistrar.registerLambdaExpression(le, args[0]);
+		}
 	}
 
 	@Override
@@ -29,8 +36,10 @@ public class Define implements InstructionExecutor, LambdaFunction {
 			newArgs[i-1] = args[i];
 		}
 		LambdaExpression le = new LambdaExpression(RuntimeLambda.staticRuntimeLambda, newArgs);
-		LambdaRegistrar.registerLambdaExpression(le, args[0]);
-		return new Value(VariableTypes.String, "Lambda Expression "+args[0]+" Registered");
+		if (registerFunctions){
+			LambdaRegistrar.registerLambdaExpression(le, args[0]);
+		}
+		return new Value(VariableTypes.LambdaExpression, le);
 	}
 
 }

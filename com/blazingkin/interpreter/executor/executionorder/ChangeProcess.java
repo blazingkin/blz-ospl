@@ -18,6 +18,7 @@ public class ChangeProcess implements InstructionExecutor {
 		}
 		s = s.substring(0, s.length()-1);
 		String path = Variable.contains(s)?(String)Variable.getValue(s).value:s;
+		path = path.contains(".blz")?path:path+".blz";	//If the file extension is not stated, add it
 		File f = new File(path);
 		if (!f.exists()){
 			Interpreter.throwError("Could not find file at path: "+path);

@@ -1,12 +1,14 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IfBlock implements InstructionExecutor {
+public class IfBlock implements InstructionExecutor, LambdaFunction {
 
 	public void run(String[] args) {
 		boolean flag = false;
@@ -138,6 +140,45 @@ public class IfBlock implements InstructionExecutor {
 		}
 		return flag;
 	}
+	
+	public static boolean isIfStatement(String statement){
+		return statement.contains("==") || statement.contains("!=") || statement.contains("<")
+				|| statement.contains(">") || statement.contains("=<") || statement.contains(">=")
+				|| statement.contains("=>") || statement.contains("<=");
+	}
+	
+	public static boolean pureComparison(String statement){
+		String[] arr = new String[1];
+		arr[0] = statement;
+		return pureComparison(arr);
+	}
+
+	//First variable is the condition
+	//Second condition is the value returned if the condition is true
+	//Third condition is the else-value
+	@Override
+	public Value evaluate(String[] args) {
+		if (isIfStatement(args[0])){
+			if (pureComparison(args[0])){
+				return Variable.getValue(args[1]);
+			}else{
+				return Variable.getValue(args[2]);
+			}
+		}
+		Value cond = Variable.getValue(args[0]);
+		if (cond.type == VariableTypes.Boolean){
+			boolean co = (boolean) cond.value;
+			if (co){
+				return Variable.getValue(args[1]);
+			}else{
+				return Variable.getValue(args[2]);
+			}
+		}
+		Interpreter.throwError("If block expected a boolean or a comparison as first statement - not found");
+		return new Value(VariableTypes.Nil, null);
+		
+	}
+	
 
 	
 	

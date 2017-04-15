@@ -116,7 +116,7 @@ public class Interpreter {
 	public static void throwError(String error){
 		if (logging){
 			System.err.println(error);
-			System.err.println("You were on line "+Executor.getLine());
+			System.err.println("Error occurred on line: "+Executor.getLine());
 			Executor.getEventHandler().exitProgram("An Error Occured");
 		}
 	}

@@ -18,17 +18,8 @@ DIV {value 1} {value 2} [address]
 MOD {value 1} {value 2} [address]
 POW {value 1} {value 2} [address]
 AND {value 1} {value 2} [address]
-@EGO (line number) {condition 1} {condition 2}
-@NGO (line number) {condition 1} {condition 2}
-@LGO (line number) {condition 1} {condition 2}
-@GGO (line number) {condition 1} {condition 2}
 NIN [address]
-@JMP (function name)
 EXT
-@EJP (function name) {condition 1} {condition 2}
-@NJP (function name) {condition 1} {condition 2}
-@LJP (function name) {condition 1} {condition 2}
-@MJP (function name) {condition 1} {condition 2}
 MOV [initial address] [final address]
 DEC [address]
 INC [address]
@@ -46,8 +37,6 @@ NRJ (function name) {condition 1} {condition 2}
 LRJ (function name) {condition 1} {condition 2}
 MRJ (function name) {condition 1} {condition 2}
 CON [address] (any) (number) (of) (arguments) ...
-@IFE {condition 1} {condition 2}
-@IFN {condition 1} {condition 2}
 IF {condition 1} ( == / > / < / != ) {condition 2}
 WAIT {time}
 ADDPROCESS (path name that may contain spaces) (function name)
@@ -75,6 +64,7 @@ ENDLOOP
 TENSORI [Tensor Name] {Number of indices}
 TENSORSET [Tensor Name] {Value} {List} {Of} {Indexes} ...
 TENSORGET [Tensor Name] {List} {Of} {Indexes} ... [place to store result]
+(DEFINE (list of args) (lambdaexpression))
 
 **********************
 Non-Functional or Experimental Instructions

@@ -43,4 +43,13 @@ public class Value {
 	public void printValue(){
 		System.out.println(value);
 	}
+	
+	public boolean equals(Object other){
+		if (other instanceof Value){
+			Value v2 = (Value) other;
+			return this.value == v2.value && this.type == v2.type;
+		}
+		return false;
+	}
+	
 }

@@ -15,15 +15,14 @@ public class RuntimeLambda implements LambdaFunction {
 	//Rest of args, things to replace the args
 	@Override
 	public Value evaluate(String[] args) {
-		/*for (String s :args){
-			System.out.println(s);
-		}*/
 		try{
 			args[0] = args[0].replace("(", "");
 			args[0] = args[0].replace(")", "");
 			String[] varNames = args[0].split(" |,");
 			for (int i = 0; i < varNames.length; i++){
-				Variable.setValue(varNames[i], Variable.getValue(args[i+2]));
+				String s = varNames[i];
+				String d = args[i+2];
+				Variable.setValue(s, Variable.getValue(d));
 			}
 			return LambdaParser.parseLambdaExpression(args[1].trim()).getValue();
 		}catch(Exception e){

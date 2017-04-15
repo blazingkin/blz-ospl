@@ -114,7 +114,8 @@ public enum Instruction {
 	SETTENSORVALUE("TENSORSET", "SET TENSOR VALUE", new SetTensorValue()),
 	GETTENSORVALUE("TENSORGET", "GET TENSOR VALUE", new GetTensorValue()),
 	TOGGLELOGGING("BLZLOG", "TOGGLE LOGGING", new BLZLogging()),
-	DEFINE("DEFINE", "DEFINE LAMBDA EXPRESSION", new Define());
+	DEFINE("DEFINE", "DEFINE LAMBDA EXPRESSION", new Define(true)),
+	LAMBDA("LAMBDA", "RETURN LAMBDA EXPRESSION", new Define(false));
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

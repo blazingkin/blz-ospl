@@ -37,6 +37,9 @@ public class Executor {
 	}
 	
 	public static Context getCurrentContext(){
+		if (functionContext.isEmpty()){
+			return Variable.getGlobalContext();
+		}
 		return functionContext.peek();
 	}
 	
@@ -363,22 +366,23 @@ public class Executor {
 				}
 				parensCount++;
 			}
-			if (exp.charAt(i) == '\"'){
-				if (inQuotes){
-					expressions.add(buildingString+"\"");
-					buildingString = "";
-					inQuotes = !inQuotes;
-					continue;
-				}
-				buildingString = "";
-				inQuotes = !inQuotes;
-			}
-			if (inQuotes){
-				buildingString += exp.charAt(i);
-				continue;
-			}
+			
 
 			if (parensCount == 0){
+				if (exp.charAt(i) == '\"'){
+					if (inQuotes){
+						expressions.add(buildingString+"\"");
+						buildingString = "";
+						inQuotes = !inQuotes;
+						continue;
+					}
+					buildingString = "";
+					inQuotes = !inQuotes;
+				}
+				if (inQuotes){
+					buildingString += exp.charAt(i);
+					continue;
+				}
 				if (exp.charAt(i) == ' ' && !buildingString.trim().equals("")){
 					expressions.add(buildingString.trim());
 					buildingString = "";

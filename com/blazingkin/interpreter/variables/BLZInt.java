@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class BLZInt {
 	private byte[] value; //Most significant byte is in value[0]
-	private boolean negative = false;
+	private boolean negative = false; //Since they are not fixed length, 2's compliment doesn't work
 	public BLZInt(int startingValue){
 		value = convertIntToByteArray(startingValue);
 		negative = startingValue<0;
@@ -23,8 +23,8 @@ public class BLZInt {
 	public static byte[] convertIntToByteArray(int in){
 		Stack<Byte> byteArr = new Stack<Byte>();
 		while (in > 0){
-			byteArr.push((byte)(in % 256));
-			in = in >> 8;
+			byteArr.push((byte)(in % 256));	// Get a single byte
+			in = in >> 8;	// Shift that byte out
 		}
 		byte arr[] = new byte[byteArr.size()];
 		int i = 0;
@@ -80,14 +80,14 @@ public class BLZInt {
 			for (byte b : lesser.value){
 				les.push((int)b);
 			}
-			Stack<Byte> out = new Stack<Byte>();
+			//Stack<Byte> out = new Stack<Byte>();
 			
 			return new BLZInt(convertBLZIntToJavaInt(int1) + convertBLZIntToJavaInt(int2));
 		}
 	}
 	
 	public static BLZInt mulBLZInt(BLZInt int1, BLZInt int2){
-		boolean neg = int1.isNegative() ^ int2.isNegative(); //XOR Them to get sign
+		//boolean neg = int1.isNegative() ^ int2.isNegative(); //XOR Them to get sign
 		//TODO implement int multiplication
 		return null;
 	}

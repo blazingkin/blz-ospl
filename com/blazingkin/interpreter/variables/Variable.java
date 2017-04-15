@@ -51,6 +51,7 @@ public class Variable {
 	public static void clearVariables(){
 		variables.clear();
 		globalContext = new Context();
+		Executor.setLine(0);
 	}
 	
 	//Gets a local value (the scope of these variables is the function they are declared in
@@ -69,9 +70,11 @@ public class Variable {
 	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
 	private static Pattern quotePattern = Pattern.compile("\".*\"");
 	public static Value getValue(String line, Context con){
+		line=line.trim();
 		if (line.length() > 0 && line.charAt(0) == '*'){	//See if it's declared as a global variable
 			con = getGlobalContext();
 		}
+		
 		if (isInteger(line)){	//If its an integer, then return it
 			return new Value(VariableTypes.Integer, Integer.parseInt(line));
 		}
@@ -81,14 +84,15 @@ public class Variable {
 		if (isBool(line)){		//If its a bool, then return it
 			return new Value(VariableTypes.Boolean, convertToBool(line));
 		}
+		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
+			return LambdaParser.parseLambdaExpression(line).getValue();
+		}
+		
+		
 		Matcher quoteMatcher = quotePattern.matcher(line);
 		if (quoteMatcher.find()){
 			return new Value(VariableTypes.String, line.replace("\"",""));
 		}
-		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
-			return LambdaParser.parseLambdaExpression(line).getValue();
-		}
-
 		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(line);
 		if (curlyBracketMatcher.find()){
 			String gp = curlyBracketMatcher.group();
@@ -100,7 +104,6 @@ public class Variable {
 			}
 			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
 		}
-		
 		Matcher squareBracketMatcher = squareBracketPattern.matcher(line);
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
@@ -110,9 +113,14 @@ public class Variable {
 			return getValueOfArray(line.split("\\[")[0], ind, con);
 		}
 		
+		
 		if (getContextVariables(con).containsKey(line)){
 			return getContextVariables(con).get(line);
 		}
+	/*	if (con.getParentContext() != getGlobalContext()){
+			return getValue(line, con.getParentContext());
+		}*/
+		Interpreter.throwError("Unable to find a value for: "+line);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -132,11 +140,11 @@ public class Variable {
 		}
 		Matcher squareBracketMatcher = squareBracketPattern.matcher(key);
 		if (squareBracketMatcher.find()){
-			String index = squareBracketMatcher.group();
-			index = index.substring(1, index.length()-1);
-			Value ind = getValue(index, con);
-			int i = getIntValue(ind);
-			setValueOfArray(key.split("\\[")[0], i, value, con);
+			String gp = squareBracketMatcher.group();
+			gp = gp.substring(1, gp.length()-1);
+			Value index = getValue(gp);
+			int ind = getIntValue(index);
+			setValueOfArray(key.split("\\[")[0], ind, value, con);
 			return;
 		}
 		getContextVariables(con).put(key, value);
@@ -211,7 +219,7 @@ public class Variable {
 		case FPS:
 			return new Value(VariableTypes.Integer, GraphicsExecutor.lastFPS);
 		case time:
-			return new Value(VariableTypes.Double, System.currentTimeMillis());
+			return new Value(VariableTypes.Double, (double)System.currentTimeMillis());
 		case osName:
 			return new Value(VariableTypes.String, System.getProperty("os.name"));
 		case osVersion:
@@ -236,7 +244,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "Release Candidate 2.0 RC1 2/21/17");
+			return new Value(VariableTypes.String, "2.0");
 		case runningFileLocation:
 			if (!Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
