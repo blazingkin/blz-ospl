@@ -1,1 +1,1 @@
-java -jar "blz-ospl v2.0.jar" -e %*
+java -jar "%~dp0blz-ospl v2.0.jar" -e %*
