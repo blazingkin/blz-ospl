@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.blazingkin.interpreter.Interpreter;
 
 public class BLZTensor<E> {
+	//The key to this HashMap is the index of the value in the tensors as a string
+	//e.g. I want element 1,2 in my rank 2 tensor. The key is "1,2,"
 	private HashMap<String, E> tensor = new HashMap<String, E>();
 	private int rank;
 	private int[] sizes;
@@ -48,6 +50,11 @@ public class BLZTensor<E> {
 			buildingString += i+",";
 		}
 		tensor.put(buildingString, obj);
+	}
+	
+	public static BLZTensor<Object> tensorProduct(BLZTensor<Object> t1, BLZTensor<Object> t2){
+		//TODO implement tensorProduct
+		return new BLZTensor<Object>(0);
 	}
 	
 	public int getRank(){

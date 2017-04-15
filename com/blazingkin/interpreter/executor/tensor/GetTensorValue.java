@@ -21,7 +21,7 @@ public class GetTensorValue implements InstructionExecutor {
 		BLZTensor<Integer> tensor = (BLZTensor<Integer>) tensorHuh.value;
 		int[] indices = new int[args.length-2];
 		for (int i = 1; i < args.length-1; i++){
-			indices[i-1] = Integer.parseInt(Variable.parseString(args[i]));
+			indices[i-1] = Variable.getIntValue(Variable.getValue(args[i]));
 		}
 		Variable.setValue(args[args.length-1], new Value(VariableTypes.Integer,tensor.getTensorEntry(indices)));
 	}

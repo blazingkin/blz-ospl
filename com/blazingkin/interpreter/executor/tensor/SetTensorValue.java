@@ -21,12 +21,16 @@ public class SetTensorValue implements InstructionExecutor {
 		int[] indexList = new int[args.length - 2];
 		int value = 0;
 		try{
-			value = Integer.parseInt(Variable.parseString(args[1]));
+			Value v = Variable.getValue(args[1]);
+			value = Variable.getIntValue(v);
+			
 			for (int i = 2; i < args.length; i++){
-				indexList[i-2] = Integer.parseInt(Variable.parseString(args[i]));
+				Value va = Variable.getValue(args[i]);
+				int val = Variable.getIntValue(va);
+				indexList[i-2] = val;
 			}
 		}catch(Exception e){
-			Interpreter.throwError("Failure parsing an int when setting a tensor value");
+			e.printStackTrace();
 		}
 		blztensor.setTensorValue(indexList, value);
 	}

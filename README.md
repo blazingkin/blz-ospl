@@ -1,57 +1,51 @@
-blz-ospl
+﻿blz-ospl
 ===
 An open source programming language written as an attempt to learn the fundamentals behind programming languages.
 
 Hello World Sample
 ===
 
-ECHO Hello World!
+:main
 
-===
+ECHO "Hello World!"
+
+END
 
 or
 
-===
-
 :main
 
-ECHO Hello World!
+(ECHO "Hello World")
 
 END
 
+===
+
+Dependencies:
+
+* A Recent Version of the Java Runtime (Anything newer than JRE7 should be good)
 
 ===
 
-BizBuzz Sample (Biz as multiples of 3, Buzz as multiples of 5)
-===
+How to use:
 
-:main
+##Windows
 
-ADD |*i| 1 *i
+1.) Add the folder containing the jar and bat file to your PATH
 
-ECHO |*i|
+2.) From the command line, run
 
-MOD |*i| 3.0 biz
+>> blz-ospl ExampleCode.blz
 
-MOD |*i| 5.0 buzz
+##Other
 
-IF |biz| == 0.0
+1.) Run the following command with "JARPATH" filled in with the correct path
 
-ECHO biz
-
-IF |buzz| == 0.0
-
-ECHO buzz
-
-IF |*i| != 50
-
-RJP main
-
-END
+>> java -jar "JARPATH" -e ExampleCode.blz
 
 
 ===
 
-For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or caalex101 [at] gmail [dot] com
+For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or visit [my website](http://www.blazingk.in/)
 
-Copyright © 2015 Alex Gravenor under the GNU GPL V2 License
+Copyright © 2017 Alex Gravenor under the GNU GPL V2 License

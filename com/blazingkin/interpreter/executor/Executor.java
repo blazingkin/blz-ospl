@@ -2,7 +2,6 @@ package com.blazingkin.interpreter.executor;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -11,6 +10,7 @@ import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -18,7 +18,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 public class Executor {
 	private static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
 	private static Stack<Method> runningMethods = new Stack<Method>();
-	private static Stack<Integer> functionUUID = new Stack<Integer>();
+	private static Stack<Context> functionContext = new Stack<Context>();
 	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
 	private static boolean loopIgnoreMode = false;
 	private static int loopsIgnored = 0;
@@ -30,21 +30,30 @@ public class Executor {
 	private static long timeStarted = 0;
 	private static int frames = 0;
 	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
+	private static Stack<Integer> processLineStack = new Stack<Integer>();
+	
+	public static void pushToProcessLineStack(int line){
+		processLineStack.push(line);
+	}
+	
+	public static Context getCurrentContext(){
+		if (functionContext.isEmpty()){
+			return Variable.getGlobalContext();
+		}
+		return functionContext.peek();
+	}
+	
+	public static void pushContext(Context con){
+		functionContext.push(con);
+	}
+	
 	
 	public static void executeMethod(Method m){
 		runningMethods.push(m);
-		functionUUID.push(Executor.getUUID());
-		if (getCurrentProcess().UUID == m.parent.UUID){
-			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
-		}else{
-			Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, m.lineNumber));
-		}
+		functionContext.push(new Context());
+		setLine(m.lineNumber);
 	}
-	public static void executeMethod(Method m, String[] args){
-		Value[] values = new Value[args.length];
-		for (int i = 0; i < values.length; i++){
-			values[i] = new Value(VariableTypes.Integer, Variable.parseString(args[i]));
-		}
+	public static void executeMethod(Method m, Value[] values){
 		executeMethod(m);
 		if (m.takesVariables){
 			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
@@ -55,12 +64,24 @@ public class Executor {
 	
 	public static void codeLoop() throws Exception{
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
-			for (;(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value < getCurrentProcess().getSize();){
-				String split[] = getCurrentProcess().getLine(getCurrentProcess().getLine()).split(" ");
-				String newSplit[] = new String[split.length-1];
-				for (int i = 1; i < split.length; i++){
-					newSplit[i-1] = split[i];
+			for (setLine(0);getLine() < getCurrentProcess().getSize();){
+				String line = getCurrentProcess().getLine(getLine());
+				if (line.trim().length() == 0){
+					setLine(getLine()+1);
+					continue;
 				}
+				if (line.charAt(0) == '('){
+					LambdaParser.parseLambdaExpression(line).getValue();
+					setLine(getLine()+1);
+					continue;
+				}
+				String split[] = line.split(" ");
+				String originalString = "";
+				for (int i = 1; i < split.length; i++){
+					originalString+= split[i]+" ";
+				}
+				originalString = originalString.trim();
+				String[] newSplit = parseExpressions(originalString);
 				if (isLoopIgnoreMode()){
 					if (split[0].equals(Instruction.ENDLOOP.instruction)){
 						if (loopsIgnored > 0){
@@ -69,26 +90,26 @@ public class Executor {
 							setLoopIgnoreMode(false);	
 							getLoopStack().pop();
 						}
-					}else if (split[0].equals(Instruction.FORLOOP) || split[0].equals(Instruction.WHILE)){
+					}else if (split[0].equals(Instruction.FORLOOP)){
 						loopsIgnored++;
 					}
-					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,(Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+					setLine(getLine()+1);
 					//System.out.println(loopStack.size() +": ls size");
 					continue;
 				}
 				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-					Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
+					Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
 					getMethods().add(nM);
 					runningMethods.push(nM);
-					functionUUID.push(Executor.getUUID());
-					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer,(Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+					functionContext.push(new Context());
+					setLine(getLine()+1);
 					continue;
 				}
 				if (split.length == 1 && split[0].equals("")){
-					Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, (Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+					setLine(getLine()+1);
 					continue;
 				}
-				Variable.setValue("pc"+getCurrentProcess().UUID, new Value(VariableTypes.Integer, (Integer)(Variable.getValue("pc"+getCurrentProcess().UUID).value)+1));
+				setLine(getLine()+1);
 				
 				Instruction it = InstructionType.getInstructionType(split[0]);
 				if (it.name.equals(Instruction.INVALID.name)){
@@ -97,8 +118,8 @@ public class Executor {
 				}
 				it.executor.run(newSplit);
 				if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-					Executor.getCurrentProcess().lineReturns.add((Integer)Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value+2);
-					Executor.executeMethod(getEventsToBeHandled().get(0).method, getEventsToBeHandled().get(0).arguments);
+					Executor.getCurrentProcess().lineReturns.add(getLine()+1);
+					Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
 					getEventsToBeHandled().remove(0);
 				}
 				if (isCloseRequested()){
@@ -124,11 +145,12 @@ public class Executor {
 		if (startingMethod != null){
 			if (!(Method.contains(getMethods(), startingMethod) == null)){
 				runningMethods.push(Method.contains(getMethods(), startingMethod));
-				functionUUID.push(Executor.getUUID());
+				functionContext.push(new Context());
 				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
 		setEventHandler(new StandAloneEventHandler());
+		pushContext(Variable.getGlobalContext());
 		codeLoop();
 			
 	}
@@ -144,7 +166,7 @@ public class Executor {
 		if (startingMethod != null){
 			if (!(Method.contains(getMethods(), startingMethod) == null)){
 				runningMethods.push(Method.contains(getMethods(), startingMethod));
-				functionUUID.push(Executor.getUUID());
+				functionContext.push(new Context());
 				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
@@ -156,7 +178,7 @@ public class Executor {
 	public static void cleanup(){
 		runningProcesses = new Stack<Process>();
 		runningMethods = new Stack<Method>();
-		functionUUID = new Stack<Integer>();
+		functionContext = new Stack<Context>();
 		setLoopStack(new Stack<LoopWrapper>());
 		setLoopIgnoreMode(false);
 		loopsIgnored = 0;
@@ -165,8 +187,7 @@ public class Executor {
 		setTimeStarted(0);
 		setFrames(0);
 		setEventsToBeHandled(new ArrayList<Event>());
-		Variable.lists = new HashMap<String, HashMap<Integer, Value>>();
-		Variable.variables = new HashMap<String,Value>();
+		Variable.clearVariables();
 		setMethods(new ArrayList<Method>());
 		setCloseRequested(false);
 		startingMethod = "";
@@ -181,10 +202,10 @@ public class Executor {
 			newSplit[i-1] = split[i];
 		}
 		if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-			Method nM = new Method(getCurrentProcess(),(Integer)Variable.getValue("pc"+getCurrentProcess().UUID).value, split[0].substring(1));
+			Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
 			getMethods().add(nM);
 			runningMethods.push(nM);
-			functionUUID.push(Executor.getUUID());
+			functionContext.push(new Context());
 			return;
 		}
 		if (split.length == 1 && split[0].equals("")){
@@ -261,12 +282,10 @@ public class Executor {
 		Executor.eventsToBeHandled = eventsToBeHandled;
 	}
 	public static void setLine(int num){				// Sets line within the current process
-		Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-2));
+		Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
 	}
-	public static void setLine(int num, int UUID){
-		if (UUID == getCurrentProcess().UUID){
-			Variable.setValue("pc"+getCurrentProcess().UUID,new Value(VariableTypes.Integer, num-2));
-		}
+	public static int getLine(){
+		return (int) Variable.getGlobalValue("*pc").value;
 	}
 	public static Stack<Process> getRunningProcesses(){
 		return runningProcesses;
@@ -278,13 +297,7 @@ public class Executor {
 			return null;
 		}
 	}
-	public static int getCurrentMethodUUID(){
-		try{
-			return functionUUID.peek();
-		}catch(Exception e){
-			return 0;
-		}
-	}
+	
 	public static Method getCurrentMethod(){
 		try{
 		return runningMethods.peek();
@@ -310,26 +323,93 @@ public class Executor {
 		return null;	
 	}
 	public static void addProcess(Process p){
+		processLineStack.push(getLine());
 		runningProcesses.push(p);
+		
 	}
+	
 	public static void popStack(){									// This is used to return to the previous process or function
-
 		if (!runningMethods.isEmpty()){
 			runningMethods.pop();
-			Variable.clearLocalVariables(functionUUID.pop());
+			Variable.clearLocalVariables(getCurrentContext());
 		}
 		if (!getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
 			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
 		}else{											// If there is not a function in the current process, go to the previous process
 			if (Executor.runningProcesses.size() > 1){
 				runningProcesses.pop();
-				Executor.setLine(Executor.getCurrentProcess().getLine()+2);
+				Executor.setLine(processLineStack.pop());
 			}else{										// If there is not a previous process, request a close
 				Executor.setCloseRequested(true);
 				getEventHandler().exitProgram("Reached end of program");
 			}
 		}
+		functionContext.pop();
 	}
 	
+	
+	//Passes a whole expression
+	public static String[] parseExpressions(String exp){
+		ArrayList<String> expressions = new ArrayList<String>();
+		int start = 0;
+		int parensCount = 0;
+		String buildingString = "";
+		boolean inQuotes = false;
+		for (int i = 0; i < exp.length(); i++){
+			if (exp.charAt(i) == '(' && !inQuotes){
+				if (parensCount == 0){
+					start = i;
+					if (!buildingString.trim().equals("")){
+						expressions.add(buildingString.trim());
+						buildingString = "";
+					}
+				}
+				parensCount++;
+			}
+			
+
+			if (parensCount == 0){
+				if (exp.charAt(i) == '\"'){
+					if (inQuotes){
+						expressions.add(buildingString+"\"");
+						buildingString = "";
+						inQuotes = !inQuotes;
+						continue;
+					}
+					buildingString = "";
+					inQuotes = !inQuotes;
+				}
+				if (inQuotes){
+					buildingString += exp.charAt(i);
+					continue;
+				}
+				if (exp.charAt(i) == ' ' && !buildingString.trim().equals("")){
+					expressions.add(buildingString.trim());
+					buildingString = "";
+					continue;
+				}
+				if (exp.charAt(i) != '"'){
+					buildingString += exp.charAt(i);
+				}
+			}
+			
+			if (exp.charAt(i) == ')' && !inQuotes){
+				parensCount--;
+				if (parensCount == 0){
+					expressions.add(exp.substring(start, i+1));
+				}
+			}
+		}
+		if (parensCount != 0){
+			Interpreter.throwError("Unmatched parens on lambda expression: "+exp);
+		}else if(!buildingString.trim().equals("")){
+			expressions.add(buildingString.trim());
+		}
+		String[] express = new String[expressions.size()];
+		for (int i = 0; i < express.length; i++){
+			express[i] = expressions.get(i);
+		}
+		return express;
+	}
 	
 }

@@ -2,402 +2,351 @@ package com.blazingkin.interpreter.variables;
 
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
-//DO NOT MESS WITH THIS CLASS, IT DOES SOME INTERESTING VOODOO MAGIC AND IF YOU MESS WITH IT YOU WILL SCREW IT UP!!!!
 
 public class Variable {
-	public static HashMap<String, Value> variables = new HashMap<String,Value>();
-	public static HashMap<String, HashMap<Integer, Value>> lists = new HashMap<String, HashMap<Integer, Value>>();
-	public static HashMap<Integer, Value> getArray(String k){
-		if (Executor.getCurrentMethod() == null || k.charAt(0) == '*'){
-			return getGlobalArray(k);
-		}
-		return lists.get(Executor.getCurrentMethod().UUID+k);
-	}
-	public static HashMap<Integer, Value> getGlobalArray(String k){
-		return lists.get(k);
-	}
+	private static HashMap<Context, HashMap<String, Value>> variables = 
+			new HashMap<Context, HashMap<String, Value>>();
+	private static Context globalContext = new Context();
 	
 	
-	public static Value getGlobalValue(String k){
-		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
-			return   getValueOfArray(k);
+	public static HashMap<String, Value> getContextVariables(Context con){
+		if (!variables.containsKey(con)){
+			variables.put(con, new HashMap<String, Value>());
 		}
-		
-		if (variables.containsKey(k))
-		{
-			return variables.get(k);
+		return variables.get(con);
+	}
+	
+	public static Context getGlobalContext(){
+		return globalContext;
+	}
+	public static HashMap<Integer, Value> getArray(String arrayName){
+		return getArray(arrayName, Executor.getCurrentContext());
+	}
+	public static HashMap<Integer, Value> getGlobalArray(String arrayName){
+		return getArray(arrayName, getGlobalContext());
+	}
+	public static HashMap<Integer, Value> getArray(String arrayName, Context context){
+		if (!getContextVariables(context).containsKey(arrayName)){
+			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<Integer, Value>()));
+		}
+		Value v = getContextVariables(context).get(arrayName);
+		if (v.type == VariableTypes.Array && v.value instanceof HashMap<?, ?>){
+			@SuppressWarnings("unchecked")
+			HashMap<Integer, Value> arr = (HashMap<Integer, Value>)v.value;
+			return arr;
 		}else{
-			return new Value(VariableTypes.Integer, 0);
+			Interpreter.throwError("Attempted to get "+arrayName+" as an array, but it is not one");
+			return null;
+		}
+	}
+	
+	public static void clearVariables(){
+		variables.clear();
+		globalContext = new Context();
+		Executor.setLine(0);
+	}
+	
+	//Gets a local value (the scope of these variables is the function they are declared in
+	public static Value getValue(String key){
+		return getValue(key, Executor.getCurrentContext());
+	}
+	
+	//This gets a global value (i.e. its scope is the entire program)
+	public static Value getGlobalValue(String key){
+		return getValue(key, getGlobalContext());
+	}
+	
+	
+	
+	private static Pattern squareBracketPattern = Pattern.compile("\\[\\S*\\]");
+	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
+	private static Pattern quotePattern = Pattern.compile("\".*\"");
+	public static Value getValue(String line, Context con){
+		line=line.trim();
+		if (line.length() > 0 && line.charAt(0) == '*'){	//See if it's declared as a global variable
+			con = getGlobalContext();
 		}
 		
+		if (isInteger(line)){	//If its an integer, then return it
+			return new Value(VariableTypes.Integer, Integer.parseInt(line));
+		}
+		if (isDouble(line)){	//If its a double, then return it
+			return new Value(VariableTypes.Double, Double.parseDouble(line));
+		}
+		if (isBool(line)){		//If its a bool, then return it
+			return new Value(VariableTypes.Boolean, convertToBool(line));
+		}
+		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
+			return LambdaParser.parseLambdaExpression(line).getValue();
+		}
+		
+		
+		Matcher quoteMatcher = quotePattern.matcher(line);
+		if (quoteMatcher.find()){
+			return new Value(VariableTypes.String, line.replace("\"",""));
+		}
+		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(line);
+		if (curlyBracketMatcher.find()){
+			String gp = curlyBracketMatcher.group();
+			gp = gp.substring(1, gp.length()-1);
+			for (SystemEnv env : SystemEnv.values()){
+				if (gp.equals(env.name)){
+					return getEnvVariable(env);
+				}
+			}
+			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
+		}
+		Matcher squareBracketMatcher = squareBracketPattern.matcher(line);
+		if (squareBracketMatcher.find()){
+			String gp = squareBracketMatcher.group();
+			gp = gp.substring(1, gp.length()-1);
+			Value index = getValue(gp, con);
+			int ind = getIntValue(index);
+			return getValueOfArray(line.split("\\[")[0], ind, con);
+		}
+		
+		
+		if (getContextVariables(con).containsKey(line)){
+			return getContextVariables(con).get(line);
+		}
+	/*	if (con.getParentContext() != getGlobalContext()){
+			return getValue(line, con.getParentContext());
+		}*/
+		Interpreter.throwError("Unable to find a value for: "+line);
+		return new Value(VariableTypes.Nil, null);
 	}
+	
+	
+	public static void setValue(String key, Value value){		//sets a local variable
+		setValue(key, value, Executor.getCurrentContext());
+	}
+	
+	//Sets a global value (i.e. its scope is the entire program)
 	public static void setGlobalValue(String key, Value value){
-		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
-			setValueOfArray(key, value);
+		setValue(key, value, getGlobalContext());
+	}
+	
+	public static void setValue(String key, Value value, Context con){
+		if (key.length() > 0 && key.charAt(0) == '*'){
+			con = getGlobalContext();
+		}
+		Matcher squareBracketMatcher = squareBracketPattern.matcher(key);
+		if (squareBracketMatcher.find()){
+			String gp = squareBracketMatcher.group();
+			gp = gp.substring(1, gp.length()-1);
+			Value index = getValue(gp);
+			int ind = getIntValue(index);
+			setValueOfArray(key.split("\\[")[0], ind, value, con);
 			return;
 		}
-		variables.put(key, value);
-	}
-	public static Value getValue(String key){	//gets local only
-		if (Executor.getCurrentMethod() == null || key.charAt(0) == '*'){
-			return getGlobalValue(key);
-		}
-		String k = Executor.getCurrentMethodUUID() + key;
-		if (k.contains("|")){
-			k = parseString(k);
-		}
-		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
-			return getValueOfArray(k);
-		}
-		
-		if (variables.containsKey(k))
-		{
-			return variables.get(k);
-			
-		}else{
-			return new Value(VariableTypes.Integer, 0);
-		}
+		getContextVariables(con).put(key, value);
 	}
 	
-	public static String[] getArguments(String[] args){
+
+	
+	
+	public static Value[] getValuesFromList(String[] args){
+		Value[] vals = new Value[args.length];
 		String[] done = new String[args.length];
 		for (int i = 0; i < args.length; i++){
 			done[i] = args[i].replace(",", "").replace("(", "").replace(")", "").trim();
+			vals[i] = getValue(done[i]);
 		}
-		return done;
+		return vals;
 	}
 	
-	public static Value getValueOfArray(String key){
 
-		if (key.contains("[")){
-			if (key.contains("|")){
-				key = parseString(key);
-			}
-			if (key.charAt(0) == '|'){
-				key = key.substring(1, key.length()-1);
-			}
-			String[] split = key.toLowerCase().split("\\[");
-			String buildingString = "";
-			for (int i = 1; i < split.length; i++){
-				buildingString = buildingString + split[i];
-				if (i != split.length-1){
-					buildingString = buildingString+"[";
-				}
-			}
-			split[1] = buildingString;
-			if (lists.containsKey(split[0])){
-				if (split[1].contains("[")){
-					return lists.get(split[0]).get((Integer) getValueOfArray(split[1].substring(0,split[1].length()-1)).value);
-				}
-				if (lists.get(split[0]).containsKey(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))))){
-					return lists.get(split[0]).get(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))));
-				}else{
-					lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))), new Value(VariableTypes.Integer, 0));
-					return new Value(VariableTypes.Integer, 0);
-				}
-				
-			}
-			lists.put(split[0], new HashMap<Integer, Value>());
-			return new Value(VariableTypes.Integer, 0);
-		}
-		return getValue(key);
-	}
-	
-	
-	
-	public static void setValueOfArray(String key, Value value){
-		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
-			String[] split = key.toLowerCase().split("\\[");
-			String buildingString = "";
-			for (int i = 1; i < split.length; i++){
-				buildingString = buildingString + split[i];
-				if (i != split.length-1){
-					buildingString = buildingString+"[";
-				}
-			}
-			split[1] = buildingString;
-			if (lists.containsKey(split[0])){
-				if (split[1].contains("[")){
-					if (split[1].charAt(0) == '|'){
-						split[1] = split[1].substring(1,split[1].length()-1);
-					}
-					int val = (Integer)getValueOfArray(split[1].substring(0,split[1].length()-1)).value;
-					lists.get(split[0]).put(val, value);
-					return;
-				}
-				lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0, split[1].length()-1))), value);
-				return;
-			}
-			lists.put(split[0], new HashMap<Integer, Value>());
-			lists.get(split[0]).put(Integer.parseInt(parseString(split[1].substring(0,split[1].length()-1))), value);
-			return;
-		}
-		setValue(key, value);
-	}
 
-	
+	/*	Checks to see if a variables has been set	
+	 */
 	public static boolean contains(String key){
-		if (key.contains("[") && key.charAt(key.length()-1) == ']'){
-			String[] split = key.toLowerCase().split("\\[");
-			return lists.containsKey(split[0]);
-		}
-		return variables.containsKey(key.toLowerCase());
+		return contains(key, Executor.getCurrentContext());
 	}
 	
-	public static void setValue(String key, Value value){		//sets a local variable
-		if (Executor.getCurrentMethod() == null || key.charAt(0) == '*'){
-			setGlobalValue(key, value);
-			return;
+	public static boolean contains(String key, Context con){
+		if (key.length() > 0 && key.charAt(0) == '*'){
+			con = getGlobalContext();
 		}
-		String k = Executor.getCurrentMethodUUID() + key;
-		if (k.contains("[") && k.charAt(k.length()-1) == ']'){
-			setValueOfArray(k, value);
-			return;
-		}
-		variables.put(k.toLowerCase(), value);
+		return getContextVariables(con).containsKey(key) || getContextVariables(con).containsKey(key.split("\\[")[0]);
 	}
 	
-	public static String[] splits(String parse){
-		ArrayList<String> a = new ArrayList<String>();
-		String currentString = "";
-		int bracketCount = 0;
-		for (int i = 0; i < parse.length(); i++){
-			if ((parse.charAt(i)=='|') && bracketCount == 0){
-				a.add(currentString);
-				currentString = "";
-			}else{
-				if (parse.charAt(i) == '['){
-					bracketCount++;
-				}
-				if (parse.charAt(i) == ']'){
-					bracketCount--;
-				}
-				currentString = currentString+parse.charAt(i);
-			}
-		}
+	
 
-		if (!currentString.equals("")){
-			a.add(currentString);
-		}
-		String[] str = new String[a.size()];
-		for (int i = 0; i < str.length; i++){
-			str[i] = a.get(i);
-		}
-		return str;
-		
-	}
+
 	
 	public static boolean isInteger(String s) {
-	    try { 
-	        Integer.parseInt(s); 
-	    } catch(NumberFormatException e) { 
-	        return false; 
-	    }
-	    return true;
+		try{
+			Integer.parseInt(s);
+			return true;
+		}catch(NumberFormatException e){}
+		return false;
 	}
 	public static boolean isDouble(String s){
 		try{
 			Double.parseDouble(s);
-		}catch(Exception e){
-			return false;
-		}
-		return true;
+			return true;
+		}catch(NumberFormatException e){}
+		return false;
 	}
 	
-	public static String getEnvVariable(SystemEnv se){
-		String replaced = "";
+	public static boolean isBool(String s){
+		String lower = s.toLowerCase();
+		return lower.equals("true") || lower.equals("false") || lower.equals("#t") || lower.equals("#f");
+	}
+	
+	public static boolean convertToBool(String s){
+		String lower = s.toLowerCase();
+		if (lower.equals("true") || lower.equals("#t")){
+			return true;
+		}
+		return false;
+	}
+	
+	public static Value getEnvVariable(SystemEnv se){
 		switch(se){
 		case windowSizeX:
-			replaced = GraphicsExecutor.jf.getWidth()+"";
-			break;
+			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getWidth());
 		case windowSizeY:
-			replaced = GraphicsExecutor.jf.getHeight()+"";
-			break;
+			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getHeight());
 		case FPS:
-			replaced = GraphicsExecutor.lastFPS+"";
-			break;
+			return new Value(VariableTypes.Integer, GraphicsExecutor.lastFPS);
 		case time:
-			replaced = System.currentTimeMillis()+"";
-			break;
+			return new Value(VariableTypes.Double, (double)System.currentTimeMillis());
 		case osName:
-			replaced = System.getProperty("os.name");
-			break;
+			return new Value(VariableTypes.String, System.getProperty("os.name"));
 		case osVersion:
-			replaced = System.getProperty("os.version");
-			break;
+			return new Value(VariableTypes.String, System.getProperty("os.version"));
 		case windowPosX:
-			replaced = GraphicsExecutor.jf.getLocation().x+"";
-			break;
+			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getLocation().x);
 		case windowPosY:
-			replaced = GraphicsExecutor.jf.getLocation().y+"";
-			break;
+			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getLocation().y);
 		case screenResX:
-			replaced = ((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth())+"";
-			break;
+			return new Value(VariableTypes.Integer, Toolkit.getDefaultToolkit().getScreenSize().getWidth());
 		case screenResY:
-			replaced = ((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight())+"";
-			break;
+			return new Value(VariableTypes.Integer, Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 		case cursorPosX:
-			replaced = MouseInfo.getPointerInfo().getLocation().x+"";
-			break;
+			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().x);
 		case cursorPosY:
-			replaced = MouseInfo.getPointerInfo().getLocation().y+"";
-			break;
+			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().y);
 		case processUUID:
-			replaced = Executor.getCurrentProcess().UUID+"";
-			break;
+			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().UUID);
 		case processesRunning:
-			replaced = Executor.getRunningProcesses().size()+"";
-			break;
+			return new Value(VariableTypes.Integer, Executor.getRunningProcesses().size());
 		case lineReturns:
-			replaced = Executor.getCurrentProcess().lineReturns.size()+"";
-			break;
+			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
-			//TODO update this everytime
-			replaced = "Release Build 1.1 R2 2/6/17";
-			break;
+			//TODO update this every time
+			return new Value(VariableTypes.String, "2.0");
 		case runningFileLocation:
 			if (!Executor.getCurrentProcess().runningFromFile){
-				replaced = "SOFTWARE";
-				break;
+				return new Value(VariableTypes.String, "SOFTWARE");
 			}
-			replaced = Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath();
-			break;
+			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath());
 		case runningFileName:
 			if (!Executor.getCurrentProcess().runningFromFile){
-				replaced = "SOFTWARE";
-				break;
+				return new Value(VariableTypes.String, "SOFTWARE");
 			}
-			replaced = Executor.getCurrentProcess().readingFrom.getName();
-			break;
+			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getName());
 		case runningFilePath:
 			if (!Executor.getCurrentProcess().runningFromFile){
-				replaced = "SOFTWARE";
-				break;
+				return new Value(VariableTypes.String, "SOFTWARE");
 			}
-			replaced = Executor.getCurrentProcess().readingFrom.getAbsolutePath();
-			break;
+			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getAbsolutePath());
 		case newline:
-			replaced = "\n";
-			break;
+			return new Value(VariableTypes.String, "\n");
 		case alt:
-			replaced = "ALT";
-			break;
+			return new Value(VariableTypes.String, "ALT");
 		case back:
-			replaced = "BACKSPACE";
-			break;
+			return new Value(VariableTypes.String, "BACKSPACE");
 		case control:
-			replaced = "CONTROL";
-			break;
+			return new Value(VariableTypes.String, "CONTROL");
 		case shift:
-			replaced = "SHIFT";
-			break;
+			return new Value(VariableTypes.String, "SHIFT");
 		case systemKey:
-			replaced = "SYSTEM_KEY";
-			break;
+			return new Value(VariableTypes.String, "SYSTEM_KEY");
 		case tab:
-			replaced = "\t";
-			break;
+			return new Value(VariableTypes.String, "\t");
 		case caps:
-			replaced = "CAPS_LOCK";
-			break;
+			return new Value(VariableTypes.String, "CAPS_LOCK");
 		case boundCursorPosX:
-			replaced = (MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left)+"";
-			break;
+			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left);
 		case boundCursorPosY:
-			replaced = (MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top)+"";
-			break;
+			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top);
 		case space:
-			replaced = " ";
-			break;
+			return new Value(VariableTypes.String, " ");
 		case euler:
-			replaced = Math.E+"";
-			break;
+			return new Value(VariableTypes.Double, Math.E);
 		case pi:
-			replaced = Math.PI+"";
-			break;
+			return new Value(VariableTypes.Double, Math.PI);
+		case context:
+			return new Value(VariableTypes.Integer, Executor.getCurrentContext().getID());
+		case nil:
+			return new Value(VariableTypes.Nil, null);
 		default:
-			break;
-		}
-		
-		return replaced;
-	}
-	
-	public static void clearLocalVariables(int f){
-		ArrayList<String> toBeCleared = new ArrayList<String>();
-		for (int i = 0; i < variables.keySet().size(); i++){
-			if ((variables.keySet().toArray()[i]+"").contains(f+"")){
-				toBeCleared.add(variables.keySet().toArray()[i]+"");
-			}
-		}
-		for (int i = 0; i < toBeCleared.size(); i++){
-			variables.remove(toBeCleared.get(i));
+			return new Value(VariableTypes.Nil, null);
 		}
 	}
 	
-	public static String parseString(String parse){
-		if (parse.length() < 2 || ((!parse.contains("|")) && (!(parse.contains("{") && parse.contains("}"))))  ){
-			return parse;										//If small or doesn't have | or ({ and })
-		}
-		if (parse.contains("{") && parse.contains("}")){
-			Matcher bracketMatcher = bracketPattern.matcher(parse);
-			while (bracketMatcher.find()){
-				String replacing = bracketMatcher.group();
-				replacing = replacing.substring(1, replacing.length()-1);
-
-				SystemEnv se = null;
-				try{
-					for (int j = 0; j < SystemEnv.values().length; j++){
-						if (replacing.equals(SystemEnv.values()[j].name)){
-							se = SystemEnv.values()[j];
-						}
-					}
-					if (se == null){
-						throw new Exception();
-					}
-				}catch(Exception e){Interpreter.throwError("Invalid System Variable: "+replacing);}
-				parse = parse.substring(0, bracketMatcher.start()) + getEnvVariable(se) + parse.substring(bracketMatcher.end());
-				bracketMatcher = bracketPattern.matcher(parse);
-			}
-		}
-		
-		
-
-		String veryFinalString = parse;
-		if (parse.contains("|")){
-			boolean flag = false;
-			if (parse.charAt(0) == '|'){
-				flag = true;
-				parse = " "+parse;
-			}
-			String split[] = splits(parse);
-			for (int i = 1; i < split.length; i+=2){
-				split[i] = split[i].substring(0,split[i].length());
-				String stra;
-				Value v = getValue(split[i]);
-				stra = v.value+"";
-				split[i] = stra;
-			}
-			if (flag){
-				split[0] = split[0].substring(1);
-			}
-			String finalString = "";
-			for (int i = 0; i < split.length; i++){
-				finalString = finalString+split[i];
-			}
-			veryFinalString = finalString;
-		}
-		return veryFinalString;
-			
+	public static void clearLocalVariables(Context con){
+		getContextVariables(con).clear();
 	}
-	static Pattern bracketPattern = Pattern.compile("[{][^{|}]*[}]");
+	
+	//Parses an array value
+	public static Value getValueOfArray(String arrayName, int index){
+		return getValueOfArray(arrayName, index, Executor.getCurrentContext());
+	}
+	
+	public static Value getValueOfArray(String arrayName, int index, Context con){
+		if (getArray(arrayName, con).containsKey(index)){
+			return getArray(arrayName, con).get(index);	
+		}
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	//Sets the value of an array
+	public static void setValueOfArray(String key,int index, Value value){
+		setValueOfArray(key,index,value,Executor.getCurrentContext());
+	}
+	
+	public static void setValueOfArray(String key,int index, Value value, Context con){
+		getArray(key, con).put(index, value);
+	}
+	
+	public static boolean isValInt(Value v){
+		return v.type == VariableTypes.Integer;
+	}
+	public static boolean isValDouble(Value v){
+		return  v.type == VariableTypes.Double;
+	}
+	public static double getDoubleVal(Value v){
+		try{
+			if (isValInt(v) || v.value instanceof Integer){
+				return (double) ((int) v.value);
+			}
+			return (double) v.value;
+		}catch(Exception e){
+			Interpreter.throwError("Attempted to cast "+v.value+" to a double and failed!");
+			return 0.0d;
+		}
+	}
+	public static int getIntValue(Value v){
+		try{
+			if (isValDouble(v) || v.value instanceof Double){
+				return (int) ((double) v.value);
+			}
+			return (int) v.value;
+		}catch(Exception e){
+			Interpreter.throwError("Attempted to cast "+v.value+" to an int and failed!");
+			return 0;
+		}
+	}
 	
 }

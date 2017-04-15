@@ -204,3 +204,6 @@ Sets a particular value in a given tensor
 
 **Tensor Get - TENSORGET
 Puts the value at a particualr index in a tensor into a variable
+
+**Define - DEFINE
+Defines a Function given a list of arguments and a lambda expression

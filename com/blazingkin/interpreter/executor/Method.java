@@ -33,6 +33,7 @@ public class Method {
 		}
 	}
 	
+	//Checks to see if this is a specific method object
 	public boolean isItThis(String name, int parentID){
 		return (functionName.equals(name) && (parentID == parent.UUID));
 	}

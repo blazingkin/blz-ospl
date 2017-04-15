@@ -1,12 +1,18 @@
 package com.blazingkin.interpreter.variables;
+
+import com.blazingkin.interpreter.executor.LambdaExpression;
+
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {
 
-	Integer(BLZInt.class),
+	Integer(java.lang.Integer.class),
 	String(java.lang.String.class),
 	Double(java.lang.Double.class),
 	Boolean(java.lang.Boolean.class),
-	Tensor(BLZTensor.class);
+	Tensor(BLZTensor.class),
+	Array(java.util.ArrayList.class),
+	LambdaExpression(LambdaExpression.class),
+	Nil(null);
 	
 	VariableTypes(Class n){
 		dataType = n;

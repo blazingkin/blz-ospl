@@ -29,7 +29,7 @@ public class Process {
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
 		readingFrom = runFile;			//the file passed to us exists and we can use it
-		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
+		//Executor.setLine(0);
 		Scanner s = new Scanner(readingFrom);
 		ArrayList<String> li = new ArrayList<String>();
 		while (s.hasNextLine()){
@@ -85,7 +85,7 @@ public class Process {
 	}
 	
 	public int getLine(){
-		return (Integer) Variable.getValue("pc"+UUID).value;
+		return Executor.getLine();
 	}
 	@SuppressWarnings("resource")
 	public int getSize() throws IOException{
@@ -95,7 +95,7 @@ public class Process {
 		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r").length;
 	}
 	public void setLine(int lineNumber){
-		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, lineNumber));
+		Executor.setLine(lineNumber);
 	}
 	
 	
