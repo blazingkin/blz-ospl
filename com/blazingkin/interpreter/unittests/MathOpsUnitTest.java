@@ -1,4 +1,4 @@
-package com.blazingkin.interperter.unittests;
+package com.blazingkin.interpreter.unittests;
 
 import com.blazingkin.interpreter.executor.Instruction;
 import com.blazingkin.interpreter.executor.math.AddVars;

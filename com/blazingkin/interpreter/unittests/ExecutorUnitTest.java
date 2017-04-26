@@ -1,4 +1,4 @@
-package com.blazingkin.interperter.unittests;
+package com.blazingkin.interpreter.unittests;
 
 import java.util.ArrayList;
 

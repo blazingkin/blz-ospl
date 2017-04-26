@@ -32,7 +32,7 @@ public class Logarithm implements InstructionExecutor, LambdaFunction {
 	@Override
 	public Value evaluate(String[] args) {
 		double num = Variable.getDoubleVal(Variable.getValue(args[0]));
-		if (args.length == 2){
+		if (args.length == 1){
 			double result = Math.log10(num);
 			return new Value(VariableTypes.Double, result);
 		}else{

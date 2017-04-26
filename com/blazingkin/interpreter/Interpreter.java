@@ -39,6 +39,9 @@ public class Interpreter {
 		System.out.println("Execute a blz file (typically .blz extension)");
 		System.out.println("-e *PATH*");
 		System.out.println();
+		System.out.println("Run in immediate mode");
+		System.out.println("-i");
+		System.out.println();
 		System.out.println("See this help message");
 		System.out.println("-h");
 	}
@@ -52,6 +55,9 @@ public class Interpreter {
 					case 'h':
 						Interpreter.printHelp();
 						System.exit(0);
+						break;
+					case 'i':
+						Executor.immediateModeLoop(System.in);
 						break;
 					case 'c':						// - c *INPUT* *OUTPUT*	COMPILE
 					String path = args[i+1];

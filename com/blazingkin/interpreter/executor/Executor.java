@@ -1,8 +1,10 @@
 package com.blazingkin.interpreter.executor;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
@@ -11,6 +13,7 @@ import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;
+import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -22,7 +25,7 @@ public class Executor {
 	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
 	private static boolean loopIgnoreMode = false;
 	private static int loopsIgnored = 0;
-	private static BlzEventHandler eventHandler;
+	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
 	private static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
 	private static boolean closeRequested = false;
 	private static String startingMethod;
@@ -31,6 +34,7 @@ public class Executor {
 	private static int frames = 0;
 	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
 	private static Stack<Integer> processLineStack = new Stack<Integer>();
+	private static boolean immediateMode = false;
 	
 	public static void pushToProcessLineStack(int line){
 		processLineStack.push(line);
@@ -223,6 +227,42 @@ public class Executor {
 		
 	}
 	
+	public static void immediateModeLoop(InputStream is){
+		System.out.println("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:");
+		System.out.println("Type 'exit' to exit");
+		String in = "";
+		Scanner sc = new Scanner(is);
+		immediateMode = true;
+		Exception lastException = new Exception("There have been no exceptions");
+		try{
+			do{
+				try{
+				in = sc.nextLine();
+				if (in.equals("err")){
+					lastException.printStackTrace();
+					continue;
+				}
+				if (in.equals("exit")){
+					break;
+				}
+				LambdaExpression le;
+				if (in.length() > 1 && in.charAt(0) == '(' && in.charAt(in.length() - 1) == ')'){
+					le = LambdaParser.parseLambdaExpression(in);
+				}else{
+					le = LambdaParser.parseLambdaExpression("("+in+")");
+				}
+				le.getValue().printValue();
+				}catch(Exception e){
+					lastException = e;
+					System.err.println("There was an issue running your last command");
+					System.err.println("Type 'err' to see the error");
+				}
+			}while (in.toLowerCase() != "exit");
+		}finally{
+		sc.close();
+		}
+	}
+	
 	
 	//Lots of getters / setters below this point
 	
@@ -285,6 +325,9 @@ public class Executor {
 		Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
 	}
 	public static int getLine(){
+		if (immediateMode){
+			return -1;
+		}
 		return (int) Variable.getGlobalValue("*pc").value;
 	}
 	public static Stack<Process> getRunningProcesses(){
