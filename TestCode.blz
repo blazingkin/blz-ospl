@@ -22,9 +22,9 @@ ECHO a " and " c
 (ECHO "double 3 = " (dbl 3))
 (DEFINE sqr (x) (MUL x x))
 (ECHO "9 squared = " (sqr 9))
-(DEFINE mln (x y z) (MUL x (MUL y z)))
-(ECHO "2*3*4 = " (mln 2 3 4))
-(DEFINE fact (fa) (IF fa==0 1 (MUL fa (fact (SUB fa 1)))))
+(DEFINE nested_mul (x y z) (MUL x (MUL y z)))
+(ECHO "2*3*4 = " (nested_mul 2 3 4))
+(DEFINE fact (x) (IF x==0 1 (MUL x (fact (SUB x 1)))))
 (DEFINE curriedaddition (x) (DEFINE ca (y) (ADD x y)))
 (ECHO "Does curried addition work? " ((curriedaddition 3) 6))
 (DEFINE curriedmultiplication (x y) (DEFINE cm (z) (MUL x (MUL y z))))
@@ -40,7 +40,7 @@ NIN b
 (ECHO (IF a==b "Your inputs were the same!" "Your inputs were different!"))
 
 NIN c
-ECHO "The product of these numbers is " (mln a b c)
+ECHO "The product of these numbers is " (nested_mul a b c)
 
 RJP checkglobal
 

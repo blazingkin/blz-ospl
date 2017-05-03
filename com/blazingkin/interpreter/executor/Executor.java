@@ -266,6 +266,10 @@ public class Executor {
 	
 	//Lots of getters / setters below this point
 	
+	public static boolean doesMethodExist(String name){
+		return (InstructionType.getInstructionType(name) != Instruction.INVALID) || LambdaRegistrar.isRegisteredLambdaExpression(name);
+	}
+	
 	public static int getUUID(){
 		int id;
 		do{

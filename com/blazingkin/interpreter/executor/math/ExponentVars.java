@@ -14,8 +14,8 @@ public class ExponentVars implements InstructionExecutor, LambdaFunction {
 		Value v2 = Variable.getValue(args[1]);
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double)
 				&& (v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double)){
-			double d1 = (double) v1.value;
-			double d2 = (double) v2.value;
+			double d1 = Variable.getDoubleVal(v1);
+			double d2 = Variable.getDoubleVal(v2);
 			Value v = new Value((v1.type == v2.type && v1.type == VariableTypes.Integer)?v1.type:VariableTypes.Double, Math.pow(d1, d2));
 			Variable.setValue(args[2], v);
 			return;
@@ -31,8 +31,8 @@ public class ExponentVars implements InstructionExecutor, LambdaFunction {
 		Value v2 = Variable.getValue(args[1]);
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double)
 				&& (v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double)){
-			double d1 = (double) v1.value;
-			double d2 = (double) v2.value;
+			double d1 = Variable.getDoubleVal(v1);
+			double d2 = Variable.getDoubleVal(v2);
 			return new Value((v1.type == v2.type && v1.type == VariableTypes.Integer)?v1.type:VariableTypes.Double, Math.pow(d1, d2));
 		}else{
 			Interpreter.throwError("Invalid types for exponentiation");

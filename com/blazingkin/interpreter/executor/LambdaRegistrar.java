@@ -12,6 +12,10 @@ public class LambdaRegistrar {
 		return runtimeDefinedLambdaExpressions.get(name).cloneWithArgs(args);
 	}
 	
+	public static boolean isRegisteredLambdaExpression(String name){
+		return runtimeDefinedLambdaExpressions.containsKey(name);
+	}
+	
 	public static void registerLambdaExpression(LambdaExpression le, String expName){
 		runtimeDefinedLambdaExpressions.put(expName, le);
 	}
