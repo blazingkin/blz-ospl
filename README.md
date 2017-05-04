@@ -9,15 +9,15 @@ The language will change drastically right now as I build up feature-completenes
 Hello World Sample
 ===
 
-:main
-ECHO "Hello World!"
-END
+>:main
+>ECHO "Hello World!"
+>END
 
 or
 
-:main
-(ECHO "Hello World")
-END
+>:main
+>(ECHO "Hello World")
+>END
 
 *See the examples folder for more*
 
