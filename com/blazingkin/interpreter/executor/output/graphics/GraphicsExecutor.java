@@ -82,6 +82,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 	        	@Override
 	            public void paintComponent(Graphics g) {
 	            	super.paintComponent(g);
+	        		System.out.println("called");
 	            	update(g);
 	            	if (System.currentTimeMillis() - Executor.getTimeStarted() > 1000){
 	            		GraphicsExecutor.lastFPS = Executor.getFrames();
@@ -100,13 +101,16 @@ public class GraphicsExecutor implements InstructionExecutor {
 	                }
 	                //System.out.println(System.currentTimeMillis()+" after");
 	                for (TextLabel tl: GraphicsExecutor.textLabels){
+	                	System.out.println("Drawing" +tl.text);
 	                	bufferGraphics.setColor(Color.black);
 	                	bufferGraphics.drawString(tl.text, tl.start.x, tl.start.y);
 	                }
 	                while(clearing);
 
 	                g.drawImage(offScreen, 0, 0, this);
-	               }catch(Exception e){}
+	               }catch(Exception e){
+	            	   e.printStackTrace();
+	               }
 
 
 	            }
@@ -295,7 +299,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			}
 			TextLabel tl = new TextLabel(new Point(px,py), buS);
 			textLabels.add(tl);
-			jf.paintComponents(jf.getGraphics());
+			jf.repaint();
 			break;
 		case setSize:
 			if (args[0].contains("[]")){
