@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.executor.input;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
-import com.blazingkin.interpreter.executor.LambdaFunction;
+import com.blazingkin.interpreter.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;

@@ -18,8 +18,6 @@ public class Listener implements InstructionExecutor {
 				return ListenerTypes.values()[i];
 			}
 		}
-		
-		
 		Interpreter.throwError("Could Not Find Listener Type: "+s);
 		return null;
 	}

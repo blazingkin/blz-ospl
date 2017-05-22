@@ -12,7 +12,7 @@ public class Wait implements InstructionExecutor {
 	 */
 	public void run(String args[]){
 		if (Variable.getValue(args[0]).type == VariableTypes.Integer){
-			int time = (int) Variable.getValue(args[0]).value;
+			int time = Variable.getIntValue(Variable.getValue(args[0]));
 			long startTime = System.currentTimeMillis();
 			while ((System.currentTimeMillis() - startTime) < time){
 				

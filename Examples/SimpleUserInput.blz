@@ -1,0 +1,14 @@
+:main
+
+ECHO "Enter a number:"
+NIN a
+ECHO "And another:"
+NIN b
+MUL a b c
+ECHO "The product of your two numbers is " c
+ADD a b d
+ECHO "The sum of your two numbers is " d
+SUB c d f
+ECHO "The difference between the product and the sum is " f
+
+END

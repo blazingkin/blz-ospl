@@ -1,0 +1,23 @@
+:main
+
+ECHO "How many fibbonacci numbers do you want?"
+NIN iter
+SET a[0] 1
+SET a[1] 1
+
+
+
+FOR SET i 2, i < iter, ADD i 1 i
+SUB i 1 ind1
+SUB i 2 ind2
+ADD a[ind1] a[ind2] a[i]
+ENDLOOP
+
+ECHO "Printing fibbonacci numbers 1-" iter
+
+FOR SET i 0, i < iter, ADD i 1 i
+ECHO a[i]
+ENDLOOP
+
+
+END

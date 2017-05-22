@@ -1,7 +1,7 @@
 package com.blazingkin.interpreter.executor.data;
 
 import com.blazingkin.interpreter.executor.InstructionExecutor;
-import com.blazingkin.interpreter.executor.LambdaFunction;
+import com.blazingkin.interpreter.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.LocalStack;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;

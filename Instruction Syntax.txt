@@ -10,7 +10,6 @@
 ECHO {echoed string}
 SECHO {echoed string}
 SET {Key} {Value}
-GOTO (line number)
 ADD {value 1} {value 2} [address]
 SUB {value 1} {value 2} [address]
 MUL {value 1} {value 2} [address]
@@ -59,12 +58,13 @@ ARCSIN {input} [place to store result]
 ARCCOS {input} [place to store result]
 ARCTAN {input} [place to store result]
 PARSE [variable to be parsed]
-FOR <INIT STATEMENT>, <TERMINATING CONDITION>, <ITERATING STATEMENT>
+FOR <INIT STATEMENT>, <LOOP CONDITION>, <ITERATING STATEMENT>
+WHILE <LOOP CONDITION>
 ENDLOOP
 TENSORI [Tensor Name] {Number of indices}
 TENSORSET [Tensor Name] {Value} {List} {Of} {Indexes} ...
 TENSORGET [Tensor Name] {List} {Of} {Indexes} ... [place to store result]
-(DEFINE (list of args) (lambdaexpression))
+(DEFINE functionname (list of args) (lambdaexpression))
 
 **********************
 Non-Functional or Experimental Instructions
@@ -77,4 +77,3 @@ TDRAW {color} {any} {number} {of} {points} {x} {y} ...
 CLEAR
 GRAPHICSPROPERTY (property)
 CLEARLAST
-WHL {condition 1} (>|<|=|!=) {condition 2}

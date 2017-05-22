@@ -1,9 +1,9 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.InstructionExecutor;
-import com.blazingkin.interpreter.executor.LambdaExpression;
-import com.blazingkin.interpreter.executor.LambdaFunction;
-import com.blazingkin.interpreter.executor.LambdaRegistrar;
+import com.blazingkin.interpreter.lambda.LambdaExpression;
+import com.blazingkin.interpreter.lambda.LambdaFunction;
+import com.blazingkin.interpreter.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 

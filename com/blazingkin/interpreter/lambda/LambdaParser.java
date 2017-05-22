@@ -1,4 +1,8 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.lambda;
+
+
+import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.Instruction;
 
 public class LambdaParser {
 

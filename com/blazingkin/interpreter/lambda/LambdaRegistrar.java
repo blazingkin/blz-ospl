@@ -1,4 +1,5 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.lambda;
+
 
 import java.util.HashMap;
 

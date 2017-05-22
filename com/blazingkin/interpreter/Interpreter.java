@@ -9,7 +9,6 @@ import java.util.List;
 import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
-import com.blazingkin.interpreter.variables.Variable;
 
 public class Interpreter {
 	public static boolean logging = true;
@@ -19,7 +18,7 @@ public class Interpreter {
 			switch(args.length){
 			case 0:
 				printHelp();
-				throwError("Not Enough Arguments");
+				System.exit(-1);
 				break;
 			default: 
 				new Interpreter().run(args);
@@ -88,9 +87,9 @@ public class Interpreter {
 		}catch(Exception e){
 			e.printStackTrace();
 			if (!Executor.getCurrentProcess().runningFromFile){
-				throwError("Error, Executor was on line "+ (Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value)+" in a software environment");
+				throwError("Error, Executor was on line "+ Executor.getLine()+" in a software environment");
 			}else{
-				throwError("Error, Executor was on line "+(Integer)(Variable.getValue("pc"+Executor.getCurrentProcess().UUID).value) + " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
+				throwError("Error, Executor was on line "+Executor.getLine() + " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
 				}		
 			}
 	}
