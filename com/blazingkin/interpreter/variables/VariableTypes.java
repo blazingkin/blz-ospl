@@ -1,6 +1,6 @@
 package com.blazingkin.interpreter.variables;
 
-import com.blazingkin.interpreter.lambda.LambdaExpression;
+import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {

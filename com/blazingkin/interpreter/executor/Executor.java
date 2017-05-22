@@ -9,10 +9,10 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
+import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
+import com.blazingkin.interpreter.executor.lambda.LambdaParser;
+import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.executor.listener.Event;
-import com.blazingkin.interpreter.lambda.LambdaExpression;
-import com.blazingkin.interpreter.lambda.LambdaParser;
-import com.blazingkin.interpreter.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;

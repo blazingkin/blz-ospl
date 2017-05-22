@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
-import com.blazingkin.interpreter.lambda.LambdaParser;
 
 public class Variable {
 	private static HashMap<Context, HashMap<String, Value>> variables = 

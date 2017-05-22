@@ -1,4 +1,4 @@
-package com.blazingkin.interpreter.lambda;
+package com.blazingkin.interpreter.executor.lambda;
 
 
 import com.blazingkin.interpreter.executor.Executor;
