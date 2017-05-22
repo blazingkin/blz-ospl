@@ -71,6 +71,10 @@ public class Interpreter {
 					runCompiler(pth, arg);
 						break;
 					case 'e':						// - e *PATHNAME*	EXECUTE
+						if (args.length == 1){
+							Interpreter.printHelp();	// If no file is passed to execute
+							System.exit(-1);
+						}
 						String paths= args[i+1];
 						File pths = new File(paths);
 						int f = i+2;
