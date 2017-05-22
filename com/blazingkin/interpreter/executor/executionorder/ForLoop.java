@@ -22,7 +22,7 @@ public class ForLoop extends LoopWrapper {
 	public void run(String[] args) {
 		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionContext == Executor.getCurrentContext()
 				&& Executor.getLoopStack().peek().startLine == 
-				Executor.getLine()){
+				Executor.getLine()){	// This whole if statement checks if the for loop is already on the loop stack
 			LoopWrapper lw = Executor.getLoopStack().peek();
 			
 			Instruction it = InstructionType.getInstructionType(lw.loopInstr.trim().split(" ")[0]);

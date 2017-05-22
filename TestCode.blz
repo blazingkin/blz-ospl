@@ -15,7 +15,6 @@ SET *l {system.os.name}
 ECHO {file.name} " <-file name, os-> " *l
 ECHO a " and " c
 
-
 (ECHO "1+2 = " (ADD 1 2))
 (ECHO "4+(4+8) = " (ADD 4 (ADD 4 8)))
 (DEFINE dbl (x) (ADD x x))
@@ -32,6 +31,21 @@ ECHO a " and " c
 (ECHO "Curried addition of 3 and 5: " (ca 5))
 (ECHO "Factorial 7: " (fact 7))
 
+
+SET loopCounter 0
+WHILE loopCounter < 3
+ECHO "looptest"
+SET innerCounter 3
+WHILE innerCounter >= 0
+ECHO innerCounter
+SUB innerCounter 1 innerCounter
+ENDLOOP
+ADD loopCounter 1 loopCounter
+ENDLOOP
+
+ECHO "Testing WAIT"
+WAIT (nested_mul 10 6 10)
+ECHO "Done testing WAIT"
 
 ECHO (dbl 5) " THIS IS A TEST"
 ECHO "Please enter three numbers"

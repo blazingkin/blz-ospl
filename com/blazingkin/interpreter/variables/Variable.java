@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
+import com.blazingkin.interpreter.lambda.LambdaParser;
 
 public class Variable {
 	private static HashMap<Context, HashMap<String, Value>> variables = 
@@ -64,6 +64,17 @@ public class Variable {
 		return getValue(key, getGlobalContext());
 	}
 	
+	public static Value addValues(Value v1, Value v2){
+		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
+			return new Value(VariableTypes.Integer, getIntValue(v1) +  getIntValue(v2));
+		}
+		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
+				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
+			return new Value(VariableTypes.Double, getDoubleVal(v1) + getDoubleVal(v2));
+		}
+		Interpreter.throwError("Failed Adding Variables "+v1+" and "+v2);
+		return new Value(VariableTypes.Nil, null);
+	}
 	
 	
 	private static Pattern squareBracketPattern = Pattern.compile("\\[\\S*\\]");
@@ -244,7 +255,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.0");
+			return new Value(VariableTypes.String, "2.0.1");
 		case runningFileLocation:
 			if (!Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");

@@ -1,0 +1,5 @@
+:main
+
+ECHO "Hello World!"
+
+END

@@ -1,0 +1,13 @@
+:main
+
+ECHO "Enter a number"
+NIN a
+SET starttime {system.time.currenttimemillis}
+FOR SET i 0, i < a, ADD i 1 i
+ECHO i
+ENDLOOP
+SUB {system.time.currenttimemillis} starttime time
+DIV time a timeperelement
+ECHO "Took " time " milliseconds (" timeperelement " milliseconds per iteration)"
+
+END

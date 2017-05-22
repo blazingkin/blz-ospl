@@ -1,0 +1,1 @@
+java -jar "blz-ospl v2.0.1.jar" -e $*

@@ -16,6 +16,7 @@ import com.blazingkin.interpreter.executor.executionorder.IfBlock;
 import com.blazingkin.interpreter.executor.executionorder.JumpReturn;
 import com.blazingkin.interpreter.executor.executionorder.LoopEnd;
 import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
+import com.blazingkin.interpreter.executor.executionorder.WhileLoop;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
@@ -109,6 +110,7 @@ public enum Instruction {
 	ARCCOS("ARCCOS", "Inverse Cosine", new Trigonometry(TrigFunctions.ARCCOS)),
 	ARCTAN("ARCTAN", "Inverse Tangent", new Trigonometry(TrigFunctions.ARCTAN)),
 	FORLOOP("FOR", "For", new ForLoop()),
+	WHILELOOP("WHILE", "While", new WhileLoop()),
 	ENDLOOP("ENDLOOP", "End Loop", new LoopEnd()),
 	INTTENSOR("TENSORI", "DECLARE INTEGER TENSOR", new IntTensor()),
 	SETTENSORVALUE("TENSORSET", "SET TENSOR VALUE", new SetTensorValue()),
