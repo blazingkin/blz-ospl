@@ -31,23 +31,35 @@ Dependencies:
 * JDK 7+
 
 
-How to use:
+How to setup and use:
 ===
 ## Windows
 
-1.) Add Java to your PATH
+1.) Install Java and make sure it is added to your PATH
 
-2.) Add the folder containing the jar and bat file to your PATH
+2.) Download the blz-ospl project from github
 
-3.) From the command line, run
+3.) Add the top folder to your PATH
+
+4.) From the command line, run
 
 > blz-ospl ExampleCode.blz
 
 ## Unix
 
-1.) Run the following command with "JARPATH" filled in with the correct path
+1.) Install Java
 
-> java -jar "JARPATH" -e ExampleCode.blz
+2.) Download the blz-ospl project from github
+
+3.) Add an alias for blz-ospl, this can be done with
+
+> alias blz-ospl=INSTALLDIRECTORY/blz-ospl.sh
+
+Where INSTALLDIRECTORY is the directory where you saved the project
+
+4.) From the terminal, run
+
+> blz-ospl ExampleCode.blz
 
 Contact and License
 ===
