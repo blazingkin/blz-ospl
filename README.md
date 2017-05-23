@@ -39,7 +39,7 @@ How to setup and use:
 
 2.) Download the blz-ospl project from github
 
-3.) Add the top folder to your PATH
+3.) Add the project folder to your PATH
 
 4.) From the command line, run
 
@@ -51,7 +51,7 @@ How to setup and use:
 
 2.) Download the blz-ospl project from github
 
-3.) Add an alias for blz-ospl, this can be done with
+3.) Add an alias for blz-ospl, this can be done by adding the following line to your ~/.bashrc
 
 > alias blz-ospl=INSTALLDIRECTORY/blz-ospl.sh
 

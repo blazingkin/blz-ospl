@@ -1,0 +1,34 @@
+:main
+SET len 0
+SET numon 2
+ECHO "How many primes do you want?"
+NIN count
+
+WHILE len < count
+SET found 0
+FOR SET i 0, i < len, ADD i 1 i
+MOD numon primes[i] flag
+IF flag == 0
+SET found 1
+
+ENDLOOP
+
+ADD numon 1 numon
+IF found == 1
+ENDLOOP
+
+SUB numon 1 prime
+SET primes[len] prime
+ADD len 1 len
+
+ENDLOOP
+
+
+FOR SET i 0, i < count, ADD i 1 i
+ADD 1 i offset
+ECHO offset "th prime: " primes[i]
+
+ENDLOOP
+
+
+END
