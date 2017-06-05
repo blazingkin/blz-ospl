@@ -1,5 +1,5 @@
 :main
-SET a 5
+a = 5
 ECHO "Input a number"
 NIN b
 ADD a b c

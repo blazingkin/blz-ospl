@@ -1,19 +1,21 @@
 package com.blazingkin.interpreter.executor;
 
+import java.util.regex.Pattern;
+
 public enum SimpleExpression {
 
-	multiplication("*", 4),
-	division("/", 4),
-	addition("+", 3),
-	subtraction("-", 3),
-	assignment("=", 1),
-	comparison("==",2),
-	parenthesis("\\(.*\\)", 1000);
+	multiplication(Pattern.compile("\\*"), 3),
+	division(Pattern.compile("\\/"), 3),
+	addition(Pattern.compile("\\+"), 4),
+	subtraction(Pattern.compile("\\-"), 3),
+	assignment(Pattern.compile("(?<!=)=(?!=)"), 6),	// The regex here makes sure it is not a ==
+	comparison(Pattern.compile("=="),5),
+	parenthesis(Pattern.compile("\\(.*?\\)"), 1000);
 	
 	
-	public final String syntax;		// Regex to check for
+	public final Pattern syntax;		// Regex to check for
 	public final int precedence;	// Precedence - Higher numbers first
-	SimpleExpression(String syntax, int precedence){
+	SimpleExpression(Pattern syntax, int precedence){
 		this.syntax = syntax;
 		this.precedence = precedence;
 	}

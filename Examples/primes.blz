@@ -1,31 +1,33 @@
 :main
-SET len 0
-SET numon 2
+len = 0
+numon = 2
 ECHO "How many primes do you want?"
 NIN count
 
 WHILE len < count
-SET found 0
-FOR SET i 0, i < len, ADD i 1 i
+found = 0
+POW len .5 sqrt
+FOR i = 0, i < sqrt, i = i + 1
 MOD numon primes[i] flag
 IF flag == 0
-SET found 1
+found = 1
+
 
 ENDLOOP
 
-ADD numon 1 numon
+numon = numon + 1
 IF found == 1
 ENDLOOP
 
-SUB numon 1 prime
-SET primes[len] prime
-ADD len 1 len
+prime = numon - 1
+primes[len] = prime
+len = len + 1
 
 ENDLOOP
 
 
-FOR SET i 0, i < count, ADD i 1 i
-ADD 1 i offset
+FOR i = 0, i < count, i = i + 1
+offset = i + 1
 ECHO offset "th prime: " primes[i]
 
 ENDLOOP

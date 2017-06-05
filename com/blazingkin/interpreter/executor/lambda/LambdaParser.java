@@ -25,4 +25,15 @@ public class LambdaParser {
 		return LambdaRegistrar.getLambdaExpression(name, args);
 	}
 	
+	public static boolean isLambdaExpression(String lam){
+		String[] splits = Executor.parseExpressions(lam);
+		String name = splits[0];
+		for (Instruction in : Instruction.values()){
+			if (in.instruction.equals(name) && in.executor instanceof LambdaFunction){
+				return true;
+			}
+		}
+		return LambdaRegistrar.isRegisteredLambdaExpression(name);
+	}
+	
 }

@@ -72,7 +72,48 @@ public class Variable {
 				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
 			return new Value(VariableTypes.Double, getDoubleVal(v1) + getDoubleVal(v2));
 		}
-		Interpreter.throwError("Failed Adding Variables "+v1+" and "+v2);
+		if (isValRational(v1) && isValRational(v2)){
+			BLZRational rat = getRationalVal(v1).add(getRationalVal(v2));
+			if (rat.den == 1){
+				return new Value(VariableTypes.Integer, (int)rat.num);
+			}
+			return new Value(VariableTypes.Rational, rat);
+		}
+		Interpreter.throwError("Failed Adding Variables "+v1.value+" and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value subValues(Value v1, Value v2){
+		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
+			return new Value(VariableTypes.Integer, getIntValue(v1) -  getIntValue(v2));
+		}
+		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
+				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
+			return new Value(VariableTypes.Double, getDoubleVal(v1) - getDoubleVal(v2));
+		}
+		if (isValRational(v1) && isValRational(v2)){
+			BLZRational rat = getRationalVal(v1).add(getRationalVal(v2).multiply((BLZRational)Value.rational(-1, 1).value));
+			if (rat.den == 1){
+				return new Value(VariableTypes.Integer, (int)rat.num);
+			}
+			return new Value(VariableTypes.Rational, rat);
+		}
+		Interpreter.throwError("Failed Subtracting Variables "+v1.value+" and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value mulValues(Value v1, Value v2){
+		if (isValRational(v1) && isValRational(v2)){
+			BLZRational rat = getRationalVal(v1).multiply(getRationalVal(v2));
+			if (rat.den == 1){
+				return Value.integer((int) rat.num);
+			}
+			return new Value(VariableTypes.Rational, rat);
+		}
+		if ((isValRational(v1) || isValDouble(v1)) && (isValRational(v2) || isValDouble(v2))){
+			return new Value(VariableTypes.Double, getDoubleVal(v1) * getDoubleVal(v2));
+		}
+		Interpreter.throwError("Failed Multiplying Variables "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -87,6 +128,7 @@ public class Variable {
 		}
 		
 		if (isInteger(line)){	//If its an integer, then return it
+			
 			return new Value(VariableTypes.Integer, Integer.parseInt(line));
 		}
 		if (isDouble(line)){	//If its a double, then return it
@@ -208,9 +250,23 @@ public class Variable {
 		return false;
 	}
 	
+	
 	public static boolean isBool(String s){
 		String lower = s.toLowerCase();
 		return lower.equals("true") || lower.equals("false") || lower.equals("#t") || lower.equals("#f");
+	}
+	
+	public static boolean isFraction(String s){
+		String[] splits = s.split("/");
+		if (splits.length == 2){
+			return isInteger(splits[0]) && isInteger(splits[1]);
+		}
+		return false;
+	}
+	
+	public static Value convertToFraction(String s){
+		String[] splits = s.split("/");
+		return Value.rational(Integer.parseInt(splits[0]), Integer.parseInt(splits[1]));
 	}
 	
 	public static boolean convertToBool(String s){
@@ -255,7 +311,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.0.1");
+			return new Value(VariableTypes.String, "2.1.0");
 		case runningFileLocation:
 			if (!Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
@@ -332,15 +388,38 @@ public class Variable {
 	}
 	
 	public static boolean isValInt(Value v){
+		if (v.type == VariableTypes.Rational){
+			BLZRational rat = (BLZRational) v.value;
+			return rat.den == 1;
+		}
 		return v.type == VariableTypes.Integer;
 	}
 	public static boolean isValDouble(Value v){
 		return  v.type == VariableTypes.Double;
 	}
+	public static boolean isValRational(Value v){
+		return v.type == VariableTypes.Integer || v.type == VariableTypes.Rational;
+	}
+	
+	public static BLZRational getRationalVal(Value v){
+		if (v.type == VariableTypes.Rational){
+			return (BLZRational) v.value;
+		}
+		if (v.type == VariableTypes.Integer){
+			return new BLZRational((int)v.value, 1);
+		}
+		Interpreter.throwError("Attemted an illegal cast to a rational");
+		return new BLZRational(0,0);
+	}
+	
 	public static double getDoubleVal(Value v){
 		try{
 			if (isValInt(v) || v.value instanceof Integer){
 				return (double) ((int) v.value);
+			}
+			if (v.type == VariableTypes.Rational){
+				BLZRational rat = (BLZRational) v.value;
+				return rat.num / rat.den;
 			}
 			return (double) v.value;
 		}catch(Exception e){
@@ -352,6 +431,10 @@ public class Variable {
 		try{
 			if (isValDouble(v) || v.value instanceof Double){
 				return (int) ((double) v.value);
+			}
+			if (v.type == VariableTypes.Rational){
+				BLZRational rat = (BLZRational) v.value;
+				return (int) (rat.num / rat.den); 
 			}
 			return (int) v.value;
 		}catch(Exception e){

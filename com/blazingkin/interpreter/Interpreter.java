@@ -9,6 +9,8 @@ import java.util.List;
 import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
+import com.blazingkin.interpreter.variables.SystemEnv;
+import com.blazingkin.interpreter.variables.Variable;
 
 public class Interpreter {
 	public static boolean logging = true;
@@ -33,24 +35,30 @@ public class Interpreter {
 		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
 		System.out.println();
 		System.out.println("Compile a pre-blz file (typically .pblz extension)");
-		System.out.println("-c *INPATH* *OUTPATH*");
+		System.out.println("blz-ospl -c *INPATH* *OUTPATH*");
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
-		System.out.println("-e *PATH*");
+		System.out.println("blz-ospl *PATH*");
 		System.out.println();
 		System.out.println("Run in immediate mode");
-		System.out.println("-i");
+		System.out.println("blz-ospl -i");
+		System.out.println();
+		System.out.println("Print version number");
+		System.out.println("blz-ospl -v");
 		System.out.println();
 		System.out.println("See this help message");
-		System.out.println("-h");
+		System.out.println("blz-ospl -h");
 	}
 	
 	
 	public void run(String args[]) throws FileNotFoundException{
 		try{
-			for (int i = 0; i < args.length; i++){
-				if (args[i].charAt(0) == '-'){
-					switch(args[i].charAt(1)){
+			if (args.length == 0){
+				Interpreter.printHelp();
+				System.exit(0);
+			}
+			if (args[0].charAt(0) == '-'){
+				switch(args[0].charAt(1)){
 					case 'h':
 						Interpreter.printHelp();
 						System.exit(0);
@@ -59,35 +67,31 @@ public class Interpreter {
 						Executor.immediateModeLoop(System.in);
 						break;
 					case 'c':						// - c *INPUT* *OUTPUT*	COMPILE
-					String path = args[i+1];
-					File pth = new File(path);
-					
-					int z = i+2;
-					List<String> arg = new LinkedList<String>();
-					while (z < args.length){
-						arg.add(args[z]);
-						z++;
-					}
-					runCompiler(pth, arg);
-						break;
-					case 'e':						// - e *PATHNAME*	EXECUTE
-						if (args.length == 1){
-							Interpreter.printHelp();	// If no file is passed to execute
-							System.exit(-1);
+						String path = args[1];
+						File pth = new File(path);
+						int z = 2;
+						List<String> arg = new LinkedList<String>();
+						while (z < args.length){
+							arg.add(args[z]);
+							z++;
 						}
-						String paths= args[i+1];
-						File pths = new File(paths);
-						int f = i+2;
-						List<String> rg = new LinkedList<String>();
-						while (f < args.length){
-							rg.add(args[f]);
-							f++;
-						}
-						runExecutor(pths, rg);
+						runCompiler(pth, arg);
 						break;
-					}
+					case 'v':
+						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
+						break;
 				}
+				System.exit(0);
 			}
+			String paths= args[0];
+			File pths = new File(paths);
+			int f = 1;
+			List<String> rg = new LinkedList<String>();
+			while (f < args.length){
+				rg.add(args[f]);
+				f++;
+			}
+			runExecutor(pths, rg);
 		}catch(Exception e){
 			e.printStackTrace();
 			if (!Executor.getCurrentProcess().runningFromFile){
@@ -124,9 +128,19 @@ public class Interpreter {
 	
 	public static void throwError(String error){
 		if (logging){
+			StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+			  for (int i = 2; i < elements.length; i++) {
+			    StackTraceElement s = elements[i];
+			    System.err.println("\tat " + s.getClassName() + "." + s.getMethodName()
+			        + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
+			  }
 			System.err.println(error);
-			System.err.println("Error occurred on line: "+Executor.getLine());
-			Executor.getEventHandler().exitProgram("An Error Occured");
+			if (!Executor.getRunningProcesses().isEmpty()){
+				System.err.println("Error occurred on line: "+Executor.getLine());
+			}
+			if (!Executor.isImmediateMode()){
+				Executor.getEventHandler().exitProgram("An Error Occured");
+			}
 		}
 	}
 

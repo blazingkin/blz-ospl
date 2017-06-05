@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.unittests;
 import java.util.Random;
 
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class UnitTestUtil {
@@ -28,7 +29,19 @@ public class UnitTestUtil {
 	}
 	
 	public static void assertEqual(Value a, Value b){
+		if (!a.equals(b)){
+			System.err.println(a.value + " != "+ b.value);
+			new Exception().printStackTrace();
+		}
 		assert a.equals(b);
+	}
+	
+	public static void assertValEqual(String name, Value b){
+		if (!Variable.getValue(name).equals(b)){
+			System.err.println(name + " != "+ b.value);
+			new Exception().printStackTrace();
+		}
+		assert Variable.getValue(name).equals(b);
 	}
 	
 	public static void assertEqualArrays(Object[] a, Object[] b){

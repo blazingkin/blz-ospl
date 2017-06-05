@@ -2,7 +2,6 @@ package com.blazingkin.interpreter.executor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -33,7 +32,6 @@ public class Process {
 		Scanner s = new Scanner(readingFrom);
 		ArrayList<String> li = new ArrayList<String>();
 		while (s.hasNextLine()){
-			//System.out.println("got line");
 			li.add(s.nextLine());
 		}
 		lines = new String[li.size()];
@@ -87,17 +85,14 @@ public class Process {
 	public int getLine(){
 		return Executor.getLine();
 	}
-	@SuppressWarnings("resource")
-	public int getSize() throws IOException{
-		if (!runningFromFile){
-			return lines.length;
-		}
-		return new Scanner(readingFrom).useDelimiter("\\Z").next().split("\\n|\\r").length;
+	
+	public int getSize(){
+		return lines.length;
 	}
+	
 	public void setLine(int lineNumber){
 		Executor.setLine(lineNumber);
 	}
-	
 	
 	public static Process getProcessByUUID(int UUID){
 		for (int i = 0; i < processes.size(); i++){

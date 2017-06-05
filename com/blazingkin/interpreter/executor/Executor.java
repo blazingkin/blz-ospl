@@ -82,13 +82,12 @@ public class Executor {
 					setLine(getLine()+1);
 					continue;
 				}
+				
+				
+				
 				String split[] = line.split(" ");
-				String originalString = "";
-				for (int i = 1; i < split.length; i++){
-					originalString+= split[i]+" ";
-				}
-				originalString = originalString.trim();
-				String[] newSplit = parseExpressions(originalString);
+				
+				
 				if (isLoopIgnoreMode()){
 					if (split[0].equals(Instruction.ENDLOOP.instruction)){
 						if (loopsIgnored > 0){
@@ -104,6 +103,7 @@ public class Executor {
 					//System.out.println(loopStack.size() +": ls size");
 					continue;
 				}
+				
 				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
 					Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
 					getMethods().add(nM);
@@ -118,10 +118,13 @@ public class Executor {
 				}
 				setLine(getLine()+1);
 				
+				String originalString = line.replaceFirst(split[0],"").trim();
+				String[] newSplit = parseExpressions(originalString);
+				
 				Instruction it = InstructionType.getInstructionType(split[0]);
-				if (it.name.equals(Instruction.INVALID.name)){
-					
-					Interpreter.throwError("Invalid instruction "+split[0]);
+				if (it == null || it.name.equals(Instruction.INVALID.name)){
+					SimpleExpressionParser.parseExpression(line);
+					continue;
 				}
 				it.executor.run(newSplit);
 				if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
@@ -240,21 +243,27 @@ public class Executor {
 		try{
 			do{
 				try{
-				in = sc.nextLine();
-				if (in.equals("err")){
-					lastException.printStackTrace();
-					continue;
-				}
-				if (in.equals("exit")){
-					break;
-				}
-				LambdaExpression le;
-				if (in.length() > 1 && in.charAt(0) == '(' && in.charAt(in.length() - 1) == ')'){
-					le = LambdaParser.parseLambdaExpression(in);
-				}else{
-					le = LambdaParser.parseLambdaExpression("("+in+")");
-				}
-				le.getValue().printValue();
+					in = sc.nextLine();
+					if (in.equals("err")){
+						lastException.printStackTrace();
+						continue;
+					}
+					if (in.equals("exit")){
+						break;
+					}
+	
+					if (LambdaParser.isLambdaExpression(in)){
+						LambdaExpression le;
+						if (in.length() > 1 && in.charAt(0) == '(' && in.charAt(in.length() - 1) == ')'){
+							le = LambdaParser.parseLambdaExpression(in);
+						}else{
+							le = LambdaParser.parseLambdaExpression("("+in+")");
+						}
+						le.getValue().printValue();	
+					}else{
+						Value result = SimpleExpressionParser.parseExpression(in);
+						result.printValue();
+					}
 				}catch(Exception e){
 					lastException = e;
 					System.err.println("There was an issue running your last command");
@@ -262,7 +271,7 @@ public class Executor {
 				}
 			}while (in.toLowerCase() != "exit");
 		}finally{
-		sc.close();
+			sc.close();
 		}
 	}
 	
@@ -285,6 +294,9 @@ public class Executor {
 	}
 	public static void setLoopStack(Stack<LoopWrapper> loopStack) {
 		Executor.loopStack = loopStack;
+	}
+	public static boolean isImmediateMode(){
+		return immediateMode;
 	}
 	public static boolean isLoopIgnoreMode() {
 		return loopIgnoreMode;
