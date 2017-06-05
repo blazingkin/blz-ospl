@@ -4,11 +4,11 @@ ECHO "Enter a number:"
 NIN a
 ECHO "And another:"
 NIN b
-MUL a b c
+c = a * b
 ECHO "The product of your two numbers is " c
-ADD a b d
+d = a + b
 ECHO "The sum of your two numbers is " d
-SUB c d f
+f = c - d
 ECHO "The difference between the product and the sum is " f
 
 END
