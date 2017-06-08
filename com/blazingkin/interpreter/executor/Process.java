@@ -8,9 +8,6 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Process {
 	public boolean runningFromFile = false;
@@ -20,23 +17,22 @@ public class Process {
 	public String[] lines;
 	
 	
-	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
-		UUID = Executor.getUUID();
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
+		UUID = Executor.getUUID();
 		readingFrom = runFile;			//the file passed to us exists and we can use it
-		//Executor.setLine(0);
-		Scanner s = new Scanner(readingFrom);
-		ArrayList<String> li = new ArrayList<String>();
-		while (s.hasNextLine()){
-			li.add(s.nextLine());
+		Scanner scan = new Scanner(readingFrom);
+		ArrayList<String> lns = new ArrayList<String>();
+		while (scan.hasNextLine()){
+			lns.add(scan.nextLine());
 		}
-		lines = new String[li.size()];
-		for (int i = 0; i < li.size(); i++){
-			lines[i] = li.get(i);
+		scan.close();
+		lines = new String[lns.size()];
+		for (int i = 0; i < lns.size(); i++){
+			lines[i] = lns.get(i);
 		}
 		if (lines.length == 0){
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
@@ -48,14 +44,25 @@ public class Process {
 	
 	public Process(ArrayList<String> code){
 		UUID = Executor.getUUID();
-		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
 		lines = new String[code.size()];
 		for (int i = 0; i < code.size(); i++){
 			lines[i] = code.get(i);
 		}
 		if (lines.length == 0){
-			Interpreter.throwError("The code recieved as a library argument did not contain any lines");
-			
+			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
+		}
+		registerMethods();
+		processes.add(this);
+	}
+	
+	public Process(String[] code){
+		lines = new String[code.length];
+		for (int i = 0; i < code.length; i++){
+			lines[i] = code[i];
+		}
+
+		if (lines.length == 0){
+			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
 		registerMethods();
 		processes.add(this);
@@ -75,9 +82,7 @@ public class Process {
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
-			Executor.setCloseRequested(true);
-			Executor.getEventHandler().exitProgram("Attempted to get a line out of code range");
-			
+			Interpreter.throwError("Attempted to get a line out of code range");
 		}
 		return lines[lineNumber];
 	}
@@ -104,6 +109,5 @@ public class Process {
 	}
 	
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	static Random r = new Random(System.currentTimeMillis());
 	
 }

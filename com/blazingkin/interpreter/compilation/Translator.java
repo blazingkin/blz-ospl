@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Instruction;
-
+@Deprecated
 public class Translator {
 		
 		//This goes through and replaces all lines with ones that are readable by the executor

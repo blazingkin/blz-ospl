@@ -117,6 +117,31 @@ public class Variable {
 		return new Value(VariableTypes.Nil, null);
 	}
 	
+	public static Value expValues(Value v1, Value v2){
+		if (isDecimalValue(v1) && isDecimalValue(v2)){
+			double d1 = getDoubleVal(v1);
+			double d2 = getDoubleVal(v2);
+			return new Value(VariableTypes.Double, Math.pow(d1, d2));
+		}
+		Interpreter.throwError("Failed Taking an Exponent with "+v1.value + " and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value logValues(Value v1, Value v2){
+		if (isDecimalValue(v1) && isDecimalValue(v2)){
+			double d1 = getDoubleVal(v1);
+			double d2 = getDoubleVal(v2);
+			return new Value(VariableTypes.Double, Math.log(d1)/Math.log(d2));
+		}
+		if (isDecimalValue(v1) && (v2.type == VariableTypes.String && ((String) v2.value).toLowerCase().equals("e"))){
+			double d1 = getDoubleVal(v1);
+			return new Value(VariableTypes.Double, Math.log(d1));
+		}
+		System.out.println(v2.type);
+		Interpreter.throwError("Failed Taking an Logarithm with "+v1.value + " and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
 	
 	private static Pattern squareBracketPattern = Pattern.compile("\\[\\S*\\]");
 	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
@@ -304,26 +329,32 @@ public class Variable {
 		case cursorPosY:
 			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().y);
 		case processUUID:
+			if (Executor.getCurrentProcess() == null){
+				return new Value(VariableTypes.Integer, -1);
+			}
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().UUID);
 		case processesRunning:
 			return new Value(VariableTypes.Integer, Executor.getRunningProcesses().size());
 		case lineReturns:
+			if (Executor.getCurrentProcess() == null){
+				return new Value(VariableTypes.Integer, -1);
+			}
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
 			return new Value(VariableTypes.String, "2.1.0");
 		case runningFileLocation:
-			if (!Executor.getCurrentProcess().runningFromFile){
+			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
 			}
 			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath());
 		case runningFileName:
-			if (!Executor.getCurrentProcess().runningFromFile){
+			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
 			}
 			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getName());
 		case runningFilePath:
-			if (!Executor.getCurrentProcess().runningFromFile){
+			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
 			}
 			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getAbsolutePath());
@@ -397,6 +428,16 @@ public class Variable {
 	public static boolean isValDouble(Value v){
 		return  v.type == VariableTypes.Double;
 	}
+	
+	
+	/**
+	 * @param v - The value to check
+	 * @return if the value is a real number (as in the mathematical set)
+	 */
+	public static boolean isDecimalValue(Value v){
+		return v.type == VariableTypes.Integer || v.type == VariableTypes.Rational || v.type == VariableTypes.Double;
+	}
+	
 	public static boolean isValRational(Value v){
 		return v.type == VariableTypes.Integer || v.type == VariableTypes.Rational;
 	}
@@ -419,7 +460,7 @@ public class Variable {
 			}
 			if (v.type == VariableTypes.Rational){
 				BLZRational rat = (BLZRational) v.value;
-				return rat.num / rat.den;
+				return (double)rat.num / (double)rat.den;
 			}
 			return (double) v.value;
 		}catch(Exception e){

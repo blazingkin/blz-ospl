@@ -38,6 +38,11 @@ public class Method {
 		return (functionName.equals(name) && (parentID == parent.UUID));
 	}
 	
+	/**
+	 * @param ar - The array to search through
+	 * @param s - The name of the target method
+	 * @return returns a method or null if it wasn't found
+	 */
 	public static Method contains(ArrayList<Method> ar, String s){
 		for (int i = 0; i < ar.size(); i++){
 			if (ar.get(i).functionName.equals(s)){

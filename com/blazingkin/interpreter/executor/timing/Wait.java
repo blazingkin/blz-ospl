@@ -1,23 +1,27 @@
 package com.blazingkin.interpreter.executor.timing;
 
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Wait implements InstructionExecutor {
 	/*
 	 * Wait
-	 * Will run a for loop until the time is ready
-	 * This only for single threaded processes
+	 * Makes the current thread sleep for the given amount of time
 	 */
 	public void run(String args[]){
-		if (Variable.getValue(args[0]).type == VariableTypes.Integer){
-			int time = Variable.getIntValue(Variable.getValue(args[0]));
-			long startTime = System.currentTimeMillis();
-			while ((System.currentTimeMillis() - startTime) < time){
-				
+		Value val = Variable.getValue(args[0]);
+		if (Variable.isDecimalValue(val)){
+			double time = Variable.getDoubleVal(val);
+			try {
+				Thread.sleep((long)time);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+			return;
 		}
+		Interpreter.throwError("Invalid Type For Wait "+val.value);
 	}
 	
 	

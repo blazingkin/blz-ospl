@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.unittests;
 
 import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
+import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
 
 import com.blazingkin.interpreter.executor.Instruction;
@@ -132,7 +133,7 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("1 + 1 == 2"), new Value(VariableTypes.Boolean, true));
 		assertEqual(parseExpression("1 + 1 + 1 == 3 == 1 + 2"), new Value(VariableTypes.Boolean, true));
 		assertEqual(parseExpression("1 + 1 == 1"), new Value(VariableTypes.Boolean, false));
-		assertEqual(parseExpression("1/1 == 1 == 2/2 == 3/3 == 5/5"), new Value(VariableTypes.Boolean, true));
+		assertEqual(parseExpression("1/1 == 1 == 2/2 == 3/3 == 5/5 == 2 - 1 == 1/2 * 2"), new Value(VariableTypes.Boolean, true));
 		
 		// Testing Division
 		assertEqual(parseExpression("1 / 2"), Value.rational(1, 2));
@@ -162,6 +163,34 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("2.0 - 2.0"), new Value(VariableTypes.Double, 0.0d));
 		assertEqual(parseExpression("1 - 2/3"), Value.rational(-1, 3));
 		//assertEqual(parseExpression("3 - 2/3"), Value.rational(7, 3));
+		
+		assertAlmostEqual(parseExpression("10 ** 2"), Value.doub(100));
+		assertAlmostEqual(parseExpression("2 ** 3"), Value.doub(8));
+		assertAlmostEqual(parseExpression("2 ** 5"), Value.doub(32));
+		assertAlmostEqual(parseExpression("1 ** 100"), Value.doub(1));
+		assertAlmostEqual(parseExpression(".9 ** 10000"), Value.doub(0));
+		assertAlmostEqual(parseExpression(".9 ** 2"), Value.doub(.81));
+		assertAlmostEqual(parseExpression(".5 ** 3"), Value.doub(1d/8d));
+		
+		
+		assertAlmostEqual(parseExpression("{e} __ \"e\""), Value.doub(1));
+		assertAlmostEqual(parseExpression("10 ** {pi} __ 10"), Value.doub(Math.PI));
+		assertAlmostEqual(parseExpression("1000 __ 10"), Value.doub(3));
+		assertAlmostEqual(parseExpression("10000 __ 10"), Value.doub(4));
+		assertAlmostEqual(parseExpression("8 __ 2"), Value.doub(3));
+		assertAlmostEqual(parseExpression("32 __ 2"), Value.doub(5));
+		assertAlmostEqual(parseExpression("{e} __ {e}"), Value.doub(1));
+		
+		assertEqual(parseExpression("2 ~= 2 =~ 2.0"), Value.bool(true));
+		assertEqual(parseExpression("{pi} ~= 3.1415926534"), Value.bool(true));
+		assertEqual(parseExpression("{e} =~ 2.71828182845904523"), Value.bool(true));
+		assertEqual(parseExpression("1/3 ~= .33333333333"), Value.bool(true));
+		assertEqual(parseExpression("8__2 ~= 3"), Value.bool(true));
+		assertEqual(parseExpression(".5 + .5 ~= 1"), Value.bool(true));
+		assertEqual(parseExpression(".1 + .2 ~= .3"), Value.bool(true));
+		assertEqual(parseExpression(".1 + .1 ~= .25"), Value.bool(false));
+		assertEqual(parseExpression(".01 + .01 ~= .025"), Value.bool(false));
+		assertEqual(parseExpression(".0001 + .0001 ~= .00025"), Value.bool(false));
 		
 		
 		System.out.println("ALL TESTS RUN");

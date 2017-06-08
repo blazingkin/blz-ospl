@@ -14,6 +14,7 @@ public class InstructionType {
 		return Instruction.INVALID;
 	}
 	
+	// This hashmap is statically loaded with all instructions from the Instruction enum
 	public static HashMap<String, Instruction> instructions;
 	static {
 		instructions = new HashMap<String, Instruction>();
@@ -21,6 +22,7 @@ public class InstructionType {
 			instructions.put(i.instruction, i);
 		}
 	}
+	
 	
 	
 }

@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
@@ -12,6 +13,7 @@ import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
 
+@SuppressWarnings("deprecation")
 public class Interpreter {
 	public static boolean logging = true;
 	
@@ -141,7 +143,10 @@ public class Interpreter {
 			if (!Executor.isImmediateMode()){
 				Executor.getEventHandler().exitProgram("An Error Occured");
 			}
+			thrownErrors.add(new Exception(error));
 		}
 	}
 
+	
+	public static Stack<Exception> thrownErrors = new Stack<Exception>();
 }

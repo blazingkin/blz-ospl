@@ -35,6 +35,27 @@ public class UnitTestUtil {
 		}
 		assert a.equals(b);
 	}
+
+	public static final double EPSILON = 1E-10;
+	public static void assertAlmostEqual(Value a, Value b){
+		if (a.equals(b)){
+			assert a.equals(b);
+			return;
+		}
+		if (Variable.isDecimalValue(a) && Variable.isDecimalValue(b)){
+			double v1 = Variable.getDoubleVal(a);
+			double v2 = Variable.getDoubleVal(b);
+			double diff = Math.abs(v2-v1);
+			if (diff > EPSILON){
+				System.out.println(a.value + " !~= " + b.value);
+				new Exception().printStackTrace();
+			}
+			assert diff < EPSILON;
+			return;
+		}
+		System.err.println("Assert Almost Equal can't handle the two values "+ a.value+" and "+b.value);
+		new Exception().printStackTrace();
+	}
 	
 	public static void assertValEqual(String name, Value b){
 		if (!Variable.getValue(name).equals(b)){

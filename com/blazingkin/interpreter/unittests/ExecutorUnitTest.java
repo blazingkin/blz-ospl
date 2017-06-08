@@ -18,10 +18,10 @@ public class ExecutorUnitTest {
 		UnitTestUtil.assertEqualArrays(p3, p3Check);
 		
 		ArrayList<Integer> uuids = new ArrayList<Integer>();
-		for (int i = 0; i < 1000; i++){
+		for (int i = 0; i < 100000; i++){
 			int u = Executor.getUUID();
 			if (uuids.contains(u)){
-				System.err.println("UUID HAD A COLLISION");
+				System.err.println("UUID HAD A COLLISION "+u);
 			}
 			uuids.add(u);
 		}

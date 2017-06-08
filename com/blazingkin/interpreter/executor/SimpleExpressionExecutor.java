@@ -10,6 +10,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class SimpleExpressionExecutor {
 
+	public static double EPSILON = 1E-8; 
 	
 	public static Value evaluate(SimpleExpression type, String expr){
 		switch(type){
@@ -106,6 +107,45 @@ public class SimpleExpressionExecutor {
 			}
 			
 			return Variable.subValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case exponentiation:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Unable to parse exponentiation, it should be base ** exponent");
+			}
+			return Variable.expValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case logarithm:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Unable to parse logarithm, it should be input __ base");
+			}
+			return Variable.logValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case approximateComparison:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Incorrect number of arguments for approximate comparison");
+			}
+			Value first = SimpleExpressionParser.parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(first)){
+				return evaluate(SimpleExpression.comparison, expr);
+			}
+			double frst = Variable.getDoubleVal(first);
+			for (int i = 1; i < splits.length; i++){
+				Value val = SimpleExpressionParser.parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(val)){
+					return evaluate(SimpleExpression.comparison, expr);
+				}
+				double v = Variable.getDoubleVal(val);
+				if (Math.abs(frst - v) > EPSILON){
+					return Value.bool(false);
+				}
+			}
+			return Value.bool(true);
 		}
 		default:
 			System.err.println(expr);

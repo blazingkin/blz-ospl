@@ -20,6 +20,7 @@ public class Echo implements InstructionExecutor, LambdaFunction {
 		out += "\n";
 		Executor.getEventHandler().print(out);
 	}
+	
 	@Override
 	public Value evaluate(String[] args) {
 		String out = "";

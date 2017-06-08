@@ -239,17 +239,20 @@ public class Executor {
 		String in = "";
 		Scanner sc = new Scanner(is);
 		immediateMode = true;
-		Exception lastException = new Exception("There have been no exceptions");
+		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
 		try{
 			do{
 				try{
 					in = sc.nextLine();
 					if (in.equals("err")){
-						lastException.printStackTrace();
+						Interpreter.thrownErrors.peek().printStackTrace();
 						continue;
 					}
 					if (in.equals("exit")){
 						break;
+					}
+					if (in.equals("")){
+						continue;
 					}
 	
 					if (LambdaParser.isLambdaExpression(in)){
@@ -265,7 +268,7 @@ public class Executor {
 						result.printValue();
 					}
 				}catch(Exception e){
-					lastException = e;
+					Interpreter.thrownErrors.add(e);
 					System.err.println("There was an issue running your last command");
 					System.err.println("Type 'err' to see the error");
 				}
@@ -287,6 +290,7 @@ public class Executor {
 		do{
 			id = (int) (Math.random() * Integer.MAX_VALUE);
 		}while(UUIDsUsed.contains(id));
+		UUIDsUsed.add(id);
 		return id;
 	}
 	public static Stack<LoopWrapper> getLoopStack() {

@@ -35,6 +35,11 @@ public class Value {
 		value = val;
 		parent = par;
 	}
+	
+	public String toString(){
+		return "<"+type+" "+value+">";
+	}
+	
 	public void printValue(){
 		System.out.println(value);
 	}
@@ -56,6 +61,10 @@ public class Value {
 	}
 	public static Value rational(int num, int den){
 		return rational((long)num, (long)den);
+	}
+	
+	public static Value doub(double num){
+		return new Value(VariableTypes.Double, num);
 	}
 	
 	public static Value integer(int val){

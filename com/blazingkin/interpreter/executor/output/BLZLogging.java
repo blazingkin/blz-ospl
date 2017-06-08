@@ -16,7 +16,7 @@ public class BLZLogging implements InstructionExecutor {
 				Interpreter.throwError("BLZLogging takes either on or off as an argument");
 			}
 		}else{
-			Interpreter.throwError("Not enough arguments for BLZLogging");
+			Interpreter.throwError("Incorrect number of arguments for BLZLogging");
 		}
 	}
 

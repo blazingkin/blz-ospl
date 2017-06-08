@@ -8,8 +8,11 @@ public enum SimpleExpression {
 	division(Pattern.compile("\\/"), 3),
 	addition(Pattern.compile("\\+"), 4),
 	subtraction(Pattern.compile("\\-"), 3),
-	assignment(Pattern.compile("(?<!=)=(?!=)"), 6),	// The regex here makes sure it is not a ==
-	comparison(Pattern.compile("=="),5),
+	exponentiation(Pattern.compile("\\*\\*"), 5),	// Two literal astersisk
+	logarithm(Pattern.compile("__"), 5),			// Two literal underscores
+	assignment(Pattern.compile("(?<!~)(?<!=)=(?!=)(?!~)"), 7),	// The regex here makes sure it is not a == or a ~=
+	comparison(Pattern.compile("=="),6),
+	approximateComparison(Pattern.compile("((~=)|(=~))"), 6),// Approximately equal to
 	parenthesis(Pattern.compile("\\(.*?\\)"), 1000);
 	
 	
