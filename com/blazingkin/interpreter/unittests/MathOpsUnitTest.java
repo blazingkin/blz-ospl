@@ -12,6 +12,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@SuppressWarnings("deprecation")
 public class MathOpsUnitTest {
 
 	public static void main(String args[]){
@@ -162,7 +163,10 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("2 - 2"), Value.integer(0));
 		assertEqual(parseExpression("2.0 - 2.0"), new Value(VariableTypes.Double, 0.0d));
 		assertEqual(parseExpression("1 - 2/3"), Value.rational(-1, 3));
-		//assertEqual(parseExpression("3 - 2/3"), Value.rational(7, 3));
+		assertEqual(parseExpression("3 - (2/3)"), Value.rational(7, 3));
+		assertEqual(parseExpression("1 - (2/3)"), Value.rational(1, 3));
+		assertEqual(parseExpression("-1/-1"), Value.integer(1));
+		assertEqual(parseExpression("1/-1"), Value.integer(-1));
 		
 		assertAlmostEqual(parseExpression("10 ** 2"), Value.doub(100));
 		assertAlmostEqual(parseExpression("2 ** 3"), Value.doub(8));

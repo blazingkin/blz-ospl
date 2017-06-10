@@ -92,7 +92,9 @@ public class Variable {
 			return new Value(VariableTypes.Double, getDoubleVal(v1) - getDoubleVal(v2));
 		}
 		if (isValRational(v1) && isValRational(v2)){
-			BLZRational rat = getRationalVal(v1).add(getRationalVal(v2).multiply((BLZRational)Value.rational(-1, 1).value));
+			BLZRational val2 = getRationalVal(v2);
+			val2.num *= -1;
+			BLZRational rat = getRationalVal(v1).add(val2);
 			if (rat.den == 1){
 				return new Value(VariableTypes.Integer, (int)rat.num);
 			}

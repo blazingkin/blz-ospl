@@ -4,7 +4,6 @@ import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 
 public class ReturnProcess implements InstructionExecutor {
-
 	
 	public void run(String args[]){
 		Executor.getCurrentProcess().lineReturns.clear();

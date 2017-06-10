@@ -10,8 +10,13 @@ public enum SimpleExpression {
 	subtraction(Pattern.compile("\\-"), 3),
 	exponentiation(Pattern.compile("\\*\\*"), 5),	// Two literal astersisk
 	logarithm(Pattern.compile("__"), 5),			// Two literal underscores
-	assignment(Pattern.compile("(?<!~)(?<!=)=(?!=)(?!~)"), 7),	// The regex here makes sure it is not a == or a ~=
-	comparison(Pattern.compile("=="),6),
+	assignment(Pattern.compile("(?<!\\!)(?<!\\>)(?<!\\<)(?<!~)(?<!=)=(?!=)(?!~)(?!\\!)(?!\\<)(?!\\>)"), 8),	// The regex here makes sure it is not a == or a ~=
+	comparison(Pattern.compile("=="),7),
+	lessThan(Pattern.compile("\\<"), 7),
+	greaterThan(Pattern.compile("\\>"), 7),
+	lessThanEqual(Pattern.compile("(\\<=|=\\<)"), 7),
+	greaterThanEqual(Pattern.compile("(\\>=|=\\>)"), 7),
+	notEqual(Pattern.compile("(!=|=!)"), 7),
 	approximateComparison(Pattern.compile("((~=)|(=~))"), 6),// Approximately equal to
 	parenthesis(Pattern.compile("\\(.*?\\)"), 1000);
 	

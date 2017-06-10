@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.executor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -14,7 +13,8 @@ public class Process {
 	public File readingFrom;
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
-	public String[] lines;
+	private String[] lines;
+	private RegisteredLine[] registeredLines;
 	
 	
 	public Process(File runFile) throws FileNotFoundException{
@@ -38,21 +38,13 @@ public class Process {
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
 		}
 		registerMethods();
+		preprocessLines();
 		processes.add(this);
 	}
 	
 	
 	public Process(ArrayList<String> code){
-		UUID = Executor.getUUID();
-		lines = new String[code.size()];
-		for (int i = 0; i < code.size(); i++){
-			lines[i] = code.get(i);
-		}
-		if (lines.length == 0){
-			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
-		}
-		registerMethods();
-		processes.add(this);
+		this((String[]) code.toArray());
 	}
 	
 	public Process(String[] code){
@@ -65,6 +57,7 @@ public class Process {
 			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
 		registerMethods();
+		preprocessLines();
 		processes.add(this);
 	}
 	
@@ -78,7 +71,39 @@ public class Process {
 			}
 		}
 	}
+
 	
+	public void preprocessLines(){
+		registeredLines = new RegisteredLine[lines.length];
+		for (int i = 0; i < lines.length; i++){
+			String splits[] = lines[i].split(" ");
+			if (splits.length == 0){
+				registeredLines[i] = null;
+				continue;
+			}
+			Instruction instr = InstructionType.getInstructionType(splits[0]);
+			if (instr == null || instr == Instruction.INVALID){
+				registeredLines[i] = null;
+				continue;
+			}
+			String newStr = lines[i].replaceFirst(splits[0], "").trim();
+			registeredLines[i] = new RegisteredLine(instr, Executor.parseExpressions(newStr));
+		}
+	}
+	
+	public boolean isRegistered(int lineNumber){
+		if (lineNumber >= lines.length){
+			Interpreter.throwError("Attempted to get a line out of code range");
+		}
+		return registeredLines[lineNumber] != null;
+	}
+	
+	public RegisteredLine getRegisteredLine(int lineNumber){
+		if (lineNumber >= lines.length){
+			Interpreter.throwError("Attempted to get a line out of code range");
+		}
+		return registeredLines[lineNumber];
+	}
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
@@ -109,5 +134,21 @@ public class Process {
 	}
 	
 	public static ArrayList<Process> processes = new ArrayList<Process>();
+	
+	
+	public class RegisteredLine{
+		public final Instruction instr;
+		public final String[] args;
+		public RegisteredLine(Instruction instr, String[] args){
+			this.instr = instr;
+			this.args = args;
+		}
+		public Instruction getInstr(){
+			return instr;
+		}
+		public String[] getArgs(){
+			return args;
+		}
+	}
 	
 }

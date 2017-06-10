@@ -17,9 +17,6 @@ public class SimpleExpressionParser {
 		if (Variable.isBool(expr)){
 			return new Value(VariableTypes.Boolean, Variable.convertToBool(expr));
 		}
-		if (Variable.isFraction(expr)){
-			return Variable.convertToFraction(expr);
-		}
 		for (SimpleExpression se : SimpleExpressionParser.functions){
 			if (se.syntax.matcher(expr).find()){
 				return SimpleExpressionExecutor.evaluate(se, expr);

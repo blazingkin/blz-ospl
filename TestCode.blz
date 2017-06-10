@@ -31,7 +31,6 @@ ECHO a " and " c
 (ECHO "Curried addition of 3 and 5: " (ca 5))
 (ECHO "Factorial 7: " (fact 7))
 
-
 SET loopCounter 0
 WHILE loopCounter < 3
 ECHO "looptest"

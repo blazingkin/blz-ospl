@@ -14,7 +14,6 @@ public class JumpReturn implements InstructionExecutor {
 	public void run(String[] args) {
 		String fName = args[0];
 		Executor.getCurrentProcess().lineReturns.add(Executor.getLine());
-		
 		if (Method.contains(Executor.getMethods(), fName) != null){
 			Method m = Executor.getMethodInCurrentProcess(fName);
 			if (m.takesVariables){
@@ -29,8 +28,5 @@ public class JumpReturn implements InstructionExecutor {
 				Executor.executeMethod(Executor.getMethodInCurrentProcess(fName));
 				return;			
 		}
-		
-
 	}
-
 }

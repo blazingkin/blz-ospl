@@ -9,7 +9,6 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class GetTensorValue implements InstructionExecutor {
 
-	
 	//Params go: Tensor name, list, of, indexes, ..., value to set
 	@Override
 	public void run(String[] args) {

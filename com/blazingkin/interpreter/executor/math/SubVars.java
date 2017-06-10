@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class SubVars implements InstructionExecutor, LambdaFunction {
 	/*	Subtract
 	 * 	Subtracts two numbers and stores them in a third variable

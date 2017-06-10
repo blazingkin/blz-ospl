@@ -16,6 +16,4 @@ public class LoopWrapper implements InstructionExecutor {
 		//This intentionally left blank
 		Interpreter.throwError("The loop wrapper was mistakenly run");
 	}
-
-	
 }

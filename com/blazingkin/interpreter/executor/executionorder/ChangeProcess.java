@@ -40,8 +40,6 @@ public class ChangeProcess implements InstructionExecutor {
 		}
 		Executor.addProcess(p);
 		Executor.executeMethod(Executor.getMethod(args[args.length-1], p.UUID));
-		
-		
 	}
 
 }

@@ -8,7 +8,7 @@ public class BLZRational  {
 			this.den = 1;
 			return;
 		}
-		long gcm = gcm(num, den);
+		long gcm = Math.abs(gcm(num, den));
 		long sign = num * den / (Math.abs(num) * Math.abs(den));
 		this.num = sign * Math.abs(num) / gcm;
 		this.den = Math.abs(den) / gcm;

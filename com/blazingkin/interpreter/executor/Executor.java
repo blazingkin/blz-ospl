@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Process.RegisteredLine;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
@@ -72,23 +73,9 @@ public class Executor {
 	public static void codeLoop() throws Exception{
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
 			for (setLine(0);getLine() < getCurrentProcess().getSize();){
-				String line = getCurrentProcess().getLine(getLine());
-				if (line.trim().length() == 0){
-					setLine(getLine()+1);
-					continue;
-				}
-				if (line.charAt(0) == '('){
-					LambdaParser.parseLambdaExpression(line).getValue();
-					setLine(getLine()+1);
-					continue;
-				}
-				
-				
-				
-				String split[] = line.split(" ");
-				
-				
+				Process currentProcess = getCurrentProcess();
 				if (isLoopIgnoreMode()){
+					String[] split = currentProcess.getLine(getLine()).split(" ");
 					if (split[0].equals(Instruction.ENDLOOP.instruction)){
 						if (loopsIgnored > 0){
 							loopsIgnored--;
@@ -100,35 +87,42 @@ public class Executor {
 						loopsIgnored++;
 					}
 					setLine(getLine()+1);
-					//System.out.println(loopStack.size() +": ls size");
 					continue;
 				}
-				
-				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-					Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
-					getMethods().add(nM);
-					runningMethods.push(nM);
-					functionContext.push(new Context());
+				if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
+					RegisteredLine line = currentProcess.getRegisteredLine(getLine());
 					setLine(getLine()+1);
-					continue;
+					line.getInstr().executor.run(line.getArgs());
 				}
-				if (split.length == 1 && split[0].equals("")){
+				else{
+					String line = currentProcess.getLine(getLine());
+					if (line.trim().length() == 0){
+						setLine(getLine()+1);
+						continue;
+					}
+					if (line.charAt(0) == '('){
+						LambdaParser.parseLambdaExpression(line).getValue();
+						setLine(getLine()+1);
+						continue;
+					}
+					String split[] = line.split(" ");
+					if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
+						Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
+						getMethods().add(nM);
+						runningMethods.push(nM);
+						functionContext.push(new Context());
+						setLine(getLine()+1);
+						continue;
+					}
+					if (split.length == 1 && split[0].equals("")){
+						setLine(getLine()+1);
+						continue;
+					}
 					setLine(getLine()+1);
-					continue;
+					SimpleExpressionParser.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
 				}
-				setLine(getLine()+1);
-				
-				String originalString = line.replaceFirst(split[0],"").trim();
-				String[] newSplit = parseExpressions(originalString);
-				
-				Instruction it = InstructionType.getInstructionType(split[0]);
-				if (it == null || it.name.equals(Instruction.INVALID.name)){
-					SimpleExpressionParser.parseExpression(line);
-					continue;
-				}
-				it.executor.run(newSplit);
 				if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-					Executor.getCurrentProcess().lineReturns.add(getLine()+1);
+					currentProcess.lineReturns.add(getLine()+1);
 					Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
 					getEventsToBeHandled().remove(0);
 				}
@@ -412,7 +406,6 @@ public class Executor {
 		}
 		functionContext.pop();
 	}
-	
 	
 	//Passes a whole expression
 	public static String[] parseExpressions(String exp){

@@ -7,6 +7,8 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+
+@Deprecated
 public class MultiplyVars implements InstructionExecutor, LambdaFunction {
 	/*	Multiply
 	 * 	Multiplies 2 numbers and stores them as a third variable

@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class ExponentVars implements InstructionExecutor, LambdaFunction {
 
 	public void run(String args[]){

@@ -6,6 +6,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class Logarithm implements InstructionExecutor, LambdaFunction {
 
 	@Override

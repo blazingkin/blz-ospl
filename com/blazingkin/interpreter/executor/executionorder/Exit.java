@@ -9,7 +9,6 @@ public class Exit implements InstructionExecutor {
 	public void run(String[] args) {
 		/*	Exit
 		 * 	sets the closeRequested flag to true
-		 * 
 		 */
 		Executor.setCloseRequested(true);
 	}
