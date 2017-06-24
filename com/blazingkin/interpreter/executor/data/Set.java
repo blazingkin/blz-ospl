@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.executor.data;
 import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Variable;
 
+@Deprecated
 public class Set implements InstructionExecutor {
 	/*	Set
 	 * 	Sets the value of a variable

@@ -35,9 +35,10 @@ public class Interpreter {
 	public static void printHelp(){
 		System.out.println("How to use BLZ-OSPL:");
 		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
-		System.out.println();
+/*		System.out.println();
 		System.out.println("Compile a pre-blz file (typically .pblz extension)");
 		System.out.println("blz-ospl -c *INPATH* *OUTPATH*");
+		This feature is deprecated, but will be recreated at a later date*/
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
 		System.out.println("blz-ospl *PATH*");

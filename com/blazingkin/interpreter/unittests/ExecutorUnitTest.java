@@ -3,10 +3,11 @@ package com.blazingkin.interpreter.unittests;
 import java.util.ArrayList;
 
 import com.blazingkin.interpreter.executor.Executor;
-
+import org.junit.*;
 public class ExecutorUnitTest {
 
-	public static void main(String[] args) {
+	@Test
+	public void testParseExpressions(){
 		String[] p1 = Executor.parseExpressions("THIS (is an (expression \"that\" takes) arguments)");
 		String[] p1Check = {"THIS", "(is an (expression \"that\" takes) arguments)"};
 		UnitTestUtil.assertEqualArrays(p1, p1Check);
@@ -16,9 +17,12 @@ public class ExecutorUnitTest {
 		String[] p3 = Executor.parseExpressions("this is a test that should be completely split");
 		String[] p3Check = {"this", "is", "a", "test", "that", "should", "be", "completely", "split"};
 		UnitTestUtil.assertEqualArrays(p3, p3Check);
-		
+	}
+	
+	@Test
+	public void testUUIDs(){
 		ArrayList<Integer> uuids = new ArrayList<Integer>();
-		for (int i = 0; i < 100000; i++){
+		for (int i = 0; i < 50000; i++){
 			int u = Executor.getUUID();
 			if (uuids.contains(u)){
 				System.err.println("UUID HAD A COLLISION "+u);

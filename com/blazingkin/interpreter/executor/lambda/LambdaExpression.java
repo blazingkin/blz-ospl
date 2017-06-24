@@ -26,5 +26,13 @@ public class LambdaExpression {
 		}
 		return new LambdaExpression(func, newArgs);
 	}
-
+	
+	public LambdaFunction getFunction()
+	{
+		return func;
+	}
+	
+	public String[] getArgs(){
+		return arguments;
+	}
 }
