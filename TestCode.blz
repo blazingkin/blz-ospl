@@ -89,6 +89,7 @@ END
 
 :checkglobal
 
+ECHO {blz.method.stack}
 ECHO *l " should be your OS"
 
 END

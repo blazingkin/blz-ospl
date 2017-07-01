@@ -385,7 +385,6 @@ public class Executor {
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
 		runningProcesses.push(p);
-		
 	}
 	
 	public static void popStack(){									// This is used to return to the previous process or function
@@ -405,6 +404,10 @@ public class Executor {
 			}
 		}
 		functionContext.pop();
+	}
+	
+	public static Stack<Method> getMethodStack(){
+		return runningMethods;
 	}
 	
 	//Passes a whole expression

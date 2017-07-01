@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 
@@ -337,6 +338,15 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().UUID);
 		case processesRunning:
 			return new Value(VariableTypes.Integer, Executor.getRunningProcesses().size());
+		case methodStack:
+			String stackString = "";
+			Method[] stck = new Method[Executor.getMethodStack().size()];
+			Executor.getMethodStack().copyInto(stck);
+			for (Method m : stck){
+				stackString = m.functionName + "\n" + stackString;
+			}
+			stackString = stackString.trim();
+			return new Value(VariableTypes.String, stackString);
 		case lineReturns:
 			if (Executor.getCurrentProcess() == null){
 				return new Value(VariableTypes.Integer, -1);
