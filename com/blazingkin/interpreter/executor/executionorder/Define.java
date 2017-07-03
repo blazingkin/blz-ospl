@@ -1,6 +1,6 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;

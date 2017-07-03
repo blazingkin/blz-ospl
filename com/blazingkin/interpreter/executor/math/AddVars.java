@@ -1,8 +1,8 @@
 package com.blazingkin.interpreter.executor.math;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Instruction;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;

@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.executor;
 
 import java.util.ArrayList;
 
-public class Method {
+public class Method implements RuntimeStackElement {
 	
 	public int UUID = Executor.getUUID();
 	public Process parent;
@@ -51,6 +51,20 @@ public class Method {
 				
 		}
 		return null;
+	}
+
+	@Override
+	public void onBlockStart() {
+		
+	}
+
+	@Override
+	public void onBlockEnd() {
+		if (!Executor.getCurrentProcess().lineReturns.empty()){
+			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
+		}else{
+			Executor.popStack();	// If there is nothing else in the current process to run, return to the previous process
+		}
 	}
 	
 }

@@ -1,22 +1,23 @@
 :main
-a = 5
-ECHO "Input a number"
-NIN b
-ADD a b c
-ECHO "the sum of " a " and " b " is " c
+	a = 5
+	ECHO "Input a number"
+	NIN b	# Get a number from the user
+	c = a + b
+	ECHO "the sum of " a " and " b " is " c
 
-SET *f 0
-RJP loop
+	SET *f 0
+	RJP loop
 
 END
 
 :loop
-IF *f < 20
-RJP method
+	IF *f < 20
+		RJP method
+	END
 END
 
 :method
-ECHO *f "nth iteration says hello"
-ADD *f 1 *f
-RJP loop
+	ECHO *f "nth iteration says hello"
+	ADD *f 1 *f
+	RJP loop
 END

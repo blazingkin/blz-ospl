@@ -1,4 +1,4 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.executor.instruction;
 
 import com.blazingkin.interpreter.executor.data.MoveData;
 import com.blazingkin.interpreter.executor.data.Peek;
@@ -6,7 +6,9 @@ import com.blazingkin.interpreter.executor.data.Pop;
 import com.blazingkin.interpreter.executor.data.Push;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Set;
+import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.ChangeProcess;
+import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.Define;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
@@ -117,7 +119,9 @@ public enum Instruction {
 	GETTENSORVALUE("TENSORGET", "GET TENSOR VALUE", new GetTensorValue()),
 	TOGGLELOGGING("BLZLOG", "TOGGLE LOGGING", new BLZLogging()),
 	DEFINE("DEFINE", "DEFINE LAMBDA EXPRESSION", new Define(true)),
-	LAMBDA("LAMBDA", "RETURN LAMBDA EXPRESSION", new Define(false));
+	LAMBDA("LAMBDA", "RETURN LAMBDA EXPRESSION", new Define(false)),
+	BREAK("BREAK", "Break from loop", new Break()),
+	CONTINUE("CONTINUE", "Continue in loop", new Continue());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

@@ -6,7 +6,7 @@ import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
 
-import com.blazingkin.interpreter.executor.Instruction;
+import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.math.AddVars;
 import com.blazingkin.interpreter.executor.math.Ceiling;
 import com.blazingkin.interpreter.variables.Value;

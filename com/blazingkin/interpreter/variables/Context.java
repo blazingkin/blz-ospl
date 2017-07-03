@@ -6,6 +6,7 @@ public class Context {
 	private Context parent;
 	private int contextID;
 	private static int maxDepth = 500;
+	
 	public Context(){
 		parent = Executor.getCurrentContext();
 		Context p = parent;

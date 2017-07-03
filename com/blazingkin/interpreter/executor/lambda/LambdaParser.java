@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.executor.lambda;
 
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Instruction;
+import com.blazingkin.interpreter.executor.instruction.Instruction;
 
 public class LambdaParser {
 

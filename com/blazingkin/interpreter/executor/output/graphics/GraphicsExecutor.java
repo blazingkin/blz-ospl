@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.listener.ListenerTypes;
 import com.blazingkin.interpreter.variables.Value;

@@ -2,9 +2,10 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.SimpleExpressionParser;
+import com.blazingkin.interpreter.variables.Value;
 
 public class ForLoop extends LoopWrapper {
-	
+	private static final Value TRUE_VAL = Value.bool(true);
 	public ForLoop(){
 		
 	}
@@ -16,18 +17,7 @@ public class ForLoop extends LoopWrapper {
 		functionContext = Executor.getCurrentContext();
 	}
 	
-	
 	public void run(String[] args) {
-		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionContext == Executor.getCurrentContext()
-				&& Executor.getLoopStack().peek().startLine == 
-				Executor.getLine()){	// This whole if statement checks if the for loop is already on the loop stack
-			LoopWrapper lw = Executor.getLoopStack().peek();
-			SimpleExpressionParser.parseExpression(lw.loopInstr);
-			if (!IfBlock.pureComparison(lw.termInstr.trim().split(" "))){
-				Executor.setLoopIgnoreMode(true);
-			}
-			
-		}else{
 			String originalString = "";
 			for (String s: args){
 				originalString = originalString + s + " ";
@@ -35,13 +25,26 @@ public class ForLoop extends LoopWrapper {
 			originalString.trim();
 			String[] splits = originalString.split(",");
 			
-			Executor.getLoopStack().push(new ForLoop(splits[0], splits[1], splits[2]));
 			SimpleExpressionParser.parseExpression(splits[0]);
-			
-			if (!IfBlock.pureComparison(splits[1].trim().split(" "))){
-				
-				Executor.setLoopIgnoreMode(true);
+			if (SimpleExpressionParser.parseExpression(splits[1]).equals(TRUE_VAL)){
+				Executor.pushToRuntimeStack(new ForLoop(splits[0], splits[1], splits[2]));
+			}else{
+				Executor.setLine(Executor.getCurrentBlockEnd());
 			}
+	}
+	@Override
+	public void onBlockStart() {
+		Executor.setLine(startLine);
+	}
+	@Override
+	public void onBlockEnd() {
+		if (Executor.isBreakMode()){
+			Executor.setBreakMode(false);
+			return;
+		}
+		SimpleExpressionParser.parseExpression(loopInstr);
+		if (SimpleExpressionParser.parseExpression(termInstr).equals(TRUE_VAL)){
+			Executor.pushToRuntimeStack(this);
 		}
 	}
 

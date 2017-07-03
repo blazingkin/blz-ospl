@@ -1,36 +1,31 @@
 :main
-len = 0
-numon = 2
-ECHO "How many primes do you want?"
-NIN count
-
-WHILE len < count
-found = 0
-POW len .5 sqrt
-FOR i = 0, i < sqrt, i = i + 1
-MOD numon primes[i] flag
-IF flag == 0
-found = 1
-
-
-ENDLOOP
-
-numon = numon + 1
-IF found == 1
-ENDLOOP
-
-prime = numon - 1
-primes[len] = prime
-len = len + 1
-
-ENDLOOP
-
-
-FOR i = 0, i < count, i = i + 1
-offset = i + 1
-ECHO offset "th prime: " primes[i]
-
-ENDLOOP
-
+	len = 0
+	numon = 2
+	ECHO "How many primes do you want?"
+	NIN count
+	
+	WHILE len < count
+		flag = 0
+		mod = 10
+		FOR i = 0, i < numon, i = i + 1
+			MOD numon primes[i] mod
+			IF mod == 0
+				flag = 1
+				BREAK
+			END
+		END
+		numon = numon + 1
+		IF flag == 1
+			CONTINUE
+		END
+		primes[len] = numon - 1
+		len = len + 1
+	END
+	
+	FOR i = 0, i < count, i = i + 1
+		off = i + 1
+		ECHO off "th prime: " primes[i]
+	END
+		
 
 END

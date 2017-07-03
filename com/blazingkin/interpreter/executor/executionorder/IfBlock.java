@@ -2,14 +2,15 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IfBlock implements InstructionExecutor, LambdaFunction {
-
+public class IfBlock implements InstructionExecutor, LambdaFunction, BlockInstruction {
+	
 	public void run(String[] args) {
 		boolean flag = false;
 		Value v1 = Variable.getValue(args[0]);
@@ -50,7 +51,9 @@ public class IfBlock implements InstructionExecutor, LambdaFunction {
 			break;
 		}
 		if (!flag){
-			Executor.setLine(Executor.getLine()+1);
+			Executor.setLine(Executor.getCurrentBlockEnd());
+		}else{
+			Executor.pushToRuntimeStack(this);
 		}
 		
 	}
@@ -176,6 +179,18 @@ public class IfBlock implements InstructionExecutor, LambdaFunction {
 		}
 		Interpreter.throwError("If block expected a boolean or a comparison as first statement - not found");
 		return new Value(VariableTypes.Nil, null);
+		
+	}
+
+	@Override
+	public void onBlockEnd() {
+		// Do nothing
+		// When else gets implemented, this may change
+	}
+
+	@Override
+	public void onBlockStart() {
+		// TODO Auto-generated method stub
 		
 	}
 	

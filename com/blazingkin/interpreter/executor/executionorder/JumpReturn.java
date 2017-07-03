@@ -2,8 +2,8 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class JumpReturn implements InstructionExecutor {

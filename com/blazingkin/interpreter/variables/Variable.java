@@ -55,6 +55,7 @@ public class Variable {
 		Executor.setLine(0);
 	}
 	
+	
 	//Gets a local value (the scope of these variables is the function they are declared in
 	public static Value getValue(String key){
 		return getValue(key, Executor.getCurrentContext());
@@ -198,9 +199,9 @@ public class Variable {
 		if (getContextVariables(con).containsKey(line)){
 			return getContextVariables(con).get(line);
 		}
-	/*	if (con.getParentContext() != getGlobalContext()){
+		if (con.getParentContext() != getGlobalContext()){
 			return getValue(line, con.getParentContext());
-		}*/
+		}
 		Interpreter.throwError("Unable to find a value for: "+line);
 		return new Value(VariableTypes.Nil, null);
 	}
