@@ -1,15 +1,15 @@
 :main
 	input = 1
-	WHILE input >= -1
-		ECHO "Enter a number (-1 to quit)"
-		NIN input
-		mod = 0
-		MOD input 2 mod
-		IF mod == 1
-			ECHO "odd"
-		END
-		IF mod == 0
-			ECHO "even"
-		END
-	END
-END
+	while input >= -1
+		echo "Enter a number (-1 to quit)"
+		nin input
+		md = 0
+		mod input 2 md
+		if md == 1
+			echo "odd"
+		end
+		if md == 0
+			echo "even"
+		end
+	end
+end

@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.executor.lambda;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionType;
 
 public class LambdaParser {
 
@@ -17,10 +18,9 @@ public class LambdaParser {
 		for (int i = 1; i < splits.length; i++){
 			args[i-1] = splits[i];
 		}
-		for (Instruction in : Instruction.values()){
-			if (in.instruction.equals(name) && in.executor instanceof LambdaFunction){
-				return new LambdaExpression((LambdaFunction) in.executor, args);
-			}
+		Instruction instr = InstructionType.getInstructionType(name);
+		if (instr != null && instr.executor instanceof LambdaFunction){
+			return new LambdaExpression((LambdaFunction) instr.executor, args);			
 		}
 		return LambdaRegistrar.getLambdaExpression(name, args);
 	}

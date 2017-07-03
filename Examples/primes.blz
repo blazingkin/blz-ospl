@@ -1,31 +1,32 @@
 :main
 	len = 0
 	numon = 2
-	ECHO "How many primes do you want?"
-	NIN count
+	echo "How many primes do you want?"
+	nin count
 	
-	WHILE len < count
+	while len < count
 		flag = 0
-		mod = 10
-		FOR i = 0, i < numon, i = i + 1
-			MOD numon primes[i] mod
-			IF mod == 0
+		md = 10
+		for i = 0, i < numon, i = i + 1
+			mod numon primes[i] md
+			if md == 0	# If a previous prime divides it, it isn't a prime
 				flag = 1
-				BREAK
-			END
-		END
+				break
+			end
+		end
 		numon = numon + 1
-		IF flag == 1
-			CONTINUE
-		END
-		primes[len] = numon - 1
+		if flag == 1	# Non-prime
+			continue
+		end
+		primes[len] = numon - 1	# We incremented numon earlier, so we need to subtract one
 		len = len + 1
-	END
+	end
 	
-	FOR i = 0, i < count, i = i + 1
+	
+	# Loop through and print primes
+	for i = 0, i < count, i = i + 1
 		off = i + 1
-		ECHO off "th prime: " primes[i]
-	END
+		echo off "th prime: " primes[i]
+	end
 		
-
-END
+end

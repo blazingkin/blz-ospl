@@ -1,9 +1,7 @@
 :main
-
-	ECHO "How many interations?"
-	NIN iter
-	FOR i=0, i<iter, i=i+1
-		ECHO i
-	END 
-
-END
+	echo "How many interations?"
+	nin iter
+	for i=0, i<iter, i=i+1
+		echo i
+	end 
+end

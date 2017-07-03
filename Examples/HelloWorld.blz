@@ -1,5 +1,3 @@
 :main
-
-ECHO "Hello World!"
-
+	echo "Hello World!"
 END

@@ -79,6 +79,7 @@ public enum Instruction {
 	UNSIGN("UNS", "UNSIGN", new Unsign()),											// Unsign - Absolute values a variable
 	MODULUS("MOD", "MODULUS", new ModVars()),										// Modulus - Gets the remainder of a difference
 	RETURNJUMP("RJP", "RETURN JUMP", new JumpReturn()),								// Return Jump - Jumps, then returns after this at the relevant END
+	CALL("CALL", "RETURN JUMP", new JumpReturn()),									// Alias for return jump
 	END("END", "END STATEMENT", new End()),											// End - Ends a return jump statement
 	CONCATENATE("CON", "CONCATENATE", new ConcatenateStrings()),					// Concatenate Strings - Concatenate Strings, removes "'s
 	IF("IF", "IF STATEMENT", new IfBlock()),

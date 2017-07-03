@@ -1,11 +1,11 @@
 :main
-	ECHO "Enter a number"
-	NIN a
+	echo "Enter a number"
+	nin a
 	starttime = {system.time.currenttimemillis}
-	FOR i = 0, i < a, i = i + 1
-		ECHO i
-	END
+	echo i = 0, i < a, i = i + 1
+		echo i
+	end
 	time = {system.time.currenttimemillis} - starttime
 	timeperelement = time / a
-	ECHO "Took " time " milliseconds (" timeperelement " milliseconds per iteration)"
-END
+	echo "Took " time " milliseconds (" timeperelement " milliseconds per iteration)"
+end

@@ -1,22 +1,21 @@
 :main
 	a = 5
-	ECHO "Input a number"
-	NIN b	# Get a number from the user
+	echo "Input a number"
+	nin b	# Get a number from the user
 	c = a + b
-	ECHO "the sum of " a " and " b " is " c
-	SET *f 0
-	RJP loop
-
-END
+	echo "the sum of " a " and " b " is " c
+	set *f 0
+	call loop
+end
 
 :loop
-	IF *f < 20
-		RJP method
-	END
-END
+	if *f < 20
+		call method
+	end
+end
 
 :method
-	ECHO *f "nth iteration says hello"
-	ADD *f 1 *f
-	RJP loop
-END
+	echo *f "nth iteration says hello"
+	add *f 1 *f
+	call loop
+end

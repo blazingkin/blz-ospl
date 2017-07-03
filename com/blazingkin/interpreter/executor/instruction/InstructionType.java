@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class InstructionType {
 	public static Instruction getInstructionType(String s){		//gets the instruction based on the function call name
 		try{
-			return instructions.get(s);
+			return instructions.get(s.toUpperCase());
 		}catch(Exception e){
 		}
 		try{
