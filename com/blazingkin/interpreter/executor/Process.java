@@ -108,7 +108,7 @@ public class Process implements RuntimeStackElement {
 			}
 			else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof End){
 				if (blckStack.empty()){
-					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+i);
+					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
 				}
 				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
 				blockArcs.put(ba.start, ba);

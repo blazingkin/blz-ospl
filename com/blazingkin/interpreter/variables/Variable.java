@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 
@@ -190,7 +191,7 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = getValue(gp, con);
+			Value index = SimpleExpressionParser.parseExpression(gp);
 			int ind = getIntValue(index);
 			return getValueOfArray(line.split("\\[")[0], ind, con);
 		}
@@ -224,7 +225,7 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = getValue(gp);
+			Value index = SimpleExpressionParser.parseExpression(gp);
 			int ind = getIntValue(index);
 			setValueOfArray(key.split("\\[")[0], ind, value, con);
 			return;

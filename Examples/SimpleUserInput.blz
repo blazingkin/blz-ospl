@@ -1,14 +1,14 @@
 :main
 
-ECHO "Enter a number:"
-NIN a
-ECHO "And another:"
-NIN b
-c = a * b
-ECHO "The product of your two numbers is " c
-d = a + b
-ECHO "The sum of your two numbers is " d
-f = c - d
-ECHO "The difference between the product and the sum is " f
+	ECHO "Enter a number:"
+	NIN a
+	ECHO "And another:"
+	NIN b
+	c = a * b
+	ECHO "The product of your two numbers is " c
+	d = a + b
+	ECHO "The sum of your two numbers is " d
+	f = c - d
+	ECHO "The difference between the product and the sum is " f
 
 END

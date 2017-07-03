@@ -4,7 +4,6 @@
 	NIN b	# Get a number from the user
 	c = a + b
 	ECHO "the sum of " a " and " b " is " c
-
 	SET *f 0
 	RJP loop
 
