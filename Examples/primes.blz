@@ -6,10 +6,8 @@
 	
 	while len < count
 		flag = 0
-		md = 10
-		for i = 0, i < numon, i = i + 1
-			mod numon primes[i] md
-			if md == 0	# If a previous prime divides it, it isn't a prime
+		for i = 0, i < len, i = i + 1
+			if numon % primes[i] == 0	# If a previous prime divides it, it isn't a prime
 				flag = 1
 				break
 			end
