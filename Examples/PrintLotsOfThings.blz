@@ -1,0 +1,7 @@
+:main
+	echo "How many interations?"
+	nin iter
+	for i=0, i<iter, i=i+1
+		echo i
+	end 
+end

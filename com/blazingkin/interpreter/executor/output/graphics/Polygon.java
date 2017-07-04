@@ -17,7 +17,4 @@ public class Polygon {
 		}
 		color = c;
 	}
-	
-
-
 }

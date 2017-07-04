@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;

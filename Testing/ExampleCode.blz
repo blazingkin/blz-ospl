@@ -1,0 +1,15 @@
+:main
+	a = 5
+	echo "Input a number"
+	nin b	# Get a number from the user
+	c = a + b
+	echo "the sum of " a " and " b " is " c
+	call loop
+end
+
+:loop
+	for i = 0, i < 2, i = i + 1
+		echo "Loop in second process"
+		echo *l " Global Vars Work"
+	end
+end

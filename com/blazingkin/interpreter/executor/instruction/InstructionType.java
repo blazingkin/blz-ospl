@@ -1,11 +1,11 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.executor.instruction;
 
 import java.util.HashMap;
 
 public class InstructionType {
 	public static Instruction getInstructionType(String s){		//gets the instruction based on the function call name
 		try{
-			return instructions.get(s);
+			return instructions.get(s.toUpperCase());
 		}catch(Exception e){
 		}
 		try{
@@ -14,6 +14,7 @@ public class InstructionType {
 		return Instruction.INVALID;
 	}
 	
+	// This hashmap is statically loaded with all instructions from the Instruction enum
 	public static HashMap<String, Instruction> instructions;
 	static {
 		instructions = new HashMap<String, Instruction>();
@@ -21,6 +22,7 @@ public class InstructionType {
 			instructions.put(i.instruction, i);
 		}
 	}
+	
 	
 	
 }

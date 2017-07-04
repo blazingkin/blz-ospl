@@ -2,11 +2,12 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
-import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.executor.Process;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.variables.Variable;
 
 public class ChangeProcess implements InstructionExecutor {
 
@@ -21,7 +22,12 @@ public class ChangeProcess implements InstructionExecutor {
 		path = path.contains(".blz")?path:path+".blz";	//If the file extension is not stated, add it
 		File f = new File(path);
 		if (!f.exists()){
-			Interpreter.throwError("Could not find file at path: "+path);
+			Process oldProcess = Executor.getCurrentProcess();
+			path = oldProcess.readingFrom.getParent()+File.separator+path;
+			f = new File(path);
+			if (!f.exists()){
+				Interpreter.throwError("Could not find file at path: "+path);
+			}
 		}
 		boolean found = false;
 		Process p = null;
@@ -40,8 +46,6 @@ public class ChangeProcess implements InstructionExecutor {
 		}
 		Executor.addProcess(p);
 		Executor.executeMethod(Executor.getMethod(args[args.length-1], p.UUID));
-		
-		
 	}
 
 }

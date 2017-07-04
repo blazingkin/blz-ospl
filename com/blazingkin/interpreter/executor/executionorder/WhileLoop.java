@@ -1,8 +1,12 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.SimpleExpressionParser;
+import com.blazingkin.interpreter.variables.Value;
 
 public class WhileLoop extends LoopWrapper {
+	private static final Value TRUE_VAL = Value.bool(true);
+	
 	public WhileLoop(){
 		
 	}
@@ -14,21 +18,30 @@ public class WhileLoop extends LoopWrapper {
 	}
 	
 	public void run(String[] args){
-		if (!Executor.getLoopStack().isEmpty() && Executor.getLoopStack().peek().functionContext == Executor.getCurrentContext()
-				&& Executor.getLoopStack().peek().startLine == Executor.getLine()){	// This if statement checks if the loop is already on the stack
-			LoopWrapper lw = Executor.getLoopStack().peek();
-			if (!IfBlock.pureComparison(lw.termInstr.split(" "))){// If our condition is false, ignore the body of the loop
-				Executor.setLoopIgnoreMode(true);
-			}
-		}else{
 			String buildingString = "";
 			for (String s : args){
 				buildingString += s + " ";
 			}
-			Executor.getLoopStack().push(new WhileLoop(buildingString.trim()));
-			if (!IfBlock.pureComparison(buildingString.split(" "))){	// If our condition is false, ignore the body of the loop
-				Executor.setLoopIgnoreMode(true);
+			if (SimpleExpressionParser.parseExpression(buildingString).equals(TRUE_VAL)){	// If our condition is false, ignore the body of the loop
+				Executor.pushToRuntimeStack(new WhileLoop(buildingString.trim()));
+			}else{
+				Executor.setLine(Executor.getCurrentBlockEnd());
 			}
+	}
+
+	@Override
+	public void onBlockStart() {
+		Executor.setLine(startLine);
+	}
+
+	@Override
+	public void onBlockEnd() {
+		if (Executor.isBreakMode()){
+			Executor.setBreakMode(false);
+			return;
+		}
+		if (SimpleExpressionParser.parseExpression(termInstr).equals(TRUE_VAL)){
+			Executor.pushToRuntimeStack(this);
 		}
 	}
 	

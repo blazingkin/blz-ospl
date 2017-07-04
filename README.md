@@ -11,7 +11,7 @@ Hello World Sample
 
 :main
 
-ECHO "Hello World!"
+	ECHO "Hello World!"
 
 END
 
@@ -19,7 +19,7 @@ or
 
 :main
 
-(ECHO "Hello World")
+	(ECHO "Hello World")
 
 END
 
@@ -28,7 +28,7 @@ END
 
 Dependencies:
 ===
-* JDK 7+
+* JRE 7+
 
 
 How to setup and use:
@@ -39,7 +39,7 @@ How to setup and use:
 
 2.) Download the blz-ospl project from github
 
-3.) Add the project folder to your PATH
+3.) Add the bin folder to your PATH
 
 4.) From the command line, run
 
@@ -53,13 +53,13 @@ How to setup and use:
 
 3.) Add an alias for blz-ospl, this can be done by adding the following line to your ~/.bashrc
 
-> alias blz-ospl=INSTALLDIRECTORY/blz-ospl.sh
+> alias blz-ospl="java -jar INSTALLDIRECTORY/bin/blz-ospl.jar"
 
 Where INSTALLDIRECTORY is the directory where you saved the project
 
 4.) From the terminal, run
 
-> blz-ospl ExampleCode.blz
+> $ blz-ospl ExampleCode.blz
 
 Contact and License
 ===

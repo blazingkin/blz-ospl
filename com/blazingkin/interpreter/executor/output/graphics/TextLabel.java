@@ -7,5 +7,4 @@ public class TextLabel {
 		start = strt;
 		text = txt;
 	}
-
 }

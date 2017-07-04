@@ -1,23 +1,17 @@
 :main
+	echo "How many fibbonacci numbers do you want?"
+	nin iter
+	a[0] = 1
+	a[1] = 1
+	for i = 2, i < iter, i = i + 1
+		ind1 = i - 1
+		ind2 = i - 2
+		a[i] = a[ind1] + a[ind2]
+	end
 
-ECHO "How many fibbonacci numbers do you want?"
-NIN iter
-a[0] = 1
-a[1] = 1
+	echo "Printing fibbonacci numbers 1-" iter
 
-
-
-FOR i = 2, i < iter, i = i + 1
-ind1 = i - 1
-ind2 = i - 2
-a[i] = a[ind1] + a[ind2]
-ENDLOOP
-
-ECHO "Printing fibbonacci numbers 1-" iter
-
-FOR i = 0, i < iter, i = i + 1
-ECHO a[i]
-ENDLOOP
-
-
-END
+	for i = 0, i < iter, i = i + 1
+		echo a[i]
+	end
+end

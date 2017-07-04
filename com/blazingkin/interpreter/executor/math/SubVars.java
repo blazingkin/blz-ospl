@@ -1,12 +1,13 @@
 package com.blazingkin.interpreter.executor.math;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class SubVars implements InstructionExecutor, LambdaFunction {
 	/*	Subtract
 	 * 	Subtracts two numbers and stores them in a third variable

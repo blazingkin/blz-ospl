@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
@@ -12,6 +13,7 @@ import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
 
+@SuppressWarnings("deprecation")
 public class Interpreter {
 	public static boolean logging = true;
 	
@@ -33,9 +35,10 @@ public class Interpreter {
 	public static void printHelp(){
 		System.out.println("How to use BLZ-OSPL:");
 		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
-		System.out.println();
+/*		System.out.println();
 		System.out.println("Compile a pre-blz file (typically .pblz extension)");
 		System.out.println("blz-ospl -c *INPATH* *OUTPATH*");
+		This feature is deprecated, but will be recreated at a later date*/
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
 		System.out.println("blz-ospl *PATH*");
@@ -141,7 +144,10 @@ public class Interpreter {
 			if (!Executor.isImmediateMode()){
 				Executor.getEventHandler().exitProgram("An Error Occured");
 			}
+			thrownErrors.add(new Exception(error));
 		}
 	}
 
+	
+	public static Stack<Exception> thrownErrors = new Stack<Exception>();
 }

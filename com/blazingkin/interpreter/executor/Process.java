@@ -3,61 +3,70 @@ package com.blazingkin.interpreter.executor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
+import com.blazingkin.interpreter.executor.executionorder.End;
+import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
+import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionType;
 
-public class Process {
+public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
 	public File readingFrom;
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
-	public String[] lines;
+	private String[] lines;
+	private RegisteredLine[] registeredLines;
+	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
+	public static ArrayList<Process> processes = new ArrayList<Process>();
 	
 	
-	@SuppressWarnings("resource")
 	public Process(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
-		UUID = Executor.getUUID();
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
 		}
+		UUID = Executor.getUUID();
 		readingFrom = runFile;			//the file passed to us exists and we can use it
-		//Executor.setLine(0);
-		Scanner s = new Scanner(readingFrom);
-		ArrayList<String> li = new ArrayList<String>();
-		while (s.hasNextLine()){
-			li.add(s.nextLine());
+		Scanner scan = new Scanner(readingFrom);
+		ArrayList<String> lns = new ArrayList<String>();
+		while (scan.hasNextLine()){
+			lns.add(scan.nextLine().split("(?<!\\\\)#")[0].trim());	// Ignore extra whitespace and comments
 		}
-		lines = new String[li.size()];
-		for (int i = 0; i < li.size(); i++){
-			lines[i] = li.get(i);
+		scan.close();
+		lines = new String[lns.size()];
+		for (int i = 0; i < lns.size(); i++){
+			lines[i] = lns.get(i);
 		}
 		if (lines.length == 0){
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
 		}
 		registerMethods();
+		preprocessLines();
+		registerBlocks();
 		processes.add(this);
 	}
 	
 	
 	public Process(ArrayList<String> code){
-		UUID = Executor.getUUID();
-		Variable.setValue("pc"+UUID, new Value(VariableTypes.Integer, 0));
-		lines = new String[code.size()];
-		for (int i = 0; i < code.size(); i++){
-			lines[i] = code.get(i);
+		this((String[]) code.toArray());
+	}
+	
+	public Process(String[] code){
+		lines = new String[code.length];
+		for (int i = 0; i < code.length; i++){
+			lines[i] = code[i];
 		}
+
 		if (lines.length == 0){
-			Interpreter.throwError("The code recieved as a library argument did not contain any lines");
-			
+			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
 		registerMethods();
+		preprocessLines();
+		registerBlocks();
 		processes.add(this);
 	}
 	
@@ -71,13 +80,66 @@ public class Process {
 			}
 		}
 	}
+
 	
+	public void preprocessLines(){
+		registeredLines = new RegisteredLine[lines.length];
+		for (int i = 0; i < lines.length; i++){
+			String splits[] = lines[i].split(" ");
+			if (splits.length == 0){
+				registeredLines[i] = null;
+				continue;
+			}
+			Instruction instr = InstructionType.getInstructionType(splits[0]);
+			if (instr == null || instr == Instruction.INVALID){
+				registeredLines[i] = null;
+				continue;
+			}
+			String newStr = lines[i].replaceFirst(splits[0], "").trim();
+			registeredLines[i] = new RegisteredLine(instr, Executor.parseExpressions(newStr));
+		}
+	}
+	
+	public void registerBlocks(){
+		Stack<Integer> blckStack = new Stack<Integer>();
+		for (int i = 0; i < lines.length; i++){
+			if (lines[i].startsWith(":") || (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof BlockInstruction)){
+				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
+			}
+			else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof End){
+				if (blckStack.empty()){
+					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
+				}
+				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
+				blockArcs.put(ba.start, ba);
+				blockArcs.put(ba.end, ba);
+			}
+		}
+		if (!blckStack.empty()){
+			while (!blckStack.empty()){
+				Executor.getEventHandler().print("Block starting on line "+blckStack.pop()+" not closed");
+			}
+			Interpreter.throwError("Some blocks not closed!");
+		}
+	}
+	
+	public boolean isRegistered(int lineNumber){
+		if (lineNumber >= lines.length){
+			Interpreter.throwError("Attempted to get a line out of code range");
+		}
+		return registeredLines[lineNumber] != null;
+	}
+	
+	public RegisteredLine getRegisteredLine(int lineNumber){
+		if (lineNumber >= lines.length){
+			Interpreter.throwError("Attempted to get a line out of code range");
+		}
+		return registeredLines[lineNumber];
+	}
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
-			Executor.setCloseRequested(true);
-			Executor.getEventHandler().exitProgram("Attempted to get a line out of code range");
-			
+			Interpreter.throwError("Attempted to get a line out of code range");
 		}
 		return lines[lineNumber];
 	}
@@ -103,7 +165,42 @@ public class Process {
 		return null;
 	}
 	
-	public static ArrayList<Process> processes = new ArrayList<Process>();
-	static Random r = new Random(System.currentTimeMillis());
+	public class BlockArc {
+		public final int start, end;
+		public BlockArc(int s, int e){
+			start = s;
+			end = e;
+		}
+	}
+	
+	
+	public class RegisteredLine{
+		public final Instruction instr;
+		public final String[] args;
+		public RegisteredLine(Instruction instr, String[] args){
+			this.instr = instr;
+			this.args = args;
+		}
+		public Instruction getInstr(){
+			return instr;
+		}
+		public String[] getArgs(){
+			return args;
+		}
+	}
+
+
+	@Override
+	public void onBlockStart() {
+		
+	}
+
+
+	@Override
+	public void onBlockEnd() {
+		if (!Executor.getProcessLineStack().empty()){
+			Executor.setLine(Executor.getProcessLineStack().pop());
+		}
+	}
 	
 }

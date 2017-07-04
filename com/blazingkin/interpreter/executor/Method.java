@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.executor;
 
 import java.util.ArrayList;
 
-public class Method {
+public class Method implements RuntimeStackElement {
 	
 	public int UUID = Executor.getUUID();
 	public Process parent;
@@ -38,6 +38,11 @@ public class Method {
 		return (functionName.equals(name) && (parentID == parent.UUID));
 	}
 	
+	/**
+	 * @param ar - The array to search through
+	 * @param s - The name of the target method
+	 * @return returns a method or null if it wasn't found
+	 */
 	public static Method contains(ArrayList<Method> ar, String s){
 		for (int i = 0; i < ar.size(); i++){
 			if (ar.get(i).functionName.equals(s)){
@@ -46,6 +51,20 @@ public class Method {
 				
 		}
 		return null;
+	}
+
+	@Override
+	public void onBlockStart() {
+		
+	}
+
+	@Override
+	public void onBlockEnd() {
+		if (!Executor.getCurrentProcess().lineReturns.empty()){
+			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
+		}else{
+			Executor.popStack();	// If there is nothing else in the current process to run, return to the previous process
+		}
 	}
 	
 }

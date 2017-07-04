@@ -21,6 +21,7 @@ public class UnitTestUtil {
 	}
 
 	public static void assertEqual(Object a, Object b){
+		org.junit.Assert.assertEquals(a, b);
 		if (a != b){
 			System.err.println("An assertion was false!");
 			System.err.println(a + "!=" + b);
@@ -29,14 +30,39 @@ public class UnitTestUtil {
 	}
 	
 	public static void assertEqual(Value a, Value b){
+		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println(a.value + " != "+ b.value);
 			new Exception().printStackTrace();
+			assert false;
 		}
 		assert a.equals(b);
 	}
+
+	public static final double EPSILON = 1E-10;
+	public static void assertAlmostEqual(Value a, Value b){
+
+		if (a.equals(b)){
+			assert a.equals(b);
+			return;
+		}
+		if (Variable.isDecimalValue(a) && Variable.isDecimalValue(b)){
+			double v1 = Variable.getDoubleVal(a);
+			double v2 = Variable.getDoubleVal(b);
+			double diff = Math.abs(v2-v1);
+			if (diff > EPSILON){
+				System.out.println(a.value + " !~= " + b.value);
+				new Exception().printStackTrace();
+			}
+			assert diff < EPSILON;
+			return;
+		}
+		System.err.println("Assert Almost Equal can't handle the two values "+ a.value+" and "+b.value);
+		new Exception().printStackTrace();
+	}
 	
 	public static void assertValEqual(String name, Value b){
+		org.junit.Assert.assertEquals(Variable.getValue(name), b);
 		if (!Variable.getValue(name).equals(b)){
 			System.err.println(name + " != "+ b.value);
 			new Exception().printStackTrace();
@@ -50,6 +76,7 @@ public class UnitTestUtil {
 			System.err.println("len of: "+a+" != len of: "+b);
 		}
 		for (int i = 0; i < a.length; i++){
+			org.junit.Assert.assertEquals(a[i], b[i]);
 			assert a[i] == b[i];
 		}
 	}

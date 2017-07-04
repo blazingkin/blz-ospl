@@ -9,12 +9,9 @@ public enum GraphicsProperty {
 	visible("visible"),
 	invisible("invisible");
 	
-	
 	GraphicsProperty(String nme){
 		name = nme;
 	}
-	
-	
 	public final String name;
 
 }

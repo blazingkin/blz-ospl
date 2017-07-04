@@ -1,0 +1,9 @@
+:main
+	call otherfunc (1, 2, 3)
+	call otherfunc ("a" "b" "c")
+	call otherfunc (1, {e}, {pi})
+end
+
+:otherfunc (x, y, z)
+	echo "this function was passed " x " " y " " z
+end

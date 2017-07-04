@@ -1,11 +1,12 @@
 package com.blazingkin.interpreter.executor.math;
 
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class Logarithm implements InstructionExecutor, LambdaFunction {
 
 	@Override

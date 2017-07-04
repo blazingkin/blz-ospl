@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.listener.ListenerTypes;
 import com.blazingkin.interpreter.variables.Value;
@@ -44,7 +44,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 		case init:
 			jf = new JFrame();
 			jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			System.setProperty("red", "0xFF0000");
+			/*System.setProperty("red", "0xFF0000");
 			System.setProperty("blue", "0x140CA3");
 			System.setProperty("green", "0x0CA35F");
 			System.setProperty("yellow", "0xEEB111");
@@ -53,7 +53,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			System.setProperty("orange", "0xF9FB07");
 			System.setProperty("purple", "0x650D7F");
 			System.setProperty("brown", "0x482F0B");
-
+			 */
 	        @SuppressWarnings("serial")
 			JPanel panel = new JPanel() { 
 	        	private boolean initialized = false;
@@ -82,7 +82,6 @@ public class GraphicsExecutor implements InstructionExecutor {
 	        	@Override
 	            public void paintComponent(Graphics g) {
 	            	super.paintComponent(g);
-	        		System.out.println("called");
 	            	update(g);
 	            	if (System.currentTimeMillis() - Executor.getTimeStarted() > 1000){
 	            		GraphicsExecutor.lastFPS = Executor.getFrames();
@@ -94,12 +93,10 @@ public class GraphicsExecutor implements InstructionExecutor {
 
 	               bufferGraphics.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
 	               g.clearRect(0, 0, GraphicsExecutor.jf.getWidth(), GraphicsExecutor.jf.getHeight());
-	               //System.out.println(System.currentTimeMillis()+" before");
 	                for (Polygon p: GraphicsExecutor.polygons){
 		                bufferGraphics.setColor(p.color);
 		                bufferGraphics.fillPolygon(p.xPoints, p.yPoints, p.xPoints.length);
 	                }
-	                //System.out.println(System.currentTimeMillis()+" after");
 	                for (TextLabel tl: GraphicsExecutor.textLabels){
 	                	System.out.println("Drawing" +tl.text);
 	                	bufferGraphics.setColor(Color.black);
@@ -127,8 +124,8 @@ public class GraphicsExecutor implements InstructionExecutor {
 	                    	String[] args = new String[1];
 	                    	args[0] = ke.getKeyChar()+"";
 	                    	if (ke.getKeyCode() == ke.VK_ENTER){
-	                    		String[] ffff = {"\n"};
-	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);
+	                    		String[] ffff = {"\n"}; // Apparently you can't put in a literal string array here
+	                    		Listener.fireEvent(ListenerTypes.KeyboardKeyDown, ffff);	
 	                    		break;
 	                    	}
 	                    	if (ke.getKeyCode() == ke.VK_SHIFT){

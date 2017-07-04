@@ -1,7 +1,7 @@
 package com.blazingkin.interpreter.executor.tensor;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.BLZTensor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -9,7 +9,6 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class GetTensorValue implements InstructionExecutor {
 
-	
 	//Params go: Tensor name, list, of, indexes, ..., value to set
 	@Override
 	public void run(String[] args) {

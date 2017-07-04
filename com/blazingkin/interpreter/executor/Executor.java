@@ -8,7 +8,10 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Process.RegisteredLine;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
+import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionType;
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
@@ -22,113 +25,68 @@ import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Executor {
-	private static Stack<Process> runningProcesses = new Stack<Process>();	// A list of all of the independently running files
-	private static Stack<Method> runningMethods = new Stack<Method>();
-	private static Stack<Context> functionContext = new Stack<Context>();
-	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
-	private static boolean loopIgnoreMode = false;
-	private static int loopsIgnored = 0;
+
+	// Instance objects
 	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
 	private static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
-	private static boolean closeRequested = false;
 	private static String startingMethod;
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
-	private static long timeStarted = 0;
-	private static int frames = 0;
 	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
-	private static Stack<Integer> processLineStack = new Stack<Integer>();
+
+	//State Variables
+	private static long timeStarted = 0;
+	private static int frames = 0;	
 	private static boolean immediateMode = false;
+	private static boolean closeRequested = false;
+	private static boolean breakMode = false;
 	
-	public static void pushToProcessLineStack(int line){
-		processLineStack.push(line);
-	}
-	
-	public static Context getCurrentContext(){
-		if (functionContext.isEmpty()){
-			return Variable.getGlobalContext();
-		}
-		return functionContext.peek();
-	}
-	
-	public static void pushContext(Context con){
-		functionContext.push(con);
-	}
+	// Stacks
+	private static Stack<RuntimeStackElement> runtimeStack = new Stack<RuntimeStackElement>();
+	private static Stack<Process> runningProcesses = new Stack<Process>();	//File Stack
+	private static Stack<Method> runningMethods = new Stack<Method>();		//Method Stack
+	private static Stack<Context> contextStack = new Stack<Context>();	//Context Stack
+	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();	//Loops
+	private static Stack<Integer> processLineStack = new Stack<Integer>();
 	
 	
-	public static void executeMethod(Method m){
-		runningMethods.push(m);
-		functionContext.push(new Context());
-		setLine(m.lineNumber);
-	}
-	public static void executeMethod(Method m, Value[] values){
-		executeMethod(m);
-		if (m.takesVariables){
-			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
-				Variable.setValue(m.variables[i], values[i]);
-			}
-		}
-	}
-	
+	// This is the main loop
 	public static void codeLoop() throws Exception{
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
 			for (setLine(0);getLine() < getCurrentProcess().getSize();){
-				String line = getCurrentProcess().getLine(getLine());
-				if (line.trim().length() == 0){
+				Process currentProcess = getCurrentProcess();
+				if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
+					RegisteredLine line = currentProcess.getRegisteredLine(getLine());
 					setLine(getLine()+1);
-					continue;
+					line.getInstr().executor.run(line.getArgs());
 				}
-				if (line.charAt(0) == '('){
-					LambdaParser.parseLambdaExpression(line).getValue();
-					setLine(getLine()+1);
-					continue;
-				}
-				
-				
-				
-				String split[] = line.split(" ");
-				
-				
-				if (isLoopIgnoreMode()){
-					if (split[0].equals(Instruction.ENDLOOP.instruction)){
-						if (loopsIgnored > 0){
-							loopsIgnored--;
-						}else{
-							setLoopIgnoreMode(false);	
-							getLoopStack().pop();
-						}
-					}else if (split[0].equals(Instruction.FORLOOP)){
-						loopsIgnored++;
+				else{
+					String line = currentProcess.getLine(getLine());
+					if (line.trim().length() == 0){
+						setLine(getLine()+1);
+						continue;
+					}
+					if (line.charAt(0) == '('){
+						LambdaParser.parseLambdaExpression(line).getValue();
+						setLine(getLine()+1);
+						continue;
+					}
+					String split[] = line.split(" ");
+					if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
+						Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
+						getMethods().add(nM);
+						pushToRuntimeStack(nM);
+						setLine(getLine()+1);
+						continue;
+					}
+					if (split.length == 1 && split[0].equals("")){
+						setLine(getLine()+1);
+						continue;
 					}
 					setLine(getLine()+1);
-					//System.out.println(loopStack.size() +": ls size");
-					continue;
+					SimpleExpressionParser.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
 				}
-				
-				if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-					Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
-					getMethods().add(nM);
-					runningMethods.push(nM);
-					functionContext.push(new Context());
-					setLine(getLine()+1);
-					continue;
-				}
-				if (split.length == 1 && split[0].equals("")){
-					setLine(getLine()+1);
-					continue;
-				}
-				setLine(getLine()+1);
-				
-				String originalString = line.replaceFirst(split[0],"").trim();
-				String[] newSplit = parseExpressions(originalString);
-				
-				Instruction it = InstructionType.getInstructionType(split[0]);
-				if (it == null || it.name.equals(Instruction.INVALID.name)){
-					SimpleExpressionParser.parseExpression(line);
-					continue;
-				}
-				it.executor.run(newSplit);
 				if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-					Executor.getCurrentProcess().lineReturns.add(getLine()+1);
+					currentProcess.lineReturns.add(getLine()+1);
 					Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
 					getEventsToBeHandled().remove(0);
 				}
@@ -143,6 +101,38 @@ public class Executor {
 	}
 	
 	
+	public static Stack<Integer> getProcessLineStack(){
+		return processLineStack;
+	}
+	
+	public static Context getCurrentContext(){
+		if (contextStack.isEmpty()){
+			return Variable.getGlobalContext();
+		}
+		return contextStack.peek();
+	}
+	
+	public static void pushContext(Context con){
+		contextStack.push(con);
+	}
+	
+	
+	public static void executeMethod(Method m){
+		pushToRuntimeStack(m);
+		setLine(m.lineNumber);
+	}
+	public static void executeMethod(Method m, Value[] values){
+		executeMethod(m);
+		if (m.takesVariables){
+			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				Variable.setValue(m.variables[i], values[i]);
+			}
+		}
+	}
+	
+
+	
+	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws Exception{			// runs the executor
 		for (int i = 0; i < args.size(); i+=2){
@@ -151,16 +141,14 @@ public class Executor {
 				startingMethod = args.get(i+1);
 			}
 		}
-		runningProcesses.push(new Process(runFile));		// puts the file passed to us as the current process
+		pushToRuntimeStack(new Process(runFile));		// puts the file passed to us as the current process
 		if (startingMethod != null){
 			if (!(Method.contains(getMethods(), startingMethod) == null)){
-				runningMethods.push(Method.contains(getMethods(), startingMethod));
-				functionContext.push(new Context());
+				pushToRuntimeStack(Method.contains(getMethods(), startingMethod));
 				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
 		setEventHandler(new StandAloneEventHandler());
-		pushContext(Variable.getGlobalContext());
 		codeLoop();
 			
 	}
@@ -172,11 +160,10 @@ public class Executor {
 				startingMethod = args.get(i+1);
 			}
 		}
-		runningProcesses.push(new Process(code));
+		pushToRuntimeStack(new Process(code));
 		if (startingMethod != null){
 			if (!(Method.contains(getMethods(), startingMethod) == null)){
-				runningMethods.push(Method.contains(getMethods(), startingMethod));
-				functionContext.push(new Context());
+				pushToRuntimeStack(Method.contains(getMethods(), startingMethod));
 				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
 			}
 		}
@@ -188,10 +175,8 @@ public class Executor {
 	public static void cleanup(){
 		runningProcesses = new Stack<Process>();
 		runningMethods = new Stack<Method>();
-		functionContext = new Stack<Context>();
+		contextStack = new Stack<Context>();
 		setLoopStack(new Stack<LoopWrapper>());
-		setLoopIgnoreMode(false);
-		loopsIgnored = 0;
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
@@ -204,52 +189,26 @@ public class Executor {
 	}
 	
 	
-	
-	public static void executeLineInCurrentProcess(int lineNumber){
-		String split[] = getCurrentProcess().getLine(lineNumber).split(" ");
-		String newSplit[] = new String[split.length-1];
-		for (int i = 1; i < split.length; i++){
-			newSplit[i-1] = split[i];
-		}
-		if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-			Method nM = new Method(getCurrentProcess(),getLine(), split[0].substring(1));
-			getMethods().add(nM);
-			runningMethods.push(nM);
-			functionContext.push(new Context());
-			return;
-		}
-		if (split.length == 1 && split[0].equals("")){
-			return;
-		}
-		Instruction it = InstructionType.getInstructionType(split[0]);
-		if (it.name.equals(Instruction.INVALID.name)){
-			
-			Interpreter.throwError("Invalid instruction "+split[0]);
-		}
-		it.executor.run(newSplit);
-	}
-	public static void executeLineInCurrentProcess(int i, int returnLine) {
-		executeLineInCurrentProcess(i);
-		
-	}
-	
 	public static void immediateModeLoop(InputStream is){
 		System.out.println("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:");
 		System.out.println("Type 'exit' to exit");
 		String in = "";
 		Scanner sc = new Scanner(is);
 		immediateMode = true;
-		Exception lastException = new Exception("There have been no exceptions");
+		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
 		try{
 			do{
 				try{
 					in = sc.nextLine();
 					if (in.equals("err")){
-						lastException.printStackTrace();
+						Interpreter.thrownErrors.peek().printStackTrace();
 						continue;
 					}
 					if (in.equals("exit")){
 						break;
+					}
+					if (in.equals("")){
+						continue;
 					}
 	
 					if (LambdaParser.isLambdaExpression(in)){
@@ -265,7 +224,7 @@ public class Executor {
 						result.printValue();
 					}
 				}catch(Exception e){
-					lastException = e;
+					Interpreter.thrownErrors.add(e);
 					System.err.println("There was an issue running your last command");
 					System.err.println("Type 'err' to see the error");
 				}
@@ -287,6 +246,7 @@ public class Executor {
 		do{
 			id = (int) (Math.random() * Integer.MAX_VALUE);
 		}while(UUIDsUsed.contains(id));
+		UUIDsUsed.add(id);
 		return id;
 	}
 	public static Stack<LoopWrapper> getLoopStack() {
@@ -297,12 +257,6 @@ public class Executor {
 	}
 	public static boolean isImmediateMode(){
 		return immediateMode;
-	}
-	public static boolean isLoopIgnoreMode() {
-		return loopIgnoreMode;
-	}
-	public static void setLoopIgnoreMode(boolean loopIgnoreMode) {
-		Executor.loopIgnoreMode = loopIgnoreMode;
 	}
 	public static BlzEventHandler getEventHandler() {
 		return eventHandler;
@@ -386,29 +340,58 @@ public class Executor {
 	}
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
-		runningProcesses.push(p);
-		
+		pushToRuntimeStack(p);
+	}
+	
+	public static void pushToRuntimeStack(RuntimeStackElement se){
+		runtimeStack.push(se);
+		if (se instanceof LoopWrapper){
+			loopStack.push((LoopWrapper)se);
+		}else if (se instanceof Process){
+			runningProcesses.push((Process) se);
+			contextStack.push(new Context());
+		}else if (se instanceof Method){
+			runningMethods.push((Method) se);
+			contextStack.push(new Context());
+		}
+		se.onBlockStart();
+
 	}
 	
 	public static void popStack(){									// This is used to return to the previous process or function
-		if (!runningMethods.isEmpty()){
+		RuntimeStackElement rse = runtimeStack.pop();
+		if (rse instanceof LoopWrapper){
+			loopStack.pop();
+		}else if(rse instanceof Process){
+			runningProcesses.pop();
+			Variable.killContext(contextStack.pop());
+		}else if(rse instanceof Method){
 			runningMethods.pop();
-			Variable.clearLocalVariables(getCurrentContext());
+			Variable.killContext(contextStack.pop());
 		}
-		if (!getCurrentProcess().lineReturns.isEmpty()){		// If there is a function in the current process, go to it
-			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
-		}else{											// If there is not a function in the current process, go to the previous process
-			if (Executor.runningProcesses.size() > 1){
-				runningProcesses.pop();
-				Executor.setLine(processLineStack.pop());
-			}else{										// If there is not a previous process, request a close
-				Executor.setCloseRequested(true);
-				getEventHandler().exitProgram("Reached end of program");
-			}
+		rse.onBlockEnd();
+		if (runtimeStack.empty()){
+			Executor.setCloseRequested(true);
+			getEventHandler().exitProgram("Reached end of program");
+			return;
 		}
-		functionContext.pop();
 	}
 	
+	public static Stack<RuntimeStackElement> getRuntimeStack(){
+		return runtimeStack;
+	}
+	
+	public static Stack<Method> getMethodStack(){
+		return runningMethods;
+	}
+	
+	public static int getCurrentBlockEnd(){
+		return getCurrentProcess().blockArcs.get(getLine()).end;
+	}
+	
+	public static int getCurrentBlockStart(){
+		return getCurrentProcess().blockArcs.get(getLine()).start;
+	}
 	
 	//Passes a whole expression
 	public static String[] parseExpressions(String exp){
@@ -472,6 +455,16 @@ public class Executor {
 			express[i] = expressions.get(i);
 		}
 		return express;
+	}
+
+
+	public static boolean isBreakMode() {
+		return breakMode;
+	}
+
+
+	public static void setBreakMode(boolean breakMode) {
+		Executor.breakMode = breakMode;
 	}
 	
 }

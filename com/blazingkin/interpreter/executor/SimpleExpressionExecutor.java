@@ -1,15 +1,17 @@
 package com.blazingkin.interpreter.executor;
 
+import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
+
 import java.util.regex.Matcher;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.variables.BLZRational;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class SimpleExpressionExecutor {
 
+	public static double EPSILON = 1E-8; 
 	
 	public static Value evaluate(SimpleExpression type, String expr){
 		switch(type){
@@ -46,37 +48,23 @@ public class SimpleExpressionExecutor {
 			}
 			return new Value(VariableTypes.Boolean, flag);
 		}
+		case notEqual:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Not enough arguments for comparison");
+			}
+			return Value.bool(parseExpression(splits[0]).equals(SimpleExpressionParser.parseExpression(splits[1])));
+		}
 		case division:
 		{	String[] splits = expr.split("/");
 			if (splits.length != 2){
 				Interpreter.throwError("Too many arguments for division");
 			}
-			Value top = SimpleExpressionParser.parseExpression(splits[0]);
-			Value bottom = SimpleExpressionParser.parseExpression(splits[1]);
-			if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
-				return Value.rational((int)top.value, (int)bottom.value);
-			}
-			if (Variable.isValRational(top) && Variable.isValRational(bottom)){
-				BLZRational toprat = Variable.getRationalVal(top);
-				BLZRational botrat = Variable.getRationalVal(bottom);
-				BLZRational botratopp = (BLZRational) Value.rational(botrat.den, botrat.num).value;
-				BLZRational prod = toprat.multiply(botratopp);
-				if (prod.den == 1){
-					return new Value(VariableTypes.Integer, (int) prod.num);
-				}
-				return new Value(VariableTypes.Rational, prod);
-			}
-			if ((Variable.isValDouble(top) || Variable.isValRational(top))
-					&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
-				double dtop = Variable.getDoubleVal(top);
-				double dbot = Variable.getDoubleVal(bottom);
-				return new Value(VariableTypes.Double, dtop/dbot);
-			}
-
-			break;
+			return Variable.divVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
 		}
 		case multiplication:
-		{	String[] splits = expr.split("\\*");
+		{	String[] splits = expr.split(type.syntax.pattern());
 			if (splits.length < 2){
 				Interpreter.throwError("Not enough arguments for multiplication");
 			}
@@ -92,8 +80,9 @@ public class SimpleExpressionExecutor {
 			Matcher mat =  type.syntax.matcher(replString);
 			while (mat.find()){
 				String toReplace = mat.group().replace("(", "").replace(")", "");
-				String newVal = SimpleExpressionParser.parseExpression(toReplace).value.toString();
-				replString = type.syntax.matcher(replString).replaceFirst(newVal);
+				String tempId = "@"+Executor.getUUID();	// Create a temp variable that starts with @ to store the value
+				Variable.setGlobalValue(tempId, SimpleExpressionParser.parseExpression(toReplace));
+				replString = type.syntax.matcher(replString).replaceFirst(tempId);
 				mat =  type.syntax.matcher(replString);
 			}
 			return SimpleExpressionParser.parseExpression(replString);
@@ -107,12 +96,149 @@ public class SimpleExpressionExecutor {
 			
 			return Variable.subValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
 		}
+		case exponentiation:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Unable to parse exponentiation, it should be base ** exponent");
+			}
+			return Variable.expValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case logarithm:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Unable to parse logarithm, it should be input __ base");
+			}
+			return Variable.logValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case approximateComparison:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Incorrect number of arguments for approximate comparison");
+			}
+			Value first = SimpleExpressionParser.parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(first)){
+				return evaluate(SimpleExpression.comparison, expr);
+			}
+			double frst = Variable.getDoubleVal(first);
+			for (int i = 1; i < splits.length; i++){
+				Value val = SimpleExpressionParser.parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(val)){
+					return evaluate(SimpleExpression.comparison, expr);
+				}
+				double v = Variable.getDoubleVal(val);
+				if (Math.abs(frst - v) > EPSILON){
+					return Value.bool(false);
+				}
+			}
+			return Value.bool(true);
+		}
+		case greaterThan:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Not enough arguments for > comparison");
+			}
+			Value comp = parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(comp)){
+				Interpreter.throwError("Cannot evaluate > with non-decimal value "+comp);
+			}
+			double cmp = Variable.getDoubleVal(comp);
+			boolean flag = true;
+			for (int i = 1; i < splits.length; i++){
+				Value currval = parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(currval)){
+					Interpreter.throwError("Cannot evaluate > with non-decimal value "+currval);
+				}
+				double cval = Variable.getDoubleVal(currval);
+				flag = flag && (Double.compare(cmp, cval) > 0);
+				cmp = cval;
+			}
+			return Value.bool(flag);
+		}
+		case greaterThanEqual:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Not enough arguments for >= comparison");
+			}
+			Value comp = parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(comp)){
+				Interpreter.throwError("Cannot evaluate >= with non-decimal value "+comp);
+			}
+			double cmp = Variable.getDoubleVal(comp);
+			boolean flag = true;
+			for (int i = 1; i < splits.length; i++){
+				Value currval = parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(currval)){
+					Interpreter.throwError("Cannot evaluate >= with non-decimal value "+currval);
+				}
+				double cval = Variable.getDoubleVal(currval);
+				flag = flag && (Double.compare(cmp, cval) >= 0);
+				cmp = cval;
+			}
+			return Value.bool(flag);
+		}
+		case lessThan:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Not enough arguments for < comparison");
+			}
+			Value comp = parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(comp)){
+				Interpreter.throwError("Cannot evaluate < with non-decimal value "+comp);
+			}
+			double cmp = Variable.getDoubleVal(comp);
+			boolean flag = true;
+			for (int i = 1; i < splits.length; i++){
+				Value currval = parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(currval)){
+					Interpreter.throwError("Cannot evaluate < with non-decimal value "+currval);
+				}
+				double cval = Variable.getDoubleVal(currval);
+				flag = flag && (Double.compare(cmp, cval) < 0);
+				cmp = cval;
+			}
+			return Value.bool(flag);
+		}
+		case lessThanEqual:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length < 2){
+				Interpreter.throwError("Not enough arguments for <= comparison");
+			}
+			Value comp = parseExpression(splits[0]);
+			if (!Variable.isDecimalValue(comp)){
+				Interpreter.throwError("Cannot evaluate <= with non-decimal value "+comp);
+			}
+			double cmp = Variable.getDoubleVal(comp);
+			boolean flag = true;
+			for (int i = 1; i < splits.length; i++){
+				Value currval = parseExpression(splits[i]);
+				if (!Variable.isDecimalValue(currval)){
+					Interpreter.throwError("Cannot evaluate <= with non-decimal value "+currval);
+				}
+				double cval = Variable.getDoubleVal(currval);
+				flag = flag && (Double.compare(cmp, cval) <= 0);
+				cmp = cval;
+			}
+			return Value.bool(flag);
+		}
+		case modulus:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Invalid number of arguments for modulus");
+			}
+			return Variable.modVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
 		default:
 			System.err.println(expr);
 			Interpreter.throwError("Simple Expression Executor Inititialized with invalid type");
 			break;
-			
-		
 		}
 		System.err.println(expr);
 		Interpreter.throwError("Simple Expression Executor Inititialized with invalid type");
