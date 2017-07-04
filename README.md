@@ -11,7 +11,7 @@ Hello World Sample
 
 :main
 
-	ECHO "Hello World!"
+ECHO "Hello World!"
 
 END
 
@@ -19,7 +19,7 @@ or
 
 :main
 
-	(ECHO "Hello World")
+(ECHO "Hello World")
 
 END
 
