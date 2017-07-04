@@ -22,7 +22,12 @@ public class ChangeProcess implements InstructionExecutor {
 		path = path.contains(".blz")?path:path+".blz";	//If the file extension is not stated, add it
 		File f = new File(path);
 		if (!f.exists()){
-			Interpreter.throwError("Could not find file at path: "+path);
+			Process oldProcess = Executor.getCurrentProcess();
+			path = oldProcess.readingFrom.getParent()+File.separator+path;
+			f = new File(path);
+			if (!f.exists()){
+				Interpreter.throwError("Could not find file at path: "+path);
+			}
 		}
 		boolean found = false;
 		Process p = null;

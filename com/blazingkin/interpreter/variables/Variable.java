@@ -393,7 +393,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.1.0");
+			return new Value(VariableTypes.String, "2.2.0");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
