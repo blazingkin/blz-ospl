@@ -2,8 +2,9 @@ package com.blazingkin.interpreter.unittests;
 
 import java.util.ArrayList;
 
+import org.junit.Test;
+
 import com.blazingkin.interpreter.executor.Executor;
-import org.junit.*;
 public class ExecutorUnitTest {
 
 	@Test

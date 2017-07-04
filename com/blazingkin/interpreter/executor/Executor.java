@@ -364,10 +364,10 @@ public class Executor {
 			loopStack.pop();
 		}else if(rse instanceof Process){
 			runningProcesses.pop();
-			contextStack.pop();
+			Variable.killContext(contextStack.pop());
 		}else if(rse instanceof Method){
 			runningMethods.pop();
-			contextStack.pop();
+			Variable.killContext(contextStack.pop());
 		}
 		rse.onBlockEnd();
 		if (runtimeStack.empty()){

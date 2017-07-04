@@ -2,7 +2,6 @@ package com.blazingkin.interpreter.unittests;
 
 import java.util.Random;
 
-
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;

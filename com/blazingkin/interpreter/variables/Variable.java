@@ -56,6 +56,11 @@ public class Variable {
 		Executor.setLine(0);
 	}
 	
+	public static void killContext(Context con){
+		if (!con.equals(getGlobalContext())){
+			variables.remove(con);
+		}
+	}
 	
 	//Gets a local value (the scope of these variables is the function they are declared in
 	public static Value getValue(String key){
@@ -119,6 +124,38 @@ public class Variable {
 			return new Value(VariableTypes.Double, getDoubleVal(v1) * getDoubleVal(v2));
 		}
 		Interpreter.throwError("Failed Multiplying Variables "+v1.value+" and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value modVals(Value val, Value quo) {
+		if (val.type == VariableTypes.Integer && quo.type == VariableTypes.Integer){
+			return Value.integer((int)val.value % (int)quo.value);
+		}
+		Interpreter.throwError("Attempted to perform a modulus on non-integers");
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value divVals(Value top, Value bottom){
+		if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
+			return Value.rational((int)top.value, (int)bottom.value);
+		}
+		if (Variable.isValRational(top) && Variable.isValRational(bottom)){
+			BLZRational toprat = Variable.getRationalVal(top);
+			BLZRational botrat = Variable.getRationalVal(bottom);
+			BLZRational botratopp = (BLZRational) Value.rational(botrat.den, botrat.num).value;
+			BLZRational prod = toprat.multiply(botratopp);
+			if (prod.den == 1){
+				return new Value(VariableTypes.Integer, (int) prod.num);
+			}
+			return new Value(VariableTypes.Rational, prod);
+		}
+		if ((Variable.isValDouble(top) || Variable.isValRational(top))
+				&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
+			double dtop = Variable.getDoubleVal(top);
+			double dbot = Variable.getDoubleVal(bottom);
+			return new Value(VariableTypes.Double, dtop/dbot);
+		}
+		Interpreter.throwError("Could not convert one of "+top+" or "+bottom+" to a dividable type");
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -497,5 +534,7 @@ public class Variable {
 			return 0;
 		}
 	}
+
+	
 	
 }

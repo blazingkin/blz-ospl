@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
@@ -10,50 +11,16 @@ import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class IfBlock implements InstructionExecutor, LambdaFunction, BlockInstruction {
+	public static final Value TRUE_VAL = Value.bool(true);
+	
 	
 	public void run(String[] args) {
-		boolean flag = false;
-		Value v1 = Variable.getValue(args[0]);
-		Value v2 = Variable.getValue(args[2]);
-		String operant = args[1];
-		switch(operant){
-		case "==":
-			if (v1.value.equals(v2.value)){
-				flag = true;
-			}
-			break;
-		case ">":
-			if (compare(v1, v2) > 0){
-				flag = true;
-			}
-			break;
-		case "<":
-			if (compare(v1,v2) < 0){
-				flag = true;
-			}
-			break;
-		case "!=":
-			if (!v1.value.equals(v2.value)){
-				flag = true;
-			}
-			break;
-		case "<=":
-			if (compare(v1,v2) <= 0){
-				flag = true;
-			}
-			break;
-		case ">=":
-			if (compare(v1,v2) >= 0){
-				flag = true;
-			}
-			break;
-		default:
-			break;
-		}
-		if (!flag){
-			Executor.setLine(Executor.getCurrentBlockEnd());
-		}else{
+		String combined = String.join(" ", args);
+		Value eval = SimpleExpressionParser.parseExpression(combined);
+		if (eval.equals(TRUE_VAL)){
 			Executor.pushToRuntimeStack(this);
+		}else{
+			Executor.setLine(Executor.getCurrentBlockEnd());
 		}
 		
 	}

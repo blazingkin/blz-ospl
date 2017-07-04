@@ -2,11 +2,12 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.executor.Process;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.variables.Variable;
 
 public class ChangeProcess implements InstructionExecutor {
 

@@ -1,14 +1,13 @@
 package com.blazingkin.interpreter.executor;
 
+import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
+
 import java.util.regex.Matcher;
 
-
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.variables.BLZRational;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
-import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 
 public class SimpleExpressionExecutor {
 
@@ -62,29 +61,7 @@ public class SimpleExpressionExecutor {
 			if (splits.length != 2){
 				Interpreter.throwError("Too many arguments for division");
 			}
-			Value top = SimpleExpressionParser.parseExpression(splits[0]);
-			Value bottom = SimpleExpressionParser.parseExpression(splits[1]);
-			if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
-				return Value.rational((int)top.value, (int)bottom.value);
-			}
-			if (Variable.isValRational(top) && Variable.isValRational(bottom)){
-				BLZRational toprat = Variable.getRationalVal(top);
-				BLZRational botrat = Variable.getRationalVal(bottom);
-				BLZRational botratopp = (BLZRational) Value.rational(botrat.den, botrat.num).value;
-				BLZRational prod = toprat.multiply(botratopp);
-				if (prod.den == 1){
-					return new Value(VariableTypes.Integer, (int) prod.num);
-				}
-				return new Value(VariableTypes.Rational, prod);
-			}
-			if ((Variable.isValDouble(top) || Variable.isValRational(top))
-					&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
-				double dtop = Variable.getDoubleVal(top);
-				double dbot = Variable.getDoubleVal(bottom);
-				return new Value(VariableTypes.Double, dtop/dbot);
-			}
-
-			break;
+			return Variable.divVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
 		}
 		case multiplication:
 		{	String[] splits = expr.split(type.syntax.pattern());
@@ -245,12 +222,19 @@ public class SimpleExpressionExecutor {
 					Interpreter.throwError("Cannot evaluate <= with non-decimal value "+currval);
 				}
 				double cval = Variable.getDoubleVal(currval);
-				flag = flag && (Double.compare(cmp, cval) >= 0);
+				flag = flag && (Double.compare(cmp, cval) <= 0);
 				cmp = cval;
 			}
 			return Value.bool(flag);
 		}
-		
+		case modulus:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){
+				Interpreter.throwError("Invalid number of arguments for modulus");
+			}
+			return Variable.modVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
 		default:
 			System.err.println(expr);
 			Interpreter.throwError("Simple Expression Executor Inititialized with invalid type");

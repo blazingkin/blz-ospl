@@ -2,9 +2,11 @@ package com.blazingkin.interpreter.unittests;
 
 
 import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
-import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
+import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
+
+import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.math.AddVars;
@@ -12,7 +14,6 @@ import com.blazingkin.interpreter.executor.math.Ceiling;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
-import org.junit.*;
 
 @SuppressWarnings("deprecation")
 public class MathOpsUnitTest {
@@ -241,6 +242,7 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("1/8 < 1/16"), Value.bool(false));
 		assertEqual(parseExpression(".001 < .1"), Value.bool(true));
 		assertEqual(parseExpression("1.3 < .9"), Value.bool(false));
+		assertEqual(parseExpression("1 < 1"), Value.bool(false));
 	}
 	
 	@Test
@@ -248,6 +250,26 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("5 > 1"), Value.bool(true));
 		assertEqual(parseExpression("{e} > {pi}"), Value.bool(false));
 		assertEqual(parseExpression("0 > -1"), Value.bool(true));
+		assertEqual(parseExpression("0 > 0"),Value.bool(false));
+	}
+	
+	@Test
+	public void testLessThanEqual(){
+		assertEqual(parseExpression("1 <= 2"), Value.bool(true));
+		assertEqual(parseExpression("1 =< 2"), Value.bool(true));
+		assertEqual(parseExpression("2 <= 1"), Value.bool(false));
+		assertEqual(parseExpression("2 =< 1"), Value.bool(false));
+		assertEqual(parseExpression("0 <= 0"), Value.bool(true));
+		assertEqual(parseExpression("0 =< 0"), Value.bool(true));
+	}
+	
+	@Test
+	public void testGreatherThanEqual(){
+		assertEqual(parseExpression("1 >= 2"), Value.bool(false));
+		assertEqual(parseExpression("1 => 2"), Value.bool(false));
+		assertEqual(parseExpression("2 >= 1"), Value.bool(true));
+		assertEqual(parseExpression("0 >= 0"), Value.bool(true));
+		assertEqual(parseExpression("1 >= 1"), Value.bool(true));
 	}
 
 	

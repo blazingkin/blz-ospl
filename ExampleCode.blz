@@ -4,18 +4,12 @@
 	nin b	# Get a number from the user
 	c = a + b
 	echo "the sum of " a " and " b " is " c
-	set *f 0
 	call loop
 end
 
 :loop
-	if *f < 20
-		call method
+	for i = 0, i < 2, i = i + 1
+		echo "Loop in second process"
+		echo *l " Global Vars Work"
 	end
-end
-
-:method
-	echo *f "nth iteration says hello"
-	add *f 1 *f
-	call loop
 end
