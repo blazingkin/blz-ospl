@@ -320,7 +320,7 @@ public class Variable {
 	
 	public static boolean isBool(String s){
 		String lower = s.toLowerCase();
-		return lower.equals("true") || lower.equals("false") || lower.equals("#t") || lower.equals("#f");
+		return lower.equals("true") || lower.equals("false");
 	}
 	
 	public static boolean isFraction(String s){
@@ -338,7 +338,7 @@ public class Variable {
 	
 	public static boolean convertToBool(String s){
 		String lower = s.toLowerCase();
-		if (lower.equals("true") || lower.equals("#t")){
+		if (lower.equals("true")){
 			return true;
 		}
 		return false;
@@ -393,7 +393,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.2.0");
+			return new Value(VariableTypes.String, "2.2.1");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");

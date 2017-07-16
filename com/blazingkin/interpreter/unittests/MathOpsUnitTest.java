@@ -87,10 +87,6 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("false"), new Value(VariableTypes.Boolean, false));
 		assertEqual(parseExpression("TRUE"), new Value(VariableTypes.Boolean, true));
 		assertEqual(parseExpression("FALSE"), new Value(VariableTypes.Boolean, false));
-		assertEqual(parseExpression("#t"), new Value(VariableTypes.Boolean, true));
-		assertEqual(parseExpression("#f"), new Value(VariableTypes.Boolean, false));
-		assertEqual(parseExpression("#T"), new Value(VariableTypes.Boolean, true));
-		assertEqual(parseExpression("#F"), new Value(VariableTypes.Boolean, false));
 		assertEqual(parseExpression("3"), new Value(VariableTypes.Integer, 3));
 		assertEqual(parseExpression("-5"), new Value(VariableTypes.Integer, -5));
 		assertEqual(parseExpression(".1"), new Value(VariableTypes.Double, .1d));

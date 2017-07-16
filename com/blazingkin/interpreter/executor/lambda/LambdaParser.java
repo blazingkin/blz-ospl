@@ -27,7 +27,7 @@ public class LambdaParser {
 	
 	public static boolean isLambdaExpression(String lam){
 		String[] splits = Executor.parseExpressions(lam);
-		String name = splits[0];
+		String name = splits[0].toUpperCase();
 		for (Instruction in : Instruction.values()){
 			if (in.instruction.equals(name) && in.executor instanceof LambdaFunction){
 				return true;

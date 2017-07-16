@@ -77,7 +77,7 @@ public class UnitTestUtil {
 		}
 		for (int i = 0; i < a.length; i++){
 			org.junit.Assert.assertEquals(a[i], b[i]);
-			assert a[i] == b[i];
+			assert a[i].equals(b[i]);
 		}
 	}
 	

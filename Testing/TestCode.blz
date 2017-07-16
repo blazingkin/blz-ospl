@@ -42,7 +42,7 @@
 		add loopCounter 1 loopCounter
 	end
 	
-	while 1 == 1
+	while true
 		echo "HOPEFULLY BREAK WORKS"
 		break
 	end
