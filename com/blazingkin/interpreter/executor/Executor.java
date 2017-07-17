@@ -96,6 +96,7 @@ public class Executor {
 					return;
 				}
 			}
+			popStack();
 		}
 		cleanup();
 	}
