@@ -26,10 +26,11 @@ class TestFile:
 	def test(self):
 		print("Running " + self.source)
 		start = time.time()
+		err = 0
 		if (self.input != None):
-			call("java -jar ../../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
+			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
 		else:
-			call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
+			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
 		end = time.time()
 		if (self.output != None):
 			testout = open(self.output + "ran", "r").read()
@@ -37,6 +38,9 @@ class TestFile:
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
+			elif err != 0:
+				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
+				print("Program returned exit code: "+str(err))
 			else:
 				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
 		print("Test took: " + str(end-start) + " seconds")
