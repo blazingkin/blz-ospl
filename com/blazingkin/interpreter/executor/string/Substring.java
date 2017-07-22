@@ -14,14 +14,14 @@ public class Substring implements InstructionExecutor, LambdaFunction {
 		if (args.length > 2){
 			if (Variable.getValue(args[1]).type == VariableTypes.Integer 
 					&& Variable.getValue(args[2]).type == VariableTypes.Integer){
-				int i1 = Variable.getIntValue(Variable.getValue(args[1]));
-				int i2 = Variable.getIntValue(Variable.getValue(args[2]));
+				int i1 = Variable.getIntValue(Variable.getValue(args[1])).intValue();
+				int i2 = Variable.getIntValue(Variable.getValue(args[2])).intValue();
 				String currentString = Variable.getValue(args[0]).value+"";
 				newString = currentString.substring(i1, i2);
 			}
 		}else{
 			if (Variable.getValue(args[1]).type == VariableTypes.Integer){
-				int i1 = Variable.getIntValue(Variable.getValue(args[1]));
+				int i1 = Variable.getIntValue(Variable.getValue(args[1])).intValue();
 				String currentString = Variable.getValue(args[0]).value+"";
 				newString = currentString.substring(i1);
 			}
@@ -35,14 +35,14 @@ public class Substring implements InstructionExecutor, LambdaFunction {
 		if (args.length > 2){
 			if (Variable.getValue(args[1]).type == VariableTypes.Integer 
 					&& Variable.getValue(args[2]).type == VariableTypes.Integer){
-				int i1 = Variable.getIntValue(Variable.getValue(args[1]));
-				int i2 = Variable.getIntValue(Variable.getValue(args[2]));
+				int i1 = Variable.getIntValue(Variable.getValue(args[1])).intValue();
+				int i2 = Variable.getIntValue(Variable.getValue(args[2])).intValue();
 				String currentString = Variable.getValue(args[0]).value+"";
 				newString = currentString.substring(i1, i2);
 			}
 		}else{
 			if (Variable.getValue(args[0]).type == VariableTypes.Integer){
-				int i1 = Variable.getIntValue(Variable.getValue(args[1]));
+				int i1 = Variable.getIntValue(Variable.getValue(args[1])).intValue();
 				String currentString = Variable.getValue(args[0]).value+"";
 				newString = currentString.substring(i1);
 			}

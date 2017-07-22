@@ -1,5 +1,7 @@
 package com.blazingkin.interpreter.executor.tensor;
 
+import java.math.BigInteger;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.BLZTensor;
@@ -16,7 +18,7 @@ public class IntTensor implements InstructionExecutor {
 			Interpreter.throwError("Wrong number of arguments to create tensor");
 		}
 		try{
-			int rank = (int) Variable.getValue(args[1]).value;
+			int rank = ((BigInteger) Variable.getValue(args[1]).value).intValue();
 			if (rank < 1){
 				throw new Exception();
 			}

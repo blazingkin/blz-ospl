@@ -1,5 +1,8 @@
 package com.blazingkin.interpreter.executor.math;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -14,10 +17,10 @@ public class Increment implements InstructionExecutor {
 			Value v = null;
 			switch(Variable.getValue(args[0]).type){
 			case Integer:
-				v = new Value(VariableTypes.Integer, (Integer)(Variable.getValue(args[0]).value) + 1);
+				v = new Value(VariableTypes.Integer, ((BigInteger)(Variable.getValue(args[0]).value)).add(BigInteger.ONE));
 				break;
 			case Double:
-				v = new Value(VariableTypes.Double, (Double)(Variable.getValue(args[0]).value) + 1.0d);
+				v = new Value(VariableTypes.Double, ((BigDecimal)(Variable.getValue(args[0]).value)).add(BigDecimal.ONE));
 				break;
 			default:
 				break;

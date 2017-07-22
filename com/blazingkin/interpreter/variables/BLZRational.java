@@ -1,28 +1,25 @@
 package com.blazingkin.interpreter.variables;
 
+import java.math.BigInteger;
+
 public class BLZRational  {
-	public long num, den;
-	public BLZRational(long num, long den){
-		if (num == 0){	// So we don't get a division by 0 error
-			this.num = 0;
-			this.den = 1;
+	public BigInteger num, den;
+	public BLZRational(BigInteger num, BigInteger den){
+		if (num.equals(BigInteger.ZERO)){	// So we don't get a division by 0 error
+			this.num = BigInteger.ZERO;
+			this.den = BigInteger.ONE;
 			return;
 		}
-		long gcm = Math.abs(gcm(num, den));
-		long sign = num * den / (Math.abs(num) * Math.abs(den));
-		this.num = sign * Math.abs(num) / gcm;
-		this.den = Math.abs(den) / gcm;
-	}
-	
-	public static long gcm(long a, long b) {
-	    return b == 0 ? a : gcm(b, a % b); // Not bad for one line of code :)
-	    // Notice how this was pulled directly from Stack Overflow ;)
+		BigInteger gcm = num.gcd(den);
+		int sign = num.signum() / den.signum();
+		this.num = num.divide(gcm).abs().multiply(BigInteger.valueOf(sign));
+		this.den = den.divide(gcm).abs();
 	}
 	
 	public boolean equals(Object other){
 		if (other instanceof BLZRational){
 			BLZRational oth = (BLZRational) other;
-			return this.num == oth.num && this.den == oth.den;
+			return this.num.equals(oth.num) && this.den.equals(oth.den);
 		}
 		return false;
 	}
@@ -32,7 +29,7 @@ public class BLZRational  {
 	}
 	
 	public static BLZRational multiply(BLZRational a, BLZRational b){
-		return new BLZRational(a.num * b.num, a.den * b.den);
+		return new BLZRational(a.num.multiply(b.num), a.den.multiply(b.den));
 	}
 	
 	public BLZRational multiply(BLZRational other){
@@ -40,7 +37,15 @@ public class BLZRational  {
 	}
 	
 	public static BLZRational add(BLZRational a, BLZRational b){
-		return new BLZRational((a.num * b.den) + (b.num * a.den), a.den * b.den);
+		return new BLZRational((a.num.multiply(b.den)).add(b.num.multiply(a.den)), a.den.multiply(b.den));
+	}
+	
+	public BLZRational subtract(BLZRational other){
+		return subtract(this, other);
+	}
+	
+	public static BLZRational subtract(BLZRational a, BLZRational b){
+		return new BLZRational((a.num.multiply(b.den)).subtract(b.num.multiply(a.den)), a.den.multiply(b.den));		
 	}
 	
 	public BLZRational add(BLZRational other){

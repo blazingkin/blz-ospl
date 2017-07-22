@@ -1,5 +1,8 @@
 package com.blazingkin.interpreter.variables;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import com.blazingkin.interpreter.executor.Method;
 
 public class Value {
@@ -53,9 +56,9 @@ public class Value {
 	}
 	
 	public static Value rational(long num, long den){
-		BLZRational rat = new BLZRational(num, den);
-		if (rat.den == 1){
-			return new Value(VariableTypes.Integer, (int)rat.num);
+		BLZRational rat = new BLZRational(BigInteger.valueOf(num), BigInteger.valueOf(den));
+		if (rat.den.equals(BigInteger.ONE)){
+			return new Value(VariableTypes.Integer, rat.num);
 		}
 		return new Value(VariableTypes.Rational, rat);
 	}
@@ -63,12 +66,20 @@ public class Value {
 		return rational((long)num, (long)den);
 	}
 	
+	public static Value rational(BigInteger num, BigInteger den){
+		BLZRational rat = new BLZRational(num, den);
+		if (rat.den.equals(BigInteger.ONE)){
+			return new Value(VariableTypes.Integer, rat.num);
+		}
+		return new Value(VariableTypes.Rational, rat);
+	}
+	
 	public static Value doub(double num){
-		return new Value(VariableTypes.Double, num);
+		return new Value(VariableTypes.Double, BigDecimal.valueOf(num));
 	}
 	
 	public static Value integer(int val){
-		return new Value(VariableTypes.Integer, val);
+		return new Value(VariableTypes.Integer, BigInteger.valueOf(val));
 	}
 	
 	public static Value bool(boolean val){

@@ -22,11 +22,11 @@ public class SetTensorValue implements InstructionExecutor {
 		int value = 0;
 		try{
 			Value v = Variable.getValue(args[1]);
-			value = Variable.getIntValue(v);
+			value = Variable.getIntValue(v).intValue();
 			
 			for (int i = 2; i < args.length; i++){
 				Value va = Variable.getValue(args[i]);
-				int val = Variable.getIntValue(va);
+				int val = Variable.getIntValue(va).intValue();
 				indexList[i-2] = val;
 			}
 		}catch(Exception e){

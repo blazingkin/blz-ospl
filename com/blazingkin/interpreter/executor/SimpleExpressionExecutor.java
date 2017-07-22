@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor;
 
 import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 
 import com.blazingkin.interpreter.Interpreter;
@@ -122,14 +123,14 @@ public class SimpleExpressionExecutor {
 			if (!Variable.isDecimalValue(first)){
 				return evaluate(SimpleExpression.comparison, expr);
 			}
-			double frst = Variable.getDoubleVal(first);
+			BigDecimal frst = Variable.getDoubleVal(first);
 			for (int i = 1; i < splits.length; i++){
 				Value val = SimpleExpressionParser.parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(val)){
 					return evaluate(SimpleExpression.comparison, expr);
 				}
-				double v = Variable.getDoubleVal(val);
-				if (Math.abs(frst - v) > EPSILON){
+				BigDecimal v = Variable.getDoubleVal(val);
+				if (Math.abs(frst.subtract(v).doubleValue()) > EPSILON){
 					return Value.bool(false);
 				}
 			}
@@ -145,15 +146,15 @@ public class SimpleExpressionExecutor {
 			if (!Variable.isDecimalValue(comp)){
 				Interpreter.throwError("Cannot evaluate > with non-decimal value "+comp);
 			}
-			double cmp = Variable.getDoubleVal(comp);
+			BigDecimal cmp = Variable.getDoubleVal(comp);
 			boolean flag = true;
 			for (int i = 1; i < splits.length; i++){
 				Value currval = parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(currval)){
 					Interpreter.throwError("Cannot evaluate > with non-decimal value "+currval);
 				}
-				double cval = Variable.getDoubleVal(currval);
-				flag = flag && (Double.compare(cmp, cval) > 0);
+				BigDecimal cval = Variable.getDoubleVal(currval);
+				flag = flag && ((cmp.subtract(cval)).doubleValue() > 0);
 				cmp = cval;
 			}
 			return Value.bool(flag);
@@ -168,15 +169,15 @@ public class SimpleExpressionExecutor {
 			if (!Variable.isDecimalValue(comp)){
 				Interpreter.throwError("Cannot evaluate >= with non-decimal value "+comp);
 			}
-			double cmp = Variable.getDoubleVal(comp);
+			BigDecimal cmp = Variable.getDoubleVal(comp);
 			boolean flag = true;
 			for (int i = 1; i < splits.length; i++){
 				Value currval = parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(currval)){
 					Interpreter.throwError("Cannot evaluate >= with non-decimal value "+currval);
 				}
-				double cval = Variable.getDoubleVal(currval);
-				flag = flag && (Double.compare(cmp, cval) >= 0);
+				BigDecimal cval = Variable.getDoubleVal(currval);
+				flag = flag && ((cmp.subtract(cval)).doubleValue() >= 0);
 				cmp = cval;
 			}
 			return Value.bool(flag);
@@ -191,15 +192,15 @@ public class SimpleExpressionExecutor {
 			if (!Variable.isDecimalValue(comp)){
 				Interpreter.throwError("Cannot evaluate < with non-decimal value "+comp);
 			}
-			double cmp = Variable.getDoubleVal(comp);
+			BigDecimal cmp = Variable.getDoubleVal(comp);
 			boolean flag = true;
 			for (int i = 1; i < splits.length; i++){
 				Value currval = parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(currval)){
 					Interpreter.throwError("Cannot evaluate < with non-decimal value "+currval);
 				}
-				double cval = Variable.getDoubleVal(currval);
-				flag = flag && (Double.compare(cmp, cval) < 0);
+				BigDecimal cval = Variable.getDoubleVal(currval);
+				flag = flag && ((cmp.subtract(cval)).doubleValue() < 0);
 				cmp = cval;
 			}
 			return Value.bool(flag);
@@ -214,15 +215,15 @@ public class SimpleExpressionExecutor {
 			if (!Variable.isDecimalValue(comp)){
 				Interpreter.throwError("Cannot evaluate <= with non-decimal value "+comp);
 			}
-			double cmp = Variable.getDoubleVal(comp);
+			BigDecimal cmp = Variable.getDoubleVal(comp);
 			boolean flag = true;
 			for (int i = 1; i < splits.length; i++){
 				Value currval = parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(currval)){
 					Interpreter.throwError("Cannot evaluate <= with non-decimal value "+currval);
 				}
-				double cval = Variable.getDoubleVal(currval);
-				flag = flag && (Double.compare(cmp, cval) <= 0);
+				BigDecimal cval = Variable.getDoubleVal(currval);
+				flag = flag && ((cmp.subtract(cval)).doubleValue() <= 0);
 				cmp = cval;
 			}
 			return Value.bool(flag);

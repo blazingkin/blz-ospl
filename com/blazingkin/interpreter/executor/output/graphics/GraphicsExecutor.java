@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -301,8 +302,8 @@ public class GraphicsExecutor implements InstructionExecutor {
 		case setSize:
 			if (args[0].contains("[]")){
 				String s = args[0].replace("[", "").replace("]", "");
-				dimX = (Integer) Variable.getValueOfArray(s, 0).value;
-				dimY = (Integer) Variable.getValueOfArray(s, 1).value;
+				dimX = ((BigInteger) Variable.getValueOfArray(s, BigInteger.ZERO).value).intValue();
+				dimY = ((BigInteger) Variable.getValueOfArray(s, BigInteger.ONE).value).intValue();
 				jf.setSize(dimX,dimY);
 				break;
 			}
@@ -342,7 +343,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			for (int i = 1; i < args.length; i++){
 				if (args[i].contains("[]")){
 					String str = args[i].replace("[]", "");
-					HashMap<Integer, Value> lst = Variable.getArray(str);
+					HashMap<BigInteger, Value> lst = Variable.getArray(str);
 					for (int y = 0; y < lst.size(); y+=2){
 						points.add(new Point( (Integer) ((Value) lst.values().toArray()[y]).value, (Integer) ((Value) lst.values().toArray()[y+1]).value));
 					}

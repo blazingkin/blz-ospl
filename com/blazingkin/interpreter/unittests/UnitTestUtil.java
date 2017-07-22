@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 import com.blazingkin.interpreter.variables.Value;
@@ -47,13 +48,14 @@ public class UnitTestUtil {
 			return;
 		}
 		if (Variable.isDecimalValue(a) && Variable.isDecimalValue(b)){
-			double v1 = Variable.getDoubleVal(a);
-			double v2 = Variable.getDoubleVal(b);
-			double diff = Math.abs(v2-v1);
+			BigDecimal v1 = Variable.getDoubleVal(a);
+			BigDecimal v2 = Variable.getDoubleVal(b);
+			double diff = (v2.subtract(v1)).doubleValue();
 			if (diff > EPSILON){
 				System.out.println(a.value + " !~= " + b.value);
 				new Exception().printStackTrace();
 			}
+			org.junit.Assert.assertTrue(diff < EPSILON);
 			assert diff < EPSILON;
 			return;
 		}
