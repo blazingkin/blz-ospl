@@ -17,7 +17,7 @@ public class SimpleExpressionExecutor {
 	public static Value evaluate(SimpleExpression type, String expr){
 		switch(type){
 		case addition:
-		{	String[] splits = expr.split("\\+");
+		{	String[] splits = expr.split(type.syntax.pattern());
 			if (splits.length < 2){
 				Interpreter.throwError("Not enough arguments for addition");
 			}
@@ -238,6 +238,26 @@ public class SimpleExpressionExecutor {
 				Interpreter.throwError("Invalid number of arguments for modulus");
 			}
 			return Variable.modVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+		}
+		case preorderIncrement:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){	// First is empty, second is the input
+				Interpreter.throwError("Invalid format for preorder increment");
+			}
+			String trimmed = splits[1].trim();
+			Variable.setValue(trimmed, Variable.addValues(Variable.getValue(trimmed), Value.integer(1)));
+			return Variable.getValue(trimmed);
+		}
+		case preorderDecrement:
+		{
+			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length != 2){	// First is empty, second is the input
+				Interpreter.throwError("Invalid format for preorder decrement");
+			}
+			String trimmed = splits[1].trim();
+			Variable.setValue(trimmed, Variable.subValues(Variable.getValue(trimmed), Value.integer(1)));
+			return Variable.getValue(trimmed);
 		}
 		default:
 			System.err.println(expr);
