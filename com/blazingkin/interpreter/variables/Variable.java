@@ -139,7 +139,10 @@ public class Variable {
 		if (val.type == VariableTypes.Integer && quo.type == VariableTypes.Integer){
 			return new Value(VariableTypes.Integer, ((BigInteger)val.value).mod((BigInteger)quo.value));
 		}
-		Interpreter.throwError("Attempted to perform a modulus on non-integers");
+		if (isDecimalValue(val) && isDecimalValue(quo)){
+			return new Value(VariableTypes.Double, getDoubleVal(val).remainder(getDoubleVal(quo)));
+		}
+		Interpreter.throwError("Attempted to perform a modulus on non-integers, "+val+" and "+quo);
 		return new Value(VariableTypes.Nil, null);
 	}
 	

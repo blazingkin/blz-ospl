@@ -267,6 +267,27 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("0 >= 0"), Value.bool(true));
 		assertEqual(parseExpression("1 >= 1"), Value.bool(true));
 	}
+	
+	@Test
+	public void testModulus(){
+		assertEqual(parseExpression("3 % 2"), Value.integer(1));
+		assertEqual(parseExpression("4 % 2"), Value.integer(0));
+		assertEqual(parseExpression("5 % 7"), Value.integer(5));
+		assertEqual(parseExpression("0 % 999"), Value.integer(0));
+		assertEqual(parseExpression("2.2 % 2"), Value.doub(.2));
+		assertAlmostEqual(parseExpression("{pi} % 3"), Value.doub(Math.PI - 3));
+	}
+	
+	@Test
+	public void testPercent(){
+		assertEqual(parseExpression("100%"), Value.integer(1));
+		assertEqual(parseExpression("50%"), Value.rational(1, 2));
+		assertEqual(parseExpression("20 %"), Value.rational(1, 5));
+		assertEqual(parseExpression("10%"), Value.rational(1, 10));
+		assertEqual(parseExpression("3%"), Value.rational(3, 100));
+		assertEqual(parseExpression("300%"), Value.integer(3));
+		assertAlmostEqual(parseExpression("{e}%"), Value.doub(Math.E / 100));
+	}
 
 	
 	

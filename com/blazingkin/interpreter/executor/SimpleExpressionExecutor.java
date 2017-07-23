@@ -231,6 +231,9 @@ public class SimpleExpressionExecutor {
 		case modulus:
 		{
 			String[] splits = expr.split(type.syntax.pattern());
+			if (splits.length == 1){
+				return Variable.divVals(SimpleExpressionParser.parseExpression(splits[0]), Value.integer(100));
+			}
 			if (splits.length != 2){
 				Interpreter.throwError("Invalid number of arguments for modulus");
 			}

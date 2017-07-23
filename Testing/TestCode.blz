@@ -60,7 +60,7 @@
 	wait (nested_mul 10 6 10)	# Wait works along with lambda statements as arguments
 	echo "Done testing WAIT"
 
-	echo (dbl 5) " THIS IS A TEST"
+	echo (dbl 5) " = 10"
 	echo "Please enter three numbers"
 	nin a
 	nin b
