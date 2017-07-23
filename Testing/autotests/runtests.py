@@ -7,6 +7,16 @@ from subprocess import call
 *	It will check output against the file with the same name, but with the .out extension
 """
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class TestFile:
 	def __init__(self, source, output=None, inp=None):
 		self.source = source
@@ -16,17 +26,23 @@ class TestFile:
 	def test(self):
 		print("Running " + self.source)
 		start = time.time()
+		err = 0
 		if (self.input != None):
-			call("java -jar ../../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
+			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
 		else:
-			call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
+			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
 		end = time.time()
 		if (self.output != None):
-			if not filecmp.cmp(self.output+"ran", self.output):
-				print("Failed")
+			testout = open(self.output + "ran", "r").read()
+			gt = open(self.output, "r").read()
+			if testout != gt:
+				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
+			elif err != 0:
+				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
+				print("Program returned exit code: "+str(err))
 			else:
-				print("Passed")
+				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
 		print("Test took: " + str(end-start) + " seconds")
 
 for file in os.listdir("."):

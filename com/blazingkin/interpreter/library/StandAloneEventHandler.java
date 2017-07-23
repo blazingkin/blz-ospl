@@ -58,6 +58,9 @@ public class StandAloneEventHandler implements BlzEventHandler {
 		if (Interpreter.logging){
 			System.out.println("Exiting: "+exitMessage);
 		}
+		if (exitMessage.equals("An Error Occured")) {
+			System.exit(-1);
+		}
 		System.exit(0);
 	}
 
