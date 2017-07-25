@@ -14,7 +14,7 @@
 	set *l {system.os.name}
 	echo {file.name} " <-file name, os-> " *l	# SystemEnv variables work
 	echo a " and " c
-
+	
 	(echo "1+2 = " (add 1 2))
 	(echo "4+(4+8) = " (add 4 (add 4 8)))	# Lambda Function Calls Work
 	(define dbl (x) (add x x))

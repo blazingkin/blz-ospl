@@ -48,7 +48,6 @@ public class Executor {
 	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();	//Loops
 	private static Stack<Integer> processLineStack = new Stack<Integer>();
 	
-	
 	// This is the main loop
 	public static void codeLoop() throws Exception{
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
@@ -101,7 +100,6 @@ public class Executor {
 		cleanup();
 	}
 	
-	
 	public static Stack<Integer> getProcessLineStack(){
 		return processLineStack;
 	}
@@ -117,11 +115,11 @@ public class Executor {
 		contextStack.push(con);
 	}
 	
-	
 	public static void executeMethod(Method m){
 		pushToRuntimeStack(m);
 		setLine(m.lineNumber);
 	}
+	
 	public static void executeMethod(Method m, Value[] values){
 		executeMethod(m);
 		if (m.takesVariables){
@@ -130,9 +128,6 @@ public class Executor {
 			}
 		}
 	}
-	
-
-	
 	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws Exception{			// runs the executor
@@ -189,7 +184,6 @@ public class Executor {
 		startingMethod = "";
 	}
 	
-	
 	public static void immediateModeLoop(InputStream is){
 		System.out.println("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:");
 		System.out.println("Type 'exit' to exit");
@@ -235,9 +229,7 @@ public class Executor {
 		}
 	}
 	
-	
 	//Lots of getters / setters below this point
-	
 	public static boolean doesMethodExist(String name){
 		return (InstructionType.getInstructionType(name) != Instruction.INVALID) || LambdaRegistrar.isRegisteredLambdaExpression(name);
 	}
@@ -250,63 +242,82 @@ public class Executor {
 		UUIDsUsed.add(id);
 		return id;
 	}
+	
 	public static Stack<LoopWrapper> getLoopStack() {
 		return loopStack;
 	}
+	
 	public static void setLoopStack(Stack<LoopWrapper> loopStack) {
 		Executor.loopStack = loopStack;
 	}
+	
 	public static boolean isImmediateMode(){
 		return immediateMode;
 	}
+	
 	public static BlzEventHandler getEventHandler() {
 		return eventHandler;
 	}
+	
 	public static void setEventHandler(BlzEventHandler eventHandler) {
 		Executor.eventHandler = eventHandler;
 	}
+	
 	public static ArrayList<Method> getMethods() {
 		return methods;
 	}
+	
 	public static void setMethods(ArrayList<Method> methods) {
 		Executor.methods = methods;
 	}
+	
 	public static boolean isCloseRequested() {
 		return closeRequested;
 	}
+	
 	public static void setCloseRequested(boolean closeRequested) {
 		Executor.closeRequested = closeRequested;
 	}
+	
 	public static int getFrames() {
 		return frames;
 	}
+	
 	public static void setFrames(int frames) {
 		Executor.frames = frames;
 	}
+	
 	public static long getTimeStarted() {
 		return timeStarted;
 	}
+	
 	public static void setTimeStarted(long timeStarted) {
 		Executor.timeStarted = timeStarted;
 	}
+	
 	public static ArrayList<Event> getEventsToBeHandled() {
 		return eventsToBeHandled;
 	}
+	
 	public static void setEventsToBeHandled(ArrayList<Event> eventsToBeHandled) {
 		Executor.eventsToBeHandled = eventsToBeHandled;
 	}
+	
 	public static void setLine(int num){				// Sets line within the current process
 		Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
 	}
+	
 	public static int getLine(){
 		if (immediateMode){
 			return -1;
 		}
 		return (int) Variable.getGlobalValue("*pc").value;
 	}
+	
 	public static Stack<Process> getRunningProcesses(){
 		return runningProcesses;
 	}
+	
 	public static Process getCurrentProcess(){
 		try{
 		return runningProcesses.peek();
@@ -322,6 +333,7 @@ public class Executor {
 			return null;
 		}
 	}
+	
 	public static Method getMethodInCurrentProcess(String methodName){
 		for (int i = 0; i < getMethods().size(); i++){
 			if (getMethods().get(i).isItThis(methodName, getCurrentProcess().UUID)){
@@ -339,6 +351,7 @@ public class Executor {
 		}
 		return null;	
 	}
+	
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
 		pushToRuntimeStack(p);
@@ -356,7 +369,6 @@ public class Executor {
 			contextStack.push(new Context());
 		}
 		se.onBlockStart();
-
 	}
 	
 	public static void popStack(){									// This is used to return to the previous process or function
@@ -457,7 +469,6 @@ public class Executor {
 		}
 		return express;
 	}
-
 
 	public static boolean isBreakMode() {
 		return breakMode;

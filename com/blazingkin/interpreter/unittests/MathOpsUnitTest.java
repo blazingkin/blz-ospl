@@ -6,6 +6,7 @@ import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqua
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.instruction.Instruction;
@@ -288,7 +289,20 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("300%"), Value.integer(3));
 		assertAlmostEqual(parseExpression("{e}%"), Value.doub(Math.E / 100));
 	}
+	
+	@Test
+	public void testMathIntegration(){
+		parseExpression("a = 3");
+		assertEqual(parseExpression("++a + 4"), Value.integer(8));
+		assertEqual(parseExpression("a"), Value.integer(4));
+		assertEqual(parseExpression("2*2 < 3*3 < 3 ** 2.1"), Value.bool(true));
+	}
 
+	
+	@AfterClass
+	public static void teardown(){
+		Variable.clearVariables();
+	}
 	
 	
 }

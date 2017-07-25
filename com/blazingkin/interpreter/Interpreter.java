@@ -98,9 +98,9 @@ public class Interpreter {
 		}catch(Exception e){
 			e.printStackTrace();
 			if (!Executor.getCurrentProcess().runningFromFile){
-				throwError("Error, Executor was on line "+ Executor.getLine()+" in a software environment");
+				throwError("Error, Executor was on line "+Executor.getLine()+" in a software environment");
 			}else{
-				throwError("Error, Executor was on line "+Executor.getLine() + " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
+				throwError("Error, Executor was on line "+Executor.getLine()+ " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
 				}		
 			}
 	}

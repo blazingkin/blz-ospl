@@ -25,9 +25,7 @@ public class ExecutorUnitTest {
 		ArrayList<Integer> uuids = new ArrayList<Integer>();
 		for (int i = 0; i < 50000; i++){
 			int u = Executor.getUUID();
-			if (uuids.contains(u)){
-				System.err.println("UUID HAD A COLLISION "+u);
-			}
+			org.junit.Assert.assertFalse(uuids.contains(u));
 			uuids.add(u);
 		}
 	}
