@@ -1,0 +1,14 @@
+echo "shouldn't run"
+
+:main
+	a = two() + three()
+	echo a
+end
+
+:two
+	return 2
+end
+
+:three
+	return 3
+end

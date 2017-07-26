@@ -32,6 +32,7 @@ class TestFile:
 		else:
 			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
 		end = time.time()
+		print("Test took: " + str(end-start) + " seconds")
 		if (self.output != None):
 			testout = open(self.output + "ran", "r").read()
 			gt = open(self.output, "r").read()
@@ -43,7 +44,7 @@ class TestFile:
 				print("Program returned exit code: "+str(err))
 			else:
 				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
-		print("Test took: " + str(end-start) + " seconds")
+		print()
 
 for file in os.listdir("."):
     if file.endswith(".blz"):

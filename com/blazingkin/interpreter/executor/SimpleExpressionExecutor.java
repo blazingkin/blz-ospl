@@ -4,6 +4,7 @@ import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseEx
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.variables.Value;
@@ -259,6 +260,23 @@ public class SimpleExpressionExecutor {
 			Variable.setValue(trimmed, Variable.subValues(Variable.getValue(trimmed), Value.integer(1)));
 			return Variable.getValue(trimmed);
 		}
+		case functionCall:
+		{
+			String methodName = expr.split("\\(")[0].trim();
+			Method toCall = Executor.getMethodInCurrentProcess(methodName);
+			String justTheArgs = expr.replace(methodName+"(", "");
+			justTheArgs = justTheArgs.substring(0, justTheArgs.length()-1);
+			if (justTheArgs.length() != 0){
+				String[] splits = justTheArgs.split(",");
+				Value[] params = new Value[splits.length];
+				for (int i = 0; i < splits.length; i++){
+					params[i] = SimpleExpressionParser.parseExpression(splits[i]);
+				}
+				return Executor.functionCall(toCall, params);
+			}
+			Value[] emptyArgs = {};
+			return Executor.functionCall(toCall, emptyArgs);
+		}
 		default:
 			System.err.println(expr);
 			Interpreter.throwError("Simple Expression Executor Inititialized with invalid type");
@@ -269,6 +287,5 @@ public class SimpleExpressionExecutor {
 		
 		return new Value(VariableTypes.Nil, null);
 	}
-	
 	
 }

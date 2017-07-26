@@ -1,0 +1,15 @@
+:main
+	echo "What number would you like the factorial of?"
+	nin input
+	fact = fact(input)
+	echo fact
+end
+
+:fact(num)
+	if num == 0
+		return 1
+	end
+	subtr = num - 1
+	result = num * fact(subtr)
+	return result
+end

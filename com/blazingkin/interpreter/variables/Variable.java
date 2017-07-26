@@ -171,6 +171,9 @@ public class Variable {
 	}
 	
 	public static Value expValues(Value v1, Value v2){
+		if (isValInt(v1) && isValInt(v2)){
+			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).pow(((BigInteger)v2.value).intValue()));
+		}
 		if (isDecimalValue(v1) && isDecimalValue(v2)){
 			BigDecimal d1 = getDoubleVal(v1);
 			BigDecimal d2 = getDoubleVal(v2);
@@ -189,7 +192,6 @@ public class Variable {
 		if (isDecimalValue(v1) && (v2.type == VariableTypes.String && ((String) v2.value).toLowerCase().equals("e"))){
 			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
-		System.out.println(v2.type);
 		Interpreter.throwError("Failed Taking an Logarithm with "+v1.value + " and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}

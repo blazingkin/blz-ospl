@@ -6,6 +6,7 @@ public enum SimpleExpression {
 
 	preorderIncrement(Pattern.compile("^\\s*\\+\\+"), 1),	// Check for things of the form ++var
 	preorderDecrement(Pattern.compile("^\\s*\\-\\-"), 1),	// Check for things of the form --var
+	functionCall(Pattern.compile("\\S*\\(.*\\)"), 1),
 	modulus(Pattern.compile("%"), 2),
 	multiplication(Pattern.compile("\\*"), 3),
 	division(Pattern.compile("\\/"), 3),
@@ -21,7 +22,7 @@ public enum SimpleExpression {
 	greaterThanEqual(Pattern.compile("(\\>=|=\\>)"), 8),
 	notEqual(Pattern.compile("(!=|=!)"), 7),
 	approximateComparison(Pattern.compile("((~=)|(=~))"), 6),// Approximately equal to
-	parenthesis(Pattern.compile("\\(.*?\\)"), 1000);
+	parenthesis(Pattern.compile("(^|\\s)\\(.*?\\)"), 1000);
 	
 	
 	public final Pattern syntax;		// Regex to check for

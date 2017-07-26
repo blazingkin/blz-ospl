@@ -29,7 +29,7 @@ public class Executor {
 	// Instance objects
 	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
 	private static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
-	private static String startingMethod;
+	private static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
 
@@ -39,6 +39,7 @@ public class Executor {
 	private static boolean immediateMode = false;
 	private static boolean closeRequested = false;
 	private static boolean breakMode = false;
+	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
 	
 	// Stacks
 	private static Stack<RuntimeStackElement> runtimeStack = new Stack<RuntimeStackElement>();
@@ -51,53 +52,86 @@ public class Executor {
 	// This is the main loop
 	public static void codeLoop() throws Exception{
 		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
-			for (setLine(0);getLine() < getCurrentProcess().getSize();){
-				Process currentProcess = getCurrentProcess();
-				if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
-					RegisteredLine line = currentProcess.getRegisteredLine(getLine());
-					setLine(getLine()+1);
-					line.getInstr().executor.run(line.getArgs());
-				}
-				else{
-					String line = currentProcess.getLine(getLine());
-					if (line.trim().length() == 0){
-						setLine(getLine()+1);
-						continue;
-					}
-					if (line.charAt(0) == '('){
-						LambdaParser.parseLambdaExpression(line).getValue();
-						setLine(getLine()+1);
-						continue;
-					}
-					String split[] = line.split(" ");
-					if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-						Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
-						getMethods().add(nM);
-						pushToRuntimeStack(nM);
-						setLine(getLine()+1);
-						continue;
-					}
-					if (split.length == 1 && split[0].equals("")){
-						setLine(getLine()+1);
-						continue;
-					}
-					setLine(getLine()+1);
-					SimpleExpressionParser.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
-				}
-				if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-					currentProcess.lineReturns.add(getLine()+1);
-					Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
-					getEventsToBeHandled().remove(0);
-				}
-				if (isCloseRequested()){
-					getEventHandler().exitProgram("Close was requested");
-					cleanup();
-					return;
-				}
+			for (setLine(getStartOfMain());getLine() < getCurrentProcess().getSize();){
+				executeCurrentLine();
 			}
 			popStack();
 		}
 		cleanup();
+	}
+	
+	public static void executeCurrentLine(){
+		Process currentProcess = getCurrentProcess();
+		if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
+			RegisteredLine line = currentProcess.getRegisteredLine(getLine());
+			setLine(getLine()+1);
+			line.getInstr().executor.run(line.getArgs());
+		}
+		else{
+			String line = currentProcess.getLine(getLine());
+			if (line.trim().length() == 0){
+				setLine(getLine()+1);
+				return;
+			}
+			if (line.charAt(0) == '('){
+				LambdaParser.parseLambdaExpression(line).getValue();
+				setLine(getLine()+1);
+				return;
+			}
+			String split[] = line.split(" ");
+			if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
+				Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
+				getMethods().add(nM);
+				pushToRuntimeStack(nM);
+				setLine(getLine()+1);
+				return;
+			}
+			if (split.length == 1 && split[0].equals("")){
+				setLine(getLine()+1);
+				return;
+			}
+			setLine(getLine()+1);
+			SimpleExpressionParser.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
+		}
+		if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
+			currentProcess.lineReturns.add(getLine()+1);
+			Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
+			getEventsToBeHandled().remove(0);
+		}
+		if (isCloseRequested()){
+			getEventHandler().exitProgram("Close was requested");
+			cleanup();
+			return;
+		}
+	}
+	
+	public static Value functionCall(Method m, Value[] values){
+		int runtimeStackDepth = runtimeStack.size();
+		if (m.parent != getCurrentProcess()){
+			pushToRuntimeStack(m.parent);
+		}else{
+			getCurrentProcess().lineReturns.add(getLine());
+		}
+		pushToRuntimeStack(m);
+		if (m.takesVariables){
+			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				Variable.setValue(m.variables[i], values[i]);
+			}
+		}
+		setLine(m.lineNumber);
+		while (runtimeStack.size() > runtimeStackDepth){
+			executeCurrentLine();
+		}
+		return returnBuffer;
+	}
+	
+	private static int getStartOfMain(){
+		Method start = getMethodInCurrentProcess(startingMethod);
+		if (start != null){
+			return start.lineNumber;
+		}else{
+			return 0;
+		}
 	}
 	
 	public static Stack<Integer> getProcessLineStack(){
@@ -138,12 +172,7 @@ public class Executor {
 			}
 		}
 		pushToRuntimeStack(new Process(runFile));		// puts the file passed to us as the current process
-		if (startingMethod != null){
-			if (!(Method.contains(getMethods(), startingMethod) == null)){
-				pushToRuntimeStack(Method.contains(getMethods(), startingMethod));
-				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
-			}
-		}
+		
 		setEventHandler(new StandAloneEventHandler());
 		codeLoop();
 			
@@ -474,9 +503,12 @@ public class Executor {
 		return breakMode;
 	}
 
-
 	public static void setBreakMode(boolean breakMode) {
 		Executor.breakMode = breakMode;
+	}
+	
+	public static void setReturnBuffer(Value v){
+		returnBuffer = v;
 	}
 	
 }
