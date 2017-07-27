@@ -2,6 +2,7 @@
 *.gen
 .metadata/*
 .recommenders/*
+.settings/*
 *.project
 *.class
 *.classpath

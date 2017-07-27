@@ -9,11 +9,7 @@ The language will change drastically right now as I build up feature-completenes
 Hello World Sample
 ===
 
-:main
-
-ECHO "Hello World!"
-
-END
+echo "Hello World"
 
 or
 
@@ -65,4 +61,8 @@ Contact and License
 ===
 For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or visit [my website](http://www.blazingk.in/)
 
-Copyright © 2017 Alex Gravenor under the GNU GPL V2 License
+This work includes a [Java BigMath library by Richard Mathar](https://arxiv.org/abs/0908.3030v3). It is in the org folder.
+
+See the Extras folder for the full license
+
+Copyright © 2017 Alex Gravenor under the GNU GPL V3 License
