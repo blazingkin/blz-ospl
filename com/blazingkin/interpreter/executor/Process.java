@@ -96,7 +96,7 @@ public class Process implements RuntimeStackElement {
 				continue;
 			}
 			String newStr = lines[i].replaceFirst(splits[0], "").trim();
-			registeredLines[i] = new RegisteredLine(instr, Executor.parseExpressions(newStr));
+			registeredLines[i] = new RegisteredLine(instr, newStr);
 		}
 	}
 	
@@ -173,21 +173,6 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
-	
-	public class RegisteredLine{
-		public final Instruction instr;
-		public final String[] args;
-		public RegisteredLine(Instruction instr, String[] args){
-			this.instr = instr;
-			this.args = args;
-		}
-		public Instruction getInstr(){
-			return instr;
-		}
-		public String[] getArgs(){
-			return args;
-		}
-	}
 
 
 	@Override

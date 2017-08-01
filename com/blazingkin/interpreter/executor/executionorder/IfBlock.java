@@ -4,13 +4,13 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IfBlock implements InstructionExecutor, LambdaFunction, BlockInstruction {
+public class IfBlock implements InstructionExecutorStringArray, LambdaFunction, BlockInstruction {
 	public static final Value TRUE_VAL = Value.bool(true);
 	
 	

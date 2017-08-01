@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class ModVars implements InstructionExecutor, LambdaFunction {
+public class ModVars implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Mod
 	 * 	Gets the remainder of 2 values
 	 */

@@ -3,13 +3,13 @@ package com.blazingkin.interpreter.executor.tensor;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.BLZTensor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IntTensor implements InstructionExecutor {
+public class IntTensor implements InstructionExecutorStringArray {
 
 	//Params are Tensor Name, Tensor Rank
 	@Override

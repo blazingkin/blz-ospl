@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 import org.nevec.rjm.BigDecimalMath;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Trigonometry implements InstructionExecutor, LambdaFunction {
+public class Trigonometry implements InstructionExecutorStringArray, LambdaFunction {
 
 	public TrigFunctions function;
 	public Trigonometry(TrigFunctions f){

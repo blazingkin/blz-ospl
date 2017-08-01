@@ -42,6 +42,7 @@ public class Interpreter {
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
 		System.out.println("blz-ospl *PATH*");
+		System.out.println("The -m flag lets you specify a main function");
 		System.out.println();
 		System.out.println("Run in immediate mode");
 		System.out.println("blz-ospl -i");

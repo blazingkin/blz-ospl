@@ -1,9 +1,9 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 
-public class End implements InstructionExecutor {
+public class End implements InstructionExecutorStringArray {
 
 	public void run(String[] args){
 		/*	End

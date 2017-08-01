@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class FileInput implements InstructionExecutor {
+public class FileInput implements InstructionExecutorStringArray {
 
 	public void run(String args[]){
 		String arrayVarAddress = args[0];

@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
-public class FileOutput implements InstructionExecutor {
+public class FileOutput implements InstructionExecutorStringArray {
 
 	public void run(String args[]){
 		String arrayVarAddress = args[0];

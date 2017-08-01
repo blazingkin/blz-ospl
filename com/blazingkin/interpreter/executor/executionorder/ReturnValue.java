@@ -3,16 +3,15 @@ package com.blazingkin.interpreter.executor.executionorder;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.variables.Value;
 
 public class ReturnValue implements InstructionExecutor {
 
-	public void run(String[] args) {
-		String buildingString = "";
-		for (String s: args){
-			buildingString += s + " ";
-		}
-		Executor.setReturnBuffer(SimpleExpressionParser.parseExpression(buildingString));
+	public Value run(String line){
+		Value v = SimpleExpressionParser.parseExpression(line);
+		Executor.setReturnBuffer(v);
 		Executor.popStack();
+		return v;
 	}
 
 }

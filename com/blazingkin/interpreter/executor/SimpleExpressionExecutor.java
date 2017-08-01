@@ -4,7 +4,6 @@ import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseEx
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.variables.Value;

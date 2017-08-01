@@ -5,13 +5,13 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Ceiling implements InstructionExecutor, LambdaFunction {
+public class Ceiling implements InstructionExecutorStringArray, LambdaFunction {
 
 	public void run(String[] args) {
 		if (Variable.getValue(args[0]).type == VariableTypes.Integer){

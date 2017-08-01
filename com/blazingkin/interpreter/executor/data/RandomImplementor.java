@@ -2,13 +2,13 @@ package com.blazingkin.interpreter.executor.data;
 
 import java.math.BigInteger;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class RandomImplementor implements InstructionExecutor, LambdaFunction {
+public class RandomImplementor implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Random
 	 * Returns a random integer from 0-99
 	 * 

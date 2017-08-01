@@ -1,12 +1,12 @@
 package com.blazingkin.interpreter.executor.string;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Substring implements InstructionExecutor, LambdaFunction {
+public class Substring implements InstructionExecutorStringArray, LambdaFunction {
 
 	@Override
 	public void run(String[] args) {

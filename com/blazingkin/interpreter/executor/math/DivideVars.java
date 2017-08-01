@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 @Deprecated
-public class DivideVars implements InstructionExecutor, LambdaFunction {
+public class DivideVars implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Divide
 	 * 	Divides two numbers and puts the output as a variable
 	 */

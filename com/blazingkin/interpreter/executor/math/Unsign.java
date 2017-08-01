@@ -1,13 +1,13 @@
 package com.blazingkin.interpreter.executor.math;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Unsign implements InstructionExecutor, LambdaFunction {
+public class Unsign implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Absolute Value
 	 * 	Unsigns a variable
 	 */

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 
-public class Listener implements InstructionExecutor {
+public class Listener implements InstructionExecutorStringArray {
 
 	public void run(String[] args){
 		listeners.add(new Listener(args[1], getListenerType(args[0])));

@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 import org.nevec.rjm.BigDecimalMath;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 @Deprecated
-public class Logarithm implements InstructionExecutor, LambdaFunction {
+public class Logarithm implements InstructionExecutorStringArray, LambdaFunction {
 
 	@Override
 	public void run(String[] args) {

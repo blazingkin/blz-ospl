@@ -8,7 +8,6 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Process.RegisteredLine;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
@@ -65,7 +64,7 @@ public class Executor {
 		if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
 			RegisteredLine line = currentProcess.getRegisteredLine(getLine());
 			setLine(getLine()+1);
-			line.getInstr().executor.run(line.getArgs());
+			line.run();
 		}
 		else{
 			String line = currentProcess.getLine(getLine());

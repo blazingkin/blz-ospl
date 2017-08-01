@@ -4,20 +4,18 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 @Deprecated
-public class AddVars implements InstructionExecutor, LambdaFunction {
+public class AddVars implements InstructionExecutorStringArray, LambdaFunction {
 
 	public void run(String[] args) {
 		/*	Add Vars
 		 * 	Will try to add them as integers first
-		 * 	If it cannot it will pass the variables to concatenate as strings
 		 * 
 		 * 
 		 * 
@@ -36,19 +34,6 @@ public class AddVars implements InstructionExecutor, LambdaFunction {
 			Variable.setValue(args[2], new Value(VariableTypes.Double, d1.add(d2)));
 			return;
 		}
-		String arr[] = new String[args.length];
-		for (int i = 0; i < args.length; i++)
-		{
-			arr[i] = args[i];
-		}
-		{
-			String temp = arr[arr.length-1];
-			for (int i = arr.length-1; i > 0; i--){
-				arr[i] = arr[i-1];
-			}
-			arr[0] = temp;
-		}
-		Instruction.CONCATENATE.executor.run(arr);
 	}
 
 	@Override

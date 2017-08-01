@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 @Deprecated
-public class SubVars implements InstructionExecutor, LambdaFunction {
+public class SubVars implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Subtract
 	 * 	Subtracts two numbers and stores them in a third variable
 	 */

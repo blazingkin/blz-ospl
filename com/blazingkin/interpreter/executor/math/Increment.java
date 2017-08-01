@@ -3,12 +3,12 @@ package com.blazingkin.interpreter.executor.math;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Increment implements InstructionExecutor {
+public class Increment implements InstructionExecutorStringArray {
 	/*	Increment
 	 * 	Increments a variable
 	 */

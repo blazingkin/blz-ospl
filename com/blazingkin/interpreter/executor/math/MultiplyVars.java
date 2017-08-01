@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -12,7 +12,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 
 @Deprecated
-public class MultiplyVars implements InstructionExecutor, LambdaFunction {
+public class MultiplyVars implements InstructionExecutorStringArray, LambdaFunction {
 	/*	Multiply
 	 * 	Multiplies 2 numbers and stores them as a third variable
 	 */

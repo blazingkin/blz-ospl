@@ -1,0 +1,25 @@
+:main	
+	echo "How deep do you want to go?"
+	nin depth
+	for i=0, i < depth, ++i
+		f = fibb(i)
+		echo i "=>" f
+	end
+end
+
+:twoplustwo
+	return 2 + 2
+end
+
+:threesquared
+	return 3 ** 2
+end
+
+:fibb(x)
+	if x < 2
+		return 1
+	end
+	sub1 = x - 1
+	sub2 = x - 2
+	return fibb(sub1) + fibb(sub2)
+end

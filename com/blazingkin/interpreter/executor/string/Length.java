@@ -1,11 +1,11 @@
 package com.blazingkin.interpreter.executor.string;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
-public class Length implements InstructionExecutor, LambdaFunction {
+public class Length implements InstructionExecutorStringArray, LambdaFunction {
 	public boolean string = true;
 	public Length(boolean string){
 		this.string = string;
