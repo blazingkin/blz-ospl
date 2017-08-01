@@ -93,6 +93,11 @@ public class Variable {
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
+		if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
+			String s1 = (String) v1.value;
+			String s2 = (String) v2.value;
+			return new Value(VariableTypes.String, s1+s2);
+		}
 		Interpreter.throwError("Failed Adding Variables "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
