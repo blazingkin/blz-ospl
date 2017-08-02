@@ -5,3 +5,4 @@ GRAPHICSPROPERTY "visible"
 TEXT 300 300 {screen.window.fps}
 WAIT 10
 RJP test
+end

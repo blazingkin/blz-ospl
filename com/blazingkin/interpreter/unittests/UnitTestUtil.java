@@ -1,13 +1,54 @@
 package com.blazingkin.interpreter.unittests;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class UnitTestUtil {
+	
+	
+	public static Queue<String> inputBuffer = new LinkedList<String>();
+	public static ArrayList<String> outputLog = new ArrayList<String>();
+	public static ArrayList<String> exitLog = new ArrayList<String>();
+	public static ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+	
+	public static void setup(){
+		Executor.setEventHandler(new TestEventHandler());
+		System.setErr(new PrintStream(outStream));
+		clearEnv();
+	}
+	
+	public static void clearEnv(){
+		inputBuffer = new LinkedList<String>();
+		outputLog = new ArrayList<String>();
+		exitLog = new ArrayList<String>();
+		outStream.reset();
+	}
+	
+	public static void addInput(String input){
+		inputBuffer.add(input);
+	}
+	
+	public static void log(String event){
+		outputLog.add(event);
+	}
+	
+	public static void exitLog(String event){
+		exitLog.add(event);
+	}
+	
+	public static String getInputFromBuffer(){
+		return inputBuffer.remove();
+	}
 	
 	public static Random rand = new Random();
 	
@@ -81,6 +122,32 @@ public class UnitTestUtil {
 			org.junit.Assert.assertEquals(a[i], b[i]);
 			assert a[i].equals(b[i]);
 		}
+	}
+	
+	public static void assertLastOutput(String output){
+		String out = outputLog.get(outputLog.size()-1);
+		org.junit.Assert.assertEquals(output, out);
+		assert output.equals(out);
+	}
+	
+	public static void assertLastExit(String err){
+		String out = exitLog.get(exitLog.size()-1);
+		org.junit.Assert.assertEquals(err, out);
+		assert err.equals(out);
+	}
+	
+	public static void assertLastError(String err){
+		String[] splits = outStream.toString().split("\n");
+		String last = splits[splits.length-1].trim();
+		org.junit.Assert.assertEquals(err, last);
+		assert err.equals(last);
+	}
+	
+	public static void assertNoErrors(){
+		org.junit.Assert.assertEquals("", outStream.toString());
+		assert "".equals(outStream.toString());
+		org.junit.Assert.assertTrue(exitLog.isEmpty());
+		assert exitLog.isEmpty();
 	}
 	
 	public static Value getIntValue(int v){

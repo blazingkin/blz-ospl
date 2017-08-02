@@ -286,8 +286,8 @@ public class GraphicsExecutor implements InstructionExecutorStringArray {
 			break;
 			
 		case drawText:
-			int px = (int) Variable.getValue(args[0]).value;
-			int py = (int) Variable.getValue(args[1]).value;
+			int px = ((BigInteger) Variable.getValue(args[0]).value).intValue();
+			int py = ((BigInteger) Variable.getValue(args[1]).value).intValue();
 			String buS = "";
 			for (int i = 2; i < args.length; i++){
 				buS = buS + Variable.getValue(args[i]).value;
@@ -308,8 +308,8 @@ public class GraphicsExecutor implements InstructionExecutorStringArray {
 				break;
 			}
 			if (Variable.getValue(args[0]).type == VariableTypes.Integer && Variable.getValue(args[1]).type == VariableTypes.Integer){
-				dimX = (int) Variable.getValue(args[0]).value;
-				dimY = (int) Variable.getValue(args[1]).value;;
+				dimX = ((BigInteger) Variable.getValue(args[0]).value).intValue();
+				dimY = ((BigInteger) Variable.getValue(args[1]).value).intValue();
 				jf.setSize(dimX, dimY);
 			}
 			break;

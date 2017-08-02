@@ -1,0 +1,14 @@
+:main
+	nin n
+	fact = factorial(n)
+	echo fact
+end
+
+
+:factorial(x)
+	if x <= 1
+		return 1
+	end
+	subt = x - 1
+	return x * factorial(subt)
+end
