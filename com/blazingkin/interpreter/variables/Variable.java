@@ -73,6 +73,14 @@ public class Variable {
 		return getValue(key, Executor.getCurrentContext());
 	}
 	
+	public static Value[] getValueAsArray(Value v){
+		if (v.type == VariableTypes.Array){
+			return (Value[]) v.value;
+		}
+		Value[] ret = {v};
+		return ret;
+	}
+	
 	//This gets a global value (i.e. its scope is the entire program)
 	public static Value getGlobalValue(String key){
 		return getValue(key, getGlobalContext());
@@ -198,6 +206,15 @@ public class Variable {
 			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
 		Interpreter.throwError("Failed Taking an Logarithm with "+v1.value + " and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value lnValue(Value v){
+		if (isDecimalValue(v)){
+			BigDecimal d1 = getDoubleVal(v);
+			return new Value(VariableTypes.Double, BigDecimalMath.log(d1.setScale(12, RoundingMode.HALF_UP)));
+		}
+		Interpreter.throwError("Failed taking the natural log of "+v.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	

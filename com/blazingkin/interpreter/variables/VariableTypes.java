@@ -14,7 +14,7 @@ public enum VariableTypes {
 	Boolean(java.lang.Boolean.class),
 	Rational(BLZRational.class),
 	Tensor(BLZTensor.class),
-	Array(java.util.ArrayList.class),
+	Array(Value[].class),
 	LambdaExpression(LambdaExpression.class),
 	Nil(null);
 	

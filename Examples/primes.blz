@@ -5,15 +5,15 @@
 	nin count
 	
 	while len < count
-		flag = 0
+		flag = false
 		for i = 0, i < len, i = i + 1
 			if numon % primes[i] == 0	# If a previous prime divides it, it isn't a prime
-				flag = 1
+				flag = true
 				break
 			end
 		end
 		numon = numon + 1
-		if flag == 1	# Non-prime
+		if flag	# Non-prime
 			continue
 		end
 		primes[len] = numon - 1	# We incremented numon earlier, so we need to subtract one

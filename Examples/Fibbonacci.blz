@@ -3,10 +3,8 @@
 	nin iter
 	a[0] = 1
 	a[1] = 1
-	for i = 2, i < iter, i = i + 1
-		ind1 = i - 1
-		ind2 = i - 2
-		a[i] = a[ind1] + a[ind2]
+	for i = 2, i < iter, i = i++
+		a[i] = a[i - 1] + a[i - 2]
 	end
 
 	echo "Printing fibbonacci numbers 1-" iter

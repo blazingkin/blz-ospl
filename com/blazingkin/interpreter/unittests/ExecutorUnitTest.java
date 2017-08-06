@@ -23,7 +23,7 @@ public class ExecutorUnitTest {
 	@Test
 	public void testUUIDs(){
 		ArrayList<Integer> uuids = new ArrayList<Integer>();
-		for (int i = 0; i < 50000; i++){
+		for (int i = 0; i < 5000; i++){
 			int u = Executor.getUUID();
 			org.junit.Assert.assertFalse(uuids.contains(u));
 			uuids.add(u);

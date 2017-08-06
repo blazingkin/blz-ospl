@@ -28,6 +28,7 @@ public class UnitTestUtil {
 	}
 	
 	public static void clearEnv(){
+		Variable.clearVariables();
 		inputBuffer = new LinkedList<String>();
 		outputLog = new ArrayList<String>();
 		exitLog = new ArrayList<String>();

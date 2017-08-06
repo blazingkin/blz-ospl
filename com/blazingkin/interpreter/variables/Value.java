@@ -50,6 +50,19 @@ public class Value {
 	public boolean equals(Object other){
 		if (other instanceof Value){
 			Value v2 = (Value) other;
+			if (type == VariableTypes.Array && v2.type == VariableTypes.Array){
+				Value[] ar1 = (Value[]) value;
+				Value[] ar2 = (Value[]) v2.value;
+				if (ar1.length != ar2.length){
+					return false;
+				}
+				for (int i = 0; i < ar1.length; i++){
+					if (!ar1[i].equals(ar2[i])){
+						return false;
+					}
+				}
+				return true;
+			}
 			return (this.value == v2.value || this.value.equals(v2.value)) && this.type.equals(v2.type);
 		}
 		return false;
@@ -84,6 +97,10 @@ public class Value {
 	
 	public static Value bool(boolean val){
 		return new Value(VariableTypes.Boolean, val);
+	}
+	
+	public static Value arr(Value[] val){
+		return new Value(VariableTypes.Array, val);
 	}
 	
 }

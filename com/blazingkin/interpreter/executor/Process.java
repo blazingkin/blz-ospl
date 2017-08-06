@@ -12,6 +12,7 @@ import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 
 public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
@@ -92,7 +93,10 @@ public class Process implements RuntimeStackElement {
 			}
 			Instruction instr = InstructionType.getInstructionType(splits[0]);
 			if (instr == null || instr == Instruction.INVALID){
-				registeredLines[i] = null;
+				if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':'){
+					continue;
+				}
+				registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));
 				continue;
 			}
 			String newStr = lines[i].replaceFirst(splits[0], "").trim();
