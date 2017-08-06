@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.executor.listener.Event;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;
@@ -90,7 +91,7 @@ public class Executor {
 				return;
 			}
 			setLine(getLine()+1);
-			SimpleExpressionParser.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
+			ExpressionExecutor.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
 		}
 		if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
 			currentProcess.lineReturns.add(getLine()+1);
@@ -243,7 +244,7 @@ public class Executor {
 						}
 						le.getValue().printValue();	
 					}else{
-						Value result = SimpleExpressionParser.parseExpression(in);
+						Value result = ExpressionExecutor.parseExpression(in);
 						result.printValue();
 					}
 				}catch(Exception e){

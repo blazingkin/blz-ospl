@@ -1,7 +1,7 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ForLoop extends LoopWrapper {
@@ -25,8 +25,8 @@ public class ForLoop extends LoopWrapper {
 			originalString.trim();
 			String[] splits = originalString.split(",");
 			
-			SimpleExpressionParser.parseExpression(splits[0]);
-			if (SimpleExpressionParser.parseExpression(splits[1]).equals(TRUE_VAL)){
+			ExpressionExecutor.parseExpression(splits[0]);
+			if (ExpressionExecutor.parseExpression(splits[1]).equals(TRUE_VAL)){
 				Executor.pushToRuntimeStack(new ForLoop(splits[0], splits[1], splits[2]));
 			}else{
 				Executor.setLine(Executor.getCurrentBlockEnd());
@@ -42,8 +42,8 @@ public class ForLoop extends LoopWrapper {
 			Executor.setBreakMode(false);
 			return;
 		}
-		SimpleExpressionParser.parseExpression(loopInstr);
-		if (SimpleExpressionParser.parseExpression(termInstr).equals(TRUE_VAL)){
+		ExpressionExecutor.parseExpression(loopInstr);
+		if (ExpressionExecutor.parseExpression(termInstr).equals(TRUE_VAL)){
 			Executor.pushToRuntimeStack(this);
 		}
 	}

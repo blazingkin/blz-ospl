@@ -1,19 +1,22 @@
 package com.blazingkin.interpreter.executor;
 
-import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
-
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 
+import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@SuppressWarnings("deprecation")
 public class SimpleExpressionExecutor {
+	
+	
 
 	public static double EPSILON = 1E-8; 
 	
+
 	public static Value evaluate(SimpleExpression type, String expr){
 		switch(type){
 		case addition:
@@ -21,9 +24,9 @@ public class SimpleExpressionExecutor {
 			if (splits.length < 2){
 				Interpreter.throwError("Not enough arguments for addition");
 			}
-			Value accumulator = SimpleExpressionParser.parseExpression(splits[0]);
+			Value accumulator = parseExpression(splits[0]);
 			for (int i = 1; i < splits.length; i++){
-				accumulator = Variable.addValues(accumulator, SimpleExpressionParser.parseExpression(splits[i]));
+				accumulator = Variable.addValues(accumulator, parseExpression(splits[i]));
 			}
 			return accumulator;
 		}
@@ -33,7 +36,7 @@ public class SimpleExpressionExecutor {
 			if (splits.length != 2){
 				Interpreter.throwError("Unable to parse assignment operation: "+expr);
 			}
-			Value right = SimpleExpressionParser.parseExpression(splits[1]);
+			Value right = parseExpression(splits[1]);
 			Variable.setValue(splits[0].trim(), right);
 			return right;
 		}
@@ -43,9 +46,9 @@ public class SimpleExpressionExecutor {
 				Interpreter.throwError("Not enough arguments for comparison");
 			}
 			boolean flag = true;
-			Value toCompare = SimpleExpressionParser.parseExpression(splits[0]);
+			Value toCompare = parseExpression(splits[0]);
 			for (int i = 1; i < splits.length; i++){
-				flag = flag && toCompare.equals(SimpleExpressionParser.parseExpression(splits[i]));
+				flag = flag && toCompare.equals(parseExpression(splits[i]));
 			}
 			return new Value(VariableTypes.Boolean, flag);
 		}
@@ -55,23 +58,23 @@ public class SimpleExpressionExecutor {
 			if (splits.length != 2){
 				Interpreter.throwError("Not enough arguments for comparison");
 			}
-			return Value.bool(parseExpression(splits[0]).equals(SimpleExpressionParser.parseExpression(splits[1])));
+			return Value.bool(parseExpression(splits[0]).equals(parseExpression(splits[1])));
 		}
 		case division:
 		{	String[] splits = expr.split("/");
 			if (splits.length != 2){
 				Interpreter.throwError("Too many arguments for division");
 			}
-			return Variable.divVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+			return Variable.divVals(parseExpression(splits[0]), parseExpression(splits[1]));
 		}
 		case multiplication:
 		{	String[] splits = expr.split(type.syntax.pattern());
 			if (splits.length < 2){
 				Interpreter.throwError("Not enough arguments for multiplication");
 			}
-			Value accumulator = SimpleExpressionParser.parseExpression(splits[0]);
+			Value accumulator = parseExpression(splits[0]);
 			for (int i = 1; i < splits.length; i++){
-				accumulator = Variable.mulValues(accumulator, SimpleExpressionParser.parseExpression(splits[i]));
+				accumulator = Variable.mulValues(accumulator, parseExpression(splits[i]));
 			}
 			return accumulator;
 		}
@@ -82,11 +85,11 @@ public class SimpleExpressionExecutor {
 			while (mat.find()){
 				String toReplace = mat.group().replace("(", "").replace(")", "");
 				String tempId = "@"+Executor.getUUID();	// Create a temp variable that starts with @ to store the value
-				Variable.setGlobalValue(tempId, SimpleExpressionParser.parseExpression(toReplace));
+				Variable.setGlobalValue(tempId, parseExpression(toReplace));
 				replString = type.syntax.matcher(replString).replaceFirst(tempId);
 				mat =  type.syntax.matcher(replString);
 			}
-			return SimpleExpressionParser.parseExpression(replString);
+			return parseExpression(replString);
 		}
 		case subtraction:
 		{	
@@ -95,7 +98,7 @@ public class SimpleExpressionExecutor {
 				Interpreter.throwError("Incorrect number of arguments for subtraction");
 			}
 			
-			return Variable.subValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+			return Variable.subValues(parseExpression(splits[0]), parseExpression(splits[1]));
 		}
 		case exponentiation:
 		{
@@ -103,7 +106,7 @@ public class SimpleExpressionExecutor {
 			if (splits.length != 2){
 				Interpreter.throwError("Unable to parse exponentiation, it should be base ** exponent");
 			}
-			return Variable.expValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+			return Variable.expValues(parseExpression(splits[0]), parseExpression(splits[1]));
 		}
 		case logarithm:
 		{
@@ -111,7 +114,7 @@ public class SimpleExpressionExecutor {
 			if (splits.length != 2){
 				Interpreter.throwError("Unable to parse logarithm, it should be input __ base");
 			}
-			return Variable.logValues(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+			return Variable.logValues(parseExpression(splits[0]), parseExpression(splits[1]));
 		}
 		case approximateComparison:
 		{
@@ -119,13 +122,13 @@ public class SimpleExpressionExecutor {
 			if (splits.length < 2){
 				Interpreter.throwError("Incorrect number of arguments for approximate comparison");
 			}
-			Value first = SimpleExpressionParser.parseExpression(splits[0]);
+			Value first = parseExpression(splits[0]);
 			if (!Variable.isDecimalValue(first)){
 				return evaluate(SimpleExpression.comparison, expr);
 			}
 			BigDecimal frst = Variable.getDoubleVal(first);
 			for (int i = 1; i < splits.length; i++){
-				Value val = SimpleExpressionParser.parseExpression(splits[i]);
+				Value val = parseExpression(splits[i]);
 				if (!Variable.isDecimalValue(val)){
 					return evaluate(SimpleExpression.comparison, expr);
 				}
@@ -232,12 +235,12 @@ public class SimpleExpressionExecutor {
 		{
 			String[] splits = expr.split(type.syntax.pattern());
 			if (splits.length == 1){
-				return Variable.divVals(SimpleExpressionParser.parseExpression(splits[0]), Value.integer(100));
+				return Variable.divVals(parseExpression(splits[0]), Value.integer(100));
 			}
 			if (splits.length != 2){
 				Interpreter.throwError("Invalid number of arguments for modulus");
 			}
-			return Variable.modVals(SimpleExpressionParser.parseExpression(splits[0]), SimpleExpressionParser.parseExpression(splits[1]));
+			return Variable.modVals(parseExpression(splits[0]), parseExpression(splits[1]));
 		}
 		case preorderIncrement:
 		{
@@ -269,7 +272,7 @@ public class SimpleExpressionExecutor {
 				String[] splits = justTheArgs.split(",");
 				Value[] params = new Value[splits.length];
 				for (int i = 0; i < splits.length; i++){
-					params[i] = SimpleExpressionParser.parseExpression(splits[i]);
+					params[i] = parseExpression(splits[i]);
 				}
 				return Executor.functionCall(toCall, params);
 			}

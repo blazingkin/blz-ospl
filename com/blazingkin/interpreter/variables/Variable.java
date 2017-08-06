@@ -15,9 +15,9 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Variable {
 	private static HashMap<Context, HashMap<String, Value>> variables = 
@@ -43,13 +43,21 @@ public class Variable {
 	}
 	public static HashMap<BigInteger, Value> getArray(String arrayName, Context context){
 		if (!getContextVariables(context).containsKey(arrayName)){
-			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<BigInteger, Value>()));
+			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<BigInteger, Value>()), context);
 		}
 		Value v = getContextVariables(context).get(arrayName);
 		if (v.type == VariableTypes.Array && v.value instanceof HashMap<?, ?>){
 			@SuppressWarnings("unchecked")
 			HashMap<BigInteger, Value> arr = (HashMap<BigInteger, Value>)v.value;
 			return arr;
+		}else if(v.value instanceof Value[]){
+			HashMap<BigInteger, Value> cast = new HashMap<BigInteger, Value>();
+			Value[] vals = (Value[]) v.value;
+			for (int i = 0; i < vals.length; i++){
+				cast.put(BigInteger.valueOf(i), vals[i]);
+			}
+			setValue(arrayName, new Value(VariableTypes.Array, cast), context);
+			return cast;
 		}else{
 			Interpreter.throwError("Attempted to get "+arrayName+" as an array, but it is not one");
 			return null;
@@ -262,7 +270,7 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = SimpleExpressionParser.parseExpression(gp);
+			Value index = ExpressionExecutor.parseExpression(gp);
 			BigInteger ind = getIntValue(index);
 			return getValueOfArray(line.split("\\[")[0], ind, con);
 		}
@@ -296,7 +304,7 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = SimpleExpressionParser.parseExpression(gp);
+			Value index = ExpressionExecutor.parseExpression(gp);
 			BigInteger ind = getIntValue(index);
 			setValueOfArray(key.split("\\[")[0], ind, value, con);
 			return;
@@ -488,7 +496,16 @@ public class Variable {
 	}
 	
 	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
-		if (getArray(arrayName, con).containsKey(index)){
+		if (getContextVariables(con).containsKey(arrayName) && getValue(arrayName, con).type == VariableTypes.Array){
+			Value v = getValue(arrayName, con);
+			if (v.value instanceof Value[]){
+				Value[] arr = (Value[]) v.value;
+				return arr[index.intValue()];
+			}
+			HashMap<BigInteger, Value> vars = (HashMap<BigInteger, Value>) v.value;
+			return vars.get(index);
+		}
+		if (getArray(arrayName, con) != null && getArray(arrayName, con).containsKey(index)){
 			return getArray(arrayName, con).get(index);	
 		}
 		return new Value(VariableTypes.Nil, null);

@@ -7,8 +7,8 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class SimpleExpressionParser {
-	public final static SimpleExpression[] functions;
 	public static Value parseExpression(String expr){
 		expr = expr.trim();
 		if (Variable.isInteger(expr)){
@@ -28,7 +28,7 @@ public class SimpleExpressionParser {
 		return Variable.getValue(expr.trim());
 	}
 	
-	
+	public final static SimpleExpression[] functions;
 	static {
 		SimpleExpression[] fncts = SimpleExpression.values();
 		for (int i = 1; i < fncts.length; i++){	// Insertion Sort Functions By Priority

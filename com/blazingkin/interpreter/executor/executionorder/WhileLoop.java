@@ -1,7 +1,7 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 
 public class WhileLoop extends LoopWrapper {
@@ -22,7 +22,7 @@ public class WhileLoop extends LoopWrapper {
 			for (String s : args){
 				buildingString += s + " ";
 			}
-			if (SimpleExpressionParser.parseExpression(buildingString).equals(TRUE_VAL)){	// If our condition is false, ignore the body of the loop
+			if (ExpressionExecutor.parseExpression(buildingString).equals(TRUE_VAL)){	// If our condition is false, ignore the body of the loop
 				Executor.pushToRuntimeStack(new WhileLoop(buildingString.trim()));
 			}else{
 				Executor.setLine(Executor.getCurrentBlockEnd());
@@ -40,7 +40,7 @@ public class WhileLoop extends LoopWrapper {
 			Executor.setBreakMode(false);
 			return;
 		}
-		if (SimpleExpressionParser.parseExpression(termInstr).equals(TRUE_VAL)){
+		if (ExpressionExecutor.parseExpression(termInstr).equals(TRUE_VAL)){
 			Executor.pushToRuntimeStack(this);
 		}
 	}

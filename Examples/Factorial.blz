@@ -9,7 +9,5 @@ end
 	if num == 0
 		return 1
 	end
-	subtr = num - 1
-	result = num * fact(subtr)
-	return result
+	return num * fact(num - 1)
 end

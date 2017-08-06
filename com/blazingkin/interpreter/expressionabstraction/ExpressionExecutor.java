@@ -2,10 +2,14 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.SimpleExpression;
+import com.blazingkin.interpreter.executor.SimpleExpressionExecutor;
+import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -14,8 +18,28 @@ public class ExpressionExecutor {
 	
 	public static double EPSILON = 1E-8; 
 	
-	public static Value parseAndExecute(String line){
+	public static Value parseExpression(String line){
 		return executeNode(ExpressionParser.parseExpression(line));
+	}
+	
+	public static Value[] extractCommaDelimits(ASTNode root){
+		ArrayList<Value> helperCall = extractCommaDelimitsHelper(root);
+		Value[] newVals = new Value[helperCall.size()];
+		helperCall.toArray(newVals);
+		return newVals;
+	}
+	
+	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root){
+		if (root.op != null && root.op == Operator.CommaDelimit){
+			ArrayList<Value> first = extractCommaDelimitsHelper(root.args[0]);
+			ArrayList<Value> second = extractCommaDelimitsHelper(root.args[1]);
+			first.addAll(second);
+			return first;
+		}else{
+			ArrayList<Value> ret = new ArrayList<Value>();
+			ret.add(executeNode(root));
+			return ret;
+		}
 	}
 	
 	public static Value executeNode(ASTNode root){
@@ -257,6 +281,13 @@ public class ExpressionExecutor {
 				BigInteger index = Variable.getIntValue(executeNode(root.args[1]));
 				return Variable.getValueOfArray(name, index);
 			}
+			case arrayLiteral:
+			{
+				if (root.args.length != 1){
+					Interpreter.throwError("Array Literal did not have 1 argument");
+				}
+				return Value.arr(extractCommaDelimits(root.args[0]));
+			}
 			case parensOpen:
 			{
 				Interpreter.throwError("Parenthesis were run.... You really broke something somehow");
@@ -265,5 +296,7 @@ public class ExpressionExecutor {
 		}
 		return new Value(VariableTypes.Nil, null);
 	}
+
+	
 
 }
