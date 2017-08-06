@@ -17,11 +17,28 @@ public class ExpressionParser {
 			if (Operator.symbols.contains(building + lne[i])){
 				building += lne[i];
 			}else if (Operator.symbols.contains(""+lne[i])){
+				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
+					String subBuilding = ""+lne[i];
+					boolean found = false;
+					for (int y = i + 1; y < lne.length; y++){
+						subBuilding += lne[y];
+						if (Operator.symbolLookup.keySet().contains(subBuilding)){	// It is an operator
+							found = true;
+							break;
+						}
+					}
+					if (!found){
+						building += lne[i];
+						continue;
+					}
+				}
 				operandStack.push(new ASTNode(building));
 				building = ""+lne[i];
 			}else{
 				if (Operator.symbols.contains(building)){
-					if (!(building.equals("-") && Character.isDigit(lne[i]))){
+					boolean isNegativeNumber = building.equals("-") && Character.isDigit(lne[i]); // make sure it fits the format for being a negative number
+					isNegativeNumber = isNegativeNumber && ((operandStack.empty() && operatorStack.empty()) || (!operatorStack.empty() && !operandStack.empty()));
+					if (!isNegativeNumber){
 						pushNewOperator(operatorStack, operandStack, Operator.symbolLookup.get(building));
 						building = "";
 					}

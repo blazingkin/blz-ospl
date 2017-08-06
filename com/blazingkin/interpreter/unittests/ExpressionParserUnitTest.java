@@ -95,6 +95,11 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
+	public void testSubtractingNegativeNumberShouldWork(){
+		assertEquals(parseExpression("3 - -2"), new ASTNode(Operator.Subtraction, new ASTNode("3"), new ASTNode("-2")));
+	}
+	
+	@Test
 	public void testArrays(){
 		assertEquals(parseExpression("arr[3]"), new ASTNode(Operator.arrayLookup, new ASTNode("arr"), new ASTNode("3")));
 	}
@@ -132,7 +137,26 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
-	public void testIssueWithWhitespace(){
+	public void testWhiteSpaceIssueWithSubtraction(){
+		assertEquals(parseExpression("a-2"), parseExpression("a - 2"));
+	}
+	
+	/*
+	 * TODO fix failing test
+	@Test
+	public void testSubtractionInArrayAccessors(){
+		ASTNode inner = parseExpression("a - 2");
+		assertEquals(parseExpression("arr[a-2]"), new ASTNode(Operator.arrayLookup, new ASTNode("arr"), inner));
+	}
+	*/
+	
+	@Test
+	public void testVariableNamesWithUnderscoresShouldWork(){
+		assertEquals(parseExpression("arr_thing + 2"), new ASTNode(Operator.Addition, new ASTNode("arr_thing"), new ASTNode("2")));
+	}
+	
+	@Test
+	public void testIssueWithWhitespaceFailureCase(){
 		// Probably shouldn't work like this?
 		// I'll allow it... I guess?
 		assertEquals(parseExpression("2 2 +"), new ASTNode(Operator.Addition, new ASTNode("2"), new ASTNode("2")));

@@ -1,15 +1,15 @@
 :main
 	for i=0, i<20, ++i
-		buildingString = ""
+		building_string = ""
 		if i % 3 == 0
-			buildingString = "bizz"
+			building_string = "bizz"
 		end
 		if i % 5 == 0
-			buildingString = buildingString + "buzz"
+			building_string = building_string + "buzz"
 		end
-		if buildingString == ""
-			buildingString = i
+		if building_string == ""
+			building_string = i
 		end
-		echo buildingString
+		echo building_string
 	end
 end

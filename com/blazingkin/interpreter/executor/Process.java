@@ -93,7 +93,7 @@ public class Process implements RuntimeStackElement {
 			}
 			Instruction instr = InstructionType.getInstructionType(splits[0]);
 			if (instr == null || instr == Instruction.INVALID){
-				if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':'){
+				if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':' || lines[i].trim().charAt(0) == '('){
 					continue;
 				}
 				registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));

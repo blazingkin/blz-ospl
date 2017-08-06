@@ -32,7 +32,7 @@ class TestFile:
 		else:
 			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
 		end = time.time()
-		print("Test took: " + str(end-start) + " seconds")
+		print("Test took: " + str(round((end-start) * 1000) / 1000) + " seconds")
 		if (self.output != None):
 			testout = open(self.output + "ran", "r").read()
 			gt = open(self.output, "r").read()
