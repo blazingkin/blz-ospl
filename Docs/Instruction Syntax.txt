@@ -1,3 +1,5 @@
+This is mostly outdated, the language website will have a much cleaner version of this soon
+
 **** FOR THIS DOCUMENT ONLY ****
 {variable replaced strings are put in curly brackets}
 [a variable address are put in square brackets]

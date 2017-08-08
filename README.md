@@ -6,20 +6,10 @@ Currently implemented in Java, but will eventually transition to being a directl
 
 The language will change drastically right now as I build up feature-completeness and polish it.
 
-Hello World Sample
+Language Hompage
 ===
 
-echo "Hello World"
-
-or
-
-:main
-
-(ECHO "Hello World")
-
-END
-
-*See the examples folder for more*
+Check out the language homepage at [blazingk.in/blz-ospl](http://blazingk.in/blz-ospl).
 
 
 Dependencies:
@@ -53,7 +43,11 @@ How to setup and use:
 
 Where INSTALLDIRECTORY is the directory where you saved the project
 
-4.) From the terminal, run
+4.) Reload your bash profile
+
+> $ source ~/.bashrc
+
+5.) From the terminal, run
 
 > $ blz-ospl ExampleCode.blz
 

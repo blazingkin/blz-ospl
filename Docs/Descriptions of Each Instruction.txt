@@ -1,3 +1,5 @@
+This is mostly outdated, the language website will have a much cleaner version of this soon
+
 Key -
 @ - Deprecated
 
