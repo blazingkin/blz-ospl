@@ -1,0 +1,14 @@
+:main
+	echo "Enter a number:"
+	nin first
+	echo "Enter a number:"
+	nin second
+	echo "The sum of these numbers is:"
+	sum = sum(first, second)
+	echo sum
+end
+
+:sum(a, b)
+	result = a + b
+	return result
+end

@@ -1,10 +1,10 @@
 package com.blazingkin.interpreter.executor.data;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Variable;
 
 @Deprecated
-public class Set implements InstructionExecutor {
+public class Set implements InstructionExecutorStringArray {
 	/*	Set
 	 * 	Sets the value of a variable
 	 */

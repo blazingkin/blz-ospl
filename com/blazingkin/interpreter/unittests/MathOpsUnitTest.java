@@ -6,6 +6,7 @@ import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqua
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.instruction.Instruction;
@@ -24,23 +25,23 @@ public class MathOpsUnitTest {
 		AddVars av = (AddVars) Instruction.ADDVARIABLE.executor;
 		String[] a1 = {"1", "1", "a"};
 		av.run(a1);
-		assertEqual(Variable.getValue("a").value, 2);
+		assertEqual(Variable.getValue("a"), Value.integer(2));
 		String[] a2 = {"2", "3", "a"};
 		av.run(a2);
-		assertEqual(Variable.getValue("a").value, 5);
+		assertEqual(Variable.getValue("a"), Value.integer(5));
 		String[] a3 = {"1", "-2", "b"};
 		av.run(a3);
-		assertEqual(Variable.getValue("b").value, -1);
+		assertEqual(Variable.getValue("b"), Value.integer(-1));
 		String[] a4 = {"a", "b", "a"};
 		av.run(a4);
-		assertEqual(Variable.getValue("a").value, 4);
+		assertEqual(Variable.getValue("a"), Value.integer(4));
 		
 		//AddVar Tests (Functional)
 		for (int i = 0; i < 1000; i++){
-			int a = UnitTestUtil.rand.nextInt();
-			int b = UnitTestUtil.rand.nextInt();
+			int a = UnitTestUtil.rand.nextInt() % 1500;
+			int b = UnitTestUtil.rand.nextInt() % 1500;
 			String[] arg = {a+"", b+""};
-			assertEqual(av.evaluate(arg), new Value(VariableTypes.Integer, a+b));
+			assertEqual(av.evaluate(arg), Value.integer(a+b));
 		}
 		Variable.clearVariables();
 
@@ -52,28 +53,28 @@ public class MathOpsUnitTest {
 		{
 			//Ceiling Tests (Imperative)
 			Ceiling ceil = (Ceiling) Instruction.CEILING.executor;
-			Variable.setValue("c", UnitTestUtil.getDoubleValue(1.5));
+			Variable.setValue("c", Value.doub(1.5));
 			String[] a1 = {"c"};
 			ceil.run(a1);
-			assertEqual(Variable.getValue("c").value, 2);
-			Variable.setValue("d", UnitTestUtil.getDoubleValue(.01));
+			assertEqual(Variable.getValue("c"), Value.integer(2));
+			Variable.setValue("d", Value.doub(.01));
 			String[] a2 = {"d"};
 			ceil.run(a2);
-			assertEqual(Variable.getValue("d").value, 1);
-			Variable.setValue("e", UnitTestUtil.getIntValue(1));
+			assertEqual(Variable.getValue("d"), Value.integer(1));
+			Variable.setValue("e", Value.integer(1));
 			String[] a3 = {"e"};
 			ceil.run(a3);
-			assertEqual(Variable.getValue("e").value, 1);
-			Variable.setValue("f", UnitTestUtil.getDoubleValue(-1.5));
+			assertEqual(Variable.getValue("e"), Value.integer(1));
+			Variable.setValue("f", Value.doub(-1.5));
 			String[] a4 = {"f"};
 			ceil.run(a4);
-			assertEqual(Variable.getValue("f").value, -1);
+			assertEqual(Variable.getValue("f"), Value.integer(-1));
 			
 			
 			//Ceiling Tests (Functional)
 			for (double d = 0; d < 5000; d += .3){
 				String[] arg = {d+""};
-				assertEqual(ceil.evaluate(arg), new Value(VariableTypes.Integer, (int)Math.ceil(d)));
+				assertEqual(ceil.evaluate(arg), Value.integer((int)Math.ceil(d)));
 			}
 			
 		}
@@ -87,48 +88,48 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("false"), new Value(VariableTypes.Boolean, false));
 		assertEqual(parseExpression("TRUE"), new Value(VariableTypes.Boolean, true));
 		assertEqual(parseExpression("FALSE"), new Value(VariableTypes.Boolean, false));
-		assertEqual(parseExpression("3"), new Value(VariableTypes.Integer, 3));
-		assertEqual(parseExpression("-5"), new Value(VariableTypes.Integer, -5));
-		assertEqual(parseExpression(".1"), new Value(VariableTypes.Double, .1d));
-		assertEqual(parseExpression("-.5"), new Value(VariableTypes.Double, -.5d));
+		assertEqual(parseExpression("3"), Value.integer(3));
+		assertEqual(parseExpression("-5"), Value.integer(-5));
+		assertEqual(parseExpression(".1"), Value.doub(.1d));
+		assertEqual(parseExpression("-.5"), Value.doub(-.5d));
 	}
 	
 	
 	
 	@Test
 	public void testAddition(){
-		assertEqual(parseExpression("3 + 4"), new Value(VariableTypes.Integer, 7));
-		assertEqual(parseExpression("3 + 2"), new Value(VariableTypes.Integer, 5));
-		assertEqual(parseExpression("-1 + -5"), new Value(VariableTypes.Integer, -6));
-		assertEqual(parseExpression("3 + 3 + 2"), new Value(VariableTypes.Integer, 8));
-		assertEqual(parseExpression("1+1"), new Value(VariableTypes.Integer, 2));
-		assertEqual(parseExpression("1+1+1+1+1"), new Value(VariableTypes.Integer, 5));
-		assertEqual(parseExpression("2.0 + 2.0"), new Value(VariableTypes.Double, 4.0d));
-		assertEqual(parseExpression("2.0 + 2"), new Value(VariableTypes.Double, 4.0d));
+		assertEqual(parseExpression("3 + 4"), Value.integer(7));
+		assertEqual(parseExpression("3 + 2"), Value.integer(5));
+		assertEqual(parseExpression("-1 + -5"), Value.integer(-6));
+		assertEqual(parseExpression("3 + 3 + 2"), Value.integer(8));
+		assertEqual(parseExpression("1+1"), Value.integer(2));
+		assertEqual(parseExpression("1+1+1+1+1"), Value.integer(5));
+		assertEqual(parseExpression("2.0 + 2.0"), Value.doub(4));
+		assertEqual(parseExpression("2.0 + 2"), Value.doub(4));
 	}
 	
 	@Test
 	public void testAssignment(){
 		parseExpression("a = 3");
-		assertValEqual("a", new Value(VariableTypes.Integer, 3));
+		assertValEqual("a", Value.integer(3));
 		parseExpression("a = 4");
-		assertValEqual("a", new Value(VariableTypes.Integer, 4));
+		assertValEqual("a", Value.integer(4));
 		parseExpression("b = 5");
-		assertValEqual("b", new Value(VariableTypes.Integer, 5));
+		assertValEqual("b", Value.integer(5));
 		parseExpression("a = b");
-		assertValEqual("a", new Value(VariableTypes.Integer, 5));
-		assertEqual(parseExpression("a + b"), new Value(VariableTypes.Integer, 10));
+		assertValEqual("a", Value.integer(5));
+		assertEqual(parseExpression("a + b"), Value.integer(10));
 		assertEqual(parseExpression("a + b"), parseExpression("b + a"));
 		parseExpression("c = a + b");
-		assertValEqual("c", new Value(VariableTypes.Integer, 10));
+		assertValEqual("c", Value.integer(10));
 		parseExpression("d= a +b + c + c");
-		assertValEqual("d", new Value(VariableTypes.Integer, 30));
-		assertValEqual("a", new Value(VariableTypes.Integer, 5));
-		assertValEqual("c", new Value(VariableTypes.Integer, 10));
+		assertValEqual("d", Value.integer(30));
+		assertValEqual("a", Value.integer(5));
+		assertValEqual("c", Value.integer(10));
 		parseExpression("arr[d] = 17.3");
-		assertValEqual("arr[30]", new Value(VariableTypes.Double, 17.3d));
+		assertValEqual("arr[30]", Value.doub(17.3d));
 		parseExpression("temp[a] = arr[d] + .9");
-		assertValEqual("temp[5]", new Value(VariableTypes.Double, 18.2d));
+		assertValEqual("temp[5]", Value.doub(18.2d));
 		Variable.clearVariables();
 	}
 	
@@ -154,7 +155,7 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("2/2 + 3/3 + 4/4 + 5/5"), Value.integer(4));
 		assertEqual(parseExpression("1/3 + 1/2"), Value.rational(5, 6));
 		assertEqual(parseExpression("1/2 + 1/2 + 1/2"), Value.rational(3, 2));
-		assertEqual(parseExpression("1.1 / 2"), new Value(VariableTypes.Double, 1.1 / 2));
+		assertEqual(parseExpression("1.1 / 2"), Value.doub(1.1 / 2));
 		parseExpression("a = 3 / 2");
 		parseExpression("b = 3 / 2");
 		assertEqual(parseExpression("a / b"), Value.integer(1));
@@ -176,7 +177,7 @@ public class MathOpsUnitTest {
 	public void testMultiplication(){
 		assertEqual(parseExpression("2 * 2"), Value.integer(4));
 		assertEqual(parseExpression("(1/2) * 2"), Value.integer(1));
-		assertEqual(parseExpression(".5 * 2"), new Value(VariableTypes.Double, 1.0d));
+		assertEqual(parseExpression(".5 * 2"), Value.doub(1));
 		assertEqual(parseExpression("(1 + 2 / 3) * 3"), Value.integer(5));
 		assertEqual(parseExpression("(2 * 3 == 5) == (2 + 2 == 1)"), Value.bool(true));
 		assertEqual(parseExpression("2 * 1/2 * 1 * 1.0"), Value.doub(1.0d));
@@ -185,7 +186,7 @@ public class MathOpsUnitTest {
 	@Test
 	public void testSubtraction(){
 		assertEqual(parseExpression("2 - 2"), Value.integer(0));
-		assertEqual(parseExpression("2.0 - 2.0"), new Value(VariableTypes.Double, 0.0d));
+		assertEqual(parseExpression("2.0 - 2.0"), Value.doub(0));
 		assertEqual(parseExpression("1 - 2/3"), Value.rational(-1, 3));
 		assertEqual(parseExpression("3 - (2/3)"), Value.rational(7, 3));
 		assertEqual(parseExpression("1 - (2/3)"), Value.rational(1, 3));
@@ -267,7 +268,41 @@ public class MathOpsUnitTest {
 		assertEqual(parseExpression("0 >= 0"), Value.bool(true));
 		assertEqual(parseExpression("1 >= 1"), Value.bool(true));
 	}
+	
+	@Test
+	public void testModulus(){
+		assertEqual(parseExpression("3 % 2"), Value.integer(1));
+		assertEqual(parseExpression("4 % 2"), Value.integer(0));
+		assertEqual(parseExpression("5 % 7"), Value.integer(5));
+		assertEqual(parseExpression("0 % 999"), Value.integer(0));
+		assertEqual(parseExpression("2.2 % 2"), Value.doub(.2));
+		assertAlmostEqual(parseExpression("{pi} % 3"), Value.doub(Math.PI - 3));
+	}
+	
+	@Test
+	public void testPercent(){
+		assertEqual(parseExpression("100%"), Value.integer(1));
+		assertEqual(parseExpression("50%"), Value.rational(1, 2));
+		assertEqual(parseExpression("20 %"), Value.rational(1, 5));
+		assertEqual(parseExpression("10%"), Value.rational(1, 10));
+		assertEqual(parseExpression("3%"), Value.rational(3, 100));
+		assertEqual(parseExpression("300%"), Value.integer(3));
+		assertAlmostEqual(parseExpression("{e}%"), Value.doub(Math.E / 100));
+	}
+	
+	@Test
+	public void testMathIntegration(){
+		parseExpression("a = 3");
+		assertEqual(parseExpression("++a + 4"), Value.integer(8));
+		assertEqual(parseExpression("a"), Value.integer(4));
+		assertEqual(parseExpression("2*2 < 3*3 < 3 ** 2.1"), Value.bool(true));
+	}
 
+	
+	@AfterClass
+	public static void teardown(){
+		Variable.clearVariables();
+	}
 	
 	
 }

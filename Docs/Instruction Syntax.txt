@@ -1,0 +1,81 @@
+This is mostly outdated, the language website will have a much cleaner version of this soon
+
+**** FOR THIS DOCUMENT ONLY ****
+{variable replaced strings are put in curly brackets}
+[a variable address are put in square brackets]
+(A Non-parsed value will be in parenthesis)
+<Things placed in angled brackets are run>
+@ means the function is deprecated
+********************************
+
+:(function name)
+ECHO {echoed string}
+SECHO {echoed string}
+SET {Key} {Value}
+ADD {value 1} {value 2} [address]
+SUB {value 1} {value 2} [address]
+MUL {value 1} {value 2} [address]
+DIV {value 1} {value 2} [address]
+MOD {value 1} {value 2} [address]
+POW {value 1} {value 2} [address]
+AND {value 1} {value 2} [address]
+NIN [address]
+EXT
+MOV [initial address] [final address]
+DEC [address]
+INC [address]
+PUSH {value}
+POP [address]
+PEEK [address]
+RAND [address]
+STR [address] (any) (number) (of) (arguments) ...
+STRIN [address]
+UNS [address]
+RJP (function name)
+END
+ERJ (function name) {condition 1} {condition 2}
+NRJ (function name) {condition 1} {condition 2}
+LRJ (function name) {condition 1} {condition 2}
+MRJ (function name) {condition 1} {condition 2}
+CON [address] (any) (number) (of) (arguments) ...
+IF {condition 1} ( == / > / < / != ) {condition 2}
+WAIT {time}
+ADDPROCESS (path name that may contain spaces) (function name)
+RETPRO
+FILEIN [array path] (path name that may contain spaces)
+FILEOUT [array path] (path name that may contain spaces)
+SUBS [oldstring] {start} {optional end}
+SLEN [string] [path to store length]
+ALEN [array] [path to store length]
+ADDLISTENER (type) (function name)
+LOG {input} [place to store result]
+LOG {input} {base} [place to store result]
+SIN {input} [place to store result]
+COS {input} [place to store result]
+TAN {input} [place to store result]
+CSC {input} [place to store result]
+SEC {input} [place to store result]
+COT {input} [place to store result]
+ARCSIN {input} [place to store result]
+ARCCOS {input} [place to store result]
+ARCTAN {input} [place to store result]
+PARSE [variable to be parsed]
+FOR <INIT STATEMENT>, <LOOP CONDITION>, <ITERATING STATEMENT>
+WHILE <LOOP CONDITION>
+ENDLOOP
+TENSORI [Tensor Name] {Number of indices}
+TENSORSET [Tensor Name] {Value} {List} {Of} {Indexes} ...
+TENSORGET [Tensor Name] {List} {Of} {Indexes} ... [place to store result]
+(DEFINE functionname (list of args) (lambdaexpression))
+
+**********************
+Non-Functional or Experimental Instructions
+
+GRT
+GRASS [array with x and y value]
+GRASS {x value} {y value}
+TDRAW {color} [array with points]
+TDRAW {color} {any} {number} {of} {points} {x} {y} ...
+CLEAR
+GRAPHICSPROPERTY (property)
+CLEARLAST

@@ -12,6 +12,7 @@ import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 
 public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
@@ -83,6 +84,7 @@ public class Process implements RuntimeStackElement {
 
 	
 	public void preprocessLines(){
+		String errors = "";
 		registeredLines = new RegisteredLine[lines.length];
 		for (int i = 0; i < lines.length; i++){
 			String splits[] = lines[i].split(" ");
@@ -90,13 +92,23 @@ public class Process implements RuntimeStackElement {
 				registeredLines[i] = null;
 				continue;
 			}
-			Instruction instr = InstructionType.getInstructionType(splits[0]);
-			if (instr == null || instr == Instruction.INVALID){
-				registeredLines[i] = null;
-				continue;
+			try{
+				Instruction instr = InstructionType.getInstructionType(splits[0]);
+				if (instr == null || instr == Instruction.INVALID){
+					if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':' || lines[i].trim().charAt(0) == '('){
+						continue;
+					}
+					registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));
+					continue;
+				}
+				String newStr = lines[i].replaceFirst(splits[0], "").trim();
+				registeredLines[i] = new RegisteredLine(instr, newStr);
+			}catch(Exception e){
+				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
-			String newStr = lines[i].replaceFirst(splits[0], "").trim();
-			registeredLines[i] = new RegisteredLine(instr, Executor.parseExpressions(newStr));
+		}
+		if (!errors.isEmpty()){
+			Interpreter.throwError(errors);
 		}
 	}
 	
@@ -173,21 +185,6 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
-	
-	public class RegisteredLine{
-		public final Instruction instr;
-		public final String[] args;
-		public RegisteredLine(Instruction instr, String[] args){
-			this.instr = instr;
-			this.args = args;
-		}
-		public Instruction getInstr(){
-			return instr;
-		}
-		public String[] getArgs(){
-			return args;
-		}
-	}
 
 
 	@Override

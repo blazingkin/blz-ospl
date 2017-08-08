@@ -3,10 +3,10 @@ package com.blazingkin.interpreter.executor.executionorder;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Variable;
 
-public class JumpReturn implements InstructionExecutor {
+public class JumpReturn implements InstructionExecutorStringArray {
 	/*	JumpReturn
 	 * 	Jumps to a function and then returns on the following line at the next end
 	 * 	Args are fName, [(args, to, pass)]

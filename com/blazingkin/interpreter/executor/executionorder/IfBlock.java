@@ -2,27 +2,24 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IfBlock implements InstructionExecutor, LambdaFunction, BlockInstruction {
-	public static final Value TRUE_VAL = Value.bool(true);
+public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockInstruction {
+	public static final Value FALSE_VAL = Value.bool(false);
+	public static final Value NIL_VAL = new Value(VariableTypes.Nil, null);
 	
-	
-	public void run(String[] args) {
-		String combined = String.join(" ", args);
-		Value eval = SimpleExpressionParser.parseExpression(combined);
-		if (eval.equals(TRUE_VAL)){
-			Executor.pushToRuntimeStack(this);
-		}else{
+	public Value run(Value v) {
+		if (v.equals(FALSE_VAL) || v.equals(NIL_VAL)){
 			Executor.setLine(Executor.getCurrentBlockEnd());
+		}else{
+			Executor.pushToRuntimeStack(this);
 		}
-		
+		return v;
 	}
 	
 	public static double compare(Value v1, Value v2){

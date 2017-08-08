@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,14 +18,14 @@ import javax.swing.JPanel;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.listener.ListenerTypes;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class GraphicsExecutor implements InstructionExecutor {
+public class GraphicsExecutor implements InstructionExecutorStringArray {
 	public static JFrame jf;
 	public final GraphicsTask task;
 	public static int lastFPS;
@@ -285,8 +286,8 @@ public class GraphicsExecutor implements InstructionExecutor {
 			break;
 			
 		case drawText:
-			int px = (int) Variable.getValue(args[0]).value;
-			int py = (int) Variable.getValue(args[1]).value;
+			int px = ((BigInteger) Variable.getValue(args[0]).value).intValue();
+			int py = ((BigInteger) Variable.getValue(args[1]).value).intValue();
 			String buS = "";
 			for (int i = 2; i < args.length; i++){
 				buS = buS + Variable.getValue(args[i]).value;
@@ -301,14 +302,14 @@ public class GraphicsExecutor implements InstructionExecutor {
 		case setSize:
 			if (args[0].contains("[]")){
 				String s = args[0].replace("[", "").replace("]", "");
-				dimX = (Integer) Variable.getValueOfArray(s, 0).value;
-				dimY = (Integer) Variable.getValueOfArray(s, 1).value;
+				dimX = ((BigInteger) Variable.getValueOfArray(s, BigInteger.ZERO).value).intValue();
+				dimY = ((BigInteger) Variable.getValueOfArray(s, BigInteger.ONE).value).intValue();
 				jf.setSize(dimX,dimY);
 				break;
 			}
 			if (Variable.getValue(args[0]).type == VariableTypes.Integer && Variable.getValue(args[1]).type == VariableTypes.Integer){
-				dimX = (int) Variable.getValue(args[0]).value;
-				dimY = (int) Variable.getValue(args[1]).value;;
+				dimX = ((BigInteger) Variable.getValue(args[0]).value).intValue();
+				dimY = ((BigInteger) Variable.getValue(args[1]).value).intValue();
 				jf.setSize(dimX, dimY);
 			}
 			break;
@@ -342,7 +343,7 @@ public class GraphicsExecutor implements InstructionExecutor {
 			for (int i = 1; i < args.length; i++){
 				if (args[i].contains("[]")){
 					String str = args[i].replace("[]", "");
-					HashMap<Integer, Value> lst = Variable.getArray(str);
+					HashMap<BigInteger, Value> lst = Variable.getArray(str);
 					for (int y = 0; y < lst.size(); y+=2){
 						points.add(new Point( (Integer) ((Value) lst.values().toArray()[y]).value, (Integer) ((Value) lst.values().toArray()[y+1]).value));
 					}

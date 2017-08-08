@@ -1,10 +1,10 @@
 package com.blazingkin.interpreter.executor.data;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Variable;
 
 @Deprecated
-public class MoveData implements InstructionExecutor {
+public class MoveData implements InstructionExecutorStringArray {
 	/*	MoveData
 	 * 	Copies the value stored in one variable to another place
 	 */

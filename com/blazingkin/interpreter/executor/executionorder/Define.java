@@ -1,13 +1,13 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Define implements InstructionExecutor, LambdaFunction {
+public class Define implements InstructionExecutorStringArray, LambdaFunction {
 
 	private boolean registerFunctions;
 	public Define(boolean shouldRegister){

@@ -2,7 +2,7 @@
 	echo "Enter a number"
 	nin a
 	starttime = {system.time.currenttimemillis}
-	for i = 0, i < a, i = i + 1
+	for i = 0; i < a; i = i + 1
 		echo i
 	end
 	time = {system.time.currenttimemillis} - starttime

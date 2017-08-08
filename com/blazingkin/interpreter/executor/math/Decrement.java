@@ -1,11 +1,14 @@
 package com.blazingkin.interpreter.executor.math;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Decrement implements InstructionExecutor {
+public class Decrement implements InstructionExecutorStringArray {
 	/*	Decrement
 	 * 	Decrements the value of a variable
 	 */
@@ -15,13 +18,13 @@ public class Decrement implements InstructionExecutor {
 			Value v = null;
 			switch(Variable.getValue(args[0]).type){
 			case Integer:
-				v = new Value(VariableTypes.Integer, (Integer)(Variable.getValue(args[0]).value) - 1);
+				v = new Value(VariableTypes.Integer, ((BigInteger)Variable.getValue(args[0]).value).subtract(BigInteger.ONE));
 				break;
 			case Boolean:
 				v = new Value(VariableTypes.Boolean, !(Boolean)(Variable.getValue(args[0]).value));
 				break;
 			case Double:
-				v = new Value(VariableTypes.Double, (Double)(Variable.getValue(args[0]).value) - 1.0d);
+				v = new Value(VariableTypes.Double, ((BigDecimal)Variable.getValue(args[0]).value).subtract(BigDecimal.ONE));
 				break;
 			case String:
 				break;

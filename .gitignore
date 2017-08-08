@@ -2,8 +2,9 @@
 *.gen
 .metadata/*
 .recommenders/*
+.settings/*
 *.project
 *.class
 *.classpath
+*.outran
 CHANGELOG
-ExampleCode2.blz

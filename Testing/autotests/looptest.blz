@@ -1,9 +1,0 @@
-:main
-	call loop
-end
-
-:loop
-	for i = 0, i < 20, i = i + 1
-		echo i
-	end
-end

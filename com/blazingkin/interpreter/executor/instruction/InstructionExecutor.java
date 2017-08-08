@@ -1,6 +1,9 @@
 package com.blazingkin.interpreter.executor.instruction;
 
-public abstract interface InstructionExecutor {
+import com.blazingkin.interpreter.variables.Value;
+
+public interface InstructionExecutor {
+
+	public abstract Value run(String line);
 	
-	public abstract void run(String args[]);		//All of the Executors Implement this interface so that they can be referenced from an enum
 }

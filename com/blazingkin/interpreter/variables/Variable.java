@@ -2,16 +2,21 @@ package com.blazingkin.interpreter.variables;
 
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.nevec.rjm.BigDecimalMath;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Variable {
 	private static HashMap<Context, HashMap<String, Value>> variables = 
@@ -29,21 +34,29 @@ public class Variable {
 	public static Context getGlobalContext(){
 		return globalContext;
 	}
-	public static HashMap<Integer, Value> getArray(String arrayName){
+	public static HashMap<BigInteger, Value> getArray(String arrayName){
 		return getArray(arrayName, Executor.getCurrentContext());
 	}
-	public static HashMap<Integer, Value> getGlobalArray(String arrayName){
+	public static HashMap<BigInteger, Value> getGlobalArray(String arrayName){
 		return getArray(arrayName, getGlobalContext());
 	}
-	public static HashMap<Integer, Value> getArray(String arrayName, Context context){
+	public static HashMap<BigInteger, Value> getArray(String arrayName, Context context){
 		if (!getContextVariables(context).containsKey(arrayName)){
-			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<Integer, Value>()));
+			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<BigInteger, Value>()), context);
 		}
 		Value v = getContextVariables(context).get(arrayName);
 		if (v.type == VariableTypes.Array && v.value instanceof HashMap<?, ?>){
 			@SuppressWarnings("unchecked")
-			HashMap<Integer, Value> arr = (HashMap<Integer, Value>)v.value;
+			HashMap<BigInteger, Value> arr = (HashMap<BigInteger, Value>)v.value;
 			return arr;
+		}else if(v.value instanceof Value[]){
+			HashMap<BigInteger, Value> cast = new HashMap<BigInteger, Value>();
+			Value[] vals = (Value[]) v.value;
+			for (int i = 0; i < vals.length; i++){
+				cast.put(BigInteger.valueOf(i), vals[i]);
+			}
+			setValue(arrayName, new Value(VariableTypes.Array, cast), context);
+			return cast;
 		}else{
 			Interpreter.throwError("Attempted to get "+arrayName+" as an array, but it is not one");
 			return null;
@@ -67,6 +80,14 @@ public class Variable {
 		return getValue(key, Executor.getCurrentContext());
 	}
 	
+	public static Value[] getValueAsArray(Value v){
+		if (v.type == VariableTypes.Array){
+			return (Value[]) v.value;
+		}
+		Value[] ret = {v};
+		return ret;
+	}
+	
 	//This gets a global value (i.e. its scope is the entire program)
 	public static Value getGlobalValue(String key){
 		return getValue(key, getGlobalContext());
@@ -74,18 +95,23 @@ public class Variable {
 	
 	public static Value addValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, getIntValue(v1) +  getIntValue(v2));
+			return new Value(VariableTypes.Integer, getIntValue(v1).add(getIntValue(v2)));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
 				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
-			return new Value(VariableTypes.Double, getDoubleVal(v1) + getDoubleVal(v2));
+			return new Value(VariableTypes.Double, getDoubleVal(v1).add(getDoubleVal(v2)));
 		}
 		if (isValRational(v1) && isValRational(v2)){
 			BLZRational rat = getRationalVal(v1).add(getRationalVal(v2));
-			if (rat.den == 1){
-				return new Value(VariableTypes.Integer, (int)rat.num);
+			if (rat.den.equals(BigInteger.ONE)){
+				return new Value(VariableTypes.Integer, rat.num);
 			}
 			return new Value(VariableTypes.Rational, rat);
+		}
+		if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
+			String s1 = (String) v1.value;
+			String s2 = (String) v2.value;
+			return new Value(VariableTypes.String, s1+s2);
 		}
 		Interpreter.throwError("Failed Adding Variables "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
@@ -93,18 +119,17 @@ public class Variable {
 	
 	public static Value subValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, getIntValue(v1) -  getIntValue(v2));
+			return new Value(VariableTypes.Integer, getIntValue(v1).subtract(getIntValue(v2)));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
 				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
-			return new Value(VariableTypes.Double, getDoubleVal(v1) - getDoubleVal(v2));
+			return new Value(VariableTypes.Double, getDoubleVal(v1).subtract(getDoubleVal(v2)));
 		}
 		if (isValRational(v1) && isValRational(v2)){
 			BLZRational val2 = getRationalVal(v2);
-			val2.num *= -1;
-			BLZRational rat = getRationalVal(v1).add(val2);
-			if (rat.den == 1){
-				return new Value(VariableTypes.Integer, (int)rat.num);
+			BLZRational rat = getRationalVal(v1).subtract(val2);
+			if (rat.den.equals(BigInteger.ONE)){
+				return new Value(VariableTypes.Integer, rat.num);
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
@@ -113,15 +138,18 @@ public class Variable {
 	}
 	
 	public static Value mulValues(Value v1, Value v2){
+		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
+			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).multiply((BigInteger)v2.value));
+		}
 		if (isValRational(v1) && isValRational(v2)){
 			BLZRational rat = getRationalVal(v1).multiply(getRationalVal(v2));
-			if (rat.den == 1){
-				return Value.integer((int) rat.num);
+			if (rat.den.equals(BigInteger.ONE)){
+				return new Value(VariableTypes.Integer, rat.num);
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
 		if ((isValRational(v1) || isValDouble(v1)) && (isValRational(v2) || isValDouble(v2))){
-			return new Value(VariableTypes.Double, getDoubleVal(v1) * getDoubleVal(v2));
+			return new Value(VariableTypes.Double, getDoubleVal(v1).multiply(getDoubleVal(v2)));
 		}
 		Interpreter.throwError("Failed Multiplying Variables "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
@@ -129,41 +157,47 @@ public class Variable {
 	
 	public static Value modVals(Value val, Value quo) {
 		if (val.type == VariableTypes.Integer && quo.type == VariableTypes.Integer){
-			return Value.integer((int)val.value % (int)quo.value);
+			return new Value(VariableTypes.Integer, ((BigInteger)val.value).mod((BigInteger)quo.value));
 		}
-		Interpreter.throwError("Attempted to perform a modulus on non-integers");
+		if (isDecimalValue(val) && isDecimalValue(quo)){
+			return new Value(VariableTypes.Double, getDoubleVal(val).remainder(getDoubleVal(quo)));
+		}
+		Interpreter.throwError("Attempted to perform a modulus on non-integers, "+val+" and "+quo);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
 	public static Value divVals(Value top, Value bottom){
 		if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
-			return Value.rational((int)top.value, (int)bottom.value);
+			return Value.rational((BigInteger)top.value, (BigInteger)bottom.value);
 		}
 		if (Variable.isValRational(top) && Variable.isValRational(bottom)){
 			BLZRational toprat = Variable.getRationalVal(top);
 			BLZRational botrat = Variable.getRationalVal(bottom);
 			BLZRational botratopp = (BLZRational) Value.rational(botrat.den, botrat.num).value;
 			BLZRational prod = toprat.multiply(botratopp);
-			if (prod.den == 1){
-				return new Value(VariableTypes.Integer, (int) prod.num);
+			if (prod.den.equals(BigInteger.ONE)){
+				return new Value(VariableTypes.Integer, prod.num);
 			}
 			return new Value(VariableTypes.Rational, prod);
 		}
 		if ((Variable.isValDouble(top) || Variable.isValRational(top))
 				&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
-			double dtop = Variable.getDoubleVal(top);
-			double dbot = Variable.getDoubleVal(bottom);
-			return new Value(VariableTypes.Double, dtop/dbot);
+			BigDecimal dtop = Variable.getDoubleVal(top);
+			BigDecimal dbot = Variable.getDoubleVal(bottom);
+			return new Value(VariableTypes.Double, dtop.divide(dbot, MathContext.DECIMAL128));
 		}
 		Interpreter.throwError("Could not convert one of "+top+" or "+bottom+" to a dividable type");
 		return new Value(VariableTypes.Nil, null);
 	}
 	
 	public static Value expValues(Value v1, Value v2){
+		if (isValInt(v1) && isValInt(v2)){
+			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).pow(((BigInteger)v2.value).intValue()));
+		}
 		if (isDecimalValue(v1) && isDecimalValue(v2)){
-			double d1 = getDoubleVal(v1);
-			double d2 = getDoubleVal(v2);
-			return new Value(VariableTypes.Double, Math.pow(d1, d2));
+			BigDecimal d1 = getDoubleVal(v1);
+			BigDecimal d2 = getDoubleVal(v2);
+			return new Value(VariableTypes.Double, powerBig(d1,d2));
 		}
 		Interpreter.throwError("Failed Taking an Exponent with "+v1.value + " and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
@@ -171,16 +205,23 @@ public class Variable {
 	
 	public static Value logValues(Value v1, Value v2){
 		if (isDecimalValue(v1) && isDecimalValue(v2)){
-			double d1 = getDoubleVal(v1);
-			double d2 = getDoubleVal(v2);
-			return new Value(VariableTypes.Double, Math.log(d1)/Math.log(d2));
+			BigDecimal d1 = getDoubleVal(v1);
+			BigDecimal d2 = getDoubleVal(v2);
+			return new Value(VariableTypes.Double, BigDecimalMath.log(d1.setScale(12, RoundingMode.HALF_UP)).divide(BigDecimalMath.log(d2.setScale(12, RoundingMode.HALF_UP)), MathContext.DECIMAL64));
 		}
 		if (isDecimalValue(v1) && (v2.type == VariableTypes.String && ((String) v2.value).toLowerCase().equals("e"))){
-			double d1 = getDoubleVal(v1);
-			return new Value(VariableTypes.Double, Math.log(d1));
+			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
-		System.out.println(v2.type);
 		Interpreter.throwError("Failed Taking an Logarithm with "+v1.value + " and "+v2.value);
+		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value lnValue(Value v){
+		if (isDecimalValue(v)){
+			BigDecimal d1 = getDoubleVal(v);
+			return new Value(VariableTypes.Double, BigDecimalMath.log(d1.setScale(12, RoundingMode.HALF_UP)));
+		}
+		Interpreter.throwError("Failed taking the natural log of "+v.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -189,25 +230,18 @@ public class Variable {
 	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
 	private static Pattern quotePattern = Pattern.compile("\".*\"");
 	public static Value getValue(String line, Context con){
-		line=line.trim();
-		if (line.length() > 0 && line.charAt(0) == '*'){	//See if it's declared as a global variable
-			con = getGlobalContext();
+		if (getContextVariables(con).containsKey(line)){
+			return getContextVariables(con).get(line);
 		}
-		
 		if (isInteger(line)){	//If its an integer, then return it
-			
-			return new Value(VariableTypes.Integer, Integer.parseInt(line));
+			return new Value(VariableTypes.Integer, new BigInteger(line));
 		}
 		if (isDouble(line)){	//If its a double, then return it
-			return new Value(VariableTypes.Double, Double.parseDouble(line));
+			return new Value(VariableTypes.Double, new BigDecimal(line));
 		}
 		if (isBool(line)){		//If its a bool, then return it
 			return new Value(VariableTypes.Boolean, convertToBool(line));
 		}
-		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
-			return LambdaParser.parseLambdaExpression(line).getValue();
-		}
-		
 		
 		Matcher quoteMatcher = quotePattern.matcher(line);
 		if (quoteMatcher.find()){
@@ -228,15 +262,12 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = SimpleExpressionParser.parseExpression(gp);
-			int ind = getIntValue(index);
+			Value index = ExpressionExecutor.parseExpression(gp);
+			BigInteger ind = getIntValue(index);
 			return getValueOfArray(line.split("\\[")[0], ind, con);
 		}
 		
 		
-		if (getContextVariables(con).containsKey(line)){
-			return getContextVariables(con).get(line);
-		}
 		if (con.getParentContext() != getGlobalContext()){
 			return getValue(line, con.getParentContext());
 		}
@@ -262,8 +293,8 @@ public class Variable {
 		if (squareBracketMatcher.find()){
 			String gp = squareBracketMatcher.group();
 			gp = gp.substring(1, gp.length()-1);
-			Value index = SimpleExpressionParser.parseExpression(gp);
-			int ind = getIntValue(index);
+			Value index = ExpressionExecutor.parseExpression(gp);
+			BigInteger ind = getIntValue(index);
 			setValueOfArray(key.split("\\[")[0], ind, value, con);
 			return;
 		}
@@ -303,18 +334,33 @@ public class Variable {
 
 	
 	public static boolean isInteger(String s) {
-		try{
-			Integer.parseInt(s);
-			return true;
-		}catch(NumberFormatException e){}
-		return false;
+		if (!s.isEmpty() && s.charAt(0) == '-'){
+			s = s.substring(1);
+		}
+		for (char c : s.toCharArray()){
+			if (!Character.isDigit(c)){
+				return false;
+			}
+		}
+		return !s.isEmpty();
 	}
 	public static boolean isDouble(String s){
-		try{
-			Double.parseDouble(s);
-			return true;
-		}catch(NumberFormatException e){}
-		return false;
+		if (!s.isEmpty() && s.charAt(0) == '-'){
+			s = s.substring(1);
+		}
+		boolean seenDecimal = false;
+		for (char c : s.toCharArray()){
+			if (!Character.isDigit(c)){
+				if (c != '.'){
+					return false;
+				}
+				if (seenDecimal){
+					return false;
+				}
+				seenDecimal = true;
+			}
+		}
+		return !s.isEmpty();
 	}
 	
 	
@@ -347,36 +393,36 @@ public class Variable {
 	public static Value getEnvVariable(SystemEnv se){
 		switch(se){
 		case windowSizeX:
-			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getWidth());
+			return Value.integer(GraphicsExecutor.jf.getWidth());
 		case windowSizeY:
-			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getHeight());
+			return Value.integer(GraphicsExecutor.jf.getHeight());
 		case FPS:
-			return new Value(VariableTypes.Integer, GraphicsExecutor.lastFPS);
+			return Value.integer(GraphicsExecutor.lastFPS);
 		case time:
-			return new Value(VariableTypes.Double, (double)System.currentTimeMillis());
+			return Value.doub((double)System.currentTimeMillis());
 		case osName:
 			return new Value(VariableTypes.String, System.getProperty("os.name"));
 		case osVersion:
 			return new Value(VariableTypes.String, System.getProperty("os.version"));
 		case windowPosX:
-			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getLocation().x);
+			return Value.integer(GraphicsExecutor.jf.getLocation().x);
 		case windowPosY:
-			return new Value(VariableTypes.Integer, GraphicsExecutor.jf.getLocation().y);
+			return Value.integer(GraphicsExecutor.jf.getLocation().y);
 		case screenResX:
-			return new Value(VariableTypes.Integer, Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+			return Value.doub(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
 		case screenResY:
-			return new Value(VariableTypes.Integer, Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+			return Value.doub(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 		case cursorPosX:
-			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().x);
+			return Value.integer(MouseInfo.getPointerInfo().getLocation().x);
 		case cursorPosY:
-			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().y);
+			return Value.integer(MouseInfo.getPointerInfo().getLocation().y);
 		case processUUID:
 			if (Executor.getCurrentProcess() == null){
-				return new Value(VariableTypes.Integer, -1);
+				return Value.integer(-1);
 			}
-			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().UUID);
+			return Value.integer(Executor.getCurrentProcess().UUID);
 		case processesRunning:
-			return new Value(VariableTypes.Integer, Executor.getRunningProcesses().size());
+			return Value.integer(Executor.getRunningProcesses().size());
 		case methodStack:
 			String stackString = "";
 			Method[] stck = new Method[Executor.getMethodStack().size()];
@@ -388,12 +434,12 @@ public class Variable {
 			return new Value(VariableTypes.String, stackString);
 		case lineReturns:
 			if (Executor.getCurrentProcess() == null){
-				return new Value(VariableTypes.Integer, -1);
+				return Value.integer(-1);
 			}
-			return new Value(VariableTypes.Integer, Executor.getCurrentProcess().lineReturns.size());
+			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.2.1");
+			return new Value(VariableTypes.String, "2.3");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
@@ -426,17 +472,17 @@ public class Variable {
 		case caps:
 			return new Value(VariableTypes.String, "CAPS_LOCK");
 		case boundCursorPosX:
-			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left);
+			return Value.integer(MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left);
 		case boundCursorPosY:
-			return new Value(VariableTypes.Integer, MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top);
+			return Value.integer(MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top);
 		case space:
 			return new Value(VariableTypes.String, " ");
 		case euler:
-			return new Value(VariableTypes.Double, Math.E);
+			return Value.doub(Math.E);
 		case pi:
-			return new Value(VariableTypes.Double, Math.PI);
+			return Value.doub(Math.PI);
 		case context:
-			return new Value(VariableTypes.Integer, Executor.getCurrentContext().getID());
+			return Value.integer(Executor.getCurrentContext().getID());
 		case nil:
 			return new Value(VariableTypes.Nil, null);
 		default:
@@ -449,30 +495,39 @@ public class Variable {
 	}
 	
 	//Parses an array value
-	public static Value getValueOfArray(String arrayName, int index){
+	public static Value getValueOfArray(String arrayName, BigInteger index){
 		return getValueOfArray(arrayName, index, Executor.getCurrentContext());
 	}
 	
-	public static Value getValueOfArray(String arrayName, int index, Context con){
-		if (getArray(arrayName, con).containsKey(index)){
+	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
+		if (getContextVariables(con).containsKey(arrayName) && getValue(arrayName, con).type == VariableTypes.Array){
+			Value v = getValue(arrayName, con);
+			if (v.value instanceof Value[]){
+				Value[] arr = (Value[]) v.value;
+				return arr[index.intValue()];
+			}
+			HashMap<BigInteger, Value> vars = (HashMap<BigInteger, Value>) v.value;
+			return vars.get(index);
+		}
+		if (getArray(arrayName, con) != null && getArray(arrayName, con).containsKey(index)){
 			return getArray(arrayName, con).get(index);	
 		}
 		return new Value(VariableTypes.Nil, null);
 	}
 	
 	//Sets the value of an array
-	public static void setValueOfArray(String key,int index, Value value){
+	public static void setValueOfArray(String key,BigInteger index, Value value){
 		setValueOfArray(key,index,value,Executor.getCurrentContext());
 	}
 	
-	public static void setValueOfArray(String key,int index, Value value, Context con){
+	public static void setValueOfArray(String key,BigInteger index, Value value, Context con){
 		getArray(key, con).put(index, value);
 	}
 	
 	public static boolean isValInt(Value v){
 		if (v.type == VariableTypes.Rational){
 			BLZRational rat = (BLZRational) v.value;
-			return rat.den == 1;
+			return rat.den.equals(BigInteger.ONE);
 		}
 		return v.type == VariableTypes.Integer;
 	}
@@ -498,41 +553,69 @@ public class Variable {
 			return (BLZRational) v.value;
 		}
 		if (v.type == VariableTypes.Integer){
-			return new BLZRational((int)v.value, 1);
+			return new BLZRational((BigInteger)v.value, BigInteger.ONE);
 		}
 		Interpreter.throwError("Attemted an illegal cast to a rational");
-		return new BLZRational(0,0);
+		return new BLZRational(BigInteger.ZERO, BigInteger.ZERO);
 	}
 	
-	public static double getDoubleVal(Value v){
+	public static BigDecimal getDoubleVal(Value v){
 		try{
 			if (isValInt(v) || v.value instanceof Integer){
-				return (double) ((int) v.value);
+				return new BigDecimal(((BigInteger) v.value));
 			}
 			if (v.type == VariableTypes.Rational){
 				BLZRational rat = (BLZRational) v.value;
-				return (double)rat.num / (double)rat.den;
+				BigDecimal num = new BigDecimal(rat.num);
+				BigDecimal den = new BigDecimal(rat.den);
+				return num.divide(den, MathContext.DECIMAL128);
 			}
-			return (double) v.value;
+			return (BigDecimal)v.value;
 		}catch(Exception e){
 			Interpreter.throwError("Attempted to cast "+v.value+" to a double and failed!");
-			return 0.0d;
+			return BigDecimal.ZERO;
 		}
 	}
-	public static int getIntValue(Value v){
+	public static BigInteger getIntValue(Value v){
 		try{
 			if (isValDouble(v) || v.value instanceof Double){
-				return (int) ((double) v.value);
+				return BigInteger.valueOf((long)((double) v.value));
 			}
 			if (v.type == VariableTypes.Rational){
 				BLZRational rat = (BLZRational) v.value;
-				return (int) (rat.num / rat.den); 
+				return rat.num.divide(rat.den); 
 			}
-			return (int) v.value;
+			return (BigInteger) v.value;
 		}catch(Exception e){
 			Interpreter.throwError("Attempted to cast "+v.value+" to an int and failed!");
-			return 0;
+			return BigInteger.ZERO;
 		}
+	}
+	
+	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
+
+	    BigDecimal ans=  new BigDecimal(1.0);
+	    BigDecimal k=  new BigDecimal(1.0);
+	    BigDecimal t=  new BigDecimal(-1.0);
+	    BigDecimal no=  new BigDecimal(0.0);
+
+	    if (exponent != no) {
+	        BigDecimal absExponent =  exponent.signum() > 0 ? exponent : t.multiply(exponent);
+	        while (absExponent.signum() > 0){
+	            ans =ans.multiply(base);
+	            absExponent = absExponent.subtract(BigDecimal.ONE);
+	        }
+
+	        if (exponent.signum() < 0) {
+	            // For negative exponent, must invert
+	            ans = k.divide(ans);
+	        }
+	    } else {
+	        // exponent is 0
+	        ans = k;
+	    }
+
+	    return ans;
 	}
 
 	

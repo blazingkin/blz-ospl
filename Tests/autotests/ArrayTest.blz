@@ -1,0 +1,7 @@
+for i=0; i < 20; i = i + 1
+	arr[i] = i
+end
+ALEN arr length	# Get the length of arr and store it in length
+for i=0; i < length; i = i + 1
+	echo arr[i]
+end

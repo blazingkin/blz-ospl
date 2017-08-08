@@ -1,13 +1,13 @@
 package com.blazingkin.interpreter.executor.tensor;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.BLZTensor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class GetTensorValue implements InstructionExecutor {
+public class GetTensorValue implements InstructionExecutorStringArray {
 
 	//Params go: Tensor name, list, of, indexes, ..., value to set
 	@Override
@@ -20,7 +20,7 @@ public class GetTensorValue implements InstructionExecutor {
 		BLZTensor<Integer> tensor = (BLZTensor<Integer>) tensorHuh.value;
 		int[] indices = new int[args.length-2];
 		for (int i = 1; i < args.length-1; i++){
-			indices[i-1] = Variable.getIntValue(Variable.getValue(args[i]));
+			indices[i-1] = Variable.getIntValue(Variable.getValue(args[i])).intValue();
 		}
 		Variable.setValue(args[args.length-1], new Value(VariableTypes.Integer,tensor.getTensorEntry(indices)));
 	}

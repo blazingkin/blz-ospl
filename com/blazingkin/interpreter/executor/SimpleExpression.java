@@ -4,11 +4,14 @@ import java.util.regex.Pattern;
 
 public enum SimpleExpression {
 
+	preorderIncrement(Pattern.compile("^\\s*\\+\\+"), 1),	// Check for things of the form ++var
+	preorderDecrement(Pattern.compile("^\\s*\\-\\-"), 1),	// Check for things of the form --var
+	functionCall(Pattern.compile("\\S*\\(.*\\)"), 1),
 	modulus(Pattern.compile("%"), 2),
 	multiplication(Pattern.compile("\\*"), 3),
 	division(Pattern.compile("\\/"), 3),
-	addition(Pattern.compile("\\+"), 4),
-	subtraction(Pattern.compile("\\-"), 3),
+	addition(Pattern.compile("(?<!\\+)\\+(?!\\+)"), 4),	// Make sure it's not an increment
+	subtraction(Pattern.compile("(?<!\\-)\\-(?!\\-)"), 3),	// Make sure it's not a decrement
 	exponentiation(Pattern.compile("\\*\\*"), 5),	// Two literal astersisk
 	logarithm(Pattern.compile("__"), 5),			// Two literal underscores
 	assignment(Pattern.compile("(?<!\\!)(?<!\\>)(?<!\\<)(?<!~)(?<!=)=(?!=)(?!~)(?!\\!)(?!\\<)(?!\\>)"), 9),	// The regex here makes sure it is not a == or a ~=
@@ -19,7 +22,7 @@ public enum SimpleExpression {
 	greaterThanEqual(Pattern.compile("(\\>=|=\\>)"), 8),
 	notEqual(Pattern.compile("(!=|=!)"), 7),
 	approximateComparison(Pattern.compile("((~=)|(=~))"), 6),// Approximately equal to
-	parenthesis(Pattern.compile("\\(.*?\\)"), 1000);
+	parenthesis(Pattern.compile("(^|\\s)\\(.*?\\)"), 1000);
 	
 	
 	public final Pattern syntax;		// Regex to check for

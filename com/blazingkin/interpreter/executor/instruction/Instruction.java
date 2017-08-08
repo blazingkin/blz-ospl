@@ -18,6 +18,7 @@ import com.blazingkin.interpreter.executor.executionorder.IfBlock;
 import com.blazingkin.interpreter.executor.executionorder.JumpReturn;
 import com.blazingkin.interpreter.executor.executionorder.LoopEnd;
 import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
+import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
 import com.blazingkin.interpreter.executor.executionorder.WhileLoop;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
@@ -122,7 +123,8 @@ public enum Instruction {
 	DEFINE("DEFINE", "DEFINE LAMBDA EXPRESSION", new Define(true)),
 	LAMBDA("LAMBDA", "RETURN LAMBDA EXPRESSION", new Define(false)),
 	BREAK("BREAK", "Break from loop", new Break()),
-	CONTINUE("CONTINUE", "Continue in loop", new Continue());
+	CONTINUE("CONTINUE", "Continue in loop", new Continue()),
+	RETURN("RETURN", "Return value", new ReturnValue());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

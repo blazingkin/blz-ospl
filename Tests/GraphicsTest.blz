@@ -1,0 +1,8 @@
+GRT
+GRASS 800 800
+GRAPHICSPROPERTY "visible"
+:test
+TEXT 300 300 {screen.window.fps}
+WAIT 10
+RJP test
+end

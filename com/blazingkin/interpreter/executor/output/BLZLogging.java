@@ -1,9 +1,9 @@
 package com.blazingkin.interpreter.executor.output;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 
-public class BLZLogging implements InstructionExecutor {
+public class BLZLogging implements InstructionExecutorStringArray {
 
 	@Override
 	public void run(String[] args) {

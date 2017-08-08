@@ -1,17 +1,20 @@
 package com.blazingkin.interpreter.variables;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {
 
-	Integer(java.lang.Integer.class),
+	Integer(BigInteger.class),
 	String(java.lang.String.class),
-	Double(java.lang.Double.class),
+	Double(BigDecimal.class),
 	Boolean(java.lang.Boolean.class),
 	Rational(BLZRational.class),
 	Tensor(BLZTensor.class),
-	Array(java.util.ArrayList.class),
+	Array(Value[].class),
 	LambdaExpression(LambdaExpression.class),
 	Nil(null);
 	

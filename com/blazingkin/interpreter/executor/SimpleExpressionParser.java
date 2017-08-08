@@ -1,18 +1,21 @@
 package com.blazingkin.interpreter.executor;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+@Deprecated
 public class SimpleExpressionParser {
-	public final static SimpleExpression[] functions;
 	public static Value parseExpression(String expr){
 		expr = expr.trim();
 		if (Variable.isInteger(expr)){
-			return new Value(VariableTypes.Integer, Integer.parseInt(expr));
+			return new Value(VariableTypes.Integer, new BigInteger(expr));
 		}
 		if (Variable.isDouble(expr)){
-			return new Value(VariableTypes.Double, Double.parseDouble(expr));
+			return new Value(VariableTypes.Double, new BigDecimal(expr));
 		}
 		if (Variable.isBool(expr)){
 			return new Value(VariableTypes.Boolean, Variable.convertToBool(expr));
@@ -25,7 +28,7 @@ public class SimpleExpressionParser {
 		return Variable.getValue(expr.trim());
 	}
 	
-	
+	public final static SimpleExpression[] functions;
 	static {
 		SimpleExpression[] fncts = SimpleExpression.values();
 		for (int i = 1; i < fncts.length; i++){	// Insertion Sort Functions By Priority

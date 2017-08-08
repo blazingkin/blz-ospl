@@ -1,12 +1,12 @@
 package com.blazingkin.interpreter.executor.math;
 
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class LogicalAnd implements InstructionExecutor, LambdaFunction {
+public class LogicalAnd implements InstructionExecutorStringArray, LambdaFunction {
 	/*	And
 	 * 	Puts in a variable the value of a1 && a2
 	 */
