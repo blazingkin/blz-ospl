@@ -11,8 +11,7 @@
 	echo "Do nested array accessors work? " arr[g[b]]
 	echo "1337+4 = " c
 	echo "1337 = " a
-	set *l {system.os.name}
-	echo {file.name} " <-file name, os-> " *l	# SystemEnv variables work
+	echo {file.name} " <-file name"	# SystemEnv variables work
 	echo a " and " c
 	
 	(echo "1+2 = " (add 1 2))
@@ -31,15 +30,15 @@
 	(echo "Curried addition of 3 and 5: " (ca 5))
 	(echo "Factorial 7: " (fact 7))
 
-	set loopCounter 0
+	loopCounter = 0
 	while loopCounter < 3
 		echo "looptest"
-		set innerCounter 3
+		innerCounter = 3
 		while innerCounter >= 0		# Nested loops work
 			echo innerCounter
-			sub innerCounter 1 innerCounter
+			innerCounter--
 		end
-		add loopCounter 1 loopCounter
+		loopCounter++
 	end
 	
 	while true
@@ -48,7 +47,7 @@
 	end
 	
 	
-	for i = 0, i < 10, i = i + 1
+	for i = 0; i < 10; i = i + 1
 		mod i 2 mod
 		if mod == 1
 			CONTINUE
@@ -75,7 +74,7 @@
 
 	tensori ten 2
 
-	for i = 0, i<=20, i = i + 1
+	for i = 0; i<=20; i = i + 1
 		f = 2 * i
 		tensorset ten f i 0
 	end
@@ -83,7 +82,7 @@
 	call function_call_test (5, 6, 7)	# Passing arguments works
 	call checkglobal						# Global variables work
 
-	for i=0,i<=20, i = i + 2
+	for i=0;i<=20; i = i + 2
 		tensorget ten i 0 g
 		echo g " is the " i "th index"	# Tensors work
 	end
@@ -101,5 +100,4 @@ end
 
 :checkglobal
 	echo {blz.method.stack}
-	echo *l " should be your OS"
 END

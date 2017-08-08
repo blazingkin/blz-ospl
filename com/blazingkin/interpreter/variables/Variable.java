@@ -15,6 +15,7 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
@@ -228,7 +229,7 @@ public class Variable {
 	
 	private static Pattern squareBracketPattern = Pattern.compile("\\[\\S*\\]");
 	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
-	private static Pattern quotePattern = Pattern.compile("\".*\"");
+	private static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
 		if (getContextVariables(con).containsKey(line)){
 			return getContextVariables(con).get(line);
@@ -271,6 +272,11 @@ public class Variable {
 		if (con.getParentContext() != getGlobalContext()){
 			return getValue(line, con.getParentContext());
 		}
+		
+		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
+			return LambdaParser.parseLambdaExpression(line).getValue();
+		}
+		
 		Interpreter.throwError("Unable to find a value for: "+line);
 		return new Value(VariableTypes.Nil, null);
 	}

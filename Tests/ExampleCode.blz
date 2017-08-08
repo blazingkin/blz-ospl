@@ -8,8 +8,7 @@
 end
 
 :loop
-	for i = 0, i < 2, i = i + 1
+	for i = 0; i < 2; i = i + 1
 		echo "Loop in second process"
-		echo *l " Global Vars Work"
 	end
 end
