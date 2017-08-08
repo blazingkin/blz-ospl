@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.SimpleExpression;
-import com.blazingkin.interpreter.executor.SimpleExpressionExecutor;
-import com.blazingkin.interpreter.executor.SimpleExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -38,6 +35,26 @@ public class ExpressionExecutor {
 		}else{
 			ArrayList<Value> ret = new ArrayList<Value>();
 			ret.add(executeNode(root));
+			return ret;
+		}
+	}
+	
+	public static ASTNode[] extractSemicolonDelimitedNodes(ASTNode root){
+		ArrayList<ASTNode> helperCall = extractSemicolonDelimitedNodesHelper(root);
+		ASTNode[] newVals = new ASTNode[helperCall.size()];
+		helperCall.toArray(newVals);
+		return newVals;
+	}
+	
+	public static ArrayList<ASTNode> extractSemicolonDelimitedNodesHelper(ASTNode root){
+		if (root.op != null && root.op == Operator.ExpressionDelimit){
+			ArrayList<ASTNode> first = extractSemicolonDelimitedNodesHelper(root.args[0]);
+			ArrayList<ASTNode> second = extractSemicolonDelimitedNodesHelper(root.args[1]);
+			first.addAll(second);
+			return first;
+		}else{
+			ArrayList<ASTNode> ret = new ArrayList<ASTNode>();
+			ret.add(root);
 			return ret;
 		}
 	}

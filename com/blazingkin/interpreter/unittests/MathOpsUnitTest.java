@@ -1,10 +1,10 @@
 package com.blazingkin.interpreter.unittests;
 
 
+import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
-import static com.blazingkin.interpreter.executor.SimpleExpressionParser.parseExpression;
 
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.math.AddVars;
 import com.blazingkin.interpreter.executor.math.Ceiling;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;

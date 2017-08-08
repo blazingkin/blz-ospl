@@ -1,5 +1,5 @@
 :main
-	for i=0, i<20, ++i
+	for i=0; i<20; ++i
 		building_string = ""
 		if i % 3 == 0
 			building_string = "bizz"

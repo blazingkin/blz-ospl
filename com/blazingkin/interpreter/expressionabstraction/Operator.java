@@ -23,6 +23,7 @@ public enum Operator{
 	NotEqual("!=", 7, OperatorType.Binary),
 	ApproximateComparison("~=", 7, OperatorType.Binary),
 	CommaDelimit(",", 6, OperatorType.Binary),
+	ExpressionDelimit(";", 20, OperatorType.Binary),
 	functionCall("", 10000, OperatorType.Binary),
 	parensOpen("", 10000, OperatorType.None),
 	arrayLookup("", 10000, OperatorType.Binary),

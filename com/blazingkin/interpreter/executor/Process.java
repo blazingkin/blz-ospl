@@ -84,6 +84,7 @@ public class Process implements RuntimeStackElement {
 
 	
 	public void preprocessLines(){
+		String errors = "";
 		registeredLines = new RegisteredLine[lines.length];
 		for (int i = 0; i < lines.length; i++){
 			String splits[] = lines[i].split(" ");
@@ -91,16 +92,23 @@ public class Process implements RuntimeStackElement {
 				registeredLines[i] = null;
 				continue;
 			}
-			Instruction instr = InstructionType.getInstructionType(splits[0]);
-			if (instr == null || instr == Instruction.INVALID){
-				if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':' || lines[i].trim().charAt(0) == '('){
+			try{
+				Instruction instr = InstructionType.getInstructionType(splits[0]);
+				if (instr == null || instr == Instruction.INVALID){
+					if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':' || lines[i].trim().charAt(0) == '('){
+						continue;
+					}
+					registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));
 					continue;
 				}
-				registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));
-				continue;
+				String newStr = lines[i].replaceFirst(splits[0], "").trim();
+				registeredLines[i] = new RegisteredLine(instr, newStr);
+			}catch(Exception e){
+				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
-			String newStr = lines[i].replaceFirst(splits[0], "").trim();
-			registeredLines[i] = new RegisteredLine(instr, newStr);
+		}
+		if (!errors.isEmpty()){
+			Interpreter.throwError(errors);
 		}
 	}
 	

@@ -15,7 +15,6 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
@@ -231,13 +230,10 @@ public class Variable {
 	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
 	private static Pattern quotePattern = Pattern.compile("\".*\"");
 	public static Value getValue(String line, Context con){
-		line=line.trim();
-		if (line.length() > 0 && line.charAt(0) == '*'){	//See if it's declared as a global variable
-			con = getGlobalContext();
+		if (getContextVariables(con).containsKey(line)){
+			return getContextVariables(con).get(line);
 		}
-		
 		if (isInteger(line)){	//If its an integer, then return it
-			
 			return new Value(VariableTypes.Integer, new BigInteger(line));
 		}
 		if (isDouble(line)){	//If its a double, then return it
@@ -246,10 +242,6 @@ public class Variable {
 		if (isBool(line)){		//If its a bool, then return it
 			return new Value(VariableTypes.Boolean, convertToBool(line));
 		}
-		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
-			return LambdaParser.parseLambdaExpression(line).getValue();
-		}
-		
 		
 		Matcher quoteMatcher = quotePattern.matcher(line);
 		if (quoteMatcher.find()){
@@ -276,9 +268,6 @@ public class Variable {
 		}
 		
 		
-		if (getContextVariables(con).containsKey(line)){
-			return getContextVariables(con).get(line);
-		}
 		if (con.getParentContext() != getGlobalContext()){
 			return getValue(line, con.getParentContext());
 		}
@@ -345,18 +334,33 @@ public class Variable {
 
 	
 	public static boolean isInteger(String s) {
-		try{
-			new BigInteger(s);
-			return true;
-		}catch(NumberFormatException e){}
-		return false;
+		if (!s.isEmpty() && s.charAt(0) == '-'){
+			s = s.substring(1);
+		}
+		for (char c : s.toCharArray()){
+			if (!Character.isDigit(c)){
+				return false;
+			}
+		}
+		return !s.isEmpty();
 	}
 	public static boolean isDouble(String s){
-		try{
-			new BigDecimal(s);
-			return true;
-		}catch(NumberFormatException e){}
-		return false;
+		if (!s.isEmpty() && s.charAt(0) == '-'){
+			s = s.substring(1);
+		}
+		boolean seenDecimal = false;
+		for (char c : s.toCharArray()){
+			if (!Character.isDigit(c)){
+				if (c != '.'){
+					return false;
+				}
+				if (seenDecimal){
+					return false;
+				}
+				seenDecimal = true;
+			}
+		}
+		return !s.isEmpty();
 	}
 	
 	

@@ -1,20 +1,14 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
-import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.variables.Context;
 
-public abstract class LoopWrapper implements InstructionExecutorStringArray, BlockInstruction {
-	public String initInstr;
-	public String loopInstr;
-	public String termInstr;
+public abstract class LoopWrapper implements BlockInstruction {
+	public ASTNode init;
+	public ASTNode loop;
+	public ASTNode term;
 	public int startLine;
 	public Context functionContext;
-	
-	@Override
-	public void run(String[] args) {
-		//This intentionally left blank
-		Interpreter.throwError("The loop wrapper was mistakenly run");
-	}
+		
 }
