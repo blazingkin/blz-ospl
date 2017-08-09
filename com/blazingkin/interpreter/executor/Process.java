@@ -75,8 +75,8 @@ public class Process implements RuntimeStackElement {
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0){
 				if (lines[i].substring(0,1).equals(":")){
-				Method nM = new Method(this, i+1,lines[i].substring(1));
-				Executor.getMethods().add(nM);
+					Method nM = new Method(this, i+1,lines[i].substring(1));
+					Executor.getMethods().add(nM);
 				}
 			}
 		}
@@ -104,6 +104,7 @@ public class Process implements RuntimeStackElement {
 				String newStr = lines[i].replaceFirst(splits[0], "").trim();
 				registeredLines[i] = new RegisteredLine(instr, newStr);
 			}catch(Exception e){
+				valid = false;
 				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
 		}
@@ -120,6 +121,7 @@ public class Process implements RuntimeStackElement {
 			}
 			else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof End){
 				if (blckStack.empty()){
+					valid = false;
 					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
 				}
 				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
@@ -129,14 +131,19 @@ public class Process implements RuntimeStackElement {
 		}
 		if (!blckStack.empty()){
 			while (!blckStack.empty()){
+				valid = false;
+				if (!Executor.isImmediateMode()){
 				Executor.getEventHandler().print("Block starting on line "+blckStack.pop()+" not closed");
+				}
 			}
+			valid = false;
 			Interpreter.throwError("Some blocks not closed!");
 		}
 	}
 	
 	public boolean isRegistered(int lineNumber){
 		if (lineNumber >= lines.length){
+			valid = false;
 			Interpreter.throwError("Attempted to get a line out of code range");
 		}
 		return registeredLines[lineNumber] != null;
@@ -144,6 +151,7 @@ public class Process implements RuntimeStackElement {
 	
 	public RegisteredLine getRegisteredLine(int lineNumber){
 		if (lineNumber >= lines.length){
+			valid = false;
 			Interpreter.throwError("Attempted to get a line out of code range");
 		}
 		return registeredLines[lineNumber];
@@ -151,10 +159,13 @@ public class Process implements RuntimeStackElement {
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
+			valid = false;
 			Interpreter.throwError("Attempted to get a line out of code range");
 		}
 		return lines[lineNumber];
 	}
+	
+	public boolean valid = true;
 	
 	public int getLine(){
 		return Executor.getLine();

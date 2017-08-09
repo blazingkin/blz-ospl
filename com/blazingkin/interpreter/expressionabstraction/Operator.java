@@ -27,7 +27,8 @@ public enum Operator{
 	functionCall("", 10000, OperatorType.Binary),
 	parensOpen("", 10000, OperatorType.None),
 	arrayLookup("", 10000, OperatorType.Binary),
-	arrayLiteral("", 10000, OperatorType.Unary);
+	arrayLiteral("", 10000, OperatorType.Unary),
+	environmentVariableLookup("",10000, OperatorType.Unary);
 	
 	public final String syntax;
 	public final int precedence;

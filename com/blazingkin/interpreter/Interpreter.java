@@ -7,13 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import com.blazingkin.interpreter.compilation.Translator;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
 
-@SuppressWarnings("deprecation")
 public class Interpreter {
 	public static boolean logging = true;
 	
@@ -70,17 +68,6 @@ public class Interpreter {
 					case 'i':
 						Executor.immediateModeLoop(System.in);
 						break;
-					case 'c':						// - c *INPUT* *OUTPUT*	COMPILE
-						String path = args[1];
-						File pth = new File(path);
-						int z = 2;
-						List<String> arg = new LinkedList<String>();
-						while (z < args.length){
-							arg.add(args[z]);
-							z++;
-						}
-						runCompiler(pth, arg);
-						break;
 					case 'v':
 						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
 						break;
@@ -118,10 +105,6 @@ public class Interpreter {
 		}
 	}
 	
-	public void runCompiler(File path, List<String> args) throws Exception {
-		Translator.run(path, args);
-	}
-	
 	public static void terminate(){
 		Executor.setCloseRequested(true);
 	}
@@ -131,6 +114,10 @@ public class Interpreter {
 	}
 	
 	public static void throwError(String error){
+		thrownErrors.add(new Exception(error));
+		if (Executor.isImmediateMode()){
+			return;
+		}
 		if (logging){
 			StackTraceElement[] elements = Thread.currentThread().getStackTrace();
 			  for (int i = 2; i < elements.length; i++) {
@@ -145,7 +132,6 @@ public class Interpreter {
 			if (!Executor.isImmediateMode()){
 				Executor.getEventHandler().exitProgram("An Error Occured");
 			}
-			thrownErrors.add(new Exception(error));
 		}
 	}
 

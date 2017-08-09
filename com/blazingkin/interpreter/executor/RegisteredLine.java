@@ -21,9 +21,9 @@ public class RegisteredLine{
 		if (instr.executor instanceof InstructionExecutorStringArray){
 			argsArr = Executor.parseExpressions(line);
 		}else if (instr.executor instanceof InstructionExecutorValue){
-			root = ExpressionParser.parseExpression(line);
+			root = ExpressionParser.parseAndCollapse(line);
 		}else if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
-			nodes = ExpressionExecutor.extractSemicolonDelimitedNodes(ExpressionParser.parseExpression(line));
+			nodes = ExpressionExecutor.extractSemicolonDelimitedNodes(ExpressionParser.parseAndCollapse(line));
 		}
 		this.args = line;
 	}

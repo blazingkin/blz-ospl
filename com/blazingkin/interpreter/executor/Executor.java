@@ -11,7 +11,6 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
-import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.executor.listener.Event;
@@ -228,25 +227,13 @@ public class Executor {
 						Interpreter.thrownErrors.peek().printStackTrace();
 						continue;
 					}
-					if (in.equals("exit")){
+					if (in.equals("exit") || in.equals("quit")){
 						break;
 					}
 					if (in.equals("")){
 						continue;
 					}
-	
-					if (LambdaParser.isLambdaExpression(in)){
-						LambdaExpression le;
-						if (in.length() > 1 && in.charAt(0) == '(' && in.charAt(in.length() - 1) == ')'){
-							le = LambdaParser.parseLambdaExpression(in);
-						}else{
-							le = LambdaParser.parseLambdaExpression("("+in+")");
-						}
-						le.getValue().printValue();	
-					}else{
-						Value result = ExpressionExecutor.parseExpression(in);
-						result.printValue();
-					}
+					System.out.println(ExpressionExecutor.parseExpression(in));
 				}catch(Exception e){
 					Interpreter.thrownErrors.add(e);
 					System.err.println("There was an issue running your last command");
@@ -337,9 +324,6 @@ public class Executor {
 	}
 	
 	public static int getLine(){
-		if (immediateMode){
-			return -1;
-		}
 		return (int) Variable.getGlobalValue("*pc").value;
 	}
 	

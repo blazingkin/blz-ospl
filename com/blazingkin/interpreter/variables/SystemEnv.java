@@ -2,59 +2,52 @@ package com.blazingkin.interpreter.variables;
 
 public enum SystemEnv {
 	//screen
-	windowSizeX("screen.window.size.x"),
-	windowSizeY("screen.window.size.y"),
-	windowPosX("screen.window.position.x"),
-	windowPosY("screen.window.position.y"),
-	screenResX("screen.resolution.size.x"),
-	screenResY("screen.resolution.size.y"),
-	cursorPosX("screen.cursor.position.x"),
-	cursorPosY("screen.cursor.position.y"),
-	boundCursorPosX("screen.window.cursor.position.x"),
-	boundCursorPosY("screen.window.cursor.position.y"),
-	FPS("screen.window.fps"),
+	cursorPosX("screen.cursor.position.x", true),
+	cursorPosY("screen.cursor.position.y", true),
 	
 	//system
-	time("system.time.currenttimemillis"),
-	osName("system.os.name"),
-	osVersion("system.os.version"),
+	time("system.time.currenttimemillis", true),
+	osName("system.os.name", false),
+	osVersion("system.os.version", false),
 	
 	
 	//Running Location
-	runningFileLocation("file.location"),		//returns the path to the folder it is in
-	runningFileName("file.name"),
-	runningFilePath("file.path"),
+	runningFileLocation("file.location", false),		//returns the path to the folder it is in
+	runningFileName("file.name", false),
+	runningFilePath("file.path", false),
 	
 	//env variables
-	processUUID("process.current.uuid"),
-	processesRunning("process.all"),
-	lineReturns("process.lines.returns"),
+	processUUID("process.current.uuid", true),
+	processesRunning("process.all", true),
+	lineReturns("process.lines.returns", true),
 	
 	
 	//constants
-	pi("pi"),
-	euler("e"),
+	pi("pi", false),
+	euler("e", false),
 	
 	//blz variables
-	version("blz.version"),
-	nil("blz.nil"),
-	context("blz.context.id"),
-	methodStack("blz.method.stack"),
+	version("blz.version", false),
+	nil("blz.nil", false),
+	context("blz.context.id", true),
+	methodStack("blz.method.stack", true),
 	
 	
 	//text special characters
-	newline("text.newline"),
-	shift("text.shift"),
-	control("text.control"),
-	alt("text.alt"),
-	systemKey("text.system.key"),
-	tab("text.tab"),
-	back("text.back"),
-	caps("text.caps"),
-	space("text.space");
+	newline("text.newline", false),
+	shift("text.shift", false),
+	control("text.control", false),
+	alt("text.alt", false),
+	systemKey("text.system.key", false),
+	tab("text.tab", false),
+	back("text.back", false),
+	caps("text.caps", false),
+	space("text.space", false);
 	
-	SystemEnv(String st){
+	SystemEnv(String st, boolean dynamic){
 		name = st;
+		this.dynamic = dynamic;
 	}
+	public final boolean dynamic;
 	public final String name;
 }

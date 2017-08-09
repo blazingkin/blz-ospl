@@ -3,8 +3,10 @@ package com.blazingkin.interpreter.expressionabstraction;
 import java.util.Stack;
 
 public class ExpressionParser {
-
-
+	
+	public static ASTNode parseAndCollapse(String line){
+		return parseExpression(line).collapse();
+	}
 	
 	// Use the shunting yard algorithm to parse a line
 	public static ASTNode parseExpression(String line){
@@ -12,9 +14,10 @@ public class ExpressionParser {
 		Stack<ASTNode> operandStack = new Stack<ASTNode>();
 		Stack<String> functionNames = new Stack<String>();
 		char[] lne = line.toCharArray();
+		boolean ignoreMode = false;
 		String building = "";
 		for (int i = 0; i < lne.length; i++){
-			if (Operator.symbols.contains(building + lne[i])){
+			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}')){
 				building += lne[i];
 			}else if (Operator.symbols.contains(""+lne[i])){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
@@ -98,6 +101,20 @@ public class ExpressionParser {
 					}else{
 						combineBinaryExpression(operatorStack, operandStack);
 					}
+					break;
+				case '{':
+					if (!building.isEmpty()){
+						operandStack.push(new ASTNode(building));
+						building = "";
+					}
+					operatorStack.push(Operator.environmentVariableLookup);
+					ignoreMode = true;
+					break;
+				case '}':
+					operandStack.push(new ASTNode(building));
+					building = "";
+					ignoreMode = false;
+					pushUnaryExpression(operatorStack, operandStack);
 					break;
 				default:
 					if (Character.isWhitespace(lne[i])){

@@ -7,7 +7,7 @@ import com.blazingkin.interpreter.variables.Value;
 
 public abstract interface InstructionExecutorSemicolonDelimitedNode extends InstructionExecutor {
 	public default Value run(String line){
-		return run(ExpressionExecutor.extractSemicolonDelimitedNodes(ExpressionParser.parseExpression(line)));
+		return run(ExpressionExecutor.extractSemicolonDelimitedNodes(ExpressionParser.parseAndCollapse(line)));
 	}
 	
 	public abstract Value run(ASTNode[] args);

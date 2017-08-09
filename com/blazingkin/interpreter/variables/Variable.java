@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.variables;
 
 import java.awt.MouseInfo;
-import java.awt.Toolkit;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
@@ -16,21 +15,10 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
-import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Variable {
-	private static HashMap<Context, HashMap<String, Value>> variables = 
-			new HashMap<Context, HashMap<String, Value>>();
 	private static Context globalContext = new Context();
-	
-	
-	public static HashMap<String, Value> getContextVariables(Context con){
-		if (!variables.containsKey(con)){
-			variables.put(con, new HashMap<String, Value>());
-		}
-		return variables.get(con);
-	}
 	
 	public static Context getGlobalContext(){
 		return globalContext;
@@ -42,10 +30,10 @@ public class Variable {
 		return getArray(arrayName, getGlobalContext());
 	}
 	public static HashMap<BigInteger, Value> getArray(String arrayName, Context context){
-		if (!getContextVariables(context).containsKey(arrayName)){
+		if (!context.variables.containsKey(arrayName)){
 			setValue(arrayName, new Value(VariableTypes.Array, new HashMap<BigInteger, Value>()), context);
 		}
-		Value v = getContextVariables(context).get(arrayName);
+		Value v = context.variables.get(arrayName);
 		if (v.type == VariableTypes.Array && v.value instanceof HashMap<?, ?>){
 			@SuppressWarnings("unchecked")
 			HashMap<BigInteger, Value> arr = (HashMap<BigInteger, Value>)v.value;
@@ -65,14 +53,16 @@ public class Variable {
 	}
 	
 	public static void clearVariables(){
-		variables.clear();
+		for (Context c : Context.contexts){
+			c.variables.clear();
+		}
 		globalContext = new Context();
 		Executor.setLine(0);
 	}
 	
 	public static void killContext(Context con){
 		if (!con.equals(getGlobalContext())){
-			variables.remove(con);
+			con.variables.clear();
 		}
 	}
 	
@@ -227,12 +217,11 @@ public class Variable {
 	}
 	
 	
-	private static Pattern squareBracketPattern = Pattern.compile("\\[\\S*\\]");
-	private static Pattern curlyBracketPattern = Pattern.compile("\\{\\S*\\}");
+	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
 	private static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
-		if (getContextVariables(con).containsKey(line)){
-			return getContextVariables(con).get(line);
+		if (con.variables.containsKey(line)){
+			return con.variables.get(line);
 		}
 		if (isInteger(line)){	//If its an integer, then return it
 			return new Value(VariableTypes.Integer, new BigInteger(line));
@@ -259,14 +248,6 @@ public class Variable {
 			}
 			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
 		}
-		Matcher squareBracketMatcher = squareBracketPattern.matcher(line);
-		if (squareBracketMatcher.find()){
-			String gp = squareBracketMatcher.group();
-			gp = gp.substring(1, gp.length()-1);
-			Value index = ExpressionExecutor.parseExpression(gp);
-			BigInteger ind = getIntValue(index);
-			return getValueOfArray(line.split("\\[")[0], ind, con);
-		}
 		
 		
 		if (con.getParentContext() != getGlobalContext()){
@@ -277,8 +258,39 @@ public class Variable {
 			return LambdaParser.parseLambdaExpression(line).getValue();
 		}
 		
-		Interpreter.throwError("Unable to find a value for: "+line);
+		return ExpressionExecutor.parseExpression(line);
+	}
+	
+	public static Value getVariableValue(String line){
+		return getVariableValue(line, Executor.getCurrentContext());
+	}
+	
+	public static Value getVariableValue(String line, Context con){
+		if (con.variables.containsKey(line)){
+			return con.variables.get(line);
+		}
+		if (con.getParentContext() != getGlobalContext()){
+			return getVariableValue(line, con.getParentContext());
+		}
+		Interpreter.throwError("Could not find a value for: "+line);
 		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static boolean canGetValue(String line){
+		if (isInteger(line)){
+			return true;
+		}
+		if (isDouble(line)){
+			return true;
+		}
+		if (isBool(line)){
+			return true;
+		}
+
+		if (isString(line)){
+			return true;
+		}
+		return false;
 	}
 	
 	
@@ -292,19 +304,7 @@ public class Variable {
 	}
 	
 	public static void setValue(String key, Value value, Context con){
-		if (key.length() > 0 && key.charAt(0) == '*'){
-			con = getGlobalContext();
-		}
-		Matcher squareBracketMatcher = squareBracketPattern.matcher(key);
-		if (squareBracketMatcher.find()){
-			String gp = squareBracketMatcher.group();
-			gp = gp.substring(1, gp.length()-1);
-			Value index = ExpressionExecutor.parseExpression(gp);
-			BigInteger ind = getIntValue(index);
-			setValueOfArray(key.split("\\[")[0], ind, value, con);
-			return;
-		}
-		getContextVariables(con).put(key, value);
+		con.variables.put(key, value);
 	}
 	
 
@@ -332,7 +332,7 @@ public class Variable {
 		if (key.length() > 0 && key.charAt(0) == '*'){
 			con = getGlobalContext();
 		}
-		return getContextVariables(con).containsKey(key) || getContextVariables(con).containsKey(key.split("\\[")[0]);
+		return con.variables.containsKey(key) || con.variables.containsKey(key.split("\\[")[0]);
 	}
 	
 	
@@ -375,12 +375,21 @@ public class Variable {
 		return lower.equals("true") || lower.equals("false");
 	}
 	
+	public static boolean isString(String s){
+		Matcher quoteMatcher = quotePattern.matcher(s);
+		return quoteMatcher.find();
+	}
+	
 	public static boolean isFraction(String s){
 		String[] splits = s.split("/");
 		if (splits.length == 2){
 			return isInteger(splits[0]) && isInteger(splits[1]);
 		}
 		return false;
+	}
+	
+	public static Value convertToString(String s){
+		return new Value(VariableTypes.String, s.substring(1, s.length() - 1));
 	}
 	
 	public static Value convertToFraction(String s){
@@ -398,26 +407,12 @@ public class Variable {
 	
 	public static Value getEnvVariable(SystemEnv se){
 		switch(se){
-		case windowSizeX:
-			return Value.integer(GraphicsExecutor.jf.getWidth());
-		case windowSizeY:
-			return Value.integer(GraphicsExecutor.jf.getHeight());
-		case FPS:
-			return Value.integer(GraphicsExecutor.lastFPS);
 		case time:
 			return Value.doub((double)System.currentTimeMillis());
 		case osName:
 			return new Value(VariableTypes.String, System.getProperty("os.name"));
 		case osVersion:
 			return new Value(VariableTypes.String, System.getProperty("os.version"));
-		case windowPosX:
-			return Value.integer(GraphicsExecutor.jf.getLocation().x);
-		case windowPosY:
-			return Value.integer(GraphicsExecutor.jf.getLocation().y);
-		case screenResX:
-			return Value.doub(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-		case screenResY:
-			return Value.doub(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 		case cursorPosX:
 			return Value.integer(MouseInfo.getPointerInfo().getLocation().x);
 		case cursorPosY:
@@ -477,10 +472,6 @@ public class Variable {
 			return new Value(VariableTypes.String, "\t");
 		case caps:
 			return new Value(VariableTypes.String, "CAPS_LOCK");
-		case boundCursorPosX:
-			return Value.integer(MouseInfo.getPointerInfo().getLocation().x - GraphicsExecutor.jf.getLocation().x - GraphicsExecutor.jf.getInsets().left);
-		case boundCursorPosY:
-			return Value.integer(MouseInfo.getPointerInfo().getLocation().y - GraphicsExecutor.jf.getLocation().y -  GraphicsExecutor.jf.getInsets().top);
 		case space:
 			return new Value(VariableTypes.String, " ");
 		case euler:
@@ -497,7 +488,7 @@ public class Variable {
 	}
 	
 	public static void clearLocalVariables(Context con){
-		getContextVariables(con).clear();
+		con.variables.clear();
 	}
 	
 	//Parses an array value
@@ -506,7 +497,7 @@ public class Variable {
 	}
 	
 	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
-		if (getContextVariables(con).containsKey(arrayName) && getValue(arrayName, con).type == VariableTypes.Array){
+		if (con.variables.containsKey(arrayName) && getValue(arrayName, con).type == VariableTypes.Array){
 			Value v = getValue(arrayName, con);
 			if (v.value instanceof Value[]){
 				Value[] arr = (Value[]) v.value;

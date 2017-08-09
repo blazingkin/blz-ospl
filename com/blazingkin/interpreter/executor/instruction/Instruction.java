@@ -13,7 +13,6 @@ import com.blazingkin.interpreter.executor.executionorder.Define;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ForLoop;
-import com.blazingkin.interpreter.executor.executionorder.Goto;
 import com.blazingkin.interpreter.executor.executionorder.IfBlock;
 import com.blazingkin.interpreter.executor.executionorder.JumpReturn;
 import com.blazingkin.interpreter.executor.executionorder.LoopEnd;
@@ -26,11 +25,9 @@ import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
 import com.blazingkin.interpreter.executor.math.AddVars;
 import com.blazingkin.interpreter.executor.math.Ceiling;
-import com.blazingkin.interpreter.executor.math.Decrement;
 import com.blazingkin.interpreter.executor.math.DivideVars;
 import com.blazingkin.interpreter.executor.math.ExponentVars;
 import com.blazingkin.interpreter.executor.math.Floor;
-import com.blazingkin.interpreter.executor.math.Increment;
 import com.blazingkin.interpreter.executor.math.Logarithm;
 import com.blazingkin.interpreter.executor.math.LogicalAnd;
 import com.blazingkin.interpreter.executor.math.ModVars;
@@ -44,8 +41,6 @@ import com.blazingkin.interpreter.executor.output.BLZLogging;
 import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
-import com.blazingkin.interpreter.executor.output.graphics.GraphicsExecutor;
-import com.blazingkin.interpreter.executor.output.graphics.GraphicsTask;
 import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.string.Substring;
@@ -60,7 +55,6 @@ public enum Instruction {
 	ECHO("ECHO", "ECHO", new Echo()),												// Echo - prints a replacing string
 	SAMELINEECHO("SECHO", "SAME LINE ECHO", new SameLineEcho()),
 	STORE("SET", "STORE", new Set()),												// Store - Stores an int as a variable
-	GOTO("GOTO", "GOTO", new Goto()),												// Goto - Goes to a line number
 	ADDVARIABLE("ADD", "ADD VARIABLES", new AddVars()),								// Add - adds two replacing strings and sets a variable to them
 	SUBTRACTVARIABLE("SUB", "SUBTRACT VARIABLES", new SubVars()),					// Sub - subtract two replacing strings and sets a variable to them
 	MULTIPLYVARIABLE("MUL", "MULTIPLE VARIABLES", new MultiplyVars()),				// Mul - multiply two replacing strings and sets a variable to them
@@ -70,8 +64,6 @@ public enum Instruction {
 	EXIT("EXT", "EXIT", new Exit()),												// Exit - ends the process
 	MOVE("MOV", "MOVE", new MoveData()),											// Move data - copies a variable to another address
 	LOGICALAND("AND", "LOGICAL AND", new LogicalAnd()),								// logical and - bitwise and, writes to a variable
-	DECREMENT("DEC", "DECREMENT", new Decrement()),									// decrement - decrements a variable by one
-	INCREMENT("INC", "INCREMENT", new Increment()),									// increment - increments a variable by one
 	PUSH("PUSH", "PUSH", new Push()),												// push - push an integer onto the stack
 	POP("POP", "POP", new Pop()),													// pop - pops an integer into a variable
 	PEEK("PEEK", "PEEK", new Peek()),												// peek - peeks an integer into a variable
@@ -84,15 +76,8 @@ public enum Instruction {
 	END("END", "END STATEMENT", new End()),											// End - Ends a return jump statement
 	CONCATENATE("CON", "CONCATENATE", new ConcatenateStrings()),					// Concatenate Strings - Concatenate Strings, removes "'s
 	IF("IF", "IF STATEMENT", new IfBlock()),
-	GRAPHICSTEST("GRT", "GRAPHICS TEST", new GraphicsExecutor(GraphicsTask.init)),
 	WAIT("WAIT", "WAIT", new Wait()),												//Wait - Waits a given time on this instruction
-	SETGRAPHICSSIZE("GRASS", "GRAPHICS SET SIZE", new GraphicsExecutor(GraphicsTask.setSize)),	//Graphics Set Size - Sets the size of the window
-	ADDTEXT("TEXT", "ADD TEXT", new GraphicsExecutor(GraphicsTask.drawText)),					//Add Text - Draws some text on the screen
-	TESTDRAW("TDRAW", "Test Draw", new GraphicsExecutor(GraphicsTask.draw)),
-	CLEAR("CLEAR", "Clear Graphics", new GraphicsExecutor(GraphicsTask.clear)),					//Clear - clears the window
-	SETGRAPHICSPROPERTY("GRAPHICSPROPERTY", "Set Graphics Property", new GraphicsExecutor(GraphicsTask.setProperty)),	//Graphics Property - Sets a property of the graphics system
 	ADDLISTENER("ADDLISTENER", "Add Event Listener", new Listener()),									//Add listener - Registers an event listener
-	CLEARLAST("CLEARLAST", "Clear Lst Graphics Element", new GraphicsExecutor(GraphicsTask.clearLast)),
 	ADDPROCESS("ADDPROCESS", "Add Process", new ChangeProcess()),								//Add Process - Execute code from an external file
 	RETURNPROCESS("RETPRO", "Return Process", new ReturnProcess()),								//Return Process - Return to the previous process
 	ROUND("ROUND", "Round", new Round()),

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -61,7 +62,13 @@ public class ExpressionExecutor {
 	
 	public static Value executeNode(ASTNode root){
 		if (root.name != null){
+			if (root.value != null){
+				return root.value;
+			}
 			String expr = root.name;
+			if (Variable.contains(expr)){
+				return Variable.getVariableValue(expr);
+			}
 			if (Variable.isInteger(expr)){
 				return new Value(VariableTypes.Integer, new BigInteger(expr));
 			}
@@ -71,7 +78,9 @@ public class ExpressionExecutor {
 			if (Variable.isBool(expr)){
 				return new Value(VariableTypes.Boolean, Variable.convertToBool(expr));
 			}
-			return Variable.getValue(expr);
+			if (Variable.isString(expr)){
+				return Variable.convertToString(expr);
+			}
 		}
 		switch (root.op){
 			case Addition:
@@ -305,14 +314,28 @@ public class ExpressionExecutor {
 				}
 				return Value.arr(extractCommaDelimits(root.args[0]));
 			}
+			case environmentVariableLookup:
+			{
+				for (SystemEnv se : SystemEnv.values()){
+					if (se.name.equals(root.args[0].name)){
+						return Variable.getEnvVariable(se);
+					}
+				}
+				System.out.println("Could Not Find Environment Variable "+root.args[0].name);
+				return new Value(VariableTypes.Nil, null);
+			}
 			case parensOpen:
 			{
 				Interpreter.throwError("Parenthesis were run.... You really broke something somehow");
 				break;
 			}
+			default:
+				return new Value(VariableTypes.Nil, null);
 		}
 		return new Value(VariableTypes.Nil, null);
 	}
+	
+
 
 	
 
