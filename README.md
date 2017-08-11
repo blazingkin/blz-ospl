@@ -1,5 +1,8 @@
 ﻿blz-ospl
 ===
+
+[![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
+
 An assembly-like interpreted language that implements both imperative and functional programming schema.
 
 Currently implemented in Java, but will eventually transition to being a directly compiled language.

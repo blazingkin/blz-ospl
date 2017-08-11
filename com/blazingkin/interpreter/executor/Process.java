@@ -21,6 +21,7 @@ public class Process implements RuntimeStackElement {
 	public Stack<Integer> lineReturns = new Stack<Integer>();
 	private String[] lines;
 	private RegisteredLine[] registeredLines;
+	public ArrayList<Method> methods = new ArrayList<Method>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
 	
@@ -77,6 +78,7 @@ public class Process implements RuntimeStackElement {
 				if (lines[i].substring(0,1).equals(":")){
 					Method nM = new Method(this, i+1,lines[i].substring(1));
 					Executor.getMethods().add(nM);
+					methods.add(nM);
 				}
 			}
 		}

@@ -1,0 +1,17 @@
+:main
+	run_func(add)
+	run_func(subtract)
+end
+
+:add(a, b)
+	return a + b
+end
+
+:subtract(a, b)
+	return a - b
+end
+
+:run_func(f)
+	out = f(40, 3)
+	echo out
+end

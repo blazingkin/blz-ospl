@@ -6,7 +6,7 @@
 		end
 		if i % 5 == 0
 			building_string = building_string + "buzz"
-		end
+		end 
 		if building_string == ""
 			building_string = i
 		end

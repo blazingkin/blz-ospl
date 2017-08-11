@@ -329,10 +329,10 @@ public class Variable {
 	}
 	
 	public static boolean contains(String key, Context con){
-		if (key.length() > 0 && key.charAt(0) == '*'){
-			con = getGlobalContext();
+		if (con.getParentContext() == null){
+			return con.variables.containsKey(key);
 		}
-		return con.variables.containsKey(key) || con.variables.containsKey(key.split("\\[")[0]);
+		return con.variables.containsKey(key) || contains(key, con.getParentContext());
 	}
 	
 	

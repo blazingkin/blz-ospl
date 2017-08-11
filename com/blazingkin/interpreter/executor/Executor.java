@@ -375,8 +375,13 @@ public class Executor {
 		if (se instanceof LoopWrapper){
 			loopStack.push((LoopWrapper)se);
 		}else if (se instanceof Process){
-			runningProcesses.push((Process) se);
-			contextStack.push(new Context());
+			Process nProcess = (Process) se;
+			runningProcesses.push(nProcess);
+			Context newCon = new Context();
+			contextStack.push(newCon);
+			for (Method m : nProcess.methods){
+				Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newCon);
+			}
 		}else if (se instanceof Method){
 			runningMethods.push((Method) se);
 			contextStack.push(new Context());

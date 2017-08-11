@@ -1,4 +1,4 @@
-import os
+import os, sys
 import filecmp
 import time
 from subprocess import call
@@ -39,9 +39,11 @@ class TestFile:
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
+				sys.exit(1)
 			elif err != 0:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Program returned exit code: "+str(err))
+				sys.exit(1)
 			else:
 				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
 		print()

@@ -79,7 +79,7 @@
 		tensorset ten f i 0
 	end
 
-	call function_call_test (5, 6, 7)	# Passing arguments works
+	function_call_test(5, 6, 7)	# Passing arguments works
 	call checkglobal						# Global variables work
 
 	for i=0;i<=20; i = i + 2
@@ -93,7 +93,7 @@ end
 	echo a ", " b ", and " c " were passed as variables"
 	a = a + 1
 	if a < 20
-		call function_call_test (a b c)
+	  function_call_test(a, b, c)
 	end
 end
 

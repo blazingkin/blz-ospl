@@ -81,6 +81,7 @@ public class ExpressionExecutor {
 			if (Variable.isString(expr)){
 				return Variable.convertToString(expr);
 			}
+			Interpreter.throwError("Could not find a value for "+root.name);
 		}
 		switch (root.op){
 			case Addition:
@@ -271,8 +272,11 @@ public class ExpressionExecutor {
 				if (root.args.length > 2){
 					Interpreter.throwError("Somehow a function had a weird numbeer of arguments");
 				}
-				String methodName = root.args[0].name;
-				Method toCall = Executor.getMethodInCurrentProcess(methodName);
+				Value methodVal = executeNode(root.args[0]);
+				if (methodVal.type != VariableTypes.Method){
+					Interpreter.throwError("Tried to call a non-method "+methodVal);
+				}
+				Method toCall = (Method) methodVal.value;
 				Value[] args;
 				if (root.args.length == 1){	// No Args
 					args = new Value[0];

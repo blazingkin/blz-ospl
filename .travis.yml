@@ -1,0 +1,9 @@
+language: 
+    java
+
+install:
+    sudo apt-get install python3-dev
+ 
+script:
+- java -jar bin/blz-ospl.jar -t
+- python3 Tests/autotests/runtests.py

@@ -7,8 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
+import com.blazingkin.interpreter.unittests.AllTestsSuite;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -70,6 +75,14 @@ public class Interpreter {
 						break;
 					case 'v':
 						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
+						break;
+					case 't':
+						Result result = JUnitCore.runClasses(AllTestsSuite.class);
+						for (Failure failure : result.getFailures()){
+							System.out.println(failure.toString());
+						}
+						System.out.println(result.wasSuccessful() ? "All Tests Passed" : "Tests Failed");
+						System.exit(result.wasSuccessful() ? 0 : 1);
 						break;
 				}
 				System.exit(0);
