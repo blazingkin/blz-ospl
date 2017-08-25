@@ -6,7 +6,8 @@ import java.util.HashSet;
 public enum Operator{
 	
 	Increment("++", 1, OperatorType.Unary),	
-	Decrement("--", 1, OperatorType.Unary),	
+	Decrement("--", 1, OperatorType.Unary),
+	DotOperator(".", 2, OperatorType.Binary),
 	Modulus("%", 2, OperatorType.UnaryOrBinary),
 	Multiplication("*", 3, OperatorType.Binary),
 	Division("/", 3, OperatorType.Binary),

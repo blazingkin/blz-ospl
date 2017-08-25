@@ -47,6 +47,22 @@ public class Value {
 		System.out.println(value);
 	}
 	
+	public String getPrintValue(){
+		if (value instanceof Value[]){
+			String buildingString = "[";
+			Value[] arr = (Value[]) value;
+			for (int i = 0; i < arr.length-1; i++){
+				buildingString += arr[i].getPrintValue() + ", ";
+			}
+			if (arr.length != 0){
+				buildingString += arr[arr.length-1].getPrintValue();
+			}
+			return buildingString + "]";
+		}else{
+			return value.toString();
+		}
+	}
+	
 	public boolean equals(Object other){
 		if (other instanceof Value){
 			Value v2 = (Value) other;
@@ -101,6 +117,10 @@ public class Value {
 	
 	public static Value arr(Value[] val){
 		return new Value(VariableTypes.Array, val);
+	}
+	
+	public static Value obj(BLZObject ob){
+		return new Value(VariableTypes.Object, ob);
 	}
 	
 }

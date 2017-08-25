@@ -132,8 +132,8 @@ public class ExpressionParserUnitTest {
 	public void testArrayAccessorExpressionShouldWork(){
 		ASTNode left = parseExpression("temp[a]");
 		ASTNode arrd = parseExpression("arr[d]");
-		ASTNode right = new ASTNode(Operator.Addition, arrd, new ASTNode(".9"));
-		assertEquals(parseExpression("temp[a] = arr[d] + .9"), new ASTNode(Operator.Assignment, left, right));
+		ASTNode right = new ASTNode(Operator.Addition, arrd, new ASTNode("0.9"));
+		assertEquals(parseExpression("temp[a] = arr[d] + 0.9"), new ASTNode(Operator.Assignment, left, right));
 	}
 	
 	@Test
@@ -168,5 +168,58 @@ public class ExpressionParserUnitTest {
 		// I could throw some kind of syntax error?
 		assertEquals(parseExpression("arr[2]2[]"), new ASTNode(Operator.arrayLookup, new ASTNode(Operator.arrayLookup, new ASTNode("arr"), new ASTNode("2")), new ASTNode("2")));
 	}
+	
+	@Test
+	public void testDotOperator(){
+		assertEquals(parseExpression("a.b"), new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")));
+	}
+	
+	@Test
+	public void testDotOperatorShouldNotMixWithDoubles(){
+		assertEquals(parseExpression("123.4"), new ASTNode("123.4"));
+	}
+	
+	@Test
+	public void testAssignmentOnDotOperator(){
+		assertEquals(parseExpression("a.b = 2"), new ASTNode(Operator.Assignment, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")), new ASTNode("2")));
+	}
+	
+	@Test
+	public void testChainedDotOperators(){
+		assertEquals(parseExpression("a.b.c"), new ASTNode(Operator.DotOperator, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")), new ASTNode("c")));
+	}
+	
+	@Test
+	public void testFunctionCallOnDotOperator(){
+		assertEquals(parseExpression("a.b()"), new ASTNode(Operator.functionCall, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b"))));
+	}
+	
+	@Test
+	public void testArrayAccessorOnFunctionCall(){
+		ASTNode callFunc = parseExpression("a(2)");
+		assertEquals(parseExpression("a(2)[3]"), new ASTNode(Operator.arrayLookup, callFunc, new ASTNode("3")));
+	}
+	
+	@Test
+	public void testArrayAccessorOnDotOperatorAndFunctionCall(){
+		ASTNode dotAndCall = parseExpression("a.b(2)");
+		assertEquals(parseExpression("a.b(2)[3]"), new ASTNode(Operator.arrayLookup, dotAndCall, new ASTNode("3")));
+	}
+	
+	@Test
+	public void testSpaceInString(){
+		assertEquals(parseExpression("\"Hello there\""), new ASTNode("\"Hello there\""));
+	}
+	
+	@Test
+	public void testSpaceInStringInFunctionCall(){
+		assertEquals(parseExpression("print(\"Hello World!\")"), new ASTNode(Operator.functionCall, new ASTNode("print"), new ASTNode("\"Hello World!\"")));
+	}
+	
+	@Test
+	public void testEscapedCharactersInStrings(){
+		assertEquals(parseExpression("\"Test \\\"\""), new ASTNode("\"Test \"\""));
+	}
+	
 
 }

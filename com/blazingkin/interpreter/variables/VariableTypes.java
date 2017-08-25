@@ -18,7 +18,8 @@ public enum VariableTypes {
 	Rational(BLZRational.class),
 	String(java.lang.String.class),
 	Tensor(BLZTensor.class),
-	Nil(null);
+	Nil(null),
+	Object(BLZObject.class);
 	
 	VariableTypes(Class n){
 		dataType = n;

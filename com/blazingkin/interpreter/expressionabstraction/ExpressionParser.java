@@ -2,6 +2,8 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.Stack;
 
+import com.blazingkin.interpreter.variables.Variable;
+
 public class ExpressionParser {
 	
 	public static ASTNode parseAndCollapse(String line){
@@ -12,14 +14,15 @@ public class ExpressionParser {
 	public static ASTNode parseExpression(String line){
 		Stack<Operator> operatorStack = new Stack<Operator>();
 		Stack<ASTNode> operandStack = new Stack<ASTNode>();
-		Stack<String> functionNames = new Stack<String>();
+		Stack<ASTNode> functionNames = new Stack<ASTNode>();
 		char[] lne = line.toCharArray();
 		boolean ignoreMode = false;
 		String building = "";
+		boolean inQuotes = false;
 		for (int i = 0; i < lne.length; i++){
 			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}')){
 				building += lne[i];
-			}else if (Operator.symbols.contains(""+lne[i])){
+			}else if (Operator.symbols.contains(""+lne[i]) && (lne[i] != '.' || !Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
 					String subBuilding = ""+lne[i];
 					boolean found = false;
@@ -51,10 +54,19 @@ public class ExpressionParser {
 					if (building.isEmpty()){
 						operatorStack.push(Operator.parensOpen);
 					}else{
-						operatorStack.push(Operator.functionCall);
-						operandStack.push(new ASTNode(building));
-						functionNames.push(building);
-						building = "";
+						if (!operatorStack.empty() && operatorStack.peek() == Operator.DotOperator){
+							operandStack.push(new ASTNode(building));
+							building = "";
+							combineBinaryExpression(operatorStack, operandStack);
+							functionNames.push(operandStack.peek());
+							operatorStack.push(Operator.functionCall);
+						}else{
+							operatorStack.push(Operator.functionCall);
+							ASTNode functionName = new ASTNode(building);
+							operandStack.push(functionName);
+							functionNames.push(functionName);
+							building = "";
+						}
 					}
 					break;
 				case ')':
@@ -68,7 +80,7 @@ public class ExpressionParser {
 					if (operatorStack.peek() == Operator.parensOpen){
 						operatorStack.pop(); // We don't care about the open parens
 					}else{	// If it is a function call
-						if (operandStack.size() > 0 && functionNames.peek().equals(operandStack.peek().name)){
+						if (operandStack.size() > 0 && functionNames.peek().equals(operandStack.peek())){
 							pushUnaryExpression(operatorStack, operandStack);
 						}else{
 							combineBinaryExpression(operatorStack, operandStack); // Add the function call to the stack
@@ -80,12 +92,14 @@ public class ExpressionParser {
 					if (operatorStack.empty() && operandStack.size() > 0 && operandStack.peek().op == Operator.arrayLookup){ // Multidimensional arrays
 						// TODO handle if the building string is not empty, there is a test that shows why this is broken
 						operatorStack.push(Operator.arrayLookup);
-					}else if (building.isEmpty()){
+					}else if (building.isEmpty() && !(i != 0 && lne[i-1] == ')')){
 						operatorStack.push(Operator.arrayLiteral);
 					}else{
+						if (!building.isEmpty()){
+							operandStack.push(new ASTNode(building));
+							building = "";
+						}
 						operatorStack.push(Operator.arrayLookup);
-						operandStack.push(new ASTNode(building));
-						building = "";
 					}
 					break;
 				case ']':
@@ -116,8 +130,18 @@ public class ExpressionParser {
 					ignoreMode = false;
 					pushUnaryExpression(operatorStack, operandStack);
 					break;
+				case '"':
+					building += '"';
+					if (inQuotes){
+						if (lne[i-1] == '\\'){
+							building = building.substring(0,building.length() - 2) + '"';
+							break;
+						}
+					}
+					inQuotes = !inQuotes;
+					break;
 				default:
-					if (Character.isWhitespace(lne[i])){
+					if (!inQuotes && Character.isWhitespace(lne[i])){
 						if (building.length() > 0){
 							operandStack.push(new ASTNode(building));
 							building = "";

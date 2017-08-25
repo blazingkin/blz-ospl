@@ -58,4 +58,11 @@ public class RegisteredLine{
 		return instr.executor.run(args);
 	}
 	
+	public String toString(){
+		if (root != null){
+			return root.toString();
+		}
+		return instr.toString() + " " + args;
+	}
+	
 }

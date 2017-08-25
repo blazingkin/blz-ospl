@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -82,6 +83,7 @@ public class ExpressionExecutor {
 				return Variable.convertToString(expr);
 			}
 			Interpreter.throwError("Could not find a value for "+root.name);
+			return new Value(VariableTypes.Nil, null);
 		}
 		switch (root.op){
 			case Addition:
@@ -151,6 +153,15 @@ public class ExpressionExecutor {
 						BigInteger index = Variable.getIntValue(executeNode(root.args[0].args[1]));
 						Value newVal = executeNode(root.args[1]);
 						Variable.setValueOfArray(arrayName, index, newVal);
+						return newVal;
+					}else if (root.args[0].op == Operator.DotOperator){
+						Value object = executeNode(root.args[0].args[0]);
+						if (object.type != VariableTypes.Object){
+							Interpreter.throwError("Tried accessing "+object+" as an object");
+						}
+						BLZObject obj = (BLZObject) object.value;
+						Value newVal = executeNode(root.args[1]);
+						Variable.setValue(root.args[0].args[1].name, newVal, obj.objectContext);
 						return newVal;
 					}
 					Interpreter.throwError("Did not know how to handle assignment of: "+root.args[0]);
@@ -281,7 +292,12 @@ public class ExpressionExecutor {
 				if (root.args.length == 1){	// No Args
 					args = new Value[0];
 				}else{	// Some args
-					args = Variable.getValueAsArray(executeNode(root.args[1]));
+					if (root.args[1].op == Operator.CommaDelimit){
+						args = Variable.getValueAsArray(executeNode(root.args[1]));
+					}else{
+						Value[] arg = {executeNode(root.args[1])};
+						args = arg;
+					}
 				}
 				return Executor.functionCall(toCall, args);
 			}
@@ -305,7 +321,12 @@ public class ExpressionExecutor {
 					Interpreter.throwError("Array Lookup did not have 2 arguments");
 				}
 				if (root.args[0].name == null){
-					Interpreter.throwError("Did not know how to access "+root.args[0]+" as an array");
+					Value arr = executeNode(root.args[0]);
+					if (arr.type != VariableTypes.Array){
+						Interpreter.throwError("Did not know how to access "+root.args[0]+" as an array");
+					}
+					BigInteger index = Variable.getIntValue(executeNode(root.args[1]));
+					return Variable.getValueOfArray(arr, index);
 				}
 				String name = root.args[0].name;
 				BigInteger index = Variable.getIntValue(executeNode(root.args[1]));
@@ -327,6 +348,26 @@ public class ExpressionExecutor {
 				}
 				System.out.println("Could Not Find Environment Variable "+root.args[0].name);
 				return new Value(VariableTypes.Nil, null);
+			}
+			case DotOperator:
+			{
+				if (root.args.length != 2){
+					Interpreter.throwError("Dot Operator did not have 2 arguments");
+				}
+				Value object = executeNode(root.args[0]);
+				if (object.type != VariableTypes.Object){
+					Interpreter.throwError("Did not know how to handle dot operator on non-object");
+				}
+				BLZObject obj = (BLZObject) object.value;
+				if (root.args[1].op == Operator.functionCall){
+					root.args[1].args[0] = new ASTNode(Variable.getValue(root.args[1].args[0].name, obj.objectContext));
+					return executeNode(root.args[1]);
+				}
+				if (root.args[1].op == Operator.arrayLookup){
+					BigInteger index = Variable.getIntValue(executeNode(root.args[1].args[1]));
+					return Variable.getValueOfArray(Variable.getValue(root.args[1].args[0].name, obj.objectContext), index);
+				}
+				return Variable.getValue(root.args[1].name, obj.objectContext);
 			}
 			case parensOpen:
 			{

@@ -3,8 +3,11 @@ package com.blazingkin.interpreter.executor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
@@ -14,6 +17,9 @@ import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 
+import in.blazingk.blz.packagemanager.*;
+import in.blazingk.blz.packagemanager.Package;
+
 public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
 	public File readingFrom;
@@ -22,11 +28,22 @@ public class Process implements RuntimeStackElement {
 	private String[] lines;
 	private RegisteredLine[] registeredLines;
 	public ArrayList<Method> methods = new ArrayList<Method>();
+	public Collection<Method> importedMethods = new HashSet<Method>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	
+	private boolean shouldImportCore = true;
 	
 	public Process(File runFile) throws FileNotFoundException{
+		runningFromFile = true;
+		setupFileProcess(runFile);
+	}
+	
+	public Process(File runFile, boolean shouldImportCore) throws FileNotFoundException{
+		this.shouldImportCore = shouldImportCore;
+		setupFileProcess(runFile);
+	}
+	
+	private void setupFileProcess(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
@@ -46,10 +63,7 @@ public class Process implements RuntimeStackElement {
 		if (lines.length == 0){
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
 		}
-		registerMethods();
-		preprocessLines();
-		registerBlocks();
-		processes.add(this);
+		setup();
 	}
 	
 	
@@ -66,13 +80,18 @@ public class Process implements RuntimeStackElement {
 		if (lines.length == 0){
 			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
+		setup();
+	}
+	
+	private void setup(){
 		registerMethods();
 		preprocessLines();
 		registerBlocks();
-		processes.add(this);
+		handleImports();
+		processes.add(this);		
 	}
 	
-	public void registerMethods(){
+	private void registerMethods(){
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0){
 				if (lines[i].substring(0,1).equals(":")){
@@ -85,7 +104,7 @@ public class Process implements RuntimeStackElement {
 	}
 
 	
-	public void preprocessLines(){
+	private void preprocessLines(){
 		String errors = "";
 		registeredLines = new RegisteredLine[lines.length];
 		for (int i = 0; i < lines.length; i++){
@@ -106,6 +125,7 @@ public class Process implements RuntimeStackElement {
 				String newStr = lines[i].replaceFirst(splits[0], "").trim();
 				registeredLines[i] = new RegisteredLine(instr, newStr);
 			}catch(Exception e){
+				e.printStackTrace();
 				valid = false;
 				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
@@ -115,7 +135,7 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
-	public void registerBlocks(){
+	private void registerBlocks(){
 		Stack<Integer> blckStack = new Stack<Integer>();
 		for (int i = 0; i < lines.length; i++){
 			if (lines[i].startsWith(":") || (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof BlockInstruction)){
@@ -141,6 +161,30 @@ public class Process implements RuntimeStackElement {
 			valid = false;
 			Interpreter.throwError("Some blocks not closed!");
 		}
+	}
+	
+	private void handleImports(){
+		//Always import core
+		Set<File> packagesToImport = new HashSet<File>();
+		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
+		try{
+			if (shouldImportCore){
+				packagesToImport.add(importer.findPackage("Core"));		
+			}
+			for (RegisteredLine line : registeredLines){
+				if (line != null && line.instr == Instruction.IMPORTPACKAGE){
+					packagesToImport.add(importer.findPackage(line.args));
+				}
+			}
+			for (File f : packagesToImport){
+				Package p = new in.blazingk.blz.packagemanager.Package(f);
+				importedMethods.addAll(p.getAllMethodsInPackage());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			Interpreter.throwError(e.getMessage());
+		}
+		
 	}
 	
 	public boolean isRegistered(int lineNumber){

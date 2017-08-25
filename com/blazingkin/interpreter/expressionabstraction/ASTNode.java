@@ -19,6 +19,12 @@ public class ASTNode {
 		args[1] = arg2;
 	}
 	
+	public ASTNode(Operator op, ASTNode arg){
+		this.op = op;
+		args = new ASTNode[1];
+		args[0] = arg;
+	}
+	
 	public String name;
 	public ASTNode(String name){
 		this.name = name;
@@ -38,6 +44,9 @@ public class ASTNode {
 			}
 			building += op.syntax;
 			return "("+building+")"; 
+		}
+		if (this.value != null){
+			return value.toString();
 		}
 		return name;
 	}
@@ -68,6 +77,8 @@ public class ASTNode {
 					return !se.dynamic;
 				}
 			}
+			return false;
+		case DotOperator:
 			return false;
 		default:
 			return canCollapseAll(args);
@@ -108,7 +119,7 @@ public class ASTNode {
 		if (otherNode.name != null && this.name != null){
 			return otherNode.name.equals(this.name);
 		}
-		if (otherNode.args.length != this.args.length){
+		if (otherNode.args == null || this.args == null || otherNode.args.length != this.args.length){
 			return false;
 		}
 		boolean flag = this.op.equals(otherNode.op);

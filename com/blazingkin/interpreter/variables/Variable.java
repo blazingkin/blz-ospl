@@ -57,7 +57,6 @@ public class Variable {
 			c.variables.clear();
 		}
 		globalContext = new Context();
-		Executor.setLine(0);
 	}
 	
 	public static void killContext(Context con){
@@ -277,20 +276,7 @@ public class Variable {
 	}
 	
 	public static boolean canGetValue(String line){
-		if (isInteger(line)){
-			return true;
-		}
-		if (isDouble(line)){
-			return true;
-		}
-		if (isBool(line)){
-			return true;
-		}
-
-		if (isString(line)){
-			return true;
-		}
-		return false;
+		return isInteger(line) || isDouble(line) || isBool(line) || isString(line);
 	}
 	
 	
@@ -503,13 +489,26 @@ public class Variable {
 				Value[] arr = (Value[]) v.value;
 				return arr[index.intValue()];
 			}
-			HashMap<BigInteger, Value> vars = (HashMap<BigInteger, Value>) v.value;
-			return vars.get(index);
+			HashMap<?, ?> vars = (HashMap<?, ?>) v.value;
+			return (Value) vars.get(index);
 		}
-		if (getArray(arrayName, con) != null && getArray(arrayName, con).containsKey(index)){
-			return getArray(arrayName, con).get(index);	
+		HashMap<?, ?> arrLookup = getArray(arrayName, con);
+		if (arrLookup != null && arrLookup.containsKey(index)){
+			return (Value) arrLookup.get(index);	
 		}
 		return new Value(VariableTypes.Nil, null);
+	}
+	
+	public static Value getValueOfArray(Value value, BigInteger index) {
+		if (value.type != VariableTypes.Array){
+			Interpreter.throwError("Tried to access "+value+" as an array, but is not one");
+		}
+		if (value.value instanceof Value[]){
+			Value[] arr = (Value[]) value.value;
+			return arr[index.intValue()];
+		}
+		HashMap<?, ?> arr = (HashMap<?, ?>) value.value;
+		return (Value) arr.get(index);
 	}
 	
 	//Sets the value of an array
@@ -590,30 +589,9 @@ public class Variable {
 	}
 	
 	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
-
-	    BigDecimal ans=  new BigDecimal(1.0);
-	    BigDecimal k=  new BigDecimal(1.0);
-	    BigDecimal t=  new BigDecimal(-1.0);
-	    BigDecimal no=  new BigDecimal(0.0);
-
-	    if (exponent != no) {
-	        BigDecimal absExponent =  exponent.signum() > 0 ? exponent : t.multiply(exponent);
-	        while (absExponent.signum() > 0){
-	            ans =ans.multiply(base);
-	            absExponent = absExponent.subtract(BigDecimal.ONE);
-	        }
-
-	        if (exponent.signum() < 0) {
-	            // For negative exponent, must invert
-	            ans = k.divide(ans);
-	        }
-	    } else {
-	        // exponent is 0
-	        ans = k;
-	    }
-
-	    return ans;
+		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base)));
 	}
+
 
 	
 	

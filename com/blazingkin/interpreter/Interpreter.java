@@ -60,7 +60,7 @@ public class Interpreter {
 	
 	public void run(String args[]) throws FileNotFoundException{
 		try{
-			if (args.length == 0){
+			if (args.length == 0){	
 				Interpreter.printHelp();
 				System.exit(0);
 			}
@@ -81,7 +81,7 @@ public class Interpreter {
 						for (Failure failure : result.getFailures()){
 							System.out.println(failure.toString());
 						}
-						System.out.println(result.wasSuccessful() ? "All Tests Passed" : "Tests Failed");
+						System.out.println(result.wasSuccessful() ? result.getRunCount() + " Tests Passed" : "Tests Failed");
 						System.exit(result.wasSuccessful() ? 0 : 1);
 						break;
 				}

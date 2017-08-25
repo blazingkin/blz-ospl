@@ -45,6 +45,7 @@ public class Executor {
 	private static Stack<Process> runningProcesses = new Stack<Process>();	//File Stack
 	private static Stack<Method> runningMethods = new Stack<Method>();		//Method Stack
 	private static Stack<Context> contextStack = new Stack<Context>();	//Context Stack
+	private static Stack<Context> processContext = new Stack<Context>();
 	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();	//Loops
 	private static Stack<Integer> processLineStack = new Stack<Integer>();
 	
@@ -319,12 +320,21 @@ public class Executor {
 		Executor.eventsToBeHandled = eventsToBeHandled;
 	}
 	
-	public static void setLine(int num){				// Sets line within the current process
-		Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
+	// Sets line within the current process
+	public static void setLine(int num){
+		try{
+			Variable.setValue("*pc", new Value(VariableTypes.Integer, num), processContext.peek());
+		}catch(Exception e){
+			Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
+		}
 	}
 	
 	public static int getLine(){
-		return (int) Variable.getGlobalValue("*pc").value;
+		try{
+			return (int) Variable.getValue("*pc", processContext.peek()).value;
+		}catch(Exception e){
+			return (int) Variable.getGlobalValue("*pc").value;
+		}
 	}
 	
 	public static Stack<Process> getRunningProcesses(){
@@ -379,7 +389,11 @@ public class Executor {
 			runningProcesses.push(nProcess);
 			Context newCon = new Context();
 			contextStack.push(newCon);
+			processContext.push(newCon);
 			for (Method m : nProcess.methods){
+				Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newCon);
+			}
+			for (Method m : nProcess.importedMethods){
 				Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newCon);
 			}
 		}else if (se instanceof Method){
@@ -398,6 +412,9 @@ public class Executor {
 			Variable.killContext(contextStack.pop());
 		}else if(rse instanceof Method){
 			runningMethods.pop();
+			if (!processContext.empty()){
+				processContext.pop();
+			}
 			Variable.killContext(contextStack.pop());
 		}
 		rse.onBlockEnd();
