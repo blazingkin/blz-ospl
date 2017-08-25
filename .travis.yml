@@ -6,4 +6,5 @@ install:
  
 script:
 - java -jar bin/blz-ospl.jar -t
-- python3 Tests/autotests/runtests.py
+- cd Tests/autotests/
+- python3 runtests.py
