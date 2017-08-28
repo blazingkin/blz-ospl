@@ -1,4 +1,4 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.executor.executionstack;
 
 public interface RuntimeStackElement {
 

@@ -7,17 +7,19 @@ import org.junit.Test;
 
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
+import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 
 public class ExpressionParserUnitTest {
 
 	@Test
 	public void testTwoPlusTwo(){
-		assertEquals(parseExpression("2 + 2"), new ASTNode(Operator.Addition, new ASTNode("2"), new ASTNode("2")));
+		assertEquals(parseExpression("2 + 2"), new OperatorASTNode(Operator.Addition, new ValueASTNode("2"), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testExponentiation(){
-		assertEquals(parseExpression("2 ** 2"), new ASTNode(Operator.Exponentiation, new ASTNode("2"), new ASTNode("2")));
+		assertEquals(parseExpression("2 ** 2"), new OperatorASTNode(Operator.Exponentiation, new ValueASTNode("2"), new ValueASTNode("2")));
 	}
 	
 	@Test
@@ -30,110 +32,110 @@ public class ExpressionParserUnitTest {
 	@Test
 	public void testThreeTimeThreeTimesThree(){
 		ASTNode threetimesthree = parseExpression("3 * 3");
-		assertEquals(parseExpression("3 * 3 * 3"), new ASTNode(Operator.Multiplication, threetimesthree, new ASTNode("3")));
+		assertEquals(parseExpression("3 * 3 * 3"), new OperatorASTNode(Operator.Multiplication, threetimesthree, new ValueASTNode("3")));
 	}
 	
 	@Test
 	public void testParens(){
 		ASTNode twoplustwo = parseExpression("2 + 2");
-		assertEquals(parseExpression("3 * (2 + 2)"), new ASTNode(Operator.Multiplication, new ASTNode("3"), twoplustwo));
+		assertEquals(parseExpression("3 * (2 + 2)"), new OperatorASTNode(Operator.Multiplication, new ValueASTNode("3"), twoplustwo));
 	}
 	
 	@Test
 	public void testOrderOfOperation(){
 		ASTNode threetimestwo = parseExpression("3 * 2");
-		assertEquals(parseExpression("3 * 2 + 3 * 2"), new ASTNode(Operator.Addition, threetimestwo, threetimestwo));
+		assertEquals(parseExpression("3 * 2 + 3 * 2"), new OperatorASTNode(Operator.Addition, threetimestwo, threetimestwo));
 	}
 	
 	@Test
 	public void testFunctionCall(){
-		assertEquals(parseExpression("blah(3)"), new ASTNode(Operator.functionCall, new ASTNode("blah"), new ASTNode("3")));
+		assertEquals(parseExpression("blah(3)"), new OperatorASTNode(Operator.functionCall, new ValueASTNode("blah"), new ValueASTNode("3")));
 	}
 	
 	@Test
 	public void testFunctionCallWithNoArgs(){
-		ASTNode[] arg = {new ASTNode("blah")};
-		assertEquals(parseExpression("blah()"), new ASTNode(Operator.functionCall, arg));
+		ASTNode[] arg = {new ValueASTNode("blah")};
+		assertEquals(parseExpression("blah()"), new OperatorASTNode(Operator.functionCall, arg));
 	}
 	
 	@Test
 	public void testEmbeddedFunctionCalls(){
-		ASTNode[] arg = {new ASTNode("fasd")};
-		assertEquals(parseExpression("blah(asdf(fasd()))"), new ASTNode(Operator.functionCall, new ASTNode("blah"), 
-				new ASTNode(Operator.functionCall, new ASTNode("asdf"), new ASTNode(Operator.functionCall, arg))));
+		ASTNode[] arg = {new ValueASTNode("fasd")};
+		assertEquals(parseExpression("blah(asdf(fasd()))"), new OperatorASTNode(Operator.functionCall, new ValueASTNode("blah"), 
+				new OperatorASTNode(Operator.functionCall, new ValueASTNode("asdf"), new OperatorASTNode(Operator.functionCall, arg))));
 	}
 	
 	@Test
 	public void testFunctionWithOtherOps(){
 		ASTNode twoplustwo = parseExpression("2 + 2");
-		assertEquals(parseExpression("2 + 2 + blah(2 + 2)"), new ASTNode(Operator.Addition, twoplustwo,
-				new ASTNode(Operator.functionCall, new ASTNode("blah"), twoplustwo)));
+		assertEquals(parseExpression("2 + 2 + blah(2 + 2)"), new OperatorASTNode(Operator.Addition, twoplustwo,
+				new OperatorASTNode(Operator.functionCall, new ValueASTNode("blah"), twoplustwo)));
 	}
 	
 	@Test
 	public void testCommasInFunctionParamsShouldWork(){
 		ASTNode threetimesthree = parseExpression("3 * 3");
 		assertEquals(parseExpression("funct(3 * 3,3*3)"),
-				new ASTNode(Operator.functionCall, new ASTNode("funct"),
-						new ASTNode(Operator.CommaDelimit, threetimesthree, threetimesthree)));
+				new OperatorASTNode(Operator.functionCall, new ValueASTNode("funct"),
+						new OperatorASTNode(Operator.CommaDelimit, threetimesthree, threetimesthree)));
 	}
 	
 	@Test
 	public void testLongStatement(){
 		ASTNode left = parseExpression("a , b");
 		ASTNode threetimesthree = parseExpression("3 * 3");
-		ASTNode right = new ASTNode(Operator.CommaDelimit, 
-				new ASTNode(Operator.functionCall, new ASTNode("funct"), threetimesthree),
+		ASTNode right = new OperatorASTNode(Operator.CommaDelimit, 
+				new OperatorASTNode(Operator.functionCall, new ValueASTNode("funct"), threetimesthree),
 				threetimesthree);
-		assertEquals(parseExpression("a, b = funct(3 * 3), 3 * 3"), new ASTNode(Operator.Assignment,
+		assertEquals(parseExpression("a, b = funct(3 * 3), 3 * 3"), new OperatorASTNode(Operator.Assignment,
 				left, right));
 	}
 	
 	@Test
 	public void testNegativeNumbersShouldWork(){
-		assertEquals(parseExpression("-3 + 4"), new ASTNode(Operator.Addition, new ASTNode("-3"), new ASTNode("4")));
+		assertEquals(parseExpression("-3 + 4"), new OperatorASTNode(Operator.Addition, new ValueASTNode("-3"), new ValueASTNode("4")));
 	}
 	
 	@Test
 	public void testSubtractingNegativeNumberShouldWork(){
-		assertEquals(parseExpression("3 - -2"), new ASTNode(Operator.Subtraction, new ASTNode("3"), new ASTNode("-2")));
+		assertEquals(parseExpression("3 - -2"), new OperatorASTNode(Operator.Subtraction, new ValueASTNode("3"), new ValueASTNode("-2")));
 	}
 	
 	@Test
 	public void testArrays(){
-		assertEquals(parseExpression("arr[3]"), new ASTNode(Operator.arrayLookup, new ASTNode("arr"), new ASTNode("3")));
+		assertEquals(parseExpression("arr[3]"), new OperatorASTNode(Operator.arrayLookup, new ValueASTNode("arr"), new ValueASTNode("3")));
 	}
 	
 	@Test
 	public void testOperationInArrayAccessors(){
 		ASTNode twoplustwo = parseExpression("2 + 2");
-		assertEquals(parseExpression("arr[2 + 2]"), new ASTNode(Operator.arrayLookup, new ASTNode("arr"), twoplustwo));
+		assertEquals(parseExpression("arr[2 + 2]"), new OperatorASTNode(Operator.arrayLookup, new ValueASTNode("arr"), twoplustwo));
 	}
 	
 	@Test
 	public void testPassingArrayLiteralInArgs(){
 		ASTNode arrLiteral = parseExpression("[2, 3, 4]");
-		assertEquals(parseExpression("func([2,3,4])"), new ASTNode(Operator.functionCall, new ASTNode("func"), arrLiteral));
+		assertEquals(parseExpression("func([2,3,4])"), new OperatorASTNode(Operator.functionCall, new ValueASTNode("func"), arrLiteral));
 	}
 	
 	@Test
 	public void testArrayLiteral(){
-		ASTNode[] arg = {new ASTNode(Operator.CommaDelimit, new ASTNode("1"), new ASTNode("2"))};
-		assertEquals(parseExpression("[1,2]"), new ASTNode(Operator.arrayLiteral, arg));
+		ASTNode[] arg = {new OperatorASTNode(Operator.CommaDelimit, new ValueASTNode("1"), new ValueASTNode("2"))};
+		assertEquals(parseExpression("[1,2]"), new OperatorASTNode(Operator.arrayLiteral, arg));
 	}
 	
 
 	@Test
 	public void testTwoDimensionalArrays(){
-		assertEquals(parseExpression("arr[2][2]"), new ASTNode(Operator.arrayLookup, new ASTNode(Operator.arrayLookup, new ASTNode("arr"), new ASTNode("2")), new ASTNode("2")));
+		assertEquals(parseExpression("arr[2][2]"), new OperatorASTNode(Operator.arrayLookup, new OperatorASTNode(Operator.arrayLookup, new ValueASTNode("arr"), new ValueASTNode("2")), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testArrayAccessorExpressionShouldWork(){
 		ASTNode left = parseExpression("temp[a]");
 		ASTNode arrd = parseExpression("arr[d]");
-		ASTNode right = new ASTNode(Operator.Addition, arrd, new ASTNode("0.9"));
-		assertEquals(parseExpression("temp[a] = arr[d] + 0.9"), new ASTNode(Operator.Assignment, left, right));
+		ASTNode right = new OperatorASTNode(Operator.Addition, arrd, new ValueASTNode("0.9"));
+		assertEquals(parseExpression("temp[a] = arr[d] + 0.9"), new OperatorASTNode(Operator.Assignment, left, right));
 	}
 	
 	@Test
@@ -152,73 +154,73 @@ public class ExpressionParserUnitTest {
 	
 	@Test
 	public void testVariableNamesWithUnderscoresShouldWork(){
-		assertEquals(parseExpression("arr_thing + 2"), new ASTNode(Operator.Addition, new ASTNode("arr_thing"), new ASTNode("2")));
+		assertEquals(parseExpression("arr_thing + 2"), new OperatorASTNode(Operator.Addition, new ValueASTNode("arr_thing"), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testIssueWithWhitespaceFailureCase(){
 		// Probably shouldn't work like this?
 		// I'll allow it... I guess?
-		assertEquals(parseExpression("2 2 +"), new ASTNode(Operator.Addition, new ASTNode("2"), new ASTNode("2")));
+		assertEquals(parseExpression("2 2 +"), new OperatorASTNode(Operator.Addition, new ValueASTNode("2"), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testPossibleTwoDimensionalArrayFailureCase(){
 		// This probably should not work like this....
 		// I could throw some kind of syntax error?
-		assertEquals(parseExpression("arr[2]2[]"), new ASTNode(Operator.arrayLookup, new ASTNode(Operator.arrayLookup, new ASTNode("arr"), new ASTNode("2")), new ASTNode("2")));
+		assertEquals(parseExpression("arr[2]2[]"), new OperatorASTNode(Operator.arrayLookup, new OperatorASTNode(Operator.arrayLookup, new ValueASTNode("arr"), new ValueASTNode("2")), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testDotOperator(){
-		assertEquals(parseExpression("a.b"), new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")));
+		assertEquals(parseExpression("a.b"), new OperatorASTNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")));
 	}
 	
 	@Test
 	public void testDotOperatorShouldNotMixWithDoubles(){
-		assertEquals(parseExpression("123.4"), new ASTNode("123.4"));
+		assertEquals(parseExpression("123.4"), new ValueASTNode("123.4"));
 	}
 	
 	@Test
 	public void testAssignmentOnDotOperator(){
-		assertEquals(parseExpression("a.b = 2"), new ASTNode(Operator.Assignment, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")), new ASTNode("2")));
+		assertEquals(parseExpression("a.b = 2"), new OperatorASTNode(Operator.Assignment, new OperatorASTNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testChainedDotOperators(){
-		assertEquals(parseExpression("a.b.c"), new ASTNode(Operator.DotOperator, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b")), new ASTNode("c")));
+		assertEquals(parseExpression("a.b.c"), new OperatorASTNode(Operator.DotOperator, new OperatorASTNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("c")));
 	}
 	
 	@Test
 	public void testFunctionCallOnDotOperator(){
-		assertEquals(parseExpression("a.b()"), new ASTNode(Operator.functionCall, new ASTNode(Operator.DotOperator, new ASTNode("a"), new ASTNode("b"))));
+		assertEquals(parseExpression("a.b()"), new OperatorASTNode(Operator.functionCall, new OperatorASTNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b"))));
 	}
 	
 	@Test
 	public void testArrayAccessorOnFunctionCall(){
 		ASTNode callFunc = parseExpression("a(2)");
-		assertEquals(parseExpression("a(2)[3]"), new ASTNode(Operator.arrayLookup, callFunc, new ASTNode("3")));
+		assertEquals(parseExpression("a(2)[3]"), new OperatorASTNode(Operator.arrayLookup, callFunc, new ValueASTNode("3")));
 	}
 	
 	@Test
 	public void testArrayAccessorOnDotOperatorAndFunctionCall(){
 		ASTNode dotAndCall = parseExpression("a.b(2)");
-		assertEquals(parseExpression("a.b(2)[3]"), new ASTNode(Operator.arrayLookup, dotAndCall, new ASTNode("3")));
+		assertEquals(parseExpression("a.b(2)[3]"), new OperatorASTNode(Operator.arrayLookup, dotAndCall, new ValueASTNode("3")));
 	}
 	
 	@Test
 	public void testSpaceInString(){
-		assertEquals(parseExpression("\"Hello there\""), new ASTNode("\"Hello there\""));
+		assertEquals(parseExpression("\"Hello there\""), new ValueASTNode("\"Hello there\""));
 	}
 	
 	@Test
 	public void testSpaceInStringInFunctionCall(){
-		assertEquals(parseExpression("print(\"Hello World!\")"), new ASTNode(Operator.functionCall, new ASTNode("print"), new ASTNode("\"Hello World!\"")));
+		assertEquals(parseExpression("print(\"Hello World!\")"), new OperatorASTNode(Operator.functionCall, new ValueASTNode("print"), new ValueASTNode("\"Hello World!\"")));
 	}
 	
 	@Test
 	public void testEscapedCharactersInStrings(){
-		assertEquals(parseExpression("\"Test \\\"\""), new ASTNode("\"Test \"\""));
+		assertEquals(parseExpression("\"Test \\\"\""), new ValueASTNode("\"Test \"\""));
 	}
 	
 

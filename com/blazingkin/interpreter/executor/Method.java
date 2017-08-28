@@ -2,6 +2,8 @@ package com.blazingkin.interpreter.executor;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
+
 public class Method implements RuntimeStackElement {
 	
 	public int UUID = Executor.getUUID();
