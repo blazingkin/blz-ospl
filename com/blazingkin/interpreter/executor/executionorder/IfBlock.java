@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
@@ -17,7 +18,7 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 		if (v.equals(FALSE_VAL) || v.equals(NIL_VAL)){
 			Executor.setLine(Executor.getCurrentBlockEnd());
 		}else{
-			Executor.pushToRuntimeStack(this);
+			RuntimeStack.push(this);
 		}
 		return v;
 	}

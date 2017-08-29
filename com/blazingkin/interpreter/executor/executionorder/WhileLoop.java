@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorSemicolonDelimitedNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
@@ -23,7 +24,7 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 	@Override
 	public Value run(ASTNode[] args) {
 		if (ExpressionExecutor.executeNode(args[0]).equals(TRUE_VAL)){
-			Executor.pushToRuntimeStack(new WhileLoop(args[0]));
+			RuntimeStack.push(new WhileLoop(args[0]));
 			return TRUE_VAL;
 		}else{
 			Executor.setLine(Executor.getCurrentBlockEnd());
@@ -43,7 +44,7 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 			return;
 		}
 		if (ExpressionExecutor.executeNode(term).equals(TRUE_VAL)){
-			Executor.pushToRuntimeStack(this);
+			RuntimeStack.push(this);
 		}
 	}
 

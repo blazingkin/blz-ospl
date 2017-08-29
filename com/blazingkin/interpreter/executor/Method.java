@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 
 public class Method implements RuntimeStackElement {
@@ -65,7 +66,7 @@ public class Method implements RuntimeStackElement {
 		if (!Executor.getCurrentProcess().lineReturns.empty()){
 			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
 		}else{
-			Executor.popStack();	// If there is nothing else in the current process to run, return to the previous process
+			RuntimeStack.pop();	// If there is nothing else in the current process to run, return to the previous process
 		}
 	}
 	

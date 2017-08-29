@@ -1,11 +1,8 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
-import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 
-public abstract class ASTNode implements RuntimeStackElement {
+public abstract class ASTNode {
 	
 	public abstract boolean canCollapse();
 	
@@ -25,15 +22,5 @@ public abstract class ASTNode implements RuntimeStackElement {
 	public abstract String getStoreName();
 	
 	public abstract Operator getOperator();
-
-	@Override
-	public void onBlockStart() {
-		
-	}
-
-	@Override
-	public void onBlockEnd() {
-		
-	}
 	
 }

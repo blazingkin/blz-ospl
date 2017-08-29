@@ -1,17 +1,8 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
-import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.variables.BLZObject;
-import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class ExpressionExecutor {
 	

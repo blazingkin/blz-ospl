@@ -1,3 +1,11 @@
 :main
-	hiya()
+	print("test")
+	call_print()
+	print("done")
+	echo "aftertest"
+	call_print()
+end
+
+:call_print
+	print("called from func")
 end

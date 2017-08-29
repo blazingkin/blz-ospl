@@ -45,7 +45,7 @@ public class ChangeProcess implements InstructionExecutorStringArray {
 			}
 		}
 		Executor.addProcess(p);
-		Executor.executeMethod(Executor.getMethod(args[args.length-1], p.UUID));
+		Executor.executeMethod(Executor.getMethodInCurrentProcess(args[args.length-1]));
 	}
 
 }
