@@ -1,9 +1,10 @@
 :main
-	print("test")
-	call_print()
-	print("done")
-	echo "aftertest"
-	call_print()
+	x = 2
+	if x == 2
+		print("x equals 2")
+	else
+		print("x doesnt equal 2")
+	end
 end
 
 :call_print

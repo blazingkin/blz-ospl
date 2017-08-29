@@ -1,13 +1,54 @@
 package com.blazingkin.interpreter.executor.instruction;
 
-import com.blazingkin.interpreter.executor.data.*;
-import com.blazingkin.interpreter.executor.executionorder.*;
-import com.blazingkin.interpreter.executor.input.*;
+import com.blazingkin.interpreter.executor.data.InitializeObject;
+import com.blazingkin.interpreter.executor.data.MoveData;
+import com.blazingkin.interpreter.executor.data.Peek;
+import com.blazingkin.interpreter.executor.data.Pop;
+import com.blazingkin.interpreter.executor.data.Push;
+import com.blazingkin.interpreter.executor.data.RandomImplementor;
+import com.blazingkin.interpreter.executor.data.Set;
+import com.blazingkin.interpreter.executor.executionorder.Break;
+import com.blazingkin.interpreter.executor.executionorder.ChangeProcess;
+import com.blazingkin.interpreter.executor.executionorder.Continue;
+import com.blazingkin.interpreter.executor.executionorder.Define;
+import com.blazingkin.interpreter.executor.executionorder.Else;
+import com.blazingkin.interpreter.executor.executionorder.End;
+import com.blazingkin.interpreter.executor.executionorder.Exit;
+import com.blazingkin.interpreter.executor.executionorder.ForLoop;
+import com.blazingkin.interpreter.executor.executionorder.IfBlock;
+import com.blazingkin.interpreter.executor.executionorder.JumpReturn;
+import com.blazingkin.interpreter.executor.executionorder.LoopEnd;
+import com.blazingkin.interpreter.executor.executionorder.ReturnProcess;
+import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
+import com.blazingkin.interpreter.executor.executionorder.WhileLoop;
+import com.blazingkin.interpreter.executor.input.FileInput;
+import com.blazingkin.interpreter.executor.input.NumInput;
+import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.listener.Listener;
-import com.blazingkin.interpreter.executor.math.*;
-import com.blazingkin.interpreter.executor.output.*;
-import com.blazingkin.interpreter.executor.string.*;
-import com.blazingkin.interpreter.executor.tensor.*;
+import com.blazingkin.interpreter.executor.math.AddVars;
+import com.blazingkin.interpreter.executor.math.Ceiling;
+import com.blazingkin.interpreter.executor.math.DivideVars;
+import com.blazingkin.interpreter.executor.math.ExponentVars;
+import com.blazingkin.interpreter.executor.math.Floor;
+import com.blazingkin.interpreter.executor.math.Logarithm;
+import com.blazingkin.interpreter.executor.math.LogicalAnd;
+import com.blazingkin.interpreter.executor.math.ModVars;
+import com.blazingkin.interpreter.executor.math.MultiplyVars;
+import com.blazingkin.interpreter.executor.math.Round;
+import com.blazingkin.interpreter.executor.math.SubVars;
+import com.blazingkin.interpreter.executor.math.TrigFunctions;
+import com.blazingkin.interpreter.executor.math.Trigonometry;
+import com.blazingkin.interpreter.executor.math.Unsign;
+import com.blazingkin.interpreter.executor.output.BLZLogging;
+import com.blazingkin.interpreter.executor.output.Echo;
+import com.blazingkin.interpreter.executor.output.FileOutput;
+import com.blazingkin.interpreter.executor.output.SameLineEcho;
+import com.blazingkin.interpreter.executor.string.ConcatenateStrings;
+import com.blazingkin.interpreter.executor.string.Length;
+import com.blazingkin.interpreter.executor.string.Substring;
+import com.blazingkin.interpreter.executor.tensor.GetTensorValue;
+import com.blazingkin.interpreter.executor.tensor.IntTensor;
+import com.blazingkin.interpreter.executor.tensor.SetTensorValue;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
@@ -74,7 +115,8 @@ public enum Instruction {
 	CONTINUE("CONTINUE", "Continue in loop", new Continue()),
 	RETURN("RETURN", "Return value", new ReturnValue()),
 	INSTANTIATE("NEW", "INSTANTIATE OBJECT", new InitializeObject()),
-	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction());
+	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
+	ELSE("ELSE", "ELSE BLOCK", new Else());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

@@ -16,12 +16,13 @@ import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.executor.instruction.LabeledInstruction;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-import in.blazingk.blz.packagemanager.*;
+import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 import in.blazingk.blz.packagemanager.Package;
 
 public class Process implements RuntimeStackElement {
@@ -141,6 +142,7 @@ public class Process implements RuntimeStackElement {
 	
 	private void registerBlocks(){
 		Stack<Integer> blckStack = new Stack<Integer>();
+		HashMap<Integer, HashMap<String, Integer>> labelMap = new HashMap<Integer, HashMap<String, Integer>>();
 		for (int i = 0; i < lines.length; i++){
 			if (lines[i].startsWith(":") || (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof BlockInstruction)){
 				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
@@ -151,8 +153,29 @@ public class Process implements RuntimeStackElement {
 					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
 				}
 				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
+				
+				if (labelMap.containsKey(ba.start)){
+					for (String key : labelMap.get(ba.start).keySet()){
+						int line = labelMap.get(ba.start).get(key);
+						ba.addLabel(key, line);
+						blockArcs.put(line, ba);
+					}
+				}
+				
 				blockArcs.put(ba.start, ba);
 				blockArcs.put(ba.end, ba);
+			}else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof LabeledInstruction){
+				RegisteredLine instruction = getRegisteredLine(i);
+				LabeledInstruction labelInstr = (LabeledInstruction) instruction.instr.executor;
+				String label = labelInstr.getLabel(instruction.getArgs());
+				if (blckStack.empty()){
+					Interpreter.throwError("Unexpected label "+label+" on line "+(i+1));
+				}
+				int startLine = blckStack.peek();
+				if (!labelMap.containsKey(startLine)){
+					labelMap.put(startLine, new HashMap<String, Integer>());
+				}
+				labelMap.get(startLine).put(label, i+1);
 			}
 		}
 		if (!blckStack.empty()){
@@ -243,6 +266,31 @@ public class Process implements RuntimeStackElement {
 		public BlockArc(int s, int e){
 			start = s;
 			end = e;
+		}
+		
+		public HashMap<String, Integer> labelMap;
+		
+		public void addLabel(String name, int line){
+			System.out.println("registered label "+name+" on line "+line);
+			if (labelMap == null){
+				labelMap = new HashMap<String, Integer>();
+			}
+			labelMap.put(name, line);
+		}
+		
+		public boolean hasLabel(String name){
+			return name.equals("start") || name.equals("end") || (labelMap != null && labelMap.containsKey(name));
+		}
+		
+		public int getBlockLine(String name) throws Exception{
+			if (labelMap != null && labelMap.containsKey(name)){
+				return labelMap.get(name);
+			}else if (name.equals("start")){
+				return start;
+			}else if(name.equals("end")){
+				return end;
+			}
+			throw new Exception("Could not find label "+name+" for block starting on line "+start);
 		}
 	}
 	

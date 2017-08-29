@@ -40,7 +40,7 @@ public class RuntimeStack {
 	public static Value pop(){
 		RuntimeStackElement se = runtimeStack.pop();
 		if (se instanceof RegisteredLine){
-			
+			return ((RegisteredLine) se).run();
 		}else if (se instanceof LoopWrapper){
 			loopStack.pop();
 		}else if (se instanceof Method){
