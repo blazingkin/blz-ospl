@@ -10,10 +10,7 @@ import java.util.Stack;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionType;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
-import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
@@ -241,9 +238,6 @@ public class Executor {
 	}
 	
 	//Lots of getters / setters below this point
-	public static boolean doesMethodExist(String name){
-		return (InstructionType.getInstructionType(name) != Instruction.INVALID) || LambdaRegistrar.isRegisteredLambdaExpression(name);
-	}
 	
 	public static int getUUID(){
 		int id;
@@ -314,14 +308,14 @@ public class Executor {
 		Executor.eventsToBeHandled = eventsToBeHandled;
 	}
 	
+	static int lineNum = -1;
 	// Sets line within the current process
 	public static void setLine(int num){
-		RuntimeStack.processLineStack.pop();
-		RuntimeStack.processLineStack.push(num);
+		lineNum = num;
 	}
 	
 	public static int getLine(){
-		return RuntimeStack.processLineStack.peek();
+		return lineNum;
 	}
 	
 	public static Stack<Process> getRunningProcesses(){

@@ -32,7 +32,7 @@ public class RuntimeStack {
 		}else if (se instanceof Process){
 			processStack.push((Process) se);
 			contextStack.push(new Context());
-			processLineStack.push(0);
+			processLineStack.push(Executor.getLine());
 		}
 		se.onBlockStart();
 	}
@@ -49,7 +49,7 @@ public class RuntimeStack {
 		}else if (se instanceof Process){
 			processStack.pop();
 			Variable.killContext(contextStack.pop());
-			processLineStack.pop();
+			Executor.setLine(processLineStack.pop());
 		}
 		se.onBlockEnd();
 		if (runtimeStack.empty()){
