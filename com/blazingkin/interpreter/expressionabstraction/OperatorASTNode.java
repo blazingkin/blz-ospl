@@ -141,6 +141,8 @@ public abstract class OperatorASTNode extends ASTNode {
 			return new NotEqualNode(args);
 		case Subtraction:
 			return new SubtractionNode(args);
+		case ExpressionDelimit:
+			return new ExpressionDelimitNode(args);
 		default:
 			return null;
 		}
