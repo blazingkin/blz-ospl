@@ -271,7 +271,6 @@ public class Process implements RuntimeStackElement {
 		public HashMap<String, Integer> labelMap;
 		
 		public void addLabel(String name, int line){
-			System.out.println("registered label "+name+" on line "+line);
 			if (labelMap == null){
 				labelMap = new HashMap<String, Integer>();
 			}
