@@ -196,13 +196,13 @@ public class ExpressionParser {
 		Operator op = operatorStack.pop();
 		ASTNode arg2 = operandStack.pop();
 		ASTNode arg1 = operandStack.pop();
-		operandStack.push(new OperatorASTNode(op, arg1, arg2));
+		operandStack.push(OperatorASTNode.newNode(op, arg1, arg2));
 	}
 	
 	public static void pushUnaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack){
 		Operator op = operatorStack.pop();
 		ASTNode arg = operandStack.pop();
-		operandStack.push(new OperatorASTNode(op, arg));
+		operandStack.push(OperatorASTNode.newNode(op, arg));
 	}
 	
 	private static Operator checkTopExpressionOperator(Stack<ASTNode> stack){
