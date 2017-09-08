@@ -39,7 +39,7 @@ public class Value {
 		parent = par;
 	}
 	
-	public String toString(){
+	public String typedToString(){
 		return "<"+type+" "+value+">";
 	}
 	
@@ -47,15 +47,15 @@ public class Value {
 		System.out.println(value);
 	}
 	
-	public String getPrintValue(){
+	public String toString(){
 		if (value instanceof Value[]){
 			String buildingString = "[";
 			Value[] arr = (Value[]) value;
 			for (int i = 0; i < arr.length-1; i++){
-				buildingString += arr[i].getPrintValue() + ", ";
+				buildingString += arr[i].toString() + ", ";
 			}
 			if (arr.length != 0){
-				buildingString += arr[arr.length-1].getPrintValue();
+				buildingString += arr[arr.length-1].toString();
 			}
 			return buildingString + "]";
 		}else{
@@ -121,6 +121,10 @@ public class Value {
 	
 	public static Value obj(BLZObject ob){
 		return new Value(VariableTypes.Object, ob);
+	}
+	
+	public static Value string(String str){
+		return new Value(VariableTypes.String, str);
 	}
 	
 }

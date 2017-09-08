@@ -14,7 +14,7 @@ public class ApproximateComparisonNode extends BinaryNode {
 	public ApproximateComparisonNode(ASTNode[] args) {
 		super(Operator.ApproximateComparison, args);
 		if (args.length != 2){
-			Interpreter.throwError("Greater Than Or Equal did not have 2 arguments");
+			Interpreter.throwError("Approximate Comparison did not have 2 arguments");
 		}
 	}
 	
