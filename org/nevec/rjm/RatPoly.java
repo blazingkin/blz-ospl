@@ -132,7 +132,8 @@ class RatPoly
         /** Create a copy of this.
         * @since 2008-11-07
         */
-        public RatPoly clone()
+        @SuppressWarnings("unchecked")
+		public RatPoly clone()
         {
                 RatPoly clo = new RatPoly() ;
                 clo.a = (Vector<Rational>)a.clone() ;

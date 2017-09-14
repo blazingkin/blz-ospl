@@ -160,5 +160,11 @@ public class UnitTestUtil {
 	public static Value getDoubleValue(double v){
 		return new Value(VariableTypes.Double, v);
 	}
+
+	public static void assertNil(Value v) {
+		org.junit.Assert.assertEquals(VariableTypes.Nil, v.type);
+		org.junit.Assert.assertNull(v.value);
+		assert v.type.equals(VariableTypes.Nil);
+	}
 	
 }

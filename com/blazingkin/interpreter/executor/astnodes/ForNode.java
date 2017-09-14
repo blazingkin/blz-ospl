@@ -31,7 +31,7 @@ public class ForNode extends ASTNode {
 	public Value execute() {
 		Value cache = NULL_VAL;
 		init.execute();
-		while (term.equals(TRUE_VAL)){
+		while (term.execute().equals(TRUE_VAL)){
 			cache = block.execute();
 			loop.execute();
 		}

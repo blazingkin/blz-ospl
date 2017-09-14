@@ -43,7 +43,8 @@ public class BigIntegerPoly implements Cloneable
         /** Ctor with a list of coefficients.
         * @param c The coefficients a0, a1, a2 etc in a0+a1*x+a2*x^2+...
         */
-        public BigIntegerPoly(final Vector<BigInteger> c)
+        @SuppressWarnings("unchecked")
+		public BigIntegerPoly(final Vector<BigInteger> c)
         {
                 a = (Vector<BigInteger>)c.clone() ;
                 simplify() ;

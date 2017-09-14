@@ -15,7 +15,7 @@ public class ArrayLookupNode extends BinaryNode {
 	public ArrayLookupNode(ASTNode[] args) {
 		super(Operator.arrayLookup, args);
 		if (args.length != 2){
-			Interpreter.throwError("Array Lookup did not have 2 arguments");
+			Interpreter.throwError("Array Lookup did not have 2 arguments.");
 		}
 	}
 	
@@ -24,7 +24,7 @@ public class ArrayLookupNode extends BinaryNode {
 		if (args[0].getStoreName() == null){
 			Value arr = args[0].execute();
 			if (arr.type != VariableTypes.Array){
-				Interpreter.throwError("Did not know how to access "+args[0]+" as an array");
+				Interpreter.throwError("Did not know how to access "+args[0]+" as an array.");
 			}
 			BigInteger index = Variable.getIntValue(args[1].execute());
 			return Variable.getValueOfArray(arr, index);

@@ -75,10 +75,6 @@ public class ExpressionExecutorUnitTest {
 		assertValEqual("d", Value.integer(30));
 		assertValEqual("a", Value.integer(5));
 		assertValEqual("c", Value.integer(10));
-		parseExpression("arr[d] = 17.3");
-		assertValEqual("arr[30]", Value.doub(17.3d));
-		parseExpression("temp[a] = arr[d] + 0.9");
-		assertValEqual("temp[5]", Value.doub(18.2d));
 		Variable.clearVariables();
 	}
 	
