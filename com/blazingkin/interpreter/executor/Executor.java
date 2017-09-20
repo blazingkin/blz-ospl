@@ -170,7 +170,7 @@ public class Executor {
 			
 	}
 	
-	public static void run(ArrayList<String> code, List<String> args, BlzEventHandler handler) throws Exception{
+	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws Exception{
 		for (int i = 0; i < args.size(); i+=2){
 			String s = args.get(i);
 			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
@@ -179,13 +179,11 @@ public class Executor {
 		}
 		RuntimeStack.push(new Process(code));
 		RuntimeStack.processLineStack.push(-1);
-		if (startingMethod != null){
-			if (!(Method.contains(getMethods(), startingMethod) == null)){
-				RuntimeStack.push(Method.contains(getMethods(), startingMethod));
-				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
-			}
-		}
 		setEventHandler(handler);
+		Method startMethod = getMethodInCurrentProcess(startingMethod);
+		if (startMethod != null){
+			executeMethod(startMethod);
+		}
 		codeLoop();
 	}
 	

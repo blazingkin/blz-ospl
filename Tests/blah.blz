@@ -1,12 +1,10 @@
 :main
-	x = 2
-	if x == 2
-		print("x equals 2")
-	else
-		print("x doesnt equal 2")
-	end
+	print(fact(number_input()))
 end
 
-:call_print
-	print("called from func")
+:fact(n)
+	if n < 2
+		return 1
+	end
+	return n * fact(n - 1)
 end
