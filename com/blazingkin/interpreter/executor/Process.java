@@ -71,17 +71,13 @@ public class Process implements RuntimeStackElement {
 		setup();
 	}
 	
-	
-	public Process(ArrayList<String> code){
-		this((String[]) code.toArray());
-	}
+
 	
 	public Process(String[] code){
 		lines = new String[code.length];
 		for (int i = 0; i < code.length; i++){
-			lines[i] = code[i];
+			lines[i] = code[i].split("(?<!\\\\)#")[0].trim();	// Ignore extra whitespace and comments;
 		}
-
 		if (lines.length == 0){
 			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}

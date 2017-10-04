@@ -501,7 +501,7 @@ public class Variable {
 	
 	public static Value getValueOfArray(Value value, BigInteger index) {
 		if (value.type != VariableTypes.Array){
-			Interpreter.throwError("Tried to access "+value+" as an array, but is not one");
+			Interpreter.throwError("Tried to access "+value+" as an array, but it is not one.");
 		}
 		if (value.value instanceof Value[]){
 			Value[] arr = (Value[]) value.value;

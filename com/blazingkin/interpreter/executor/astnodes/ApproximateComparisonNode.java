@@ -14,7 +14,7 @@ public class ApproximateComparisonNode extends BinaryNode {
 	public ApproximateComparisonNode(ASTNode[] args) {
 		super(Operator.ApproximateComparison, args);
 		if (args.length != 2){
-			Interpreter.throwError("Approximate Comparison did not have 2 arguments");
+			Interpreter.throwError("Approximate Comparison did not have 2 arguments.");
 		}
 	}
 	
@@ -23,7 +23,7 @@ public class ApproximateComparisonNode extends BinaryNode {
 		Value v1 = args[0].execute();
 		Value v2 = args[1].execute();
 		if (!Variable.isDecimalValue(v1) || !Variable.isDecimalValue(v2)){
-			Interpreter.throwError("One of "+v1+" or "+v2+" is not a decimal value");
+			Interpreter.throwError("One of "+v1+" or "+v2+" is not a decimal value.");
 		}
 		BigDecimal d1 = Variable.getDoubleVal(v1);
 		BigDecimal d2 = Variable.getDoubleVal(v2);

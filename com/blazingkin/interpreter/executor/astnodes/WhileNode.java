@@ -28,7 +28,7 @@ public class WhileNode extends ASTNode {
 	@Override
 	public Value execute() {
 		Value cache = NULL_VAL;
-		while (term.equals(TRUE_VAL)){
+		while (term.execute().equals(TRUE_VAL)){
 			cache = block.execute();
 		}
 		return cache;

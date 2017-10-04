@@ -10,10 +10,12 @@ public class Value {
 	public Object value = null;
 	public boolean isGlobal = false;
 	public Method parent = null;
+	
 	public Value(VariableTypes t, Object val){	//This stores the value and the type of value that it is
 		type = t;
 		value = val;
 	}
+	
 	public Value(VariableTypes t, Object val, Method par, boolean global){
 		if (val == null){
 			type = VariableTypes.Nil;
@@ -125,6 +127,10 @@ public class Value {
 	
 	public static Value string(String str){
 		return new Value(VariableTypes.String, str);
+	}
+	
+	public static Value nil() {
+		return new Value(VariableTypes.Nil, null);
 	}
 	
 }
