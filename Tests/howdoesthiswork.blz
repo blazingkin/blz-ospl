@@ -1,0 +1,8 @@
+:main
+	a = get_two(), get_two()
+	print(a)
+end
+
+:get_two()
+	return 2
+end

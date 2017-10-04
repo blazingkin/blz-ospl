@@ -26,12 +26,17 @@ public class Method implements RuntimeStackElement {
 			functionName = functionName.replace("^", "");
 		}
 		if (ln.contains("(") && ln.contains(")")){
-			takesVariables = true;
-			String vars = ln.split("\\(")[ln.split("\\(").length-1].split("\\)")[0];
-			String vNames[] = vars.split(",");
-			variables = new String[vNames.length];
-			for (int i = 0; i < vNames.length; i++){
-				variables[i] = vNames[i].trim();
+			String varSplit[] = ln.split("\\(|\\)");
+			if (varSplit.length < 2){
+				functionName = functionName.replaceAll("\\(|\\)", "");
+			}else{
+				takesVariables = true;
+				String vars = varSplit[varSplit.length - 1];
+				String vNames[] = vars.split(",");
+				variables = new String[vNames.length];
+				for (int i = 0; i < vNames.length; i++){
+					variables[i] = vNames[i].trim();
+				}
 			}
 		}
 	}

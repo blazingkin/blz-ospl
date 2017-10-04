@@ -1,12 +1,15 @@
 :main
 	x = 2
+	call_print()
 	if x == 2
 		print("x equals 2")
 	else
 		print("x doesnt equal 2")
 	end
+	call_print()
 end
 
-:call_print
+:call_print()
+	print(call_print)
 	print("called from func")
 end

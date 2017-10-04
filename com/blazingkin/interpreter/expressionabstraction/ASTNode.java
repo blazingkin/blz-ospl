@@ -19,6 +19,7 @@ public abstract class ASTNode {
 	
 	public abstract Value execute();
 	
+	// This is similar to the lvalue in c
 	public abstract String getStoreName();
 	
 	public abstract Operator getOperator();
