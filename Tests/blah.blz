@@ -1,10 +1,5 @@
 :main
-	print(fact(number_input()))
-end
-
-:fact(n)
-	if n < 2
-		return 1
-	end
-	return n * fact(n - 1)
+	a = []
+	a[5] = "hi"
+	print(a)
 end

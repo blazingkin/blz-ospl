@@ -516,8 +516,53 @@ public class Variable {
 		setValueOfArray(key,index,value,Executor.getCurrentContext());
 	}
 	
-	public static void setValueOfArray(String key,BigInteger index, Value value, Context con){
-		getArray(key, con).put(index, value);
+	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con){
+		Value arr = getValue(arrayName, con);
+		if (arr.type != VariableTypes.Array){
+			Interpreter.throwError(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
+		}
+		Value[] VArr = (Value[]) arr.value;
+		if (VArr.length <= index.intValue()){
+			Value[] NArr = new Value[index.intValue() + 1];
+			for (int i = 0; i <= index.intValue(); i++){
+				if (i < VArr.length){
+					NArr[i] = VArr[i];
+				}else{
+					NArr[i] = Value.nil();
+				}
+			}
+			
+			NArr[index.intValue()] = value;
+			setValue(arrayName, new Value(VariableTypes.Array, NArr));
+		}else{
+			VArr[index.intValue()] = value;
+		}
+	}
+	
+	public static void setValueOfHash(String hashName, Value key, Value newVal, Context con){
+		if (!con.variables.containsKey(hashName)){
+			HashMap<Value, Value> newHash = new HashMap<Value, Value>();
+			newHash.put(key, newVal);
+			setValue(hashName, new Value(VariableTypes.Hash, newHash), con);
+			return;
+		}
+		Value hash = getValue(hashName, con);
+		if (hash.type != VariableTypes.Hash){
+			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		hsh.put(key, newVal);
+	}
+	
+	public static Value getValueOfHash(String hashName, Value key, Context con){
+		Value hash = getValue(hashName, con);
+		if (hash.type != VariableTypes.Hash){
+			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		return hsh.get(key);
 	}
 	
 	public static boolean isValInt(Value v){
@@ -590,6 +635,13 @@ public class Variable {
 	
 	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base)));
+	}
+	
+	public static VariableTypes typeOf(String name, Context con){
+		if (!con.variables.containsKey(name)){
+			return VariableTypes.Nil;
+		}
+		return getValue(name, con).type;
 	}
 
 

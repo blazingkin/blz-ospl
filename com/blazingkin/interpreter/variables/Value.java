@@ -60,9 +60,10 @@ public class Value {
 				buildingString += arr[arr.length-1].toString();
 			}
 			return buildingString + "]";
-		}else{
+		}else if (value != null){
 			return value.toString();
 		}
+		return "";
 	}
 	
 	public boolean equals(Object other){
@@ -131,6 +132,11 @@ public class Value {
 	
 	public static Value nil() {
 		return new Value(VariableTypes.Nil, null);
+	}
+	
+	@Override
+	public int hashCode(){
+		return value.hashCode();
 	}
 	
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.astnodes.ArrayLookupNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Value;
@@ -58,6 +59,20 @@ public class ArrayLookupNodeUnitTest {
 		ASTNode[] args = {new ValueASTNode(Value.arr(testArray)), new ValueASTNode(Value.integer(3)) };
 		ArrayLookupNode n = new ArrayLookupNode(args);
 		UnitTestUtil.assertEqual(Value.bool(false), n.execute());
+	}
+	
+	@Test
+	public void shouldLookupCharacterInString(){
+		UnitTestUtil.assertEqual(Value.string("b"), ExpressionExecutor.parseExpression("\"abc\"[1]"));
+	}
+	
+	@Test
+	public void shouldLookupCharacterInStringSetInVariable(){
+		ExpressionExecutor.parseExpression("a = \"lmno\"");
+		UnitTestUtil.assertEqual(Value.string("l"), ExpressionExecutor.parseExpression("a[0]"));
+		UnitTestUtil.assertEqual(Value.string("m"), ExpressionExecutor.parseExpression("a[1]"));
+		UnitTestUtil.assertEqual(Value.string("n"), ExpressionExecutor.parseExpression("a[2]"));
+		UnitTestUtil.assertEqual(Value.string("o"), ExpressionExecutor.parseExpression("a[3]"));
 	}
 
 }

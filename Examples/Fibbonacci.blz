@@ -1,6 +1,6 @@
 :main
-	echo "How many fibbonacci numbers do you want?"
-	nin iter
+	print("How many fibbonacci numbers do you want?")
+	iter = number_input()
 	a = [1,1]
 	for i = 2; i < iter; i++
 		a[i] = a[i - 1] + a[i - 2]
