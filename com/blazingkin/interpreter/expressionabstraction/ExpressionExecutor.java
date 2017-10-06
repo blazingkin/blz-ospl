@@ -20,6 +20,9 @@ public class ExpressionExecutor {
 	}
 	
 	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root){
+		if (root == null){
+			return new ArrayList<Value>();
+		}
 		if (root.getOperator() == Operator.CommaDelimit){
 			OperatorASTNode oroot = (OperatorASTNode) root;
 			ArrayList<Value> first = extractCommaDelimitsHelper(oroot.args[0]);

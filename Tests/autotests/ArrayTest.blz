@@ -1,3 +1,4 @@
+arr = []
 for i=0; i < 20; i = i + 1
 	arr[i] = i
 end

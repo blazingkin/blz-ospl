@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.Stack;
 
+import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {
@@ -106,6 +107,13 @@ public class ExpressionParser {
 					if (!building.isEmpty()){
 						operandStack.push(new ValueASTNode(building));
 						building = "";
+					}else{
+						if (operatorStack.peek() == Operator.arrayLiteral){
+							// For empty arrays
+							// i.e. a = []
+							operandStack.push(OperatorASTNode.newNode(operatorStack.pop(), (ASTNode)null));
+							break;
+						}
 					}
 					while (operatorStack.peek() != Operator.arrayLookup && operatorStack.peek() != Operator.arrayLiteral){
 						combineBinaryExpression(operatorStack, operandStack);
