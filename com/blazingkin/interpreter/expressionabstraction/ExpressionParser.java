@@ -21,7 +21,7 @@ public class ExpressionParser {
 		String building = "";
 		boolean inQuotes = false;
 		for (int i = 0; i < lne.length; i++){
-			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}')){
+			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
 				building += lne[i];
 			}else if (Operator.symbols.contains(""+lne[i]) && (lne[i] != '.' || !Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins

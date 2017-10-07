@@ -223,5 +223,10 @@ public class ExpressionParserUnitTest {
 		assertEquals(parseExpression("\"Test \\\"\""), new ValueASTNode("\"Test \"\""));
 	}
 	
+	@Test
+	public void testOperandCharactersInStrings(){
+		assertEquals(parseExpression("\"Test-\""), new ValueASTNode("\"Test-\""));
+	}
+	
 
 }

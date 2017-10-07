@@ -1,12 +1,12 @@
 :main
-	echo "What number would you like the factorial of?"
-	nin input
+	print("What number would you like the factorial of?")
+	input = number_input()
 	fact = fact(input)
-	echo fact
+	print(fact)
 end
 
 :fact(num)
-	if num == 0
+	if num <= 1
 		return 1
 	end
 	return num * fact(num - 1)

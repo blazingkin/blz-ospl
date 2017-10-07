@@ -6,9 +6,9 @@
 		a[i] = a[i - 1] + a[i - 2]
 	end
 
-	echo "Printing fibbonacci numbers 1-" iter
+	print("Printing fibbonacci numbers 1-" + iter)
 
 	for i = 0; i < iter; i++
-		echo a[i]
+		print(a[i])
 	end
 end

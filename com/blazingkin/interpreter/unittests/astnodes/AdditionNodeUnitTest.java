@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.astnodes.AdditionNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Value;
@@ -95,6 +96,15 @@ public class AdditionNodeUnitTest {
 		AdditionNode add = new AdditionNode(args);
 		UnitTestUtil.assertEqual(Value.string("312"), add.execute());
 		UnitTestUtil.assertNoErrors();
+	}
+	
+	@Test
+	public void shouldAddSeveralThings(){
+		ExpressionExecutor.parseExpression("x = 1");
+		ExpressionExecutor.parseExpression("y = {e}");
+		ExpressionExecutor.parseExpression("z = {pi}");
+		UnitTestUtil.assertEqual(Value.string("x = 1, y = 2.718281828459045, z = 3.141592653589793"), 
+				ExpressionExecutor.parseExpression("\"x = \" + x + \", y = \" + y + \", z = \" + z"));
 	}
 	
 }

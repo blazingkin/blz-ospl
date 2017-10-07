@@ -1,10 +1,10 @@
 :main
 	len = 0
 	numon = 2
-	echo "How many primes do you want?"
-	nin count
-	
+	print("How many primes do you want?")
+	count = number_input()
 	start_time = {system.time.currenttimemillis}
+	
 	while len < count
 		flag = false
 		for i = 0; i < len; i = i + 1
@@ -25,10 +25,10 @@
 	# Loop through and print primes
 	for i = 0; i < count; i = i + 1
 		off = i + 1
-		echo off "th prime: " primes[i]
+		print(off + "th prime: " + primes[i])
 	end
 	
 	time = (end_time - start_time) / 1000
-	echo "Took " time " seconds"
+	print("Took " + time + " seconds")
 		
 end

@@ -17,7 +17,7 @@ public class AdditionNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(){
+	public Value execute(){ 
 		return Variable.addValues(args[0].execute(), args[1].execute());
 	}
 

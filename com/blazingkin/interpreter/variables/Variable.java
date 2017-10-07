@@ -88,7 +88,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, getIntValue(v1).add(getIntValue(v2)));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
-				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
+				(v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double)){
 			return new Value(VariableTypes.Double, getDoubleVal(v1).add(getDoubleVal(v2)));
 		}
 		if (isValRational(v1) && isValRational(v2)){
