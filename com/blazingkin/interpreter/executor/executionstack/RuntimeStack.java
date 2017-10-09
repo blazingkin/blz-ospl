@@ -9,6 +9,7 @@ import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 import com.blazingkin.interpreter.executor.Process;
 
 public class RuntimeStack {
@@ -44,8 +45,10 @@ public class RuntimeStack {
 		}else if (se instanceof LoopWrapper){
 			loopStack.pop();
 		}else if (se instanceof Method){
-			methodStack.pop();
+			Method m = methodStack.pop();
 			Variable.killContext(contextStack.pop());
+			se.onBlockEnd();
+			return new Value(VariableTypes.Method, m);
 		}else if (se instanceof Process){
 			processStack.pop();
 			Variable.killContext(contextStack.pop());

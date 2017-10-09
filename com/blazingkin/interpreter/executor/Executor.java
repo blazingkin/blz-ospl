@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
@@ -360,6 +361,10 @@ public class Executor {
 	
 	public static int getCurrentBlockStart(){
 		return getCurrentProcess().blockArcs.get(getLine()).start;
+	}
+	
+	public static BlockArc getCurrentBlock(){
+		return getCurrentProcess().blockArcs.get(getLine());
 	}
 
 	public static boolean isBreakMode() {

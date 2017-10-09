@@ -14,6 +14,7 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
@@ -419,6 +420,8 @@ public class Variable {
 			}
 			stackString = stackString.trim();
 			return new Value(VariableTypes.String, stackString);
+		case runtimeStack:
+			return Value.string(RuntimeStack.runtimeStack.toString());
 		case lineReturns:
 			if (Executor.getCurrentProcess() == null){
 				return Value.integer(-1);
@@ -426,7 +429,7 @@ public class Variable {
 			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.3");
+			return new Value(VariableTypes.String, "2.4");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");

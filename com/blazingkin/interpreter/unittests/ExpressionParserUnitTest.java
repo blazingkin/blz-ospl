@@ -143,14 +143,11 @@ public class ExpressionParserUnitTest {
 		assertEquals(parseExpression("a-2"), parseExpression("a - 2"));
 	}
 	
-	/*
-	 * TODO fix failing test
 	@Test
 	public void testSubtractionInArrayAccessors(){
 		ASTNode inner = parseExpression("a - 2");
-		assertEquals(parseExpression("arr[a-2]"), new ASTNode(Operator.arrayLookup, new ASTNode("arr"), inner));
+		assertEquals(parseExpression("arr[a - 2]"), OperatorASTNode.newNode(Operator.arrayLookup, new ValueASTNode("arr"), inner));
 	}
-	*/
 	
 	@Test
 	public void testVariableNamesWithUnderscoresShouldWork(){

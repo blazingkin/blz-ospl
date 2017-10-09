@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.unittests.astnodes.AdditionNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.ApproximateComparisonNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLiteralNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLookupNodeUnitTest;
+import com.blazingkin.interpreter.unittests.astnodes.AssignmentNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 
 // This is not scalable.... TODO Find a better way
@@ -16,7 +17,9 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	ApproximateComparisonNodeUnitTest.class,
 	ArrayLiteralNodeUnitTest.class,
 	ArrayLookupNodeUnitTest.class,
+	AssignmentNodeUnitTest.class,
 	WhileNodeUnitTest.class,
+	InstructionExecutorStringArrayTest.class,
 	ExecutorUnitTest.class,
 	ExpressionExecutorUnitTest.class,
 	ExpressionParserUnitTest.class,

@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
@@ -16,7 +17,18 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 	
 	public Value run(Value v) {
 		if (v.equals(FALSE_VAL) || v.equals(NIL_VAL)){
-			Executor.setLine(Executor.getCurrentBlockEnd());
+			BlockArc currentArc = Executor.getCurrentBlock();
+			if (currentArc.hasLabel("else")){
+				try{
+					RuntimeStack.push(this);
+					Executor.setLine(currentArc.getBlockLine("else"));
+				}catch(Exception e){
+					System.out.println("Oh god, you broke something really badly");
+					Interpreter.throwError("Like this branch should not be reachable");
+				}
+			}else{
+				Executor.setLine(currentArc.end);
+			}
 		}else{
 			RuntimeStack.push(this);
 		}
@@ -155,7 +167,7 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 
 	@Override
 	public void onBlockStart() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
