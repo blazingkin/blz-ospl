@@ -1,0 +1,11 @@
+:main
+	arr = []
+	i = 0
+	num = number_input()
+	while num > 0
+		arr[i] = num
+		i++
+		num = number_input()
+	end
+	print(sort(arr))
+end

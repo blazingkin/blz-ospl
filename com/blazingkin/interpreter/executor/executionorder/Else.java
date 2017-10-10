@@ -15,6 +15,7 @@ public class Else implements InstructionExecutor, LabeledInstruction {
 
 	@Override
 	public Value run(String line) {
+		// We want to jump to the end, not to after the block
 		Executor.setLine(Executor.getCurrentBlockEnd() - 1);
 		return Value.nil();
 	}

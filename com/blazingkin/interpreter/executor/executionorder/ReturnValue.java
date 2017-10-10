@@ -15,6 +15,7 @@ public class ReturnValue implements InstructionExecutorValue {
 		while (elem == null || elem.type != VariableTypes.Method){
 			elem = RuntimeStack.pop();
 		}
+		Executor.setBreakMode(false);
 		return v;
 	}
 
