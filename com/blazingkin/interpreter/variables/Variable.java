@@ -14,6 +14,7 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
@@ -88,7 +89,7 @@ public class Variable {
 			return new Value(VariableTypes.Integer, getIntValue(v1).add(getIntValue(v2)));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
-				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
+				(v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double)){
 			return new Value(VariableTypes.Double, getDoubleVal(v1).add(getDoubleVal(v2)));
 		}
 		if (isValRational(v1) && isValRational(v2)){
@@ -98,9 +99,9 @@ public class Variable {
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
-		if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
-			String s1 = (String) v1.value;
-			String s2 = (String) v2.value;
+		if (v1.type == VariableTypes.String || v2.type == VariableTypes.String){
+			String s1 = v1.toString();
+			String s2 = v2.toString();
 			return new Value(VariableTypes.String, s1+s2);
 		}
 		Interpreter.throwError("Failed Adding Variables "+v1.value+" and "+v2.value);
@@ -419,6 +420,8 @@ public class Variable {
 			}
 			stackString = stackString.trim();
 			return new Value(VariableTypes.String, stackString);
+		case runtimeStack:
+			return Value.string(RuntimeStack.runtimeStack.toString());
 		case lineReturns:
 			if (Executor.getCurrentProcess() == null){
 				return Value.integer(-1);
@@ -426,7 +429,7 @@ public class Variable {
 			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.3");
+			return new Value(VariableTypes.String, "2.4");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
@@ -501,7 +504,7 @@ public class Variable {
 	
 	public static Value getValueOfArray(Value value, BigInteger index) {
 		if (value.type != VariableTypes.Array){
-			Interpreter.throwError("Tried to access "+value+" as an array, but is not one");
+			Interpreter.throwError("Tried to access "+value+" as an array, but it is not one.");
 		}
 		if (value.value instanceof Value[]){
 			Value[] arr = (Value[]) value.value;
@@ -516,8 +519,53 @@ public class Variable {
 		setValueOfArray(key,index,value,Executor.getCurrentContext());
 	}
 	
-	public static void setValueOfArray(String key,BigInteger index, Value value, Context con){
-		getArray(key, con).put(index, value);
+	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con){
+		Value arr = getValue(arrayName, con);
+		if (arr.type != VariableTypes.Array){
+			Interpreter.throwError(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
+		}
+		Value[] VArr = (Value[]) arr.value;
+		if (VArr.length <= index.intValue()){
+			Value[] NArr = new Value[index.intValue() + 1];
+			for (int i = 0; i <= index.intValue(); i++){
+				if (i < VArr.length){
+					NArr[i] = VArr[i];
+				}else{
+					NArr[i] = Value.nil();
+				}
+			}
+			
+			NArr[index.intValue()] = value;
+			setValue(arrayName, new Value(VariableTypes.Array, NArr));
+		}else{
+			VArr[index.intValue()] = value;
+		}
+	}
+	
+	public static void setValueOfHash(String hashName, Value key, Value newVal, Context con){
+		if (!con.variables.containsKey(hashName)){
+			HashMap<Value, Value> newHash = new HashMap<Value, Value>();
+			newHash.put(key, newVal);
+			setValue(hashName, new Value(VariableTypes.Hash, newHash), con);
+			return;
+		}
+		Value hash = getValue(hashName, con);
+		if (hash.type != VariableTypes.Hash){
+			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		hsh.put(key, newVal);
+	}
+	
+	public static Value getValueOfHash(String hashName, Value key, Context con){
+		Value hash = getValue(hashName, con);
+		if (hash.type != VariableTypes.Hash){
+			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		return hsh.get(key);
 	}
 	
 	public static boolean isValInt(Value v){
@@ -590,6 +638,13 @@ public class Variable {
 	
 	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base)));
+	}
+	
+	public static VariableTypes typeOf(String name, Context con){
+		if (!con.variables.containsKey(name)){
+			return VariableTypes.Nil;
+		}
+		return getValue(name, con).type;
 	}
 
 

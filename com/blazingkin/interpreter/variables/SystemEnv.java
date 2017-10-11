@@ -31,6 +31,7 @@ public enum SystemEnv {
 	nil("blz.nil", false),
 	context("blz.context.id", true),
 	methodStack("blz.method.stack", true),
+	runtimeStack("blz.runtime.stack", true),
 	
 	
 	//text special characters

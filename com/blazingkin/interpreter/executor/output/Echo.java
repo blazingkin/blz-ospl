@@ -15,7 +15,7 @@ public class Echo implements InstructionExecutorStringArray, LambdaFunction {
 	public void run(String[] args) {
 		String out = "";
 		for (int i = 0; i < args.length; i++){
-				out += Variable.getValue(args[i]).getPrintValue();
+				out += Variable.getValue(args[i]).toString();
 		}
 		out += "\n";
 		Executor.getEventHandler().print(out);
@@ -25,7 +25,7 @@ public class Echo implements InstructionExecutorStringArray, LambdaFunction {
 	public Value evaluate(String[] args) {
 		String out = "";
 		for (int i = 0; i < args.length; i++){
-			out += Variable.getValue(args[i]).getPrintValue();
+			out += Variable.getValue(args[i]).toString();
 		}
 		out += "\n";
 		Executor.getEventHandler().print(out);

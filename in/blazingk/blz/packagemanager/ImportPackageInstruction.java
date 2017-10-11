@@ -23,6 +23,10 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	}
 	
 	public File findPackageDirectory() throws FileNotFoundException {
+		try {
+			return getEnvironmentPackageDirectory();
+		}catch(Exception e) {
+		}
 		if (ImportPackageInstruction.packageDirectory == null){
 			File dir = getRunningDirectory();
 			for (File f : listFileTree(dir,0)){
@@ -37,6 +41,11 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		}
 	}
 	
+	private File getEnvironmentPackageDirectory() {
+		String PackageDirectory = System.getenv("BLZPACKAGES");
+		return new File(PackageDirectory);
+	}
+
 	public File findPackage(String packageName) throws FileNotFoundException{
 		File dir = findPackageDirectory();
 		for (File f : dir.listFiles()){

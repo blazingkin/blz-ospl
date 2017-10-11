@@ -15,7 +15,7 @@ public class FileInput implements InstructionExecutorStringArray {
 	public void run(String args[]){
 		String arrayVarAddress = args[0];
 		String filePath = "";
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<Value> lines = new ArrayList<Value>();
 		for (int i = 1; i < args.length; i++){
 			filePath= filePath+args[i];
 			if (i != args.length-1){
@@ -27,15 +27,15 @@ public class FileInput implements InstructionExecutorStringArray {
 			File f = new File(filePath);
 			Scanner s = new Scanner(f);
 			while (s.hasNextLine()){
-				lines.add(s.nextLine());
+				lines.add(Value.string(s.nextLine()));
 			}
 			s.close();
 		}catch(Exception e){
 			Interpreter.throwError("File "+filePath+" not found");
 		}
-		for (int i = 0; i < lines.size(); i++){
-			Variable.setValue(arrayVarAddress+"["+i+"]", new Value(VariableTypes.String, lines.get(i)));
-		}
+		Value[] lnes = new Value[lines.size()];
+		lines.toArray(lnes);
+		Variable.setValue(arrayVarAddress, Value.arr(lnes));
 	}
 	
 	

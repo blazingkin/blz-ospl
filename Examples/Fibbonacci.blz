@@ -1,14 +1,14 @@
 :main
-	echo "How many fibbonacci numbers do you want?"
-	nin iter
+	print("How many fibbonacci numbers do you want?")
+	iter = number_input()
 	a = [1,1]
 	for i = 2; i < iter; i++
 		a[i] = a[i - 1] + a[i - 2]
 	end
 
-	echo "Printing fibbonacci numbers 1-" iter
+	print("Printing fibbonacci numbers 1-" + iter)
 
 	for i = 0; i < iter; i++
-		echo a[i]
+		print(a[i])
 	end
 end

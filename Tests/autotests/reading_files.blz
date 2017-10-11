@@ -1,0 +1,8 @@
+:main
+	# This is kinda cheating, don't you think
+	lines = read_file("reading_files.out")
+	len = array_length(lines)
+	for i = 0; i < len; i++
+		print(lines[i])
+	end
+end

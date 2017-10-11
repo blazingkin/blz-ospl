@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.Stack;
 
+import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {
@@ -20,7 +21,7 @@ public class ExpressionParser {
 		String building = "";
 		boolean inQuotes = false;
 		for (int i = 0; i < lne.length; i++){
-			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}')){
+			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
 				building += lne[i];
 			}else if (Operator.symbols.contains(""+lne[i]) && (lne[i] != '.' || !Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
@@ -38,7 +39,7 @@ public class ExpressionParser {
 						continue;
 					}
 				}
-				operandStack.push(new ASTNode(building));
+				operandStack.push(new ValueASTNode(building));
 				building = ""+lne[i];
 			}else{
 				if (Operator.symbols.contains(building)){
@@ -55,14 +56,14 @@ public class ExpressionParser {
 						operatorStack.push(Operator.parensOpen);
 					}else{
 						if (!operatorStack.empty() && operatorStack.peek() == Operator.DotOperator){
-							operandStack.push(new ASTNode(building));
+							operandStack.push(new ValueASTNode(building));
 							building = "";
 							combineBinaryExpression(operatorStack, operandStack);
 							functionNames.push(operandStack.peek());
 							operatorStack.push(Operator.functionCall);
 						}else{
 							operatorStack.push(Operator.functionCall);
-							ASTNode functionName = new ASTNode(building);
+							ASTNode functionName = new ValueASTNode(building);
 							operandStack.push(functionName);
 							functionNames.push(functionName);
 							building = "";
@@ -71,7 +72,7 @@ public class ExpressionParser {
 					break;
 				case ')':
 					if (!building.isEmpty()){
-						operandStack.push(new ASTNode(building));
+						operandStack.push(new ValueASTNode(building));
 						building = "";
 					}
 					while (operatorStack.peek() != Operator.parensOpen && operatorStack.peek() != Operator.functionCall){
@@ -89,14 +90,14 @@ public class ExpressionParser {
 					}
 					break;
 				case '[':
-					if (operatorStack.empty() && operandStack.size() > 0 && operandStack.peek().op == Operator.arrayLookup){ // Multidimensional arrays
+					if (operatorStack.empty() && operandStack.size() > 0 && checkTopExpressionOperator(operandStack) == Operator.arrayLookup){ // Multidimensional arrays
 						// TODO handle if the building string is not empty, there is a test that shows why this is broken
 						operatorStack.push(Operator.arrayLookup);
 					}else if (building.isEmpty() && !(i != 0 && lne[i-1] == ')')){
 						operatorStack.push(Operator.arrayLiteral);
 					}else{
 						if (!building.isEmpty()){
-							operandStack.push(new ASTNode(building));
+							operandStack.push(new ValueASTNode(building));
 							building = "";
 						}
 						operatorStack.push(Operator.arrayLookup);
@@ -104,8 +105,15 @@ public class ExpressionParser {
 					break;
 				case ']':
 					if (!building.isEmpty()){
-						operandStack.push(new ASTNode(building));
+						operandStack.push(new ValueASTNode(building));
 						building = "";
+					}else{
+						if (operatorStack.peek() == Operator.arrayLiteral){
+							// For empty arrays
+							// i.e. a = []
+							operandStack.push(OperatorASTNode.newNode(operatorStack.pop(), (ASTNode)null));
+							break;
+						}
 					}
 					while (operatorStack.peek() != Operator.arrayLookup && operatorStack.peek() != Operator.arrayLiteral){
 						combineBinaryExpression(operatorStack, operandStack);
@@ -118,14 +126,14 @@ public class ExpressionParser {
 					break;
 				case '{':
 					if (!building.isEmpty()){
-						operandStack.push(new ASTNode(building));
+						operandStack.push(new ValueASTNode(building));
 						building = "";
 					}
 					operatorStack.push(Operator.environmentVariableLookup);
 					ignoreMode = true;
 					break;
 				case '}':
-					operandStack.push(new ASTNode(building));
+					operandStack.push(new ValueASTNode(building));
 					building = "";
 					ignoreMode = false;
 					pushUnaryExpression(operatorStack, operandStack);
@@ -143,7 +151,7 @@ public class ExpressionParser {
 				default:
 					if (!inQuotes && Character.isWhitespace(lne[i])){
 						if (building.length() > 0){
-							operandStack.push(new ASTNode(building));
+							operandStack.push(new ValueASTNode(building));
 							building = "";
 						}
 					}else{
@@ -157,7 +165,7 @@ public class ExpressionParser {
 			building = "";
 		}
 		if (!building.isEmpty()){
-			operandStack.push(new ASTNode(building));
+			operandStack.push(new ValueASTNode(building));
 		}
 		while (!operatorStack.isEmpty()){
 			pushNewExpression(operatorStack, operandStack);
@@ -196,15 +204,25 @@ public class ExpressionParser {
 		Operator op = operatorStack.pop();
 		ASTNode arg2 = operandStack.pop();
 		ASTNode arg1 = operandStack.pop();
-		ASTNode[] args = {arg1, arg2};
-		operandStack.push(new ASTNode(op, args));
+		operandStack.push(OperatorASTNode.newNode(op, arg1, arg2));
 	}
 	
 	public static void pushUnaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack){
 		Operator op = operatorStack.pop();
 		ASTNode arg = operandStack.pop();
-		ASTNode[] args = {arg};
-		operandStack.push(new ASTNode(op, args));
+		operandStack.push(OperatorASTNode.newNode(op, arg));
+	}
+	
+	private static Operator checkTopExpressionOperator(Stack<ASTNode> stack){
+		if (stack.size() != 0){
+			ASTNode top = stack.peek();
+			if (top instanceof OperatorASTNode){
+				OperatorASTNode otop = (OperatorASTNode) top;
+				return otop.op;
+			}
+			return null;
+		}
+		return null;
 	}
 	
 	

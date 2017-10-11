@@ -1,11 +1,11 @@
 :main
-	echo "Enter a number:"
-	nin first
-	echo "Enter a number:"
-	nin second
-	echo "The sum of these numbers is:"
+	print("Enter a number:")
+	first = number_input()
+	print("Enter a number:")
+	second = number_input()
+	print("The sum of these numbers is:")
 	sum = sum(first, second)
-	echo sum
+	print(sum)
 end
 
 :sum(a, b)
