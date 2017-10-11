@@ -11,3 +11,8 @@ end
 	strin a
 	return a
 end
+
+:read_file(path)
+	filein x path
+	return x
+end
