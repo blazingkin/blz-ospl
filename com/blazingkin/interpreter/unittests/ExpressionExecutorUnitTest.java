@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -37,7 +38,7 @@ public class ExpressionExecutorUnitTest {
 		assertEqual(parseExpression("FALSE"), Value.bool(false));
 		assertEqual(parseExpression("3"), Value.integer(3));
 		assertEqual(parseExpression("-5"), Value.integer(-5));
-		assertEqual(parseExpression(".1"), Value.doub(.1d));
+		assertEqual(parseExpression("0.1"), Value.doub(.1d));
 		// This one fails... maybe it should.. maybe it shouldn't... not sure
 		//assertEqual(parseExpression("-.5"), Value.doub(-.5d));
 		assertEqual(parseExpression("-0.5"), Value.doub(-.5d));
@@ -74,10 +75,6 @@ public class ExpressionExecutorUnitTest {
 		assertValEqual("d", Value.integer(30));
 		assertValEqual("a", Value.integer(5));
 		assertValEqual("c", Value.integer(10));
-		parseExpression("arr[d] = 17.3");
-		assertValEqual("arr[30]", Value.doub(17.3d));
-		parseExpression("temp[a] = arr[d] + .9");
-		assertValEqual("temp[5]", Value.doub(18.2d));
 		Variable.clearVariables();
 	}
 	
@@ -135,6 +132,11 @@ public class ExpressionExecutorUnitTest {
 	@Test
 	public void testThreeSquared(){
 		assertEqual(parseExpression("3 ** 2"), Value.integer(9));
+	}
+	
+	@Test
+	public void testDecimalPowers(){
+		assertAlmostEqual(parseExpression("2 ** 0.5"), Value.doub(Math.sqrt(2)));
 	}
 	
 	@Test
@@ -370,6 +372,36 @@ public class ExpressionExecutorUnitTest {
 		assertEqual(parseExpression("arr[0]"), Value.integer(2));
 		assertEqual(parseExpression("arr[1]"), Value.integer(3));
 		assertEqual(parseExpression("arr[2]"), Value.integer(4));
+	}
+	
+	@Test
+	public void testDotOperatorShouldWork(){
+		Variable.setValue("asdf", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("asdf.inner = 2"), Value.integer(2));
+		assertEqual(parseExpression("asdf.inner"), Value.integer(2));
+		parseExpression("inner");
+		UnitTestUtil.assertLastError("Could not find a value for inner");
+	}
+	
+	@Test
+	public void testDoubleDotOperatorShouldWork(){
+		Variable.setValue("a", Value.obj(new BLZObject()));
+		Variable.setValue("b", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("a.b = b"), parseExpression("b"));
+		assertEqual(parseExpression("a.b.x = 2"), Value.integer(2));
+		assertEqual(parseExpression("a.b.x"), Value.integer(2));
+		assertEqual(parseExpression("b.x"), Value.integer(2));
+		parseExpression("x");
+		UnitTestUtil.assertLastError("Could not find a value for x");
+	}
+	
+	@Test
+	public void testArraysInsideObject(){
+		Variable.setValue("a", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("a.arr = [1,2,3]"), parseExpression("[1,2,3]"));
+		assertEqual(parseExpression("a.arr"), parseExpression("[1,2,3]"));
+		assertEqual(parseExpression("a.arr[0]"), Value.integer(1));
+		assertEqual(parseExpression("a.arr[2]"), Value.integer(3));
 	}
 	
 	//TODO find a way to test function calls

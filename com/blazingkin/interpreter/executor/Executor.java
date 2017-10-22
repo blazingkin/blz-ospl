@@ -8,11 +8,10 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
-import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
-import com.blazingkin.interpreter.executor.lambda.LambdaRegistrar;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
@@ -40,21 +39,15 @@ public class Executor {
 	private static boolean breakMode = false;
 	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
 	
-	// Stacks
-	private static Stack<RuntimeStackElement> runtimeStack = new Stack<RuntimeStackElement>();
-	private static Stack<Process> runningProcesses = new Stack<Process>();	//File Stack
-	private static Stack<Method> runningMethods = new Stack<Method>();		//Method Stack
-	private static Stack<Context> contextStack = new Stack<Context>();	//Context Stack
-	private static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();	//Loops
 	private static Stack<Integer> processLineStack = new Stack<Integer>();
 	
 	// This is the main loop
 	public static void codeLoop() throws Exception{
-		while (!runningProcesses.isEmpty()){			// while we have a thing to do, we will continue to execute
+		while (!RuntimeStack.isEmpty()){			// while we have a thing to do, we will continue to execute
 			for (setLine(getStartOfMain());getLine() < getCurrentProcess().getSize();){
 				executeCurrentLine();
 			}
-			popStack();
+			RuntimeStack.pop();
 		}
 		cleanup();
 	}
@@ -81,7 +74,7 @@ public class Executor {
 			if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
 				Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
 				getMethods().add(nM);
-				pushToRuntimeStack(nM);
+				RuntimeStack.push(nM);
 				setLine(getLine()+1);
 				return;
 			}
@@ -105,20 +98,20 @@ public class Executor {
 	}
 	
 	public static Value functionCall(Method m, Value[] values){
-		int runtimeStackDepth = runtimeStack.size();
+		int runtimeStackDepth = RuntimeStack.runtimeStack.size();
 		if (m.parent != getCurrentProcess()){
-			pushToRuntimeStack(m.parent);
+			RuntimeStack.push(m.parent);
 		}else{
 			getCurrentProcess().lineReturns.add(getLine());
 		}
-		pushToRuntimeStack(m);
+		RuntimeStack.push(m);
 		if (m.takesVariables){
 			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
 				Variable.setValue(m.variables[i], values[i]);
 			}
 		}
 		setLine(m.lineNumber);
-		while (runtimeStack.size() > runtimeStackDepth){
+		while (RuntimeStack.runtimeStack.size() > runtimeStackDepth){
 			executeCurrentLine();
 		}
 		return returnBuffer;
@@ -138,18 +131,15 @@ public class Executor {
 	}
 	
 	public static Context getCurrentContext(){
-		if (contextStack.isEmpty()){
+		if (RuntimeStack.contextStack.isEmpty()){
 			return Variable.getGlobalContext();
 		}
-		return contextStack.peek();
+		return RuntimeStack.contextStack.peek();
 	}
 	
-	public static void pushContext(Context con){
-		contextStack.push(con);
-	}
 	
 	public static void executeMethod(Method m){
-		pushToRuntimeStack(m);
+		RuntimeStack.push(m);
 		setLine(m.lineNumber);
 	}
 	
@@ -170,36 +160,37 @@ public class Executor {
 				startingMethod = args.get(i+1);
 			}
 		}
-		pushToRuntimeStack(new Process(runFile));		// puts the file passed to us as the current process
-		
+		RuntimeStack.push(new Process(runFile));		// puts the file passed to us as the current process
+		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(new StandAloneEventHandler());
+		Method startMethod = getMethodInCurrentProcess(startingMethod);
+		if (startMethod != null){
+			executeMethod(startMethod);
+		}
 		codeLoop();
 			
 	}
 	
-	public static void run(ArrayList<String> code, List<String> args, BlzEventHandler handler) throws Exception{
+	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws Exception{
 		for (int i = 0; i < args.size(); i+=2){
 			String s = args.get(i);
 			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
 				startingMethod = args.get(i+1);
 			}
 		}
-		pushToRuntimeStack(new Process(code));
-		if (startingMethod != null){
-			if (!(Method.contains(getMethods(), startingMethod) == null)){
-				pushToRuntimeStack(Method.contains(getMethods(), startingMethod));
-				Executor.setLine(getCurrentMethod().lineNumber+1);		//if there is a starting method and we can find it, set the line number to it
-			}
-		}
+		RuntimeStack.push(new Process(code));
+		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(handler);
+		Method startMethod = getMethodInCurrentProcess(startingMethod);
+		if (startMethod != null){
+			executeMethod(startMethod);
+		}
 		codeLoop();
 	}
 	
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program
 	public static void cleanup(){
-		runningProcesses = new Stack<Process>();
-		runningMethods = new Stack<Method>();
-		contextStack = new Stack<Context>();
+		RuntimeStack.cleanup();
 		setLoopStack(new Stack<LoopWrapper>());
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
@@ -246,9 +237,6 @@ public class Executor {
 	}
 	
 	//Lots of getters / setters below this point
-	public static boolean doesMethodExist(String name){
-		return (InstructionType.getInstructionType(name) != Instruction.INVALID) || LambdaRegistrar.isRegisteredLambdaExpression(name);
-	}
 	
 	public static int getUUID(){
 		int id;
@@ -260,11 +248,11 @@ public class Executor {
 	}
 	
 	public static Stack<LoopWrapper> getLoopStack() {
-		return loopStack;
+		return RuntimeStack.loopStack;
 	}
 	
 	public static void setLoopStack(Stack<LoopWrapper> loopStack) {
-		Executor.loopStack = loopStack;
+		RuntimeStack.loopStack = loopStack;
 	}
 	
 	public static boolean isImmediateMode(){
@@ -319,21 +307,23 @@ public class Executor {
 		Executor.eventsToBeHandled = eventsToBeHandled;
 	}
 	
-	public static void setLine(int num){				// Sets line within the current process
-		Variable.setGlobalValue("*pc", new Value(VariableTypes.Integer, num));
+	static int lineNum = -1;
+	// Sets line within the current process
+	public static void setLine(int num){
+		lineNum = num;
 	}
 	
 	public static int getLine(){
-		return (int) Variable.getGlobalValue("*pc").value;
+		return lineNum;
 	}
 	
 	public static Stack<Process> getRunningProcesses(){
-		return runningProcesses;
+		return RuntimeStack.processStack;
 	}
 	
 	public static Process getCurrentProcess(){
 		try{
-		return runningProcesses.peek();
+		return RuntimeStack.processStack.peek();
 		}catch(Exception e){
 			return null;
 		}
@@ -341,79 +331,28 @@ public class Executor {
 	
 	public static Method getCurrentMethod(){
 		try{
-		return runningMethods.peek();
+			return RuntimeStack.methodStack.peek();
 		}catch(Exception e){
 			return null;
 		}
 	}
 	
 	public static Method getMethodInCurrentProcess(String methodName){
-		for (int i = 0; i < getMethods().size(); i++){
-			if (getMethods().get(i).isItThis(methodName, getCurrentProcess().UUID)){
-				return getMethods().get(i);
+		for (Method m : getCurrentProcess().methods){
+			if (m.functionName.equals(methodName)){
+				return m;
 			}
 		}
 		return null;
 	}
 	
-	public static Method getMethod(String methodName, int processID){
-		for (int i = 0; i < getMethods().size(); i++){
-			if (getMethods().get(i).isItThis(methodName, processID)){
-				return getMethods().get(i);
-			}
-		}
-		return null;	
-	}
-	
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
-		pushToRuntimeStack(p);
-	}
-	
-	public static void pushToRuntimeStack(RuntimeStackElement se){
-		runtimeStack.push(se);
-		if (se instanceof LoopWrapper){
-			loopStack.push((LoopWrapper)se);
-		}else if (se instanceof Process){
-			Process nProcess = (Process) se;
-			runningProcesses.push(nProcess);
-			Context newCon = new Context();
-			contextStack.push(newCon);
-			for (Method m : nProcess.methods){
-				Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newCon);
-			}
-		}else if (se instanceof Method){
-			runningMethods.push((Method) se);
-			contextStack.push(new Context());
-		}
-		se.onBlockStart();
-	}
-	
-	public static void popStack(){									// This is used to return to the previous process or function
-		RuntimeStackElement rse = runtimeStack.pop();
-		if (rse instanceof LoopWrapper){
-			loopStack.pop();
-		}else if(rse instanceof Process){
-			runningProcesses.pop();
-			Variable.killContext(contextStack.pop());
-		}else if(rse instanceof Method){
-			runningMethods.pop();
-			Variable.killContext(contextStack.pop());
-		}
-		rse.onBlockEnd();
-		if (runtimeStack.empty()){
-			Executor.setCloseRequested(true);
-			getEventHandler().exitProgram("Reached end of program");
-			return;
-		}
-	}
-	
-	public static Stack<RuntimeStackElement> getRuntimeStack(){
-		return runtimeStack;
+		RuntimeStack.push(p);
 	}
 	
 	public static Stack<Method> getMethodStack(){
-		return runningMethods;
+		return RuntimeStack.methodStack;
 	}
 	
 	public static int getCurrentBlockEnd(){
@@ -424,68 +363,8 @@ public class Executor {
 		return getCurrentProcess().blockArcs.get(getLine()).start;
 	}
 	
-	//Passes a whole expression
-	public static String[] parseExpressions(String exp){
-		ArrayList<String> expressions = new ArrayList<String>();
-		int start = 0;
-		int parensCount = 0;
-		String buildingString = "";
-		boolean inQuotes = false;
-		for (int i = 0; i < exp.length(); i++){
-			if (exp.charAt(i) == '(' && !inQuotes){
-				if (parensCount == 0){
-					start = i;
-					if (!buildingString.trim().equals("")){
-						expressions.add(buildingString.trim());
-						buildingString = "";
-					}
-				}
-				parensCount++;
-			}
-			
-
-			if (parensCount == 0){
-				if (exp.charAt(i) == '\"'){
-					if (inQuotes){
-						expressions.add(buildingString+"\"");
-						buildingString = "";
-						inQuotes = !inQuotes;
-						continue;
-					}
-					buildingString = "";
-					inQuotes = !inQuotes;
-				}
-				if (inQuotes){
-					buildingString += exp.charAt(i);
-					continue;
-				}
-				if (exp.charAt(i) == ' ' && !buildingString.trim().equals("")){
-					expressions.add(buildingString.trim());
-					buildingString = "";
-					continue;
-				}
-				if (exp.charAt(i) != '"'){
-					buildingString += exp.charAt(i);
-				}
-			}
-			
-			if (exp.charAt(i) == ')' && !inQuotes){
-				parensCount--;
-				if (parensCount == 0){
-					expressions.add(exp.substring(start, i+1));
-				}
-			}
-		}
-		if (parensCount != 0){
-			Interpreter.throwError("Unmatched parens on lambda expression: "+exp);
-		}else if(!buildingString.trim().equals("")){
-			expressions.add(buildingString.trim());
-		}
-		String[] express = new String[expressions.size()];
-		for (int i = 0; i < express.length; i++){
-			express[i] = expressions.get(i);
-		}
-		return express;
+	public static BlockArc getCurrentBlock(){
+		return getCurrentProcess().blockArcs.get(getLine());
 	}
 
 	public static boolean isBreakMode() {

@@ -1,12 +1,12 @@
 :main
-	echo "Enter a number:"
-	nin a
-	echo "And another:"
-	nin b
+	print("Enter a number:")
+	a = number_input()
+	print("And another:")
+	b = number_input()
 	c = a * b
-	echo "The product of your two numbers is " c
+	print("The product of your two numbers is "+c)
 	d = a + b
-	echo "The sum of your two numbers is " d
+	print("The sum of your two numbers is "+d)
 	f = c - d
-	echo "The difference between the product and the sum is " f
+	print("The difference between the product and the sum is "+f)
 end

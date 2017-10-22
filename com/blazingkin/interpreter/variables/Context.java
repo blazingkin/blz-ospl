@@ -25,6 +25,13 @@ public class Context {
 		contextID = getUID();
 		contexts.add(this);
 	}
+	
+	public Context(Context parent){
+		contextID = getUID();
+		this.parent = parent;
+		contexts.add(this);
+	}
+	
 	public int getID(){
 		return contextID;
 	}

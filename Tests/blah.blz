@@ -1,0 +1,16 @@
+:main
+	test()	
+	print("back in main")
+end
+
+:test
+	a = 0
+	while true
+		if a++ < 20
+			print(a)
+		else
+			print("done")
+			return 0
+		end
+	end
+end

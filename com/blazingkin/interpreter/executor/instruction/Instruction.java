@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.instruction;
 
+import com.blazingkin.interpreter.executor.data.InitializeObject;
 import com.blazingkin.interpreter.executor.data.MoveData;
 import com.blazingkin.interpreter.executor.data.Peek;
 import com.blazingkin.interpreter.executor.data.Pop;
@@ -10,6 +11,7 @@ import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.ChangeProcess;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.Define;
+import com.blazingkin.interpreter.executor.executionorder.Else;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ForLoop;
@@ -48,6 +50,8 @@ import com.blazingkin.interpreter.executor.tensor.GetTensorValue;
 import com.blazingkin.interpreter.executor.tensor.IntTensor;
 import com.blazingkin.interpreter.executor.tensor.SetTensorValue;
 import com.blazingkin.interpreter.executor.timing.Wait;
+
+import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 @SuppressWarnings("deprecation")
 public enum Instruction {
@@ -109,7 +113,10 @@ public enum Instruction {
 	LAMBDA("LAMBDA", "RETURN LAMBDA EXPRESSION", new Define(false)),
 	BREAK("BREAK", "Break from loop", new Break()),
 	CONTINUE("CONTINUE", "Continue in loop", new Continue()),
-	RETURN("RETURN", "Return value", new ReturnValue());
+	RETURN("RETURN", "Return value", new ReturnValue()),
+	INSTANTIATE("NEW", "INSTANTIATE OBJECT", new InitializeObject()),
+	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
+	ELSE("ELSE", "ELSE BLOCK", new Else());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

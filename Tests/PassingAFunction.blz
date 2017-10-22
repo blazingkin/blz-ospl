@@ -1,0 +1,11 @@
+:main
+	passalong_function()()
+end
+
+:passalong_function
+	return print_2
+end
+
+:print_2
+	echo "2"
+end

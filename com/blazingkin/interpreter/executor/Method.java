@@ -2,6 +2,9 @@ package com.blazingkin.interpreter.executor;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
+
 public class Method implements RuntimeStackElement {
 	
 	public int UUID = Executor.getUUID();
@@ -23,12 +26,17 @@ public class Method implements RuntimeStackElement {
 			functionName = functionName.replace("^", "");
 		}
 		if (ln.contains("(") && ln.contains(")")){
-			takesVariables = true;
-			String vars = ln.split("\\(")[ln.split("\\(").length-1].split("\\)")[0];
-			String vNames[] = vars.split(",");
-			variables = new String[vNames.length];
-			for (int i = 0; i < vNames.length; i++){
-				variables[i] = vNames[i].trim();
+			String varSplit[] = ln.split("\\(|\\)");
+			if (varSplit.length < 2){
+				functionName = functionName.replaceAll("\\(|\\)", "");
+			}else{
+				takesVariables = true;
+				String vars = varSplit[varSplit.length - 1];
+				String vNames[] = vars.split(",");
+				variables = new String[vNames.length];
+				for (int i = 0; i < vNames.length; i++){
+					variables[i] = vNames[i].trim();
+				}
 			}
 		}
 	}
@@ -63,7 +71,7 @@ public class Method implements RuntimeStackElement {
 		if (!Executor.getCurrentProcess().lineReturns.empty()){
 			Executor.setLine(Executor.getCurrentProcess().lineReturns.pop());
 		}else{
-			Executor.popStack();	// If there is nothing else in the current process to run, return to the previous process
+			RuntimeStack.pop();	// If there is nothing else in the current process to run, return to the previous process
 		}
 	}
 	

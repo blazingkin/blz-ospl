@@ -3,16 +3,27 @@ package com.blazingkin.interpreter.executor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionorder.End;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.executor.instruction.LabeledInstruction;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
+
+import in.blazingk.blz.packagemanager.ImportPackageInstruction;
+import in.blazingk.blz.packagemanager.Package;
 
 public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
@@ -22,11 +33,22 @@ public class Process implements RuntimeStackElement {
 	private String[] lines;
 	private RegisteredLine[] registeredLines;
 	public ArrayList<Method> methods = new ArrayList<Method>();
+	public Collection<Method> importedMethods = new HashSet<Method>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	
+	private boolean shouldImportCore = true;
 	
 	public Process(File runFile) throws FileNotFoundException{
+		runningFromFile = true;
+		setupFileProcess(runFile);
+	}
+	
+	public Process(File runFile, boolean shouldImportCore) throws FileNotFoundException{
+		this.shouldImportCore = shouldImportCore;
+		setupFileProcess(runFile);
+	}
+	
+	private void setupFileProcess(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
 		if (!runFile.exists()){
 			Interpreter.throwError("Could Not Find File: "+runFile.getName()+" at path: "+runFile.getPath());
@@ -46,33 +68,31 @@ public class Process implements RuntimeStackElement {
 		if (lines.length == 0){
 			Interpreter.throwError("File: "+runFile.getName()+" did not contain any lines");
 		}
-		registerMethods();
-		preprocessLines();
-		registerBlocks();
-		processes.add(this);
+		setup();
 	}
 	
-	
-	public Process(ArrayList<String> code){
-		this((String[]) code.toArray());
-	}
+
 	
 	public Process(String[] code){
 		lines = new String[code.length];
 		for (int i = 0; i < code.length; i++){
-			lines[i] = code[i];
+			lines[i] = code[i].split("(?<!\\\\)#")[0].trim();	// Ignore extra whitespace and comments;
 		}
-
 		if (lines.length == 0){
 			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
+		setup();
+	}
+	
+	private void setup(){
 		registerMethods();
 		preprocessLines();
 		registerBlocks();
-		processes.add(this);
+		handleImports();
+		processes.add(this);		
 	}
 	
-	public void registerMethods(){
+	private void registerMethods(){
 		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
 			if (lines[i].length() > 0){
 				if (lines[i].substring(0,1).equals(":")){
@@ -85,7 +105,7 @@ public class Process implements RuntimeStackElement {
 	}
 
 	
-	public void preprocessLines(){
+	private void preprocessLines(){
 		String errors = "";
 		registeredLines = new RegisteredLine[lines.length];
 		for (int i = 0; i < lines.length; i++){
@@ -106,6 +126,7 @@ public class Process implements RuntimeStackElement {
 				String newStr = lines[i].replaceFirst(splits[0], "").trim();
 				registeredLines[i] = new RegisteredLine(instr, newStr);
 			}catch(Exception e){
+				e.printStackTrace();
 				valid = false;
 				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
@@ -115,8 +136,9 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
-	public void registerBlocks(){
+	private void registerBlocks(){
 		Stack<Integer> blckStack = new Stack<Integer>();
+		HashMap<Integer, HashMap<String, Integer>> labelMap = new HashMap<Integer, HashMap<String, Integer>>();
 		for (int i = 0; i < lines.length; i++){
 			if (lines[i].startsWith(":") || (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof BlockInstruction)){
 				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
@@ -127,8 +149,29 @@ public class Process implements RuntimeStackElement {
 					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
 				}
 				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
+				
+				if (labelMap.containsKey(ba.start)){
+					for (String key : labelMap.get(ba.start).keySet()){
+						int line = labelMap.get(ba.start).get(key);
+						ba.addLabel(key, line);
+						blockArcs.put(line, ba);
+					}
+				}
+				
 				blockArcs.put(ba.start, ba);
 				blockArcs.put(ba.end, ba);
+			}else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof LabeledInstruction){
+				RegisteredLine instruction = getRegisteredLine(i);
+				LabeledInstruction labelInstr = (LabeledInstruction) instruction.instr.executor;
+				String label = labelInstr.getLabel(instruction.getArgs());
+				if (blckStack.empty()){
+					Interpreter.throwError("Unexpected label "+label+" on line "+(i+1));
+				}
+				int startLine = blckStack.peek();
+				if (!labelMap.containsKey(startLine)){
+					labelMap.put(startLine, new HashMap<String, Integer>());
+				}
+				labelMap.get(startLine).put(label, i+1);
 			}
 		}
 		if (!blckStack.empty()){
@@ -141,6 +184,30 @@ public class Process implements RuntimeStackElement {
 			valid = false;
 			Interpreter.throwError("Some blocks not closed!");
 		}
+	}
+	
+	private void handleImports(){
+		//Always import core
+		Set<File> packagesToImport = new HashSet<File>();
+		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
+		try{
+			if (shouldImportCore){
+				packagesToImport.add(importer.findPackage("Core"));		
+			}
+			for (RegisteredLine line : registeredLines){
+				if (line != null && line.instr == Instruction.IMPORTPACKAGE){
+					packagesToImport.add(importer.findPackage(line.args));
+				}
+			}
+			for (File f : packagesToImport){
+				Package p = new in.blazingk.blz.packagemanager.Package(f);
+				importedMethods.addAll(p.getAllMethodsInPackage());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			Interpreter.throwError(e.getMessage());
+		}
+		
 	}
 	
 	public boolean isRegistered(int lineNumber){
@@ -196,13 +263,42 @@ public class Process implements RuntimeStackElement {
 			start = s;
 			end = e;
 		}
+		
+		public HashMap<String, Integer> labelMap;
+		
+		public void addLabel(String name, int line){
+			if (labelMap == null){
+				labelMap = new HashMap<String, Integer>();
+			}
+			labelMap.put(name, line);
+		}
+		
+		public boolean hasLabel(String name){
+			return name.equals("start") || name.equals("end") || (labelMap != null && labelMap.containsKey(name));
+		}
+		
+		public int getBlockLine(String name) throws Exception{
+			if (labelMap != null && labelMap.containsKey(name)){
+				return labelMap.get(name);
+			}else if (name.equals("start")){
+				return start;
+			}else if(name.equals("end")){
+				return end;
+			}
+			throw new Exception("Could not find label "+name+" for block starting on line "+start);
+		}
 	}
 	
 
 
 	@Override
 	public void onBlockStart() {
-		
+		for (Method m : methods){
+			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		}
+		for (Method m : importedMethods){
+			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		}
 	}
 
 

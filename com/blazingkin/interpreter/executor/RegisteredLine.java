@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor;
 
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorSemicolonDelimitedNode;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
@@ -10,7 +11,7 @@ import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class RegisteredLine{
+public class RegisteredLine implements RuntimeStackElement{
 	private ASTNode root;
 	public final Instruction instr;
 	public final String args;
@@ -19,7 +20,7 @@ public class RegisteredLine{
 	public RegisteredLine(Instruction instr, String line){
 		this.instr = instr;
 		if (instr.executor instanceof InstructionExecutorStringArray){
-			argsArr = Executor.parseExpressions(line);
+			argsArr = InstructionExecutorStringArray.parseExpressions(line);
 		}else if (instr.executor instanceof InstructionExecutorValue){
 			root = ExpressionParser.parseAndCollapse(line);
 		}else if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
@@ -56,6 +57,23 @@ public class RegisteredLine{
 			return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes);
 		}
 		return instr.executor.run(args);
+	}
+	
+	public String toString(){
+		if (root != null){
+			return root.toString();
+		}
+		return instr.toString() + " " + args;
+	}
+
+	@Override
+	public void onBlockStart() {
+		
+	}
+
+	@Override
+	public void onBlockEnd() {
+		
 	}
 	
 }

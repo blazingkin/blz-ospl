@@ -266,44 +266,6 @@ public class BigIntegerMath
                 return M ;
         }
 
-        /** Replace column of a matrix with a column vector.
-        * @param A The matrix.
-        * @param c The column index of the column to be substituted (0-based).
-        * @param v The column vector to be inserted.
-        * With the current implementation, it must be at least as long as the row count, and 
-        *  its elements that exceed that count are ignored.
-        * @return The modified matrix. This is not a deep copy but contains references to the original.
-        * @since 2010-08-27
-        * @author Richard J. Mathar
-        */
-        static private BigInteger[][] colSubs(final BigInteger[][] A, final int c, final BigInteger[] v) throws ArithmeticException
-        {
-                /* original row count */
-                final int rL = A.length ;
-                if ( rL == 0 )
-                        throw new ArithmeticException("zero row count in matrix") ;
-                /* original column count */
-                final int cL = A[0].length ;
-                if ( cL == 0 )
-                        throw new ArithmeticException("zero column count in matrix") ;
-                if ( c < 0  || c >= cL)
-                        throw new ArithmeticException("column number "+c + " out of range 0.." + (cL-1)) ;
-                BigInteger M[][] = new BigInteger[rL][cL] ;
-                for (int row = 0 ; row < rL ; row++)
-                {
-                        for(int col = 0 ; col < cL ;col++)
-                        {
-                                /* currently, v may just be longer than the row count, and surplus
-                                * elements will be ignored. Shorter v lead to an exception.
-                                */
-                                if ( col != c )
-                                        M[row][col] = A[row][col] ;
-                                else
-                                        M[row][col] = v[row] ;
-                        }
-                }
-                return M ;
-        }
 
         /** Determinant of an integer square matrix.
         * @param A The square matrix.

@@ -1,0 +1,18 @@
+:print(x)
+	echo x
+end
+
+:number_input
+	nin a
+	return a
+end
+
+:string_input
+	strin a
+	return a
+end
+
+:read_file(path)
+	filein x path
+	return x
+end

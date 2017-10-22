@@ -1,7 +1,7 @@
 :main
-	echo "How many interations?"
-	nin iter
-	for i=0; i<iter; i=i+1
-		echo i
+	print("How many interations?")
+	iter = number_input()
+	for i=0; i<iter; i++
+		print(i)
 	end 
 end

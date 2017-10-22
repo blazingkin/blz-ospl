@@ -5,8 +5,12 @@ import java.util.HashSet;
 
 public enum Operator{
 	
+	// The enum values that start with lowercase do not follow
+	// normal operator notation
+	
 	Increment("++", 1, OperatorType.Unary),	
-	Decrement("--", 1, OperatorType.Unary),	
+	Decrement("--", 1, OperatorType.Unary),
+	DotOperator(".", 2, OperatorType.Binary),
 	Modulus("%", 2, OperatorType.UnaryOrBinary),
 	Multiplication("*", 3, OperatorType.Binary),
 	Division("/", 3, OperatorType.Binary),

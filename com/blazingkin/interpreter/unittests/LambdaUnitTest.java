@@ -7,8 +7,6 @@ import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqualArray
 
 import org.junit.Test;
 
-import com.blazingkin.interpreter.executor.instruction.Instruction;
-
 public class LambdaUnitTest {
 
 	@Test

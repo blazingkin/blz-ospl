@@ -2,7 +2,6 @@ package com.blazingkin.interpreter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -60,7 +59,7 @@ public class Interpreter {
 	
 	public void run(String args[]) throws FileNotFoundException{
 		try{
-			if (args.length == 0){
+			if (args.length == 0){	
 				Interpreter.printHelp();
 				System.exit(0);
 			}
@@ -81,7 +80,7 @@ public class Interpreter {
 						for (Failure failure : result.getFailures()){
 							System.out.println(failure.toString());
 						}
-						System.out.println(result.wasSuccessful() ? "All Tests Passed" : "Tests Failed");
+						System.out.println(result.wasSuccessful() ? result.getRunCount() + " Tests Passed" : "Tests Failed");
 						System.exit(result.wasSuccessful() ? 0 : 1);
 						break;
 				}
@@ -108,7 +107,7 @@ public class Interpreter {
 	
 	
 	//This is for when you want to run blz code from another program
-	public static void executeCodeAsLibrary(ArrayList<String> code, List<String> args, BlzEventHandler eventHandler) throws Exception{
+	public static void executeCodeAsLibrary(String[] code, List<String> args, BlzEventHandler eventHandler) throws Exception{
 		try{
 			Executor.run(code, args, eventHandler);
 		}catch(Exception e){
