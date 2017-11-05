@@ -12,6 +12,7 @@ import org.junit.runner.notification.Failure;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
+import com.blazingkin.interpreter.repl.REPL;
 import com.blazingkin.interpreter.unittests.AllTestsSuite;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
@@ -70,7 +71,7 @@ public class Interpreter {
 						System.exit(0);
 						break;
 					case 'i':
-						Executor.immediateModeLoop(System.in);
+						REPL.immediateModeLoop(System.in);
 						break;
 					case 'v':
 						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
@@ -128,6 +129,8 @@ public class Interpreter {
 	public static void throwError(String error){
 		thrownErrors.add(new Exception(error));
 		if (Executor.isImmediateMode()){
+			Executor.getEventHandler().err("There was an issue running your last command\n");
+			Executor.getEventHandler().err("Type 'err' to see the error");
 			return;
 		}
 		if (logging){
@@ -141,10 +144,8 @@ public class Interpreter {
 			if (!Executor.getRunningProcesses().isEmpty()){
 				System.err.println("Error occurred on line: "+Executor.getLine());
 			}
-			if (!Executor.isImmediateMode()){
-				Executor.getEventHandler().exitProgram("An Error Occured");
-			}
 		}
+		Executor.getEventHandler().exitProgram("An Error Occured");
 	}
 
 	

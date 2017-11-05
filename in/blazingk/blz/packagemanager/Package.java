@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
 
 public class Package {
 	private File packageDirectory;

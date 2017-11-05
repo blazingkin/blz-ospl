@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Process;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ChangeProcess implements InstructionExecutorStringArray {

@@ -8,11 +8,14 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
+import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
@@ -34,7 +37,7 @@ public class Executor {
 	//State Variables
 	private static long timeStarted = 0;
 	private static int frames = 0;	
-	private static boolean immediateMode = false;
+	public static boolean immediateMode = false;
 	private static boolean closeRequested = false;
 	private static boolean breakMode = false;
 	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
@@ -203,38 +206,7 @@ public class Executor {
 		startingMethod = "";
 	}
 	
-	public static void immediateModeLoop(InputStream is){
-		System.out.println("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:");
-		System.out.println("Type 'exit' to exit");
-		String in = "";
-		Scanner sc = new Scanner(is);
-		immediateMode = true;
-		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
-		try{
-			do{
-				try{
-					in = sc.nextLine();
-					if (in.equals("err")){
-						Interpreter.thrownErrors.peek().printStackTrace();
-						continue;
-					}
-					if (in.equals("exit") || in.equals("quit")){
-						break;
-					}
-					if (in.equals("")){
-						continue;
-					}
-					System.out.println(ExpressionExecutor.parseExpression(in));
-				}catch(Exception e){
-					Interpreter.thrownErrors.add(e);
-					System.err.println("There was an issue running your last command");
-					System.err.println("Type 'err' to see the error");
-				}
-			}while (in.toLowerCase() != "exit");
-		}finally{
-			sc.close();
-		}
-	}
+
 	
 	//Lots of getters / setters below this point
 	

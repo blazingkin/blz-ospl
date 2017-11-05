@@ -1,6 +1,6 @@
 package com.blazingkin.interpreter.executor.listener;
 
-import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 public class Event {
 	/*	

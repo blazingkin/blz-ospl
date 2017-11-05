@@ -1,6 +1,5 @@
 :main
-	test()	
-	print("back in main")
+	print(random())
 end
 
 :test

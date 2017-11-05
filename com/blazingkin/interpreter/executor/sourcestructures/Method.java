@@ -1,7 +1,8 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.executor.sourcestructures;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 
@@ -39,6 +40,15 @@ public class Method implements RuntimeStackElement {
 				}
 			}
 		}
+	}
+	
+	public String toString(){
+		String args = "";
+		for (String s : variables){
+			args += s + ", ";
+		}
+		args = args.substring(0, args.lastIndexOf(','));
+		return "<Method " + functionName + "(" + args + ")>";
 	}
 	
 	//Checks to see if this is a specific method object

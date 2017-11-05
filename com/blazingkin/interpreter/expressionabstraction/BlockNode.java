@@ -1,6 +1,6 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import com.blazingkin.interpreter.executor.RegisteredLine;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.variables.Value;
 
 public class BlockNode extends ASTNode {
