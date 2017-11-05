@@ -2,7 +2,6 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.Stack;
 
-import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {

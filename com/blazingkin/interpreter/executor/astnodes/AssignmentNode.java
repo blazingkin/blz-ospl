@@ -13,8 +13,6 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-import jdk.nashorn.internal.runtime.Context;
-
 public class AssignmentNode extends BinaryNode {
 
 	public AssignmentNode(ASTNode[] args) {
