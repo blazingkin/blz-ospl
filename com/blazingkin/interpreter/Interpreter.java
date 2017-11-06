@@ -11,6 +11,8 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.unittests.AllTestsSuite;
 import com.blazingkin.interpreter.variables.SystemEnv;
@@ -131,13 +133,14 @@ public class Interpreter {
 			return;
 		}
 		if (logging){
-			StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-			  for (int i = 2; i < elements.length; i++) {
-			    StackTraceElement s = elements[i];
-			    System.err.println("\tat " + s.getClassName() + "." + s.getMethodName()
-			        + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
-			  }
-			System.err.println(error);
+			Stack<RuntimeStackElement> reverse = new Stack<RuntimeStackElement>();
+			while (!RuntimeStack.runtimeStack.isEmpty()) {
+				reverse.push(RuntimeStack.runtimeStack.pop());
+			}
+			System.err.println("Stacktrace:");
+			while (!reverse.isEmpty()) {
+				System.err.println(reverse.pop().toString());
+			}
 			if (!Executor.getRunningProcesses().isEmpty()){
 				System.err.println("Error occurred on line: "+Executor.getLine());
 			}
