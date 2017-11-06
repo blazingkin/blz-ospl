@@ -49,6 +49,13 @@ public class Process implements RuntimeStackElement {
 		setupFileProcess(runFile);
 	}
 	
+	public String toString() {
+		if (readingFrom != null) {
+			return "<Process "+readingFrom.getName()+">";
+		}
+		return "<Process "+hashCode()+">";
+	}
+	
 	private void setupFileProcess(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
 		if (!runFile.exists()){
@@ -308,6 +315,11 @@ public class Process implements RuntimeStackElement {
 		if (!Executor.getProcessLineStack().empty()){
 			Executor.setLine(Executor.getProcessLineStack().pop());
 		}
+	}
+
+	@Override
+	public int getLineNum() {
+		return -1;
 	}
 	
 }

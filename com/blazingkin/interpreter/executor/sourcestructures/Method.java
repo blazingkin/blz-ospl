@@ -47,7 +47,9 @@ public class Method implements RuntimeStackElement {
 		for (String s : variables){
 			args += s + ", ";
 		}
-		args = args.substring(0, args.lastIndexOf(','));
+		if (args.length() > 0) {
+			args = args.substring(0, args.lastIndexOf(','));
+		}
 		return "<Method " + functionName + "(" + args + ")>";
 	}
 	
@@ -83,6 +85,11 @@ public class Method implements RuntimeStackElement {
 		}else{
 			RuntimeStack.pop();	// If there is nothing else in the current process to run, return to the previous process
 		}
+	}
+
+	@Override
+	public int getLineNum() {
+		return lineNumber;
 	}
 	
 }

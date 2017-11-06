@@ -21,6 +21,10 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 		functionContext = Executor.getCurrentContext();
 	}
 	
+	public String toString() {
+		return "<WhileLoop>";
+	}
+	
 	@Override
 	public Value run(ASTNode[] args) {
 		if (ExpressionExecutor.executeNode(args[0]).equals(TRUE_VAL)){
@@ -46,6 +50,11 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 		if (ExpressionExecutor.executeNode(term).equals(TRUE_VAL)){
 			RuntimeStack.push(this);
 		}
+	}
+
+	@Override
+	public int getLineNum() {
+		return startLine;
 	}
 
 

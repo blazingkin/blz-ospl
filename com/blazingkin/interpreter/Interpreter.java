@@ -136,17 +136,19 @@ public class Interpreter {
 			return;
 		}
 		if (logging){
-			Stack<RuntimeStackElement> reverse = new Stack<RuntimeStackElement>();
-			while (!RuntimeStack.runtimeStack.isEmpty()) {
-				reverse.push(RuntimeStack.runtimeStack.pop());
-			}
-			System.err.println("Stacktrace:");
-			while (!reverse.isEmpty()) {
-				System.err.println(reverse.pop().toString());
-			}
 			if (!Executor.getRunningProcesses().isEmpty()){
+				Stack<RuntimeStackElement> reverse = new Stack<RuntimeStackElement>();
+				while (!RuntimeStack.runtimeStack.isEmpty()) {
+					reverse.push(RuntimeStack.runtimeStack.pop());
+				}
+				System.err.println("Stack:");
+				while (!reverse.isEmpty()) {
+					RuntimeStackElement rse = reverse.pop();
+					System.err.println((rse.getLineNum() == -1 ? "" : "Line " + rse.getLineNum()) + "\t" + rse.toString());
+				}
 				System.err.println("Error occurred on line: "+Executor.getLine());
 			}
+			System.err.println(error);
 		}
 		Executor.getEventHandler().exitProgram("An Error Occured");
 	}

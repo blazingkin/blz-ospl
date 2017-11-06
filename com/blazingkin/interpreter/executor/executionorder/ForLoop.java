@@ -34,6 +34,10 @@ public class ForLoop extends LoopWrapper implements InstructionExecutorSemicolon
 		}
 	}
 	
+	public String toString() {
+		return "<ForLoop>";
+	}
+	
 	@Override
 	public void onBlockStart() {
 		Executor.setLine(startLine);
@@ -48,6 +52,11 @@ public class ForLoop extends LoopWrapper implements InstructionExecutorSemicolon
 		if (ExpressionExecutor.executeNode(term).equals(TRUE_VAL)){
 			RuntimeStack.push(this);
 		}
+	}
+
+	@Override
+	public int getLineNum() {
+		return startLine;
 	}
 	
 }

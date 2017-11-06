@@ -1,5 +1,5 @@
 :main
-	test = [3, 5, 6, 1, 8, 2, 0, {e}, {pi}, 0.123, "blah"]
+	test = [3, 5, 6, 1, 8, 2, 0, {e}, {pi}, 0.123]
 	result = sort(test)
 	print(result)
 	print(test)

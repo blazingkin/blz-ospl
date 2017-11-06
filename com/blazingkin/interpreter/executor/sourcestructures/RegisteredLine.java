@@ -75,5 +75,10 @@ public class RegisteredLine implements RuntimeStackElement{
 	public void onBlockEnd() {
 		
 	}
+
+	@Override
+	public int getLineNum() {
+		return -1;
+	}
 	
 }

@@ -170,6 +170,11 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 		
 		
 	}
+
+	@Override
+	public int getLineNum() {
+		return -1;
+	}
 	
 
 	

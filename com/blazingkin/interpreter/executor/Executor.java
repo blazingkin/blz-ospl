@@ -1,26 +1,22 @@
 package com.blazingkin.interpreter.executor;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Stack;
 
-import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
-import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;
-import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -110,7 +106,7 @@ public class Executor {
 		RuntimeStack.push(m);
 		if (m.takesVariables){
 			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
-				Variable.setValue(m.variables[i], values[i]);
+				Variable.setValue(m.variables[i], (values[i]).clone());
 			}
 		}
 		setLine(m.lineNumber);
