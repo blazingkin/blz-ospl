@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import com.blazingkin.interpreter.executor.Method;
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {

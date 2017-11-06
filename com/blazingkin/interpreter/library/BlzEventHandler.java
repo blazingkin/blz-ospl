@@ -6,6 +6,7 @@ public interface BlzEventHandler {
 	
 	
 	public void print(String contents);	//This handles all text output
+	public void err(String contents); // This handles output to stderr
 	public void exitProgram(String exitMessage);	//This handles a close request from inside the code
 	public String getInput();	//This handles input requests
 }

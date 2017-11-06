@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.blazingkin.interpreter.executor.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
 
 public class ProcessUnitTest {
 

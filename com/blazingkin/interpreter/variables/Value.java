@@ -3,7 +3,7 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.blazingkin.interpreter.executor.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 public class Value {
 	public VariableTypes type;

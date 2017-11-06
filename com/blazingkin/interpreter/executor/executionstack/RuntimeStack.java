@@ -3,14 +3,14 @@ package com.blazingkin.interpreter.executor.executionstack;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Method;
-import com.blazingkin.interpreter.executor.RegisteredLine;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
-import com.blazingkin.interpreter.executor.Process;
 
 public class RuntimeStack {
 	
@@ -55,7 +55,7 @@ public class RuntimeStack {
 			Executor.setLine(processLineStack.pop());
 		}
 		se.onBlockEnd();
-		if (runtimeStack.empty()){
+		if (runtimeStack.empty() && !Executor.immediateMode){
 			Executor.setCloseRequested(true);
 			Executor.getEventHandler().exitProgram("Reached end of program");
 			return null;

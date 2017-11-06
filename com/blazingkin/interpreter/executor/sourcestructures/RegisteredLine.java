@@ -1,4 +1,4 @@
-package com.blazingkin.interpreter.executor;
+package com.blazingkin.interpreter.executor.sourcestructures;
 
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;

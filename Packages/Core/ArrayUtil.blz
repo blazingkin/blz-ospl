@@ -14,6 +14,16 @@
 	return arr
 end
 
+:reverse(arr)
+	len = array_length(arr)
+	for i = 0; i < len / 2; i++
+		temp = arr[i]
+		arr[i] = arr[len - i - 1]
+		arr[len - i - 1] = temp
+	end
+	return arr
+end
+
 :array_length(arr)
 	ALEN arr len	# Call the internal function
 	return len
