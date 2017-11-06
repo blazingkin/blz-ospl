@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
-public class Value {
+public class Value implements Cloneable {
 	public VariableTypes type;
 	public Object value = null;
 	public boolean isGlobal = false;
@@ -28,6 +28,7 @@ public class Value {
 		value = val;
 		isGlobal = global;
 		parent = par;
+
 	}
 	public Value(VariableTypes t, Object val, Method par){
 		if (val == null){
@@ -39,6 +40,14 @@ public class Value {
 		type = t;
 		value = val;
 		parent = par;
+	}
+	
+	@Override
+	public Value clone() {
+		if (type == VariableTypes.Array) {
+			return new Value(type, ((Value[]) value).clone(), parent, isGlobal);
+		}
+		return this;
 	}
 	
 	public String typedToString(){
