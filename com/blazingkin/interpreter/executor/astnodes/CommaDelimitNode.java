@@ -4,6 +4,7 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -17,9 +18,9 @@ public class CommaDelimitNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(){
-		Value[] v1 = Variable.getValueAsArray(args[0].execute());
-		Value[] v2 = Variable.getValueAsArray(args[1].execute());
+	public Value execute(Context con){
+		Value[] v1 = Variable.getValueAsArray(args[0].execute(con));
+		Value[] v2 = Variable.getValueAsArray(args[1].execute(con));
 		int size = v1.length + v2.length;
 		Value[] newArr = new Value[size];
 		for (int i = 0; i < v1.length; i++){

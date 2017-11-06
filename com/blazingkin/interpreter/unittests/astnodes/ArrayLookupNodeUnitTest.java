@@ -9,6 +9,7 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ArrayLookupNodeUnitTest {
@@ -42,7 +43,7 @@ public class ArrayLookupNodeUnitTest {
 	public void shouldRequireAnArrayAsTheFirstType() {
 		ASTNode[] args = { new ValueASTNode(Value.integer(3)), new ValueASTNode(Value.integer(3)) };
 		try {
-		new ArrayLookupNode(args).execute();
+		new ArrayLookupNode(args).execute(new Context());
 		} catch (Exception e) {} // We aren't catching the exception later because we normally exit
 		UnitTestUtil.assertLastError("Tried to access 3 as an array, but it is not one.");
 	}
@@ -51,14 +52,14 @@ public class ArrayLookupNodeUnitTest {
 	public void shouldCorrectlyLookupAValue() {
 		ASTNode[] args = {new ValueASTNode(Value.arr(testArray)), new ValueASTNode(Value.integer(1)) };
 		ArrayLookupNode n = new ArrayLookupNode(args);
-		UnitTestUtil.assertEqual(Value.integer(4), n.execute());
+		UnitTestUtil.assertEqual(Value.integer(4), n.execute(new Context()));
 	}
 	
 	@Test
 	public void shouldCorrectlyLookupAnotherValue() {
 		ASTNode[] args = {new ValueASTNode(Value.arr(testArray)), new ValueASTNode(Value.integer(3)) };
 		ArrayLookupNode n = new ArrayLookupNode(args);
-		UnitTestUtil.assertEqual(Value.bool(false), n.execute());
+		UnitTestUtil.assertEqual(Value.bool(false), n.execute(new Context()));
 	}
 	
 	@Test

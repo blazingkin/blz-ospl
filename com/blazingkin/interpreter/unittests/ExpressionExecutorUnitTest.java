@@ -14,6 +14,7 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.variables.BLZObject;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -59,22 +60,23 @@ public class ExpressionExecutorUnitTest {
 	
 	@Test
 	public void testLotsOfAssignment(){
-		parseExpression("a = 3");
-		assertValEqual("a", Value.integer(3));
-		parseExpression("a = 4");
-		assertValEqual("a", Value.integer(4));
-		parseExpression("b = 5");
-		assertValEqual("b", Value.integer(5));
-		parseExpression("a = b");
-		assertValEqual("a", Value.integer(5));
-		assertEqual(parseExpression("a + b"), Value.integer(10));
-		assertEqual(parseExpression("a + b"), parseExpression("b + a"));
-		parseExpression("c = a + b");
-		assertValEqual("c", Value.integer(10));
-		parseExpression("d= a +b + c + c");
-		assertValEqual("d", Value.integer(30));
-		assertValEqual("a", Value.integer(5));
-		assertValEqual("c", Value.integer(10));
+		Context tCon = new Context();
+		parseExpression("a = 3", tCon);
+		assertEqual(tCon.getValue("a"), Value.integer(3));
+		parseExpression("a = 4", tCon);
+		assertEqual(tCon.getValue("a"), Value.integer(4));
+		parseExpression("b = 5", tCon);
+		assertEqual(tCon.getValue("b"), Value.integer(5));
+		parseExpression("a = b", tCon);
+		assertEqual(tCon.getValue("a"), Value.integer(5));
+		assertEqual(parseExpression("a + b", tCon), Value.integer(10));
+		assertEqual(parseExpression("a + b", tCon), parseExpression("b + a", tCon));
+		parseExpression("c = a + b", tCon);
+		assertEqual(tCon.getValue("c"), Value.integer(10));
+		parseExpression("d= a +b + c + c", tCon);
+		assertEqual(tCon.getValue("d"), Value.integer(30));
+		assertEqual(tCon.getValue("a"), Value.integer(5));
+		assertEqual(tCon.getValue("c"), Value.integer(10));
 		Variable.clearVariables();
 	}
 	
@@ -342,7 +344,7 @@ public class ExpressionExecutorUnitTest {
 	public void testCommaDelimitExtraction(){
 		Value[] arr = {Value.integer(3), Value.bool(false), Value.doub(3.2)};
 		ASTNode expr = ExpressionParser.parseExpression("3, false, 3.2");
-		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr), arr);
+		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr, new Context()), arr);
 	}
 	
 	@Test
@@ -350,7 +352,7 @@ public class ExpressionExecutorUnitTest {
 		Value[] internalArr = {Value.integer(2), Value.integer(3)};
 		Value[] arr = {Value.arr(internalArr), Value.bool(false), Value.doub(3.2)};
 		ASTNode expr = ExpressionParser.parseExpression("[2, 3], false, 3.2");
-		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr), arr);
+		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr, new Context()), arr);
 	}
 	
 	@Test
@@ -368,40 +370,44 @@ public class ExpressionExecutorUnitTest {
 	
 	@Test
 	public void testSettingAndGettingFromArray(){
-		parseExpression("arr = [2,3,4]");
-		assertEqual(parseExpression("arr[0]"), Value.integer(2));
-		assertEqual(parseExpression("arr[1]"), Value.integer(3));
-		assertEqual(parseExpression("arr[2]"), Value.integer(4));
+		Context tCon = new Context();
+		parseExpression("arr = [2,3,4]", tCon);
+		assertEqual(parseExpression("arr[0]", tCon), Value.integer(2));
+		assertEqual(parseExpression("arr[1]", tCon), Value.integer(3));
+		assertEqual(parseExpression("arr[2]", tCon), Value.integer(4));
 	}
 	
 	@Test
 	public void testDotOperatorShouldWork(){
-		Variable.setValue("asdf", Value.obj(new BLZObject()));
-		assertEqual(parseExpression("asdf.inner = 2"), Value.integer(2));
-		assertEqual(parseExpression("asdf.inner"), Value.integer(2));
-		parseExpression("inner");
+		Context testContext = new Context();
+		testContext.setValue("asdf", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("asdf.inner = 2", testContext), Value.integer(2));
+		assertEqual(parseExpression("asdf.inner", testContext), Value.integer(2));
+		parseExpression("inner", testContext);
 		UnitTestUtil.assertLastError("Could not find a value for inner");
 	}
 	
 	@Test
 	public void testDoubleDotOperatorShouldWork(){
-		Variable.setValue("a", Value.obj(new BLZObject()));
-		Variable.setValue("b", Value.obj(new BLZObject()));
-		assertEqual(parseExpression("a.b = b"), parseExpression("b"));
-		assertEqual(parseExpression("a.b.x = 2"), Value.integer(2));
-		assertEqual(parseExpression("a.b.x"), Value.integer(2));
-		assertEqual(parseExpression("b.x"), Value.integer(2));
-		parseExpression("x");
+		Context testContext = new Context();
+		testContext.setValue("a", Value.obj(new BLZObject()));
+		testContext.setValue("b", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("a.b = b", testContext), parseExpression("b", testContext));
+		assertEqual(parseExpression("a.b.x = 2", testContext), Value.integer(2));
+		assertEqual(parseExpression("a.b.x", testContext), Value.integer(2));
+		assertEqual(parseExpression("b.x", testContext), Value.integer(2));
+		parseExpression("x", testContext);
 		UnitTestUtil.assertLastError("Could not find a value for x");
 	}
 	
 	@Test
 	public void testArraysInsideObject(){
-		Variable.setValue("a", Value.obj(new BLZObject()));
-		assertEqual(parseExpression("a.arr = [1,2,3]"), parseExpression("[1,2,3]"));
-		assertEqual(parseExpression("a.arr"), parseExpression("[1,2,3]"));
-		assertEqual(parseExpression("a.arr[0]"), Value.integer(1));
-		assertEqual(parseExpression("a.arr[2]"), Value.integer(3));
+		Context testContext = new Context();
+		testContext.setValue("a", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("a.arr = [1,2,3]", testContext), parseExpression("[1,2,3]"));
+		assertEqual(parseExpression("a.arr", testContext), parseExpression("[1,2,3]"));
+		assertEqual(parseExpression("a.arr[0]", testContext), Value.integer(1));
+		assertEqual(parseExpression("a.arr[2]", testContext), Value.integer(3));
 	}
 	
 	//TODO find a way to test function calls

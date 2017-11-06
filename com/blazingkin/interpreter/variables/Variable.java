@@ -14,9 +14,7 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Variable {
 	private static Context globalContext = new Context();
@@ -218,47 +216,9 @@ public class Variable {
 	
 	
 	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
-	private static Pattern quotePattern = Pattern.compile("^\".*\"$");
+	static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
-		if (con.variables.containsKey(line)){
-			return con.variables.get(line);
-		}
-		if (isInteger(line)){	//If its an integer, then return it
-			return new Value(VariableTypes.Integer, new BigInteger(line));
-		}
-		if (isDouble(line)){	//If its a double, then return it
-			return new Value(VariableTypes.Double, new BigDecimal(line));
-		}
-		if (isBool(line)){		//If its a bool, then return it
-			return new Value(VariableTypes.Boolean, convertToBool(line));
-		}
-		
-		Matcher quoteMatcher = quotePattern.matcher(line);
-		if (quoteMatcher.find()){
-			return new Value(VariableTypes.String, line.replace("\"",""));
-		}
-		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(line);
-		if (curlyBracketMatcher.find()){
-			String gp = curlyBracketMatcher.group();
-			gp = gp.substring(1, gp.length()-1);
-			for (SystemEnv env : SystemEnv.values()){
-				if (gp.equals(env.name)){
-					return getEnvVariable(env);
-				}
-			}
-			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
-		}
-		
-		
-		if (con.getParentContext() != getGlobalContext()){
-			return getValue(line, con.getParentContext());
-		}
-		
-		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
-			return LambdaParser.parseLambdaExpression(line).getValue();
-		}
-		
-		return ExpressionExecutor.parseExpression(line);
+		return con.getValue(line);
 	}
 	
 	public static Value getVariableValue(String line){

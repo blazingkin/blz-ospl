@@ -6,6 +6,7 @@ import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -20,8 +21,8 @@ public class FunctionCallNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(){
-		Value methodVal = args[0].execute();
+	public Value execute(Context con){
+		Value methodVal = args[0].execute(con);
 		if (methodVal.type != VariableTypes.Method){
 			Interpreter.throwError("Tried to call a non-method "+methodVal);
 		}
@@ -31,9 +32,9 @@ public class FunctionCallNode extends BinaryNode {
 			args = new Value[0];
 		}else{	// Some args
 			if (this.args[1].getOperator() == Operator.CommaDelimit){
-				args = Variable.getValueAsArray(this.args[1].execute());
+				args = Variable.getValueAsArray(this.args[1].execute(con));
 			}else{
-				Value[] arg = {this.args[1].execute()};
+				Value[] arg = {this.args[1].execute(con)};
 				args = arg;
 			}
 		}
