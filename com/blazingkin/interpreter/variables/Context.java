@@ -50,36 +50,10 @@ public class Context {
 		return variables.containsKey(s);
 	}
 	
-	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
-	static Pattern quotePattern = Pattern.compile("^\".*\"$");
+
 	public Value getValue(String s){
 		if (hasValue(s)){
 			return variables.get(s);
-		}
-		if (Variable.isInteger(s)){	//If its an integer, then return it
-			return new Value(VariableTypes.Integer, new BigInteger(s));
-		}
-		if (Variable.isDouble(s)){	//If its a double, then return it
-			return new Value(VariableTypes.Double, new BigDecimal(s));
-		}
-		if (Variable.isBool(s)){		//If its a bool, then return it
-			return new Value(VariableTypes.Boolean, Variable.convertToBool(s));
-		}
-		
-		Matcher quoteMatcher = quotePattern.matcher(s);
-		if (quoteMatcher.find()){
-			return new Value(VariableTypes.String, s.replace("\"",""));
-		}
-		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(s);
-		if (curlyBracketMatcher.find()){
-			String gp = curlyBracketMatcher.group();
-			gp = gp.substring(1, gp.length()-1);
-			for (SystemEnv env : SystemEnv.values()){
-				if (gp.equals(env.name)){
-					return Variable.getEnvVariable(env);
-				}
-			}
-			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
 		}
 		
 		if (parent != null && getParentContext() != Variable.getGlobalContext()){

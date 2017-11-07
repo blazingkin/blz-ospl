@@ -371,7 +371,8 @@ public class ExpressionExecutorUnitTest {
 	@Test
 	public void testSettingAndGettingFromArray(){
 		Context tCon = new Context();
-		parseExpression("arr = [2,3,4]", tCon);
+		Value[] arr = {Value.integer(2), Value.integer(3), Value.integer(4)};
+		tCon.setValue("arr", Value.arr(arr));
 		assertEqual(parseExpression("arr[0]", tCon), Value.integer(2));
 		assertEqual(parseExpression("arr[1]", tCon), Value.integer(3));
 		assertEqual(parseExpression("arr[2]", tCon), Value.integer(4));

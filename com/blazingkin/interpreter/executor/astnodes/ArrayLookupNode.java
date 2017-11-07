@@ -37,17 +37,17 @@ public class ArrayLookupNode extends BinaryNode {
 			return Variable.getValueOfArray(arr, index);
 		}
 		String name = args[0].getStoreName();
-		VariableTypes type = Variable.typeOf(name, Executor.getCurrentContext());
+		VariableTypes type = Variable.typeOf(name, con);
 		if (type == VariableTypes.Array){
 			BigInteger index = Variable.getIntValue(args[1].execute(con));
-			return Variable.getValueOfArray(name, index);
+			return Variable.getValueOfArray(name, index, con);
 		}else if (type == VariableTypes.String){ 
 			int index = Variable.getIntValue(args[1].execute(con)).intValue();
 			String s = (String) Variable.getValue(name).value;
 			return new Value(VariableTypes.String, s.substring(index, index+1));
 		}else{ /* Assume it is a hash */
 			Value key = args[1].execute(con);
-			return Variable.getValueOfHash(name, key, Executor.getCurrentContext());
+			return Variable.getValueOfHash(name, key, con);
 		}
 	}
 

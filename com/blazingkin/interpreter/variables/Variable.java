@@ -218,6 +218,30 @@ public class Variable {
 	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
 	static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
+		if (isInteger(line)){	//If its an integer, then return it
+			return new Value(VariableTypes.Integer, new BigInteger(line));
+		}
+		if (Variable.isDouble(line)){	//If its a double, then return it
+			return new Value(VariableTypes.Double, new BigDecimal(line));
+		}
+		if (Variable.isBool(line)){		//If its a bool, then return it
+			return new Value(VariableTypes.Boolean, Variable.convertToBool(line));
+		}
+		Matcher quoteMatcher = quotePattern.matcher(line);
+		if (quoteMatcher.find()){
+			return new Value(VariableTypes.String, line.replace("\"",""));
+		}
+		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(line);
+		if (curlyBracketMatcher.find()){
+			String gp = curlyBracketMatcher.group();
+			gp = gp.substring(1, gp.length()-1);
+			for (SystemEnv env : SystemEnv.values()){
+				if (gp.equals(env.name)){
+					return Variable.getEnvVariable(env);
+				}
+			}
+			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
+		}
 		return con.getValue(line);
 	}
 	
