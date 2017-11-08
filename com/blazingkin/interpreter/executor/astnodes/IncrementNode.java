@@ -4,6 +4,7 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.UnaryNode;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -17,12 +18,14 @@ public class IncrementNode extends UnaryNode {
 	}
 	
 	@Override
-	public Value execute(){
-		if (args[0].getStoreName() == null){
+	public Value execute(Context con){
+		String storeName = args[0].getStoreName();
+		if (storeName == null){
 			Interpreter.throwError("Did not know how to increment: "+args[0]);
 		}
-		Variable.setValue(args[0].getStoreName(), Variable.addValues(Variable.getValue(args[0].getStoreName()), Value.integer(1)));
-		return Variable.getValue(args[0].getStoreName());
+		Value add = Variable.addValues(con.getValue(storeName), Value.integer(1));
+		con.setValue(storeName, add);
+		return con.getValue(storeName);
 	}
 
 }

@@ -1,6 +1,30 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import com.blazingkin.interpreter.executor.astnodes.*;
+import com.blazingkin.interpreter.executor.astnodes.AdditionNode;
+import com.blazingkin.interpreter.executor.astnodes.ApproximateComparisonNode;
+import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
+import com.blazingkin.interpreter.executor.astnodes.ArrayLookupNode;
+import com.blazingkin.interpreter.executor.astnodes.AssignmentNode;
+import com.blazingkin.interpreter.executor.astnodes.CommaDelimitNode;
+import com.blazingkin.interpreter.executor.astnodes.ComparisonNode;
+import com.blazingkin.interpreter.executor.astnodes.DecrementNode;
+import com.blazingkin.interpreter.executor.astnodes.DivisionNode;
+import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
+import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
+import com.blazingkin.interpreter.executor.astnodes.ExponentiationNode;
+import com.blazingkin.interpreter.executor.astnodes.ExpressionDelimitNode;
+import com.blazingkin.interpreter.executor.astnodes.FunctionCallNode;
+import com.blazingkin.interpreter.executor.astnodes.GreaterThanEqualsNode;
+import com.blazingkin.interpreter.executor.astnodes.GreaterThanNode;
+import com.blazingkin.interpreter.executor.astnodes.IncrementNode;
+import com.blazingkin.interpreter.executor.astnodes.LessThanEqualsNode;
+import com.blazingkin.interpreter.executor.astnodes.LessThanNode;
+import com.blazingkin.interpreter.executor.astnodes.LogarithmNode;
+import com.blazingkin.interpreter.executor.astnodes.ModulusNode;
+import com.blazingkin.interpreter.executor.astnodes.MultiplicationNode;
+import com.blazingkin.interpreter.executor.astnodes.NotEqualNode;
+import com.blazingkin.interpreter.executor.astnodes.SubtractionNode;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 
 public abstract class OperatorASTNode extends ASTNode {
@@ -69,7 +93,7 @@ public abstract class OperatorASTNode extends ASTNode {
 	@Override
 	public ASTNode collapse() {
 		if (canCollapse()){
-			return new ValueASTNode(execute());
+			return new ValueASTNode(execute(new Context()));
 		}else{
 			if (args != null){
 				ASTNode[] newChildren = new ASTNode[args.length];

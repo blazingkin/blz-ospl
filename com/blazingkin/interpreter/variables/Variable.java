@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,9 +15,7 @@ import org.nevec.rjm.BigDecimalMath;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Variable {
 	private static Context globalContext = new Context();
@@ -57,6 +56,7 @@ public class Variable {
 		for (Context c : Context.contexts){
 			c.variables.clear();
 		}
+		Context.contexts = new ArrayList<Context>();
 		globalContext = new Context();
 	}
 	
@@ -218,21 +218,17 @@ public class Variable {
 	
 	
 	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
-	private static Pattern quotePattern = Pattern.compile("^\".*\"$");
+	static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
-		if (con.variables.containsKey(line)){
-			return con.variables.get(line);
-		}
 		if (isInteger(line)){	//If its an integer, then return it
 			return new Value(VariableTypes.Integer, new BigInteger(line));
 		}
-		if (isDouble(line)){	//If its a double, then return it
+		if (Variable.isDouble(line)){	//If its a double, then return it
 			return new Value(VariableTypes.Double, new BigDecimal(line));
 		}
-		if (isBool(line)){		//If its a bool, then return it
-			return new Value(VariableTypes.Boolean, convertToBool(line));
+		if (Variable.isBool(line)){		//If its a bool, then return it
+			return new Value(VariableTypes.Boolean, Variable.convertToBool(line));
 		}
-		
 		Matcher quoteMatcher = quotePattern.matcher(line);
 		if (quoteMatcher.find()){
 			return new Value(VariableTypes.String, line.replace("\"",""));
@@ -243,22 +239,12 @@ public class Variable {
 			gp = gp.substring(1, gp.length()-1);
 			for (SystemEnv env : SystemEnv.values()){
 				if (gp.equals(env.name)){
-					return getEnvVariable(env);
+					return Variable.getEnvVariable(env);
 				}
 			}
 			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
 		}
-		
-		
-		if (con.getParentContext() != getGlobalContext()){
-			return getValue(line, con.getParentContext());
-		}
-		
-		if (line.length() > 0 && line.charAt(0) == '(' && line.charAt(line.length()-1) == ')'){
-			return LambdaParser.parseLambdaExpression(line).getValue();
-		}
-		
-		return ExpressionExecutor.parseExpression(line);
+		return con.getValue(line);
 	}
 	
 	public static Value getVariableValue(String line){

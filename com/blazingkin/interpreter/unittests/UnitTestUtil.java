@@ -10,6 +10,7 @@ import java.util.Random;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -106,14 +107,14 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 	}
 	
-	public static void assertValEqual(String name, Value b){
+	public static void assertValEqual(String name, Value b, Context con){
 		Value a = ExpressionExecutor.parseExpression(name);
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println(name + " != "+ b.value);
 			new Exception().printStackTrace();
 		}
-		assert Variable.getValue(name).equals(b);
+		assert con.getValue(name).equals(b);
 	}
 	
 	public static void assertEqualArrays(Object[] a, Object[] b){

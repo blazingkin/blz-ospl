@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ArrayLiteralNodeUnitTest {
@@ -33,7 +34,7 @@ public class ArrayLiteralNodeUnitTest {
 		ASTNode[] args = {ExpressionParser.parseExpression("2, 3, 4")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.integer(2), Value.integer(3), Value.integer(4)};
-		UnitTestUtil.assertEqual(Value.arr(vals), n.execute());
+		UnitTestUtil.assertEqual(Value.arr(vals), n.execute(new Context()));
 	}
 	
 	@Test
@@ -41,7 +42,7 @@ public class ArrayLiteralNodeUnitTest {
 		ASTNode[] args = {ExpressionParser.parseExpression("\"asdf\", 234, 123.02")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.string("asdf"), Value.integer(234), Value.doub(123.02)};
-		UnitTestUtil.assertEqual(Value.arr(vals), n.execute());
+		UnitTestUtil.assertEqual(Value.arr(vals), n.execute(new Context()));
 	}
 	
 

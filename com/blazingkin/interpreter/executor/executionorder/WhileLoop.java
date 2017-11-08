@@ -27,7 +27,7 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 	
 	@Override
 	public Value run(ASTNode[] args) {
-		if (ExpressionExecutor.executeNode(args[0]).equals(TRUE_VAL)){
+		if (ExpressionExecutor.executeNode(args[0], Executor.getCurrentContext()).equals(TRUE_VAL)){
 			RuntimeStack.push(new WhileLoop(args[0]));
 			return TRUE_VAL;
 		}else{
@@ -47,7 +47,7 @@ public class WhileLoop extends LoopWrapper implements InstructionExecutorSemicol
 			Executor.setBreakMode(false);
 			return;
 		}
-		if (ExpressionExecutor.executeNode(term).equals(TRUE_VAL)){
+		if (ExpressionExecutor.executeNode(term, Executor.getCurrentContext()).equals(TRUE_VAL)){
 			RuntimeStack.push(this);
 		}
 	}

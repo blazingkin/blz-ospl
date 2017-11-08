@@ -24,8 +24,8 @@ public class ForLoop extends LoopWrapper implements InstructionExecutorSemicolon
 	
 	@Override
 	public Value run(ASTNode[] args) {
-		ExpressionExecutor.executeNode(args[0]);
-		if (ExpressionExecutor.executeNode(args[1]).equals(TRUE_VAL)){
+		ExpressionExecutor.executeNode(args[0], Executor.getCurrentContext());
+		if (ExpressionExecutor.executeNode(args[1], Executor.getCurrentContext()).equals(TRUE_VAL)){
 			RuntimeStack.push(new ForLoop(args[0], args[1], args[2]));
 			return TRUE_VAL;
 		}else{
@@ -48,8 +48,8 @@ public class ForLoop extends LoopWrapper implements InstructionExecutorSemicolon
 			Executor.setBreakMode(false);
 			return;
 		}
-		ExpressionExecutor.executeNode(loop);
-		if (ExpressionExecutor.executeNode(term).equals(TRUE_VAL)){
+		ExpressionExecutor.executeNode(loop, Executor.getCurrentContext());
+		if (ExpressionExecutor.executeNode(term, Executor.getCurrentContext()).equals(TRUE_VAL)){
 			RuntimeStack.push(this);
 		}
 	}
