@@ -3,10 +3,10 @@ package com.blazingkin.interpreter.executor.astnodes;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -21,32 +21,32 @@ public class ArrayLookupNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(){
+	public Value execute(Context con){
 		if (args[0].getStoreName() == null){
-			Value arr = args[0].execute();
+			Value arr = args[0].execute(con);
 			if (arr.type == VariableTypes.String){ 
-				int index = Variable.getIntValue(args[1].execute()).intValue();
+				int index = Variable.getIntValue(args[1].execute(con)).intValue();
 				String s = (String) arr.value;
 				return new Value(VariableTypes.String, s.substring(index, index+1));
 			}
 			if (arr.type != VariableTypes.Array){
 				Interpreter.throwError("Did not know how to access "+args[0]+" as an array.");
 			}
-			BigInteger index = Variable.getIntValue(args[1].execute());
+			BigInteger index = Variable.getIntValue(args[1].execute(con));
 			return Variable.getValueOfArray(arr, index);
 		}
 		String name = args[0].getStoreName();
-		VariableTypes type = Variable.typeOf(name, Executor.getCurrentContext());
+		VariableTypes type = Variable.typeOf(name, con);
 		if (type == VariableTypes.Array){
-			BigInteger index = Variable.getIntValue(args[1].execute());
-			return Variable.getValueOfArray(name, index);
+			BigInteger index = Variable.getIntValue(args[1].execute(con));
+			return Variable.getValueOfArray(name, index, con);
 		}else if (type == VariableTypes.String){ 
-			int index = Variable.getIntValue(args[1].execute()).intValue();
+			int index = Variable.getIntValue(args[1].execute(con)).intValue();
 			String s = (String) Variable.getValue(name).value;
 			return new Value(VariableTypes.String, s.substring(index, index+1));
 		}else{ /* Assume it is a hash */
-			Value key = args[1].execute();
-			return Variable.getValueOfHash(name, key, Executor.getCurrentContext());
+			Value key = args[1].execute(con);
+			return Variable.getValueOfHash(name, key, con);
 		}
 	}
 

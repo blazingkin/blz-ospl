@@ -1,0 +1,13 @@
+:main
+	new a
+	a.val = "Some stuff"
+	a.otherval = "That works"
+	garble_it(a)
+	print(a.val)
+	print(a.otherval)
+end
+
+:garble_it(obj)
+	obj.val = "random"
+	obj.otherval = "garbage"
+end

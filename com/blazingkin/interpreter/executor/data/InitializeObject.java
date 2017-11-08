@@ -10,7 +10,7 @@ public class InitializeObject implements InstructionExecutor {
 
 	@Override
 	public Value run(String line) {
-		Variable.setValue(line, new Value(VariableTypes.Object, new BLZObject(Variable.getGlobalContext())));
+		Variable.setValue(line, new Value(VariableTypes.Object, new BLZObject()));
 		return Variable.getVariableValue(line);
 	}
 

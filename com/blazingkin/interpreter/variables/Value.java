@@ -46,6 +46,8 @@ public class Value implements Cloneable {
 	public Value clone() {
 		if (type == VariableTypes.Array) {
 			return new Value(type, ((Value[]) value).clone(), parent, isGlobal);
+		}else if (type == VariableTypes.Object){
+			return new Value(type, ((BLZObject)value).clone(), parent, isGlobal);
 		}
 		return this;
 	}

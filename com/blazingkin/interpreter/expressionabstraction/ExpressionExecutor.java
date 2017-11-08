@@ -2,36 +2,42 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ExpressionExecutor {
 	
 	public static double EPSILON = 1E-8; 
 	
-	public static Value parseExpression(String line){
-		return executeNode(ExpressionParser.parseExpression(line));
+	public static Value parseExpression(String line, Context con){
+		return executeNode(ExpressionParser.parseExpression(line), con);
 	}
 	
-	public static Value[] extractCommaDelimits(ASTNode root){
-		ArrayList<Value> helperCall = extractCommaDelimitsHelper(root);
+	public static Value parseExpression(String line){
+		return parseExpression(line, Executor.getCurrentContext());
+	}
+	
+	public static Value[] extractCommaDelimits(ASTNode root, Context con){
+		ArrayList<Value> helperCall = extractCommaDelimitsHelper(root, con);
 		Value[] newVals = new Value[helperCall.size()];
 		helperCall.toArray(newVals);
 		return newVals;
 	}
 	
-	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root){
+	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root, Context con){
 		if (root == null){
 			return new ArrayList<Value>();
 		}
 		if (root.getOperator() == Operator.CommaDelimit){
 			OperatorASTNode oroot = (OperatorASTNode) root;
-			ArrayList<Value> first = extractCommaDelimitsHelper(oroot.args[0]);
-			ArrayList<Value> second = extractCommaDelimitsHelper(oroot.args[1]);
+			ArrayList<Value> first = extractCommaDelimitsHelper(oroot.args[0], con);
+			ArrayList<Value> second = extractCommaDelimitsHelper(oroot.args[1], con);
 			first.addAll(second);
 			return first;
 		}else{
 			ArrayList<Value> ret = new ArrayList<Value>();
-			ret.add(root.execute());
+			ret.add(root.execute(con));
 			return ret;
 		}
 	}
@@ -57,8 +63,8 @@ public class ExpressionExecutor {
 		}
 	}
 	
-	public static Value executeNode(ASTNode root){
-		return root.execute();
+	public static Value executeNode(ASTNode root, Context con){
+		return root.execute(con);
 	}
 	
 }

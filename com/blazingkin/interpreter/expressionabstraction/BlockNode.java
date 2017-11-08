@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class BlockNode extends ASTNode {
@@ -21,11 +22,11 @@ public class BlockNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute() {
+	public Value execute(Context con) {
 		for (int i = 0; i < instructions.length - 1; i++){
-			instructions[i].run();
+			instructions[i].run(con);
 		}
-		return instructions[instructions.length - 1].run(); // Ruby got it right
+		return instructions[instructions.length - 1].run(con); // Ruby got it right
 	}
 
 	@Override

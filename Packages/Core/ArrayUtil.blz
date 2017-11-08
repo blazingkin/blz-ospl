@@ -14,6 +14,20 @@
 	return arr
 end
 
+:sort!(arr)
+	len = array_length(arr)
+	for i = 0; i < len; i++
+		for j = 0; j < len - 1; j++
+			if arr[j] > arr[j + 1]
+				temp = arr[j]
+				arr[j] = arr[j + 1]
+				arr[j + 1] = temp
+			end
+		end
+	end
+	return arr
+end
+
 :reverse(arr)
 	len = array_length(arr)
 	for i = 0; i < len / 2; i++

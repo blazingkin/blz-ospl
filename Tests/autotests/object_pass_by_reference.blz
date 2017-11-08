@@ -1,0 +1,13 @@
+:main
+	new obj
+	obj.a = "test"
+	obj.b = "output"
+	mangle!(obj)
+	print(obj.a)
+	print(obj.b)
+end
+
+:mangle(obj)
+	obj.a = "Object"
+	obj.b = "Mangled"
+end

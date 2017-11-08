@@ -56,7 +56,7 @@ public class Executor {
 		if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
 			RegisteredLine line = currentProcess.getRegisteredLine(getLine());
 			setLine(getLine()+1);
-			line.run();
+			line.run(Executor.getCurrentContext());
 		}
 		else{
 			String line = currentProcess.getLine(getLine());
@@ -82,7 +82,7 @@ public class Executor {
 				return;
 			}
 			setLine(getLine()+1);
-			ExpressionExecutor.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
+			ExpressionExecutor.parseExpression(line, Executor.getCurrentContext());	// If it hasn't been anything so far it must be a simple expression
 		}
 		if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
 			currentProcess.lineReturns.add(getLine()+1);
@@ -96,7 +96,7 @@ public class Executor {
 		}
 	}
 	
-	public static Value functionCall(Method m, Value[] values){
+	public static Value functionCall(Method m, Value[] values, boolean passByReference){
 		int runtimeStackDepth = RuntimeStack.runtimeStack.size();
 		if (m.parent != getCurrentProcess()){
 			RuntimeStack.push(m.parent);
@@ -105,8 +105,14 @@ public class Executor {
 		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){
-			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
-				Variable.setValue(m.variables[i], (values[i]).clone());
+			if (passByReference){
+				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+					Variable.setValue(m.variables[i], values[i]);
+				}
+			}else{
+				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+					Variable.setValue(m.variables[i], (values[i]).clone());
+				}
 			}
 		}
 		setLine(m.lineNumber);
