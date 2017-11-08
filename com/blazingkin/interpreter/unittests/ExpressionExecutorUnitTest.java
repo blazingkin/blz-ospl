@@ -4,7 +4,6 @@ package com.blazingkin.interpreter.unittests;
 import static com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor.parseExpression;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
-import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertValEqual;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -381,23 +380,23 @@ public class ExpressionExecutorUnitTest {
 	@Test
 	public void testDotOperatorShouldWork(){
 		Context testContext = new Context();
-		testContext.setValue("asdf", Value.obj(new BLZObject()));
-		assertEqual(parseExpression("asdf.inner = 2", testContext), Value.integer(2));
-		assertEqual(parseExpression("asdf.inner", testContext), Value.integer(2));
+		testContext.setValue("abcd", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("abcd.inner = 2", testContext), Value.integer(2));
+		assertEqual(parseExpression("abcd.inner", testContext), Value.integer(2));
 		parseExpression("inner", testContext);
 		UnitTestUtil.assertLastError("Could not find a value for inner");
 	}
 	
 	@Test
 	public void testDoubleDotOperatorShouldWork(){
-		Context testContext = new Context();
-		testContext.setValue("a", Value.obj(new BLZObject()));
-		testContext.setValue("b", Value.obj(new BLZObject()));
-		assertEqual(parseExpression("a.b = b", testContext), parseExpression("b", testContext));
-		assertEqual(parseExpression("a.b.x = 2", testContext), Value.integer(2));
-		assertEqual(parseExpression("a.b.x", testContext), Value.integer(2));
-		assertEqual(parseExpression("b.x", testContext), Value.integer(2));
-		parseExpression("x", testContext);
+		Context tCon = new Context();
+		tCon.setValue("abc", Value.obj(new BLZObject()));
+		tCon.setValue("bbb", Value.obj(new BLZObject()));
+		assertEqual(parseExpression("abc.b = bbb", tCon), parseExpression("bbb", tCon));
+		assertEqual(parseExpression("abc.b.x = 2", tCon), Value.integer(2));
+		assertEqual(parseExpression("abc.b.x", tCon), Value.integer(2));
+		assertEqual(parseExpression("bbb.x", tCon), Value.integer(2));
+		parseExpression("x", tCon);
 		UnitTestUtil.assertLastError("Could not find a value for x");
 	}
 	

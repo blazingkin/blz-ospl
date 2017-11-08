@@ -1,15 +1,10 @@
 package com.blazingkin.interpreter.variables;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 
 public class Context {
 	private Context parent;
@@ -75,7 +70,12 @@ public class Context {
 	}
 	
 	public void setValue(String storeName, Value value){
-		variables.put(storeName, value);
+		if (hasValue(storeName) || !inContext(storeName) ||
+			this == Variable.getGlobalContext() || parent == null){
+			variables.put(storeName, value);
+		}else{
+			parent.setValue(storeName, value);
+		}
 	}
 	
 	

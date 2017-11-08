@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +56,7 @@ public class Variable {
 		for (Context c : Context.contexts){
 			c.variables.clear();
 		}
+		Context.contexts = new ArrayList<Context>();
 		globalContext = new Context();
 	}
 	

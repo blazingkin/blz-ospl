@@ -4,7 +4,7 @@ public class BLZObject {
 
 	public Context objectContext;
 	public BLZObject(Context parent){
-		objectContext = new Context(parent);
+		objectContext = new Context(null);
 	}
 	
 	public BLZObject(){

@@ -18,6 +18,7 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	ArrayLiteralNodeUnitTest.class,
 	ArrayLookupNodeUnitTest.class,
 	AssignmentNodeUnitTest.class,
+	ContextUnitTest.class,
 	WhileNodeUnitTest.class,
 	InstructionExecutorStringArrayTest.class,
 	ExecutorUnitTest.class,
