@@ -4,7 +4,7 @@
 	new other
 	other.second = obj
 	obj.hello = say_hello
-	other.second.say_hello()
+	other.second.hello()
 	other.second.x = 3
 	print(other.second.x)
 	other.second.arr_func = arr

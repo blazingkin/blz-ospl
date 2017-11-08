@@ -24,7 +24,7 @@
 	# Loop through and print primes
 	for i = 0; i < count; i = i + 1
 		off = i + 1
-		echo off "th prime: " primes[i]
+		print(off + "th prime: " + primes[i])
 	end
 		
 end
