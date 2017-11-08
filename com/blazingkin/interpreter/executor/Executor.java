@@ -96,7 +96,7 @@ public class Executor {
 		}
 	}
 	
-	public static Value functionCall(Method m, Value[] values){
+	public static Value functionCall(Method m, Value[] values, boolean passByReference){
 		int runtimeStackDepth = RuntimeStack.runtimeStack.size();
 		if (m.parent != getCurrentProcess()){
 			RuntimeStack.push(m.parent);
@@ -105,8 +105,14 @@ public class Executor {
 		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){
-			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
-				Variable.setValue(m.variables[i], (values[i]).clone());
+			if (passByReference){
+				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+					Variable.setValue(m.variables[i], values[i]);
+				}
+			}else{
+				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+					Variable.setValue(m.variables[i], (values[i]).clone());
+				}
 			}
 		}
 		setLine(m.lineNumber);

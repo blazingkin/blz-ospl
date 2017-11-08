@@ -19,15 +19,16 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	ArrayLookupNodeUnitTest.class,
 	AssignmentNodeUnitTest.class,
 	ContextUnitTest.class,
-	WhileNodeUnitTest.class,
-	InstructionExecutorStringArrayTest.class,
 	ExecutorUnitTest.class,
 	ExpressionExecutorUnitTest.class,
 	ExpressionParserUnitTest.class,
+	FunctionCallNodeUnitTest.class,
+	InstructionExecutorStringArrayTest.class,
 	LambdaUnitTest.class,
 	MathOpsUnitTest.class,
 	ProcessUnitTest.class,
-	VariableUnitTest.class
+	VariableUnitTest.class,
+	WhileNodeUnitTest.class
 })
 public class AllTestsSuite {
 
