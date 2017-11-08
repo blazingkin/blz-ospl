@@ -40,17 +40,13 @@ How to setup and use:
 
 2.) Download the blz-ospl project from github
 
-3.) Add an alias for blz-ospl, this can be done by adding the following line to your ~/.bashrc
+3.) Add the blz-ospl 'bin' folder to your path
 
-> alias blz-ospl="java -jar INSTALLDIRECTORY/bin/blz-ospl.jar"
+> export PATH=$PATH:"INSTALLDIRECTORY/bin"
 
-Where INSTALLDIRECTORY is the directory where you saved the project
+Where INSTALLDIRECTORY is the directory where you saved blz-ospl
 
-4.) Reload your bash profile
-
-> $ source ~/.bashrc
-
-5.) From the terminal, run
+4.) From the terminal, run
 
 > $ blz-ospl ExampleCode.blz
 
