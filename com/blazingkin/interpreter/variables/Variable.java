@@ -415,7 +415,7 @@ public class Variable {
 			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.4");
+			return new Value(VariableTypes.String, "2.5");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
@@ -436,7 +436,7 @@ public class Variable {
 		case alt:
 			return new Value(VariableTypes.String, "ALT");
 		case back:
-			return new Value(VariableTypes.String, "BACKSPACE");
+			return new Value(VariableTypes.String, "\b");
 		case control:
 			return new Value(VariableTypes.String, "CONTROL");
 		case shift:

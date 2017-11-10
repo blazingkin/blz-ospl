@@ -26,8 +26,7 @@ public class EnvironmentVariableLookupNode extends UnaryNode {
 				return Variable.getEnvVariable(se);
 			}
 		}
-		System.out.println("Could Not Find Environment Variable "+args[0].getStoreName());
-		return new Value(VariableTypes.Nil, null);
+		return Value.string(System.getenv(args[0].getStoreName()));
 	}
 
 }

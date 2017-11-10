@@ -1,0 +1,5 @@
+import TestUtil
+
+:main
+	print(gimme_two())
+end
