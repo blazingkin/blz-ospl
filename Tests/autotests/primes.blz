@@ -1,8 +1,8 @@
 :main
 	len = 0
 	numon = 2
-	echo "How many primes do you want?"
-	nin count
+	print("How many primes do you want?")
+	count = number_input()
 	
 	while len < count
 		flag = 0
@@ -12,12 +12,11 @@
 				break
 			end
 		end
-		numon = numon + 1
-		if flag == 1	# Non-prime
-			continue
+		if flag == 0	# prime
+			primes[len] = numon
+			len = len + 1
 		end
-		primes[len] = numon - 1	# We incremented numon earlier, so we need to subtract one
-		len = len + 1
+		numon = numon + 1
 	end
 	
 	

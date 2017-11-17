@@ -94,8 +94,8 @@ public class Process implements RuntimeStackElement {
 	
 	private void setup(){
 		registerMethods();
-		preprocessLines();
 		registerBlocks();
+		preprocessLines();
 		handleImports();
 		processes.add(this);		
 	}
@@ -144,14 +144,43 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
+	private boolean isBlock(String line){
+		String[] splits = line.split(" ");
+		Instruction inst = InstructionType.getInstructionType(splits[0]);
+		return inst != null && inst.executor instanceof BlockInstruction;
+	}
+	
+	private boolean isEnd(String line){
+		String[] splits = line.split(" ");
+		Instruction inst = InstructionType.getInstructionType(splits[0]);
+		return inst != null && inst.executor instanceof End;		
+	}
+	
+	private boolean isLabel(String line){
+		String[] splits = line.split(" ");
+		Instruction inst = InstructionType.getInstructionType(splits[0]);
+		return inst != null && inst.executor instanceof LabeledInstruction;
+	}
+	
+	private String getLabel(String line){
+		String[] splits = line.split(" ");
+		Instruction inst = InstructionType.getInstructionType(splits[0]);
+		String args = "";
+		for (int i = 1; i < splits.length; i++){
+			args += splits[i] + " ";
+		}
+		args.trim();
+		return ((LabeledInstruction) inst.executor).getLabel(args);
+	}
+	
 	private void registerBlocks(){
 		Stack<Integer> blckStack = new Stack<Integer>();
 		HashMap<Integer, HashMap<String, Integer>> labelMap = new HashMap<Integer, HashMap<String, Integer>>();
 		for (int i = 0; i < lines.length; i++){
-			if (lines[i].startsWith(":") || (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof BlockInstruction)){
+			if (lines[i].startsWith(":") || isBlock(lines[i])){
 				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
 			}
-			else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof End){
+			else if (isEnd(lines[i])){
 				if (blckStack.empty()){
 					valid = false;
 					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
@@ -168,10 +197,8 @@ public class Process implements RuntimeStackElement {
 				
 				blockArcs.put(ba.start, ba);
 				blockArcs.put(ba.end, ba);
-			}else if (isRegistered(i) && getRegisteredLine(i).instr.executor instanceof LabeledInstruction){
-				RegisteredLine instruction = getRegisteredLine(i);
-				LabeledInstruction labelInstr = (LabeledInstruction) instruction.instr.executor;
-				String label = labelInstr.getLabel(instruction.getArgs());
+			}else if (isLabel(lines[i])){
+				String label = getLabel(lines[i]);
 				if (blckStack.empty()){
 					Interpreter.throwError("Unexpected label "+label+" on line "+(i+1));
 				}

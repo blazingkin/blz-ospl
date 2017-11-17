@@ -6,19 +6,18 @@
 	start_time = {system.time.currenttimemillis}
 	
 	while len < count
-		flag = false
+		flag = true
 		for i = 0; i < len; i = i + 1
 			if numon % primes[i] == 0	# If a previous prime divides it, it isn't a prime
-				flag = true
+				flag = false
 				break
 			end
 		end
-		numon = numon + 1
-		if flag	# Non-prime
-			continue
+		if flag	# prime
+			primes[len] = numon
+			len = len + 1
 		end
-		primes[len] = numon - 1	# We incremented numon earlier, so we need to subtract one
-		len = len + 1
+		numon = numon + 1
 	end
 	end_time = {system.time.currenttimemillis}
 	
