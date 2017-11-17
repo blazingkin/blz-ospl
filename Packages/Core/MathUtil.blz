@@ -2,3 +2,32 @@
 	RAND x range
 	return x
 end
+
+:max(x, y)
+	if x > y
+		return x
+	end
+	return y
+end
+
+:min(x, y)
+	if x < y
+		return x
+	end
+	return y
+end
+
+:floor(x)
+	return (x - (x % 1))
+end
+
+:ceil(x)
+	if x % 1 == 0
+		return x + 1
+	end
+	return x + (1 - (x % 1))
+end
+
+:distance(x_1, y_1, x_2, y_2)
+	return (((x_2 - x_1) ** 2) + ((y_2 - y_1) ** 2)) ** 0.5 
+end
