@@ -1,0 +1,8 @@
+:main
+	string = "long string"
+	length = string_length(string)
+	for i = 0; i < length; i++
+		string[i] = "f"
+	end
+	print(string)
+end

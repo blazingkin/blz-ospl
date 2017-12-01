@@ -36,6 +36,28 @@ public class AssignmentNode extends BinaryNode {
 					Value newVal = args[1].execute(con);
 					Variable.setValueOfArray(arrayName, index, newVal, con);
 					return newVal;					
+				}else if (type == VariableTypes.String){
+					Value newVal = args[1].execute(con);
+					if (newVal.type != VariableTypes.String){
+						Interpreter.throwError("Expected "+ newVal +" to be a string");
+						return Value.nil();
+					}
+					String newString = (String) newVal.value;
+					if (newString.length() != 1){
+						Interpreter.throwError("Expected "+newVal+" to be a string of length 1");
+						return Value.nil();
+					}
+					String oldString = (String) con.getValue(arrayName).value;
+					int index = Variable.getIntValue(lookupNode.args[1].execute(con)).intValue();
+					if (oldString.length() < index){
+						Interpreter.throwError("Out of bounds! Tried to set index: "+index+" of string: "+oldString);
+						return Value.nil();
+					}
+					char[] chars = oldString.toCharArray();
+					chars[index] = newString.charAt(0);
+					Value newStrVal = Value.string(String.valueOf(chars));
+					Variable.setValue(arrayName, newStrVal, con);
+					return newStrVal;
 				}else{ // Assume it's a hash
 					Value key = lookupNode.args[1].execute(con);
 					Value newVal = args[1].execute(con);

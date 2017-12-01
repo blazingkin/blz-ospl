@@ -1,0 +1,4 @@
+:string_length(string)
+	SLEN string len
+	return len
+end
