@@ -10,6 +10,7 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class FileOutput implements InstructionExecutorStringArray {
 
@@ -29,9 +30,14 @@ public class FileOutput implements InstructionExecutorStringArray {
 				f.createNewFile();
 			}
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-			int size = Variable.getArray(arrayVarAddress).size();
+			Value arr = Variable.getValue(arrayVarAddress);
+			if (arr.type != VariableTypes.Array){
+				Interpreter.throwError(arr+" was not an array");
+			}
+			Value[] vals = (Value[]) arr.value;
+			int size = vals.length;
 			for (int i = 0; i < size; i++){
-				writer.write(((Value)Variable.getArray(arrayVarAddress).values().toArray()[i]).value+"");
+				writer.write((vals[i]).value+"");
 				if (i != size -1){
 					writer.write("\n");
 				}

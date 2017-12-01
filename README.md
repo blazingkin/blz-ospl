@@ -1,15 +1,13 @@
-﻿blz-ospl
+﻿The blazingkin open source programming language (blz-ospl)
 ===
 
 [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
-
-An assembly-like interpreted language that implements both imperative and functional programming schema.
 
 Currently implemented in Java, but will eventually transition to being a directly compiled language.
 
 The language will change drastically right now as I build up feature-completeness and polish it.
 
-Language Hompage
+Language Homepage
 ===
 
 Check out the language homepage at [blazingk.in/blz-ospl](http://blazingk.in/blz-ospl).
@@ -35,6 +33,10 @@ How to setup and use:
 > blz-ospl ExampleCode.blz
 
 ## Unix
+
+Use the installation script available [here](http://blazingk.in/install_blz.sh). (Always read scripts you download before running them).
+
+*Or*
 
 1.) Install Java
 

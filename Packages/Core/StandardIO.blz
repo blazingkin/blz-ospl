@@ -16,3 +16,7 @@ end
 	filein x path
 	return x
 end
+
+:write_file_lines(path, contents)
+	fileout contents path
+end

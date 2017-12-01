@@ -8,7 +8,6 @@ import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class EnvironmentVariableLookupNode extends UnaryNode {
 

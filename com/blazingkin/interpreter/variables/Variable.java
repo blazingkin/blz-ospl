@@ -22,7 +22,7 @@ public class Variable {
 	
 	public static Context getGlobalContext(){
 		return globalContext;
-	}
+	}	
 	public static HashMap<BigInteger, Value> getArray(String arrayName){
 		return getArray(arrayName, Executor.getCurrentContext());
 	}
