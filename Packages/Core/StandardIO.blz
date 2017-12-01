@@ -18,5 +18,5 @@ end
 end
 
 :write_file_lines(path, contents)
-	fileout contents path
+	print(contents)
 end

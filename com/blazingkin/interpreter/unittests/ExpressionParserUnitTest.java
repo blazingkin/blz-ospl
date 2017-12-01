@@ -119,6 +119,14 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
+	public void testPassingTwoVariablesOneIsArray(){
+		ASTNode arrLiteral = parseExpression("[2,3,4]");
+		ASTNode commaDelimits = OperatorASTNode.newNode(Operator.CommaDelimit, new ValueASTNode("1"), arrLiteral);
+		assertEquals(parseExpression("func(1, [2,3,4])"), OperatorASTNode.newNode(Operator.functionCall, 
+				new ValueASTNode("func"), commaDelimits));
+	}
+	
+	@Test
 	public void testArrayLiteral(){
 		ASTNode[] arg = {OperatorASTNode.newNode(Operator.CommaDelimit, new ValueASTNode("1"), new ValueASTNode("2"))};
 		assertEquals(parseExpression("[1,2]"), OperatorASTNode.newNode(Operator.arrayLiteral, arg));

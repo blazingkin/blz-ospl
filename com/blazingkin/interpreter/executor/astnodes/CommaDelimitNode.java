@@ -19,8 +19,24 @@ public class CommaDelimitNode extends BinaryNode {
 	
 	@Override
 	public Value execute(Context con){
-		Value[] v1 = Variable.getValueAsArray(args[0].execute(con));
-		Value[] v2 = Variable.getValueAsArray(args[1].execute(con));
+		Value[] v1, v2;
+		
+		// This is not the cleanest way to do this
+		// However it fixes a bug if one of the args evaluates to an array
+		if (args[0].getOperator() == Operator.CommaDelimit){
+			v1 = Variable.getValueAsArray(args[0].execute(con));
+		}else{
+			v1 = new Value[1];
+			v1[0] = args[0].execute(con);
+		}
+		if (args[1].getOperator() == Operator.CommaDelimit){
+			v2 = Variable.getValueAsArray(args[1].execute(con));
+		}else{
+			v2 = new Value[1];
+			v2[0] = args[1].execute(con);
+		}
+		
+		
 		int size = v1.length + v2.length;
 		Value[] newArr = new Value[size];
 		for (int i = 0; i < v1.length; i++){
