@@ -18,6 +18,10 @@ public class Constructor implements RuntimeStackElement {
 		return name;
 	}
 	
+	public Process getParent(){
+		return parent;
+	}
+	
 	@Override
 	public void onBlockStart() {
 		// TODO Auto-generated method stub

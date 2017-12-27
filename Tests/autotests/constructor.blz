@@ -4,5 +4,6 @@
 end
 
 constructor Container
+	print("Hello from container")
 	Container.x = 2
 end

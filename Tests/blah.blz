@@ -1,24 +1,27 @@
 :main
-	print("Hello")
-	new asdf Last
+	print("Hello from main")
+	new asdf Blah
 	
 	print(asdf.x)
 	print(asdf.a * asdf.b)
 end
 
 constructor Blah
+	print("Hello from Blah")
 	this.x = 2
 	this.a = 20
 	this.b = 30
 end
 
 constructor Random
+	print("Hello from Random")
 	this.x = "From Random"
 	this.a = 10
 	this.b = 40
 end
 
 constructor Last
+	print("Hello from Last")
 	this.x = {e}
 	this.a = {e}
 	this.b = {pi}

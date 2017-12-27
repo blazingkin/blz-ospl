@@ -346,7 +346,6 @@ public class Process implements RuntimeStackElement {
 	}
 	
 
-
 	@Override
 	public void onBlockStart() {
 		for (Method m : methods){
