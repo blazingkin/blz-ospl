@@ -34,8 +34,8 @@ class TestFile:
 		end = time.time()
 		print("Test took: " + str(round((end-start) * 1000) / 1000) + " seconds")
 		if (self.output != None):
-			testout = open(self.output + "ran", "r").read()
-			gt = open(self.output, "r").read()
+			testout = open(self.output + "ran", "r").read().replace("\r", "")
+			gt = open(self.output, "r").read().replace("\r", "")
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")

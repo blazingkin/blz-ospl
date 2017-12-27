@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -9,6 +10,7 @@ import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
@@ -26,6 +28,7 @@ public class Executor {
 	// Instance objects
 	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
 	private static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
+	private static HashMap<String, Constructor> constructor = new HashMap<String, Constructor>();
 	private static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
@@ -145,7 +148,7 @@ public class Executor {
 	
 	public static void executeMethod(Method m){
 		RuntimeStack.push(m);
-		setLine(m.lineNumber);
+		setLine(m.getLineNum());
 	}
 	
 	public static void executeMethod(Method m, Value[] values){
@@ -323,6 +326,14 @@ public class Executor {
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
 		RuntimeStack.push(p);
+	}
+	
+	public static void addConstructor(String name, Constructor con){
+		constructor.put(name, con);
+	}
+	
+	public static Constructor getConstructor(String name){
+		return constructor.get(name);
 	}
 	
 	public static Stack<Method> getMethodStack(){

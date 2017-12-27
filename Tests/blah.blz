@@ -1,15 +1,25 @@
 :main
-	print(random())
+	print("Hello")
+	new asdf Last
+	
+	print(asdf.x)
+	print(asdf.a * asdf.b)
 end
 
-:test
-	a = 0
-	while true
-		if a++ < 20
-			print(a)
-		else
-			print("done")
-			return 0
-		end
-	end
+constructor Blah
+	this.x = 2
+	this.a = 20
+	this.b = 30
+end
+
+constructor Random
+	this.x = "From Random"
+	this.a = 10
+	this.b = 40
+end
+
+constructor Last
+	this.x = {e}
+	this.a = {e}
+	this.b = {pi}
 end

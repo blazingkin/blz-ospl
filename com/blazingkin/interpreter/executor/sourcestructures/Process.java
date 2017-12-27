@@ -34,6 +34,7 @@ public class Process implements RuntimeStackElement {
 	private String[] lines;
 	private RegisteredLine[] registeredLines;
 	public ArrayList<Method> methods = new ArrayList<Method>();
+	public ArrayList<Constructor> constructors = new ArrayList<Constructor>();
 	public Collection<Method> importedMethods = new HashSet<Method>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
@@ -95,6 +96,7 @@ public class Process implements RuntimeStackElement {
 	private void setup(){
 		registerMethods();
 		registerBlocks();
+		registerConstructors();
 		preprocessLines();
 		handleImports();
 		processes.add(this);		
@@ -107,6 +109,19 @@ public class Process implements RuntimeStackElement {
 					Method nM = new Method(this, i+1,lines[i].substring(1));
 					Executor.getMethods().add(nM);
 					methods.add(nM);
+				}
+			}
+		}
+	}
+	
+	private void registerConstructors(){
+		for (int i = 0; i < lines.length; i++){
+			if (lines[i].length() > 0){
+				if (lines[i].startsWith("constructor ")){
+					String constructorName = lines[i].replaceFirst("constructor ", "");
+					Constructor con = new Constructor(this, i+1, constructorName);
+					constructors.add(con);
+					Executor.addConstructor(constructorName, con);
 				}
 			}
 		}
@@ -145,6 +160,12 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	private boolean isBlock(String line){
+		if (line.startsWith(":")){
+			return true;
+		}
+		if (line.startsWith("constructor")){
+			return true;
+		}
 		String[] splits = line.split(" ");
 		Instruction inst = InstructionType.getInstructionType(splits[0]);
 		return inst != null && inst.executor instanceof BlockInstruction;
@@ -177,7 +198,7 @@ public class Process implements RuntimeStackElement {
 		Stack<Integer> blckStack = new Stack<Integer>();
 		HashMap<Integer, HashMap<String, Integer>> labelMap = new HashMap<Integer, HashMap<String, Integer>>();
 		for (int i = 0; i < lines.length; i++){
-			if (lines[i].startsWith(":") || isBlock(lines[i])){
+			if (isBlock(lines[i])){
 				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
 			}
 			else if (isEnd(lines[i])){

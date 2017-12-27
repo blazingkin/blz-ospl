@@ -1,0 +1,8 @@
+:main
+	new asdf Container
+	print(asdf.x)
+end
+
+constructor Container
+	Container.x = 2
+end

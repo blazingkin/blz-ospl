@@ -62,6 +62,14 @@ public class RuntimeStack {
 		}
 		return null;
 	}
+	
+	public static void pushContext(Context con){
+		contextStack.push(con);
+	}
+	
+	public static Context popContext(){
+		return contextStack.pop();
+	}
 
 	public static boolean isEmpty() {
 		return runtimeStack.isEmpty();
