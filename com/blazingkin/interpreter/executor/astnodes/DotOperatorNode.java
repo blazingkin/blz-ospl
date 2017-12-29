@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
@@ -30,11 +31,6 @@ public class DotOperatorNode extends BinaryNode {
 			Interpreter.throwError("Did not know how to handle dot operator on non-object");
 		}
 		BLZObject obj = (BLZObject) object.value;
-		if (args[1].getOperator() == Operator.functionCall){
-			OperatorASTNode fCall = (OperatorASTNode) args[1];
-			fCall.args[0] = new ValueASTNode(obj.objectContext.getValue(fCall.args[0].getStoreName()));
-			return args[1].execute(obj.objectContext);
-		}
 		if (args[1].getOperator() == Operator.arrayLookup){
 			OperatorASTNode arrLookup = (OperatorASTNode) args[1];
 			BigInteger index = Variable.getIntValue(arrLookup.args[1].execute(con));

@@ -2,15 +2,21 @@
 	print("Hello from main")
 	new asdf Blah
 	
-	print(asdf.x)
-	print(asdf.a * asdf.b)
+	asdf.pr()
+end
+
+:print_this
+	print({blz.context.id})
+	print(this)
 end
 
 constructor Blah
+	print({blz.context.id})
 	print("Hello from Blah")
 	this.x = 2
 	this.a = 20
 	this.b = 30
+	this.pr = print_this
 end
 
 constructor Random
