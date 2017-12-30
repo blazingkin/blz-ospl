@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 @SuppressWarnings("rawtypes")
@@ -17,6 +18,7 @@ public enum VariableTypes {
 	Integer(BigInteger.class),
 	LambdaExpression(LambdaExpression.class),
 	Method(Method.class),
+	Closure(Closure.class),
 	Nil(null),
 	Object(BLZObject.class),
 	Rational(BLZRational.class),

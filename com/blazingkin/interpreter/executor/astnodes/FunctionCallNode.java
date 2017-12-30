@@ -33,7 +33,7 @@ public class FunctionCallNode extends BinaryNode {
 	@Override
 	public Value execute(Context con){
 		Value methodVal = args[0].execute(con);
-		if (methodVal.type != VariableTypes.Method){
+		if (methodVal.type != VariableTypes.Method && methodVal.type != VariableTypes.Closure){
 			Interpreter.throwError("Tried to call a non-method "+methodVal);
 		}
 		Method toCall = (Method) methodVal.value;

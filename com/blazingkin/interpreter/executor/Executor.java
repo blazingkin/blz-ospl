@@ -10,6 +10,7 @@ import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
@@ -74,10 +75,17 @@ public class Executor {
 			}
 			String split[] = line.split(" ");
 			if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-				Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
-				getMethods().add(nM);
-				RuntimeStack.push(nM);
-				setLine(getLine()+1);
+				if (RuntimeStack.runtimeStack.peek() instanceof Constructor){
+					setLine(getLine()+1);
+					Closure closure = new Closure(currentProcess, getLine(), line.trim(), Executor.getCurrentContext());
+					Variable.setValue(closure.functionName, Value.closure(closure), closure.context);
+					setLine(getCurrentBlockEnd());
+				}else{
+					Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
+					getMethods().add(nM);
+					RuntimeStack.push(nM);
+					setLine(getLine()+1);
+				}				
 				return;
 			}
 			if (split.length == 1 && split[0].equals("")){
@@ -105,6 +113,10 @@ public class Executor {
 			RuntimeStack.push(m.parent);
 		}else{
 			getCurrentProcess().lineReturns.add(getLine());
+		}
+		if (m instanceof Closure){
+			Closure clos = (Closure) m;
+			RuntimeStack.pushContext(clos.context);
 		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){

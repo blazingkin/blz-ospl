@@ -15,7 +15,6 @@ end
 end
 
 constructor Blah
-	print({blz.context.id})
 	print("Hello from Blah")
 	x = 2
 	a = 20

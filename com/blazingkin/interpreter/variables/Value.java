@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 public class Value implements Cloneable {
@@ -139,6 +140,10 @@ public class Value implements Cloneable {
 	
 	public static Value string(String str){
 		return new Value(VariableTypes.String, str);
+	}
+	
+	public static Value closure(Closure closure){
+		return new Value(VariableTypes.Closure, closure);
 	}
 	
 	public static Value nil() {
