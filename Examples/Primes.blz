@@ -1,0 +1,33 @@
+:main
+	len = 0
+	numon = 2
+	print("How many primes do you want?")
+	count = number_input()
+	start_time = {system.time.currenttimemillis}
+	
+	while len < count
+		flag = true
+		for i = 0; i < len; i = i + 1
+			if numon % primes[i] == 0	# If a previous prime divides it, it isn't a prime
+				flag = false
+				break
+			end
+		end
+		if flag	# prime
+			primes[len] = numon
+			len = len + 1
+		end
+		numon = numon + 1
+	end
+	end_time = {system.time.currenttimemillis}
+	
+	# Loop through and print primes
+	for i = 0; i < count; i = i + 1
+		off = i + 1
+		print(off + "th prime: " + primes[i])
+	end
+	
+	time = (end_time - start_time) / 1000
+	print("Took " + time + " seconds")
+		
+end
