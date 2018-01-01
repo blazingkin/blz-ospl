@@ -22,15 +22,17 @@ How to setup and use:
 ===
 ## Windows
 
-1.) Install Java and make sure it is added to your PATH
+1.) Install the Java [JDK](http://www.oracle.com/technetwork/java/javase/downloads)
 
-2.) Download the blz-ospl project from github
+2.) Add the Java bin folder to your PATH
 
-3.) Add the bin folder to your PATH
+3.) Clone the blz-ospl project from github
 
-4.) From the command line, run
+4.) Add the bin folder to your PATH
 
-> blz-ospl ExampleCode.blz
+5.) From the command line, run
+
+> blz ExampleCode.blz
 
 ## Unix
 
@@ -40,7 +42,7 @@ Use the installation script available [here](http://blazingk.in/install_blz.sh).
 
 1.) Install Java
 
-2.) Download the blz-ospl project from github
+2.) Clone the blz-ospl project from github
 
 3.) Add the blz-ospl 'bin' folder to your path
 
@@ -50,7 +52,7 @@ Where INSTALLDIRECTORY is the directory where you saved blz-ospl
 
 4.) From the terminal, run
 
-> $ blz-ospl ExampleCode.blz
+> $ blz ExampleCode.blz
 
 Contact and License
 ===
