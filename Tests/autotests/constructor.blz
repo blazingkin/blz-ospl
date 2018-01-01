@@ -1,9 +1,9 @@
 :main
-	new asdf Container
+	asdf = Container()
 	print(asdf.x)
 end
 
 constructor Container
 	print("Hello from container")
-	Container.x = 2
+	this.x = 2
 end

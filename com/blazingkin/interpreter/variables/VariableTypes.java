@@ -15,7 +15,7 @@ public enum VariableTypes {
 	Array(Value[].class),
 	Boolean(java.lang.Boolean.class),
 	Closure(Closure.class),
-	//Constructor(Constructor.class),
+	Constructor(Constructor.class),
 	Double(BigDecimal.class),
 	Hash(HashMap.class),
 	Integer(BigInteger.class),

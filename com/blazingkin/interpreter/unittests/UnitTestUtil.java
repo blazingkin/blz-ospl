@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.Random;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -31,6 +32,7 @@ public class UnitTestUtil {
 	
 	public static void clearEnv(){
 		Variable.clearVariables();
+		RuntimeStack.cleanup();
 		inputBuffer = new LinkedList<String>();
 		outputLog = new ArrayList<String>();
 		exitLog = new ArrayList<String>();

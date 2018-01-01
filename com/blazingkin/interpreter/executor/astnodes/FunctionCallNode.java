@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -33,10 +34,11 @@ public class FunctionCallNode extends BinaryNode {
 	@Override
 	public Value execute(Context con){
 		Value methodVal = args[0].execute(con);
-		if (methodVal.type != VariableTypes.Method && methodVal.type != VariableTypes.Closure){
+		if (methodVal.type != VariableTypes.Method &&
+			methodVal.type != VariableTypes.Closure &&
+			methodVal.type != VariableTypes.Constructor){
 			Interpreter.throwError("Tried to call a non-method "+methodVal);
 		}
-		Method toCall = (Method) methodVal.value;
 		Value[] args;
 		if (this.args.length == 1){	// No Args
 			args = new Value[0];
@@ -48,6 +50,11 @@ public class FunctionCallNode extends BinaryNode {
 				args = arg;
 			}
 		}
+		if (methodVal.type == VariableTypes.Constructor){
+			Constructor constructor = (Constructor) methodVal.value;
+			return Constructor.initialize(constructor, args, passByReference);
+		}
+		Method toCall = (Method) methodVal.value;
 		return Executor.functionCall(toCall, args, passByReference);
 	}
 

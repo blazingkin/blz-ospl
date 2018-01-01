@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 public class Value implements Cloneable {
@@ -144,6 +145,10 @@ public class Value implements Cloneable {
 	
 	public static Value closure(Closure closure){
 		return new Value(VariableTypes.Closure, closure);
+	}
+	
+	public static Value constructor(Constructor constructor){
+		return new Value(VariableTypes.Constructor, constructor);
 	}
 	
 	public static Value nil() {
