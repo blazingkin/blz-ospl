@@ -6,6 +6,26 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {
 	
+	public static String[] parseBindingWithArguments(String line){
+		String name = line.split("\\(")[0].trim();
+		String varSplit[] = line.split("\\(|\\)");
+		/* Check to see if the function has any arguments */
+		if ((line.contains("(") && line.contains(")")) && varSplit.length >= 2){
+			String vars = varSplit[varSplit.length - 1];
+			String vNames[] = vars.split(",");
+			String[] result = new String[vNames.length + 1];
+			for (int i = 1; i <= vNames.length; i++){
+				result[i] = vNames[i - 1].trim();
+			}
+			result[0] = name;
+			return result;
+		}else{
+			// Why won't you let me do this on one line Java!
+			String[] result = {name};
+			return result;
+		}
+	}
+	
 	public static ASTNode parseAndCollapse(String line){
 		return parseExpression(line).collapse();
 	}

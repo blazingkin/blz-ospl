@@ -117,8 +117,8 @@ public class Process implements RuntimeStackElement {
 	private void registerConstructors(){
 		for (int i = 0; i < lines.length; i++){
 			if (lines[i].length() > 0){
-				if (lines[i].startsWith("constructor ")){
-					String constructorName = lines[i].replaceFirst("constructor ", "");
+				if (lines[i].startsWith("constructor")){
+					String constructorName = lines[i].replaceFirst("constructor", "").trim();
 					Constructor con = new Constructor(this, i+1, constructorName);
 					constructors.add(con);
 					Executor.addConstructor(constructorName, con);

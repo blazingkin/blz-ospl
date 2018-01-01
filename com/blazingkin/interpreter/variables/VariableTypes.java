@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 @SuppressWarnings("rawtypes")
@@ -13,12 +14,13 @@ public enum VariableTypes {
 	
 	Array(Value[].class),
 	Boolean(java.lang.Boolean.class),
+	Closure(Closure.class),
+	//Constructor(Constructor.class),
 	Double(BigDecimal.class),
 	Hash(HashMap.class),
 	Integer(BigInteger.class),
 	LambdaExpression(LambdaExpression.class),
 	Method(Method.class),
-	Closure(Closure.class),
 	Nil(null),
 	Object(BLZObject.class),
 	Rational(BLZRational.class),

@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 
 public class Constructor implements RuntimeStackElement {
@@ -9,6 +10,9 @@ public class Constructor implements RuntimeStackElement {
 	public String name;
 	
 	public Constructor(Process parent, int line, String name){
+		if (name.equals("")){
+			Interpreter.throwError("Empty constructor name!");
+		}
 		this.parent = parent;
 		this.lineNum = line;
 		this.name = name;

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
+import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
@@ -233,5 +234,46 @@ public class ExpressionParserUnitTest {
 		assertEquals(parseExpression("\"Test-\""), new ValueASTNode("\"Test-\""));
 	}
 	
+	@Test
+	public void testBindingParsingWithNoParenthesis(){
+		String[] expected = {"func"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func");
+		org.junit.Assert.assertArrayEquals(result, expected);
+	}
+	
+	@Test
+	public void testBindingParsingWithParenthesis(){
+		String[] expected = {"func"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func()");
+		org.junit.Assert.assertArrayEquals(expected, result);
+	}
+	
+	@Test
+	public void testBindingParsingWithOneArgument(){
+		String[] expected = {"func", "arg"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func(arg)");
+		org.junit.Assert.assertArrayEquals(expected, result);
+	}
 
+	@Test
+	public void testBindingParsingWithTwoArgumentsNoSpace(){
+		String[] expected = {"func", "arg1", "arg2"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func(arg1,arg2)");
+		org.junit.Assert.assertArrayEquals(expected, result);
+	}
+	
+	@Test
+	public void testBindingParsingWithTwoArgumentsWithSpace(){
+		String[] expected = {"func", "arg1", "arg2"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func(arg1, arg2)");
+		org.junit.Assert.assertArrayEquals(expected, result);
+	}
+	
+	@Test
+	public void testBindingParsingWithThreeArguments(){
+		String[] expected = {"func", "arg1", "arg2", "arg3"};
+		String[] result = ExpressionParser.parseBindingWithArguments("func(arg1,arg2,arg3)");
+		org.junit.Assert.assertArrayEquals(expected, result);
+	}
+	
 }
