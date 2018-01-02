@@ -627,9 +627,6 @@ public class Variable {
 	}
 	
 	public static VariableTypes typeOf(String name, Context con){
-		if (!con.variables.containsKey(name)){
-			return VariableTypes.Nil;
-		}
 		return getValue(name, con).type;
 	}
 

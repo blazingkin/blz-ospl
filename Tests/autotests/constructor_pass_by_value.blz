@@ -1,0 +1,12 @@
+:main
+	a = [1, 1, 1]
+	obj = Mangle(a)
+	obj.mangle()
+	print(a)
+end
+
+constructor Mangle(array)
+	:mangle
+		array[0] = 2
+	end
+end

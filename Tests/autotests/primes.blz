@@ -3,7 +3,7 @@
 	numon = 2
 	print("How many primes do you want?")
 	count = number_input()
-	
+	primes = []
 	while len < count
 		flag = 0
 		for i = 0; i < len; i = i + 1

@@ -4,7 +4,7 @@
 	print("How many primes do you want?")
 	count = number_input()
 	start_time = {system.time.currenttimemillis}
-	
+	primes = []	
 	while len < count
 		flag = true
 		for i = 0; i < len; i = i + 1
