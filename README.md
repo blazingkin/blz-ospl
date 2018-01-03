@@ -3,9 +3,11 @@
 
 [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
 
-Currently implemented in Java, but will eventually transition to being a directly compiled language.
+blz is an easy to use, fast, portable, and open scripting language.
 
-The language will change drastically right now as I build up feature-completeness and polish it.
+The language is currently developing feature-completeness, and may change dramatically as that happens.
+
+It currently runs on top of the JVM. There are plans to move it to the [GraalVM](https://github.com/graalvm/graal) using Truffle.
 
 Language Homepage
 ===
