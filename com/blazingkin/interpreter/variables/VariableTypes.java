@@ -23,6 +23,7 @@ public enum VariableTypes {
 	Method(Method.class),
 	Nil(null),
 	Object(BLZObject.class),
+	PrimitiveMethod(BLZPrimitiveMethod.class),
 	Rational(BLZRational.class),
 	String(java.lang.String.class),
 	Tensor(BLZTensor.class);
@@ -32,6 +33,10 @@ public enum VariableTypes {
 	}
 
 	public final Class dataType;
-	
-	
+	public static HashMap<VariableTypes, Context> primitiveContexts = new HashMap<VariableTypes, Context>();
+	static {
+		for (VariableTypes vt : VariableTypes.values()) {
+			primitiveContexts.put(vt, new Context(null));
+		}
+	}
 }

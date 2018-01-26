@@ -73,7 +73,7 @@ public class UnitTestUtil {
 			System.err.println("An assertion was false!");
 			System.err.println(a + "!=" + b);
 		}
-		assert a == b;
+		assert a.equals(b);
 	}
 	
 	public static void assertEqual(Value a, Value b){

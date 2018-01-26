@@ -5,22 +5,22 @@
  #
  #
 
-:array_length(arr)
+:length(arr)
 	ALEN arr len	# Call the internal function
 	return len
 end
 
 :concatenate(arr_A, arr_B)
-	len1 = array_length(arr1)
-	len2 = array_length(arr2)
+	len1 = arr_A.length()
+	len2 = arr_B.length()
 	for i = 0; i < len2; i++
 		arr_A[len1+i] = arr_B[i]
 	end
-	return arr1
+	return arr_A
 end
 
 :contains?(arr, element)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len; i++
 		if arr[i] == element
 			return true
@@ -34,7 +34,7 @@ end
 end
 
 :reverse(arr)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len / 2; i++
 		temp = arr[i]
 		arr[i] = arr[len - i - 1]
@@ -44,7 +44,7 @@ end
 end
 
 :shuffle(arr)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len; i++
 		x = random(len - 1)
 		temp_element = arr[i]
@@ -65,7 +65,7 @@ end
 
 # Currently implemented via bubble sort, will make quicksort at some point
 :sort(arr)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len; i++
 		for j = 0; j < len - 1; j++
 			if arr[j] > arr[j + 1]

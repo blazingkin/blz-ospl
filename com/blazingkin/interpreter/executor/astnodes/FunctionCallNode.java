@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
+import com.blazingkin.interpreter.variables.BLZPrimitiveMethod;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -35,6 +36,7 @@ public class FunctionCallNode extends BinaryNode {
 	public Value execute(Context con){
 		Value methodVal = args[0].execute(con);
 		if (methodVal.type != VariableTypes.Method &&
+			methodVal.type != VariableTypes.PrimitiveMethod &&
 			methodVal.type != VariableTypes.Closure &&
 			methodVal.type != VariableTypes.Constructor){
 			Interpreter.throwError("Tried to call a non-method "+methodVal);
@@ -53,6 +55,16 @@ public class FunctionCallNode extends BinaryNode {
 		if (methodVal.type == VariableTypes.Constructor){
 			Constructor constructor = (Constructor) methodVal.value;
 			return Constructor.initialize(constructor, args, passByReference);
+		}else if(methodVal.type == VariableTypes.PrimitiveMethod) {
+			BLZPrimitiveMethod pm = (BLZPrimitiveMethod) methodVal.value;
+			passByReference = pm.passByReference;
+			Value[] nargs = new Value[args.length + 1];
+			nargs[0] = pm.v;
+			for (int i = 1; i < nargs.length; i++) {
+				nargs[i] = args[i - 1];
+			}
+			args = nargs;
+			methodVal = new Value(VariableTypes.Method, pm.m);
 		}
 		Method toCall = (Method) methodVal.value;
 		return Executor.functionCall(toCall, args, passByReference);
