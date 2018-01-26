@@ -1,4 +1,68 @@
 
+ # Array Utilities
+ #
+ # <insert some kind of cool header or discription here>
+ #
+ #
+
+:array_length(arr)
+	ALEN arr len	# Call the internal function
+	return len
+end
+
+:concatenate(arr_A, arr_B)
+	len1 = array_length(arr1)
+	len2 = array_length(arr2)
+	for i = 0; i < len2; i++
+		arr_A[len1+i] = arr_B[i]
+	end
+	return arr1
+end
+
+:contains?(arr, element)
+	len = array_length(arr)
+	for i = 0; i < len; i++
+		if arr[i] == element
+			return true
+		end
+	end
+	return false
+end
+
+:copy(arr)
+	return arr
+end
+
+:reverse(arr)
+	len = array_length(arr)
+	for i = 0; i < len / 2; i++
+		temp = arr[i]
+		arr[i] = arr[len - i - 1]
+		arr[len - i - 1] = temp
+	end
+	return arr
+end
+
+:shuffle(arr)
+	len = array_length(arr)
+	for i = 0; i < len; i++
+		x = random(len - 1)
+		temp_element = arr[i]
+		arr[i] = arr[x]
+		arr[x] = temp_element
+	end
+	return arr
+end
+
+:slice(arr, start, end)
+	# Later: add check for start/end that are out of bounds
+	arr_new = []
+	for i = start; i < end; i++
+		arr_new[i - start] = arr[i]
+	end
+	return arr_new
+end
+
 # Currently implemented via bubble sort, will make quicksort at some point
 :sort(arr)
 	len = array_length(arr)
@@ -14,31 +78,3 @@
 	return arr
 end
 
-:sort!(arr)
-	len = array_length(arr)
-	for i = 0; i < len; i++
-		for j = 0; j < len - 1; j++
-			if arr[j] > arr[j + 1]
-				temp = arr[j]
-				arr[j] = arr[j + 1]
-				arr[j + 1] = temp
-			end
-		end
-	end
-	return arr
-end
-
-:reverse(arr)
-	len = array_length(arr)
-	for i = 0; i < len / 2; i++
-		temp = arr[i]
-		arr[i] = arr[len - i - 1]
-		arr[len - i - 1] = temp
-	end
-	return arr
-end
-
-:array_length(arr)
-	ALEN arr len	# Call the internal function
-	return len
-end
