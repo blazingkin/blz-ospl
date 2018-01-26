@@ -51,7 +51,7 @@ public class Context {
 			return variables.get(s);
 		}
 		
-		if (parent != null && getParentContext() != Variable.getGlobalContext()){
+		if (parent != null){
 			return parent.getValue(s);
 		}else{
 			Interpreter.throwError("Could not find a value for "+s);

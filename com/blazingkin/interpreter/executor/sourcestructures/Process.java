@@ -38,15 +38,9 @@ public class Process implements RuntimeStackElement {
 	public Collection<Method> importedMethods = new HashSet<Method>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	private boolean shouldImportCore = true;
 	
 	public Process(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
-		setupFileProcess(runFile);
-	}
-	
-	public Process(File runFile, boolean shouldImportCore) throws FileNotFoundException{
-		this.shouldImportCore = shouldImportCore;
 		setupFileProcess(runFile);
 	}
 	
@@ -252,9 +246,6 @@ public class Process implements RuntimeStackElement {
 		Set<File> packagesToImport = new HashSet<File>();
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
-			if (shouldImportCore){
-				packagesToImport.add(importer.findPackage("Core"));		
-			}
 			for (RegisteredLine line : registeredLines){
 				if (line != null && line.instr == Instruction.IMPORTPACKAGE){
 					packagesToImport.add(importer.findPackage(line.args));

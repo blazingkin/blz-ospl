@@ -27,7 +27,7 @@ public class Package {
 			String fileName = f.getName();
 			String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
 			if (extension.toLowerCase().equals("blz")){
-				Process fileProcess = new Process(f, !packageDirectory.getName().toLowerCase().equals("core"));
+				Process fileProcess = new Process(f);
 				processes.put(fileName.replace(".blz", ""), fileProcess);
 			}
 		}
