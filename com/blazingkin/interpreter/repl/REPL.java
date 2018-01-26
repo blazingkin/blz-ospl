@@ -24,6 +24,12 @@ public class REPL {
 	public static void immediateModeLoop(InputStream is){
 		Executor.getEventHandler().print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
 		Executor.getEventHandler().print("Type 'exit' to exit\n");
+		try {
+			in.blazingk.blz.packagemanager.Package.importCore();
+		} catch (Exception e) {
+			Executor.getEventHandler().err(e.getMessage());
+			Executor.getEventHandler().exitProgram("Failed to import Core");
+		}
 		String in = "";
 		Scanner sc = new Scanner(is);
 		Executor.immediateMode = true;

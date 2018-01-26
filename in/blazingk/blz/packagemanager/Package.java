@@ -74,7 +74,17 @@ public class Package {
 		File coreFolder = importer.findPackage("Core");
 		Package corePackage = new Package(coreFolder);
 		for (Method m : corePackage.getAllMethodsInPackage()){
-			Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+			try {
+				if (m.parent.readingFrom.getName().equals("ArrayUtil.blz")) {
+					VariableTypes.primitiveContexts.get(VariableTypes.Array).setValue(m.functionName, new Value(VariableTypes.Method, m));
+				}else if (m.parent.readingFrom.getName().equals("StringUtil.blz")) {
+					VariableTypes.primitiveContexts.get(VariableTypes.String).setValue(m.functionName, new Value(VariableTypes.Method, m));
+				}else{
+					Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+				}
+			}catch(NullPointerException e) {
+				Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+			}
 		}
 	}
 }

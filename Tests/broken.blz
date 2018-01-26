@@ -1,28 +1,5 @@
 :main
-	print("Hello world!")
-	
-	#Test 00 :contains
-	arr = [1,2]
-	print(contains?(arr, 1))
-	
-	#Test 00 :concatenate
-	arr1 = [0,1,2]
-	arr2 = [3,{nil},5,6,7]
-	arr3 = concatenate(arr1, arr2)
-	print("arr3: " + arr3)
-	print("arr1: " + arr1)
-	
-	#Test 00 :slice
-	arr = [0,1,2,3,4,5,{nil},7,8]
-	print("arr: " + arr)
-	arr1 = slice(arr,0,3)
-	print("arr1 sliced from arr: " + arr1)
-	arr2 = slice(arr,0,array_length(arr))
-	print("arr2 sliced from arr: " + arr2)
-	arr3 = slice(arr,0,0)
-	print("arr3 sliced from arr: " + arr3)
-	
-	arr1 = slice(arr1,0,1)
-	print("arr1 sliced from arr1: " + arr1)
-	#
+	a = [2, 3, 1]
+	a = a.sort()
+	print(a)
 end

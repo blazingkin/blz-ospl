@@ -1,5 +1,5 @@
 :main
 	arr = [2, 1, 3]
-	print(sort!(arr))
+	print(arr.sort!())
 	print(arr)
 end

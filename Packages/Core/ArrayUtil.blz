@@ -1,21 +1,7 @@
 
 # Currently implemented via bubble sort, will make quicksort at some point
 :sort(arr)
-	len = array_length(arr)
-	for i = 0; i < len; i++
-		for j = 0; j < len - 1; j++
-			if arr[j] > arr[j + 1]
-				temp = arr[j]
-				arr[j] = arr[j + 1]
-				arr[j + 1] = temp
-			end
-		end
-	end
-	return arr
-end
-
-:sort!(arr)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len; i++
 		for j = 0; j < len - 1; j++
 			if arr[j] > arr[j + 1]
@@ -29,7 +15,7 @@ end
 end
 
 :reverse(arr)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len / 2; i++
 		temp = arr[i]
 		arr[i] = arr[len - i - 1]
@@ -39,7 +25,7 @@ end
 end
 
 :contains?(arr, element)
-	len = array_length(arr)
+	len = arr.length()
 	for i = 0; i < len; i++
 		if arr[i] == element
 			return true
@@ -49,8 +35,8 @@ end
 end
 
 :concatenate(arr1, arr2)
-	len1 = array_length(arr1)
-	len2 = array_length(arr2)
+	len1 = arr1.length()
+	len2 = arr2.length()
 	for i = 0; i < len2; i++
 		arr1[len1+i] = arr2[i]
 	end
@@ -66,7 +52,7 @@ end
 	return arr1
 end
 
-:array_length(arr)
+:length(arr)
 	ALEN arr len	# Call the internal function
 	return len
 end

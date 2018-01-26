@@ -3,11 +3,14 @@ package com.blazingkin.interpreter.executor.astnodes;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.variables.BLZObject;
+import com.blazingkin.interpreter.variables.BLZPrimitiveMethod;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -26,7 +29,12 @@ public class DotOperatorNode extends BinaryNode {
 	public Value execute(Context con){
 		Value object = args[0].execute(con);
 		if (object.type != VariableTypes.Object){
-			Interpreter.throwError("Did not know how to handle dot operator on non-object");
+			boolean passByReference = false;
+			if (args[1].getStoreName().contains("!")) {
+				passByReference = true;
+			}
+			Method primitiveMethod = (Method) VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", "")).value;
+			return new Value(VariableTypes.PrimitiveMethod, new BLZPrimitiveMethod(primitiveMethod, object, passByReference));
 		}
 		BLZObject obj = (BLZObject) object.value;
 		if (args[1].getOperator() == Operator.arrayLookup){
