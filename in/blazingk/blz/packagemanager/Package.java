@@ -7,8 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Package {
 	private File packageDirectory;
@@ -63,6 +67,15 @@ public class Package {
 	        else fileTree.addAll(listFileTree(entry));
 	    }
 	    return fileTree;
+	}
+	
+	public static void importCore() throws Exception {
+		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
+		File coreFolder = importer.findPackage("Core");
+		Package corePackage = new Package(coreFolder);
+		for (Method m : corePackage.getAllMethodsInPackage()){
+			Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+		}
 	}
 }
 

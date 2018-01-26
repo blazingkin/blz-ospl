@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
@@ -28,6 +29,9 @@ public class RuntimeStack {
 			
 		}else if (se instanceof LoopWrapper){
 			loopStack.push((LoopWrapper)se);
+		}else if (se instanceof Closure){
+			methodStack.push((Method) se);
+			contextStack.push(new Context(contextStack.peek()));
 		}else if (se instanceof Method){
 			methodStack.push((Method) se);
 			contextStack.push(new Context(processContextStack.peek()));
