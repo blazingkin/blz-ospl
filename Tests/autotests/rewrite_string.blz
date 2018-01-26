@@ -1,6 +1,6 @@
 :main
 	string = "long string"
-	length = string_length(string)
+	length = string.length()
 	for i = 0; i < length; i++
 		string[i] = "f"
 	end
