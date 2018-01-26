@@ -38,6 +38,34 @@ end
 	return arr
 end
 
+:contains?(arr, element)
+	len = array_length(arr)
+	for i = 0; i < len; i++
+		if arr[i] == element
+			return true
+		end
+	end
+	return false
+end
+
+:concatenate(arr1, arr2)
+	len1 = array_length(arr1)
+	len2 = array_length(arr2)
+	for i = 0; i < len2; i++
+		arr1[len1+i] = arr2[i]
+	end
+	return arr1
+end
+
+:slice(arr, start, end)
+	# Later: add check for start/end that are out of bounds
+	arr1 = []
+	for i = start; i < end; i++
+		arr1[i-start] = arr[i]
+	end
+	return arr1
+end
+
 :array_length(arr)
 	ALEN arr len	# Call the internal function
 	return len

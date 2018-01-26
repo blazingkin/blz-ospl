@@ -187,6 +187,7 @@ public class Executor {
 		if (startMethod != null){
 			executeMethod(startMethod);
 		}
+		importCore();
 		codeLoop();
 			
 	}
@@ -205,6 +206,7 @@ public class Executor {
 		if (startMethod != null){
 			executeMethod(startMethod);
 		}
+		importCore();
 		codeLoop();
 	}
 	
@@ -224,6 +226,14 @@ public class Executor {
 	}
 	
 
+	public static void importCore(){
+		try {
+			in.blazingk.blz.packagemanager.Package.importCore();
+		}catch(Exception e){
+			eventHandler.err(e.getMessage());
+			eventHandler.exitProgram("Failed to import core directory");
+		}
+	}
 	
 	//Lots of getters / setters below this point
 	
