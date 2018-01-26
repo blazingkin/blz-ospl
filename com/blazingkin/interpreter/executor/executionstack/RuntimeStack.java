@@ -20,6 +20,7 @@ public class RuntimeStack {
 	public static Stack<Context> contextStack = new Stack<Context>();
 	public static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
 	public static Stack<Integer> processLineStack = new Stack<Integer>();
+	public static Stack<Context> processContextStack = new Stack<Context>();
 	
 	public static void push(RuntimeStackElement se){
 		runtimeStack.push(se);
@@ -29,10 +30,11 @@ public class RuntimeStack {
 			loopStack.push((LoopWrapper)se);
 		}else if (se instanceof Method){
 			methodStack.push((Method) se);
-			contextStack.push(new Context());
+			contextStack.push(new Context(processContextStack.peek()));
 		}else if (se instanceof Process){
 			processStack.push((Process) se);
-			contextStack.push(new Context());
+			contextStack.push(new Context(Variable.getGlobalContext()));
+			processContextStack.push(contextStack.peek());
 			processLineStack.push(Executor.getLine());
 		}
 		se.onBlockStart();
@@ -51,6 +53,7 @@ public class RuntimeStack {
 			return new Value(VariableTypes.Method, m);
 		}else if (se instanceof Process){
 			processStack.pop();
+			processContextStack.pop();
 			Variable.killContext(contextStack.pop());
 			Executor.setLine(processLineStack.pop());
 		}

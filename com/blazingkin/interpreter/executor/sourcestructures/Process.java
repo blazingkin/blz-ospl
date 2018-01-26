@@ -67,7 +67,12 @@ public class Process implements RuntimeStackElement {
 		Scanner scan = new Scanner(readingFrom);
 		ArrayList<String> lns = new ArrayList<String>();
 		while (scan.hasNextLine()){
-			lns.add(scan.nextLine().split("(?<!\\\\)#")[0].trim());	// Ignore extra whitespace and comments
+			try{
+				lns.add(scan.nextLine().split("(?<!\\\\)#")[0].trim());	// Ignore extra whitespace and comments
+			}catch(ArrayIndexOutOfBoundsException e){
+				/* Basically the line starts with a comment */
+				lns.add("");
+			}
 		}
 		scan.close();
 		lines = new String[lns.size()];
