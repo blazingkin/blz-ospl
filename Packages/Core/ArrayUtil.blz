@@ -33,6 +33,15 @@ end
 	return arr
 end
 
+:remove(arr, index)
+	len = arr.length()
+	temp_arr = arr.copy()
+	for i = index; i < len - 1; i++
+		arr[i] = temp_arr[i + 1]
+	end
+	return arr.slice(0, len - 1)
+end
+
 :reverse(arr)
 	len = arr.length()
 	for i = 0; i < len / 2; i++

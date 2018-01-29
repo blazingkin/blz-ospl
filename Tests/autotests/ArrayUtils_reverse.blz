@@ -1,0 +1,6 @@
+:main
+    #Test 00 :remove
+    my_arr = [0, 1, 2, 3]
+    my_arr = my_arr.reverse()
+    print(my_arr)
+end

@@ -1,0 +1,15 @@
+:main
+    #Test 00 :remove
+	print(">>> Test 00 :remove <<<")
+	arr = [0,1,2,3,4,5,6]
+	print("before remove: " + arr)
+	arr = arr.remove(3)
+	print("after removing index 3: " + arr)
+	arr = arr.remove(5)
+	print("after removing index 5: " + arr)
+	arr = arr.remove(0)
+	print("after removing index 0: " + arr)
+	arr2 = arr.remove(1)
+	print("arr2 makes a copy of arr and removes index 1: " + arr2)
+	print("--------------------------------")
+end
