@@ -75,11 +75,26 @@ public class Package {
 		Package corePackage = new Package(coreFolder);
 		for (Method m : corePackage.getAllMethodsInPackage()){
 			try {
-				if (m.parent.readingFrom.getName().equals("ArrayUtil.blz")) {
-					VariableTypes.primitiveContexts.get(VariableTypes.Array).setValue(m.functionName, new Value(VariableTypes.Method, m));
-				}else if (m.parent.readingFrom.getName().equals("StringUtil.blz")) {
-					VariableTypes.primitiveContexts.get(VariableTypes.String).setValue(m.functionName, new Value(VariableTypes.Method, m));
-				}else{
+				String fileName = m.parent.readingFrom.getName();
+				if (fileName.equals("ArrayUtil.blz")) {
+					VariableTypes.primitiveContexts.get(VariableTypes.Array).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("StringUtil.blz")) {
+					VariableTypes.primitiveContexts.get(VariableTypes.String).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("NilUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Nil).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("NumberUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Integer).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Rational).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Double).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("MethodUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Method).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Constructor).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Closure).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.PrimitiveMethod).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("BooleanUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Boolean).setValue(m.functionName, Value.method(m));
+				}
+				else{
 					Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
 				}
 			}catch(NullPointerException e) {
