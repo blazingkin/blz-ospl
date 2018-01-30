@@ -33,6 +33,7 @@ end
 	return arr
 end
 
+#does not work with !
 :remove(arr, index)
 	len = arr.length()
 	temp_arr = arr.copy()
