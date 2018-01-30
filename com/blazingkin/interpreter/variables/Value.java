@@ -151,6 +151,10 @@ public class Value implements Cloneable {
 		return new Value(VariableTypes.Constructor, constructor);
 	}
 	
+	public static Value method(Method m){
+		return new Value(VariableTypes.Method, m);
+	}
+	
 	public static Value nil() {
 		return new Value(VariableTypes.Nil, null);
 	}

@@ -2,3 +2,7 @@
 	SLEN string len
 	return len
 end
+
+:nil?
+	return false
+end

@@ -1,0 +1,15 @@
+:main
+	print((2).nil?())
+	print((2/3).nil?())
+	print(2.0.nil?())
+	print("hi".nil?())
+	print([1,2,3].nil?())
+	print(Blah.nil?())
+	print(main.nil?())
+	print({blz.nil}.nil?())
+end
+
+
+constructor Blah()
+	
+end
