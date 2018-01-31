@@ -21,6 +21,7 @@ import com.blazingkin.interpreter.executor.astnodes.LessThanEqualsNode;
 import com.blazingkin.interpreter.executor.astnodes.LessThanNode;
 import com.blazingkin.interpreter.executor.astnodes.LogarithmNode;
 import com.blazingkin.interpreter.executor.astnodes.LogicalAndNode;
+import com.blazingkin.interpreter.executor.astnodes.LogicalOrNode;
 import com.blazingkin.interpreter.executor.astnodes.ModulusNode;
 import com.blazingkin.interpreter.executor.astnodes.MultiplicationNode;
 import com.blazingkin.interpreter.executor.astnodes.NotEqualNode;
@@ -160,6 +161,8 @@ public abstract class OperatorASTNode extends ASTNode {
 			return new LogarithmNode(args);
 		case LogicalAnd:
 			return new LogicalAndNode(args);
+		case LogicalOr:
+			return new LogicalOrNode(args);
 		case Modulus:
 			return new ModulusNode(args);
 		case Multiplication:
