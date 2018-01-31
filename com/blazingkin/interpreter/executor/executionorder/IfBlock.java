@@ -23,7 +23,8 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 					RuntimeStack.push(this);
 					Executor.setLine(currentArc.getBlockLine("else"));
 				}catch(Exception e){
-					System.out.println("Oh god, you broke something really badly");
+					Executor.getEventHandler().err("Oh god, you broke something really badly");
+					Executor.getEventHandler().err("This is related to `else` tags from if statements");
 					Interpreter.throwError("Like this branch should not be reachable");
 				}
 			}else{
