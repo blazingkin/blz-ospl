@@ -12,4 +12,6 @@
 	arr1 = arr.slice(0,1)
 	print("arr1 sliced from arr1: " + arr1)
 	print("--------------------------------")
+
+	#does not really make sense to use slice!()
 end

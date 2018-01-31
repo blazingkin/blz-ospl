@@ -7,4 +7,13 @@
     print("arr3: " + arr3)
     print("arr1: " + arr1)
     print("--------------------------------")
+
+    #Test 01 :concatenate! (same thing as above)
+    print(">>> Test 01 :concatenate! <<<")
+    arr1 = [0,1,2]
+    arr2 = [3,{nil},5,6,7]
+    arr3 = arr1.concatenate!(arr2)
+    print("arr3: " + arr3)
+    print("arr1: " + arr1)
+    print("--------------------------------")
 end

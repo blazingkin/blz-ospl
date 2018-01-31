@@ -1,7 +1,13 @@
 :main
-    #Test 00 :contains
-	print(">>> Test 00 :contains <<<")
+    #Test 00 :contains?
+	print(">>> Test 00 :contains? <<<")
 	arr = [1,2]
 	print(arr.contains?(1))
+	print("--------------------------------")
+
+	#Test 01 :contains?! (same as above)
+	print(">>> Test 01 :contains?! <<<")
+	arr = [1,2]
+	print(arr.contains?!(1))
 	print("--------------------------------")
 end

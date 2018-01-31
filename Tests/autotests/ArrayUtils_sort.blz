@@ -1,0 +1,11 @@
+:main
+    #Test 00 :sort
+    my_arr = [9, 3, 2, 1, 0, 6, 5, 7, 4, 8]
+    my_arr = my_arr.sort()
+    print(my_arr)
+
+    #Test 01 :sort!
+    my_arr = [9, 3, 2, 1, 0, 6, 5, 7, 4, 8]
+    my_arr.sort!()
+    print(my_arr)
+end
