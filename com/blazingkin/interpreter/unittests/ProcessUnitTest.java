@@ -89,6 +89,24 @@ public class ProcessUnitTest {
 		UnitTestUtil.assertLastError("Empty constructor name!");
 	}
 	
+	@Test
+	public void TestLabelOutsideOfBlock(){
+		try{
+		String[] code = {"else"};
+		new Process(code);
+		}catch(Exception e){}
+		UnitTestUtil.assertLastError("Unexpected label else on line 1");
+	}
+	
+	@Test
+	public void TestExtraEnd(){
+		try{
+			String[] code = {"if blah", "end", "end"};
+		new Process(code);
+		}catch(Exception e){}
+		UnitTestUtil.assertLastError("Unexpected end of block on line 3");
+	}
+	
 	@After
 	public void clearEnv(){
 		UnitTestUtil.clearEnv();

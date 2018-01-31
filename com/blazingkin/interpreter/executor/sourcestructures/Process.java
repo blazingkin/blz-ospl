@@ -148,12 +148,12 @@ public class Process implements RuntimeStackElement {
 				String newStr = lines[i].replaceFirst(splits[0], "").trim();
 				registeredLines[i] = new RegisteredLine(instr, newStr);
 			}catch(Exception e){
-				e.printStackTrace();
 				valid = false;
 				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
 			}
 		}
 		if (!errors.isEmpty()){
+			errors += "In process: "+ this.toString() + "\n";
 			Interpreter.throwError(errors);
 		}
 	}
@@ -203,7 +203,8 @@ public class Process implements RuntimeStackElement {
 			else if (isEnd(lines[i])){
 				if (blckStack.empty()){
 					valid = false;
-					Interpreter.throwError("Unexpected "+getRegisteredLine(i).instr.name+" on line "+(i+1));
+					Executor.getEventHandler().err("Error in process: "+this.toString()+"\n");
+					Interpreter.throwError("Unexpected end of block on line "+(i+1));
 				}
 				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
 				
@@ -220,6 +221,7 @@ public class Process implements RuntimeStackElement {
 			}else if (isLabel(lines[i])){
 				String label = getLabel(lines[i]);
 				if (blckStack.empty()){
+					Executor.getEventHandler().err("Error in process: "+ this.toString() + "\n");
 					Interpreter.throwError("Unexpected label "+label+" on line "+(i+1));
 				}
 				int startLine = blckStack.peek();
@@ -233,7 +235,8 @@ public class Process implements RuntimeStackElement {
 			while (!blckStack.empty()){
 				valid = false;
 				if (!Executor.isImmediateMode()){
-				Executor.getEventHandler().print("Block starting on line "+blckStack.pop()+" not closed");
+					Executor.getEventHandler().err("Error in process: " + this.toString() + "\n");
+					Executor.getEventHandler().err("Block starting on line "+blckStack.pop()+" not closed");
 				}
 			}
 			valid = false;
