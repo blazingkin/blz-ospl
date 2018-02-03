@@ -9,6 +9,7 @@ import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class LessThanNode extends BinaryNode {
 
@@ -24,6 +25,11 @@ public class LessThanNode extends BinaryNode {
 		Value v1 = args[0].execute(con);
 		Value v2 = args[1].execute(con);
 		if (!Variable.isDecimalValue(v1) || !Variable.isDecimalValue(v2)){
+			if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
+				String s1 = (String) v1.value;
+				String s2 = (String) v2.value;
+				return Value.bool(s1.compareTo(s2) < 0);
+			}
 			Interpreter.throwError("One of "+v1+" or "+v2+" is not a decimal value");
 		}
 		BigDecimal d1 = Variable.getDoubleVal(v1);

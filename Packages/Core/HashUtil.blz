@@ -18,4 +18,4 @@ end
 
 :nil?
 	return false
-end
+end	

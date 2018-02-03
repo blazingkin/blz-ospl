@@ -1,0 +1,14 @@
+:sort(arr)
+	i = 1
+	while i < arr.length()
+		j = i
+		while (j > 0) && (arr[j - 1] > arr[j])
+			temp = arr[j]
+			arr[j] = arr[j - 1]
+			arr[j - 1] = temp
+			j--
+		end
+		i++
+	end
+	return arr
+end
