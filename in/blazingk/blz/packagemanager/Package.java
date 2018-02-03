@@ -93,6 +93,8 @@ public class Package {
 					VariableTypes.primitiveContexts.get(VariableTypes.PrimitiveMethod).setValue(m.functionName, Value.method(m));
 				}else if (fileName.equals("BooleanUtil.blz")){
 					VariableTypes.primitiveContexts.get(VariableTypes.Boolean).setValue(m.functionName, Value.method(m));
+				}else if (fileName.equals("HashUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Hash).setValue(m.functionName, Value.method(m));
 				}
 				else{
 					Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
