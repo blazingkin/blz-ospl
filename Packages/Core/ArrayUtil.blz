@@ -88,6 +88,10 @@ end
 	return arr
 end
 
+:unique
+	
+end
+
 :nil?
 	return false
 end
