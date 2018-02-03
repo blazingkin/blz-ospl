@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.instruction;
 
+import com.blazingkin.interpreter.executor.data.HashHasKey;
 import com.blazingkin.interpreter.executor.data.InitializeObject;
 import com.blazingkin.interpreter.executor.data.Peek;
 import com.blazingkin.interpreter.executor.data.Pop;
@@ -105,7 +106,8 @@ public enum Instruction {
 	RETURN("RETURN", "Return value", new ReturnValue()),
 	INSTANTIATE("NEW", "INSTANTIATE OBJECT", new InitializeObject()),
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
-	ELSE("ELSE", "ELSE BLOCK", new Else());
+	ELSE("ELSE", "ELSE BLOCK", new Else()),
+	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
