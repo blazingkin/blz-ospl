@@ -33,6 +33,26 @@ end
 	return arr
 end
 
+:each(arr, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		method(arr[i])
+	end
+	return arr
+end
+
+:map(arr, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		arr[i] = method(arr[i])
+	end
+	return arr
+end
+
+:nil?
+	return false
+end
+
 #does not work with !
 :remove(arr, index)
 	len = arr.length()
@@ -89,26 +109,6 @@ end
 	return arr
 end
 
-:each(arr, method)
-	length = arr.length()
-	for i = 0; i < length; i++
-		method(arr[i])
-	end
-	return arr
-end
-
-:map(arr, method)
-	length = arr.length()
-	for i = 0; i < length; i++
-		arr[i] = method(arr[i])
-	end
-	return arr
-end
-
 :unique
 	
-end
-
-:nil?
-	return false
 end
