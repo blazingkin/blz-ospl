@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.unittests.astnodes.ApproximateComparisonNodeUn
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLiteralNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLookupNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.AssignmentNodeUnitTest;
+import com.blazingkin.interpreter.unittests.astnodes.LessThanNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.LogicalAndNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.LogicalOrNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
@@ -28,6 +29,7 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	FunctionCallNodeUnitTest.class,
 	InstructionExecutorStringArrayTest.class,
 	LambdaUnitTest.class,
+	LessThanNodeUnitTest.class,
 	LogicalAndNodeUnitTest.class,
 	LogicalOrNodeUnitTest.class,
 	MathOpsUnitTest.class,

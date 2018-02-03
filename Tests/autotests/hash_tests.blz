@@ -1,0 +1,9 @@
+:main
+	hash = {}
+	hash.set("hi", 2)
+	print(hash.get("hi"))
+	hash.set(2, 3)
+	print(hash.get(2))
+	print(hash.has_key?(2))
+	print(hash.has_key?("asdf"))
+end
