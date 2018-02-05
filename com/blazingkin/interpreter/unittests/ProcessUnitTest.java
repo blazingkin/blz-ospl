@@ -90,6 +90,17 @@ public class ProcessUnitTest {
 	}
 	
 	@Test
+	public void TestMainAndConstructor() {
+		String[] code = {"constructor Blah(a, b)", "end", ":main", "print(Blah(2,3).a)", "end"};
+		Process p = new Process(code);
+		UnitTestUtil.assertNoErrors();
+		UnitTestUtil.assertEqual(p.constructors.size(), 1);
+		UnitTestUtil.assertEqual(p.constructors.get(0).name, "Blah");
+		UnitTestUtil.assertEqual(p.methods.size(), 1);
+		UnitTestUtil.assertEqual(p.methods.get(0).functionName, "main");
+	}
+	
+	@Test
 	public void TestLabelOutsideOfBlock(){
 		try{
 		String[] code = {"else"};
