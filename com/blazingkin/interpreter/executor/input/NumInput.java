@@ -5,12 +5,11 @@ import java.math.BigInteger;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
-import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class NumInput implements InstructionExecutorStringArray, LambdaFunction {
+public class NumInput implements InstructionExecutorStringArray {
 	/*	NumInput
 	 * 	Gets a number as input (Only a number)
 	 * 
@@ -29,20 +28,5 @@ public class NumInput implements InstructionExecutorStringArray, LambdaFunction 
 		}
 	}
 
-	@Override
-	public Value evaluate(String[] args) {
-		try{
-			String str = Executor.getEventHandler().getInput();
-			if (Variable.isInteger(str)){
-				return new Value(VariableTypes.Integer, new BigInteger(str));
-			}else{
-				return new Value(VariableTypes.Double, new BigDecimal(str));
-			}
-		}catch(Exception e){
-			System.err.println("Invalid Input, Please Input A Number");
-			evaluate(args);
-		}
-		return evaluate(args);
-	}
 	
 }

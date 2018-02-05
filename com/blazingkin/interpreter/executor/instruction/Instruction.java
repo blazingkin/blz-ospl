@@ -14,13 +14,11 @@ import com.blazingkin.interpreter.executor.executionorder.WhileLoop;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
-import com.blazingkin.interpreter.executor.math.ModVars;
 import com.blazingkin.interpreter.executor.output.BLZLogging;
 import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.string.Length;
-import com.blazingkin.interpreter.executor.string.Substring;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
@@ -32,7 +30,6 @@ public enum Instruction {
 	NUMINPUT("NIN", "NUM INPUT", new NumInput()),									// Number input - inputs a string and parses to an int stores to a variable
 	RANDOM("RAND", "RANDOM", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
 	STRINGINPUT("STRIN", "STRINGIN", new StringInput()),								// Input String - gets a string through input
-	MODULUS("MOD", "MODULUS", new ModVars()),										// Modulus - Gets the remainder of a difference
 	END("END", "END STATEMENT", new End()),											// End - Ends a return jump statement
 	IF("IF", "IF STATEMENT", new IfBlock()),
 	WAIT("WAIT", "WAIT", new Wait()),												//Wait - Waits a given time on this instruction
@@ -40,7 +37,6 @@ public enum Instruction {
 	FILEOUTPUT("FILEOUT", "File Out", new FileOutput()),
 	STRINGLENGTH("SLEN", "String Length", new Length(true)),
 	ARRAYLENGTH("ALEN", "Array Length", new Length(false)),
-	SUBSTRING("SUBS", "Substring", new Substring()),
 	FORLOOP("FOR", "For", new ForLoop()),
 	WHILELOOP("WHILE", "While", new WhileLoop()),
 	TOGGLELOGGING("BLZLOG", "TOGGLE LOGGING", new BLZLogging()),

@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -65,11 +64,6 @@ public class Executor {
 		else{
 			String line = currentProcess.getLine(getLine());
 			if (line.trim().length() == 0){
-				setLine(getLine()+1);
-				return;
-			}
-			if (line.charAt(0) == '('){
-				LambdaParser.parseLambdaExpression(line).getValue();
 				setLine(getLine()+1);
 				return;
 			}

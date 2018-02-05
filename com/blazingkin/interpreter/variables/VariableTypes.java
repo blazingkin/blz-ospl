@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import com.blazingkin.interpreter.executor.lambda.LambdaExpression;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
@@ -19,7 +18,6 @@ public enum VariableTypes {
 	Double(BigDecimal.class),
 	Hash(HashMap.class),
 	Integer(BigInteger.class),
-	LambdaExpression(LambdaExpression.class),
 	Method(Method.class),
 	Nil(null),
 	Object(BLZObject.class),

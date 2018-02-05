@@ -3,12 +3,11 @@ package com.blazingkin.interpreter.executor.data;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
-import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class RandomImplementor implements InstructionExecutorStringArray, LambdaFunction {
+public class RandomImplementor implements InstructionExecutorStringArray {
 	/*	Random
 	 * Returns a random integer from 0-99
 	 * 
@@ -30,18 +29,4 @@ public class RandomImplementor implements InstructionExecutorStringArray, Lambda
 		Variable.setValue(args[0], v);
 	}
 
-
-	@Override
-	public Value evaluate(String[] args) {
-		if(args.length == 1){
-			BigInteger range = Variable.getIntValue(Variable.getValue(args[0]));
-			return new Value(VariableTypes.Integer, BigInteger.valueOf((long)(Math.random()*range.intValue())));
-		}else if (args.length == 2){
-			BigInteger lowerBound = Variable.getIntValue(Variable.getValue(args[0]));
-			BigInteger upperBound = Variable.getIntValue(Variable.getValue(args[1]));
-			BigInteger range = upperBound.subtract(lowerBound);
-			return new Value(VariableTypes.Integer, lowerBound.add(BigInteger.valueOf((long)(Math.random()*range.intValue()))));
-		}
-		return new Value(VariableTypes.Integer, BigInteger.valueOf((long)(Math.random()*100)));
-	}
 }
