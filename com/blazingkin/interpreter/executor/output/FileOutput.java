@@ -14,7 +14,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class FileOutput implements InstructionExecutorStringArray {
 
-	public void run(String args[]){
+	public Value run(String args[]){
 		String arrayVarAddress = args[0];
 		String filePath = "";
 		for (int i = 1; i < args.length; i++){
@@ -46,8 +46,9 @@ public class FileOutput implements InstructionExecutorStringArray {
 		}catch(Exception e){
 			e.printStackTrace();
 			Interpreter.throwError("there was an error writing to file "+filePath);
+			return Value.bool(false);
 		}
-		
+		return Value.bool(true);
 	}
 	
 	

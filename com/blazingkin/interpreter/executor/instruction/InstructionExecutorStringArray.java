@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public abstract interface InstructionExecutorStringArray extends InstructionExecutor {
 	
 	public default Value run(String line){
-		run(parseExpressions(line));
-		return new Value(VariableTypes.Nil, null);
+		return run(line.split(" "));
 	}
 	
 	//Passes a whole expression
@@ -77,5 +75,5 @@ public abstract interface InstructionExecutorStringArray extends InstructionExec
 		return express;
 	}
 	
-	public abstract void run(String args[]);		//All of the Executors Implement this interface so that they can be referenced from an enum
+	public abstract Value run(String args[]);		//All of the Executors Implement this interface so that they can be referenced from an enum
 }

@@ -14,17 +14,19 @@ public class NumInput implements InstructionExecutorStringArray {
 	 * 	Gets a number as input (Only a number)
 	 * 
 	 */
-	public void run(String[] vars){
+	public Value run(String[] vars){
 		try{
 			String str = Executor.getEventHandler().getInput();
 			if (Variable.isInteger(str)){
 				Variable.setValue(vars[0], new Value(VariableTypes.Integer,new BigInteger(str)));
+				return Variable.getValue(vars[0]);
 			}else{
 				Variable.setValue(vars[0], new Value(VariableTypes.Double,new BigDecimal(str)));
+				return Variable.getValue(vars[0]);
 			}
 		}catch(Exception e){
 			System.err.println("Invalid Input, Please Input A Number");
-			run(vars);
+			return run(vars);
 		}
 	}
 

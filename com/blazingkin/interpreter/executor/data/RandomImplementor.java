@@ -13,7 +13,7 @@ public class RandomImplementor implements InstructionExecutorStringArray {
 	 * 
 	 */
 	@Override
-	public void run(String[] args) {
+	public Value run(String[] args) {
 		Value v;
 		if(args.length == 2){
 			BigInteger range = Variable.getIntValue(Variable.getValue(args[1]));
@@ -27,6 +27,7 @@ public class RandomImplementor implements InstructionExecutorStringArray {
 			v = new Value(VariableTypes.Integer, BigInteger.valueOf((long)(Math.random()*100)));
 		}
 		Variable.setValue(args[0], v);
+		return v;
 	}
 
 }

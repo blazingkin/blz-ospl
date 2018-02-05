@@ -10,12 +10,14 @@ public class Length implements InstructionExecutorStringArray {
 		this.string = string;
 	}
 	@Override
-	public void run(String[] args) {
+	public Value run(String[] args) {
 		if (string){
 			String str = (String) Variable.getValue(args[0]).value;
 			Variable.setValue(args[1], Value.integer(str.length()));
+			return Value.integer(str.length());
 		}else{
 			Variable.setValue(args[1], Value.integer(Variable.getArray(args[0]).size()));
+			return Variable.getValue(args[1]);
 		}
 	}
 

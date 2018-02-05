@@ -11,8 +11,9 @@ public class StringInput implements InstructionExecutorStringArray {
 	 * 	Gets a string as input
 	 * 
 	 */
-	public void run(String[] vars){
+	public Value run(String[] vars){
 		Variable.setValue(vars[0], new Value(VariableTypes.String, Executor.getEventHandler().getInput()));
+		return Variable.getValue(vars[0]);
 	}
 
 	
