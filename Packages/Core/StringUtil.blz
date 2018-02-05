@@ -38,3 +38,12 @@ end
 	return true
 end
 
+:to_array(string)
+	length = string.length()
+	result = []
+	for i = 0; i < length; i++
+		result[i] = string[i]
+	end
+	return result
+end
+

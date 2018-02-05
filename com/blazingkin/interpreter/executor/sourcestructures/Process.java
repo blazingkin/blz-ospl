@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.sourcestructures;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -246,7 +247,7 @@ public class Process implements RuntimeStackElement {
 	
 	private void handleImports(){
 		//Always import core
-		Set<File> packagesToImport = new HashSet<File>();
+		Set<Path> packagesToImport = new HashSet<Path>();
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
 			for (RegisteredLine line : registeredLines){
@@ -254,7 +255,7 @@ public class Process implements RuntimeStackElement {
 					packagesToImport.add(importer.findPackage(line.args));
 				}
 			}
-			for (File f : packagesToImport){
+			for (Path f : packagesToImport){
 				Package p = new in.blazingk.blz.packagemanager.Package(f);
 				importedMethods.addAll(p.getAllMethodsInPackage());
 			}

@@ -1,0 +1,3 @@
+:main
+	print("asdf".to_array() == ["a", "s", "d", "f"])
+end

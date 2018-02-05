@@ -230,6 +230,7 @@ public class Executor {
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		}catch(Exception e){
+			e.printStackTrace();
 			eventHandler.err(e.getMessage());
 			eventHandler.exitProgram("Failed to import core directory");
 		}

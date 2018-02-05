@@ -1,12 +1,15 @@
 package in.blazingk.blz.packagemanager;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
@@ -15,19 +18,19 @@ import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Package {
-	private File packageDirectory;
+	private Path packageDirectory;
 	private HashMap<String, Process> processes; // Key is process name
 	public PackageSettings settings;
 	
-	public Package(File directory) throws IOException{
+	public Package(Path directory) throws IOException{
 		packageDirectory = directory;
 		processes = new HashMap<String, Process>();
 		// loadSettings
-		for (File f : listFileTree(packageDirectory)){
-			String fileName = f.getName();
+		for (Path f : listFileTree(packageDirectory)){
+			String fileName = f.getFileName().toString();
 			String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
 			if (extension.toLowerCase().equals("blz")){
-				Process fileProcess = new Process(f);
+				Process fileProcess = new Process(f.toFile());
 				processes.put(fileName.replace(".blz", ""), fileProcess);
 			}
 		}
@@ -56,22 +59,23 @@ public class Package {
 	}
 	
 	
-	// Shamelessly used from StackOverflow
-	public Collection<File> listFileTree(File dir) {
-	    Set<File> fileTree = new HashSet<File>();
-	    if(dir==null||dir.listFiles()==null){
-	        return fileTree;
+	public Collection<Path> listFileTree(Path dir) {
+	    Set<Path> fileTree = new HashSet<Path>();
+	    try {
+	    	DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+	    	for (Path entry : stream) {
+	    		fileTree.addAll(listFileTree(entry));
+	    	}
+	    }catch(IOException io) {
+	    	/* Not directory */
 	    }
-	    for (File entry : dir.listFiles()) {
-	        if (entry.isFile()) fileTree.add(entry);
-	        else fileTree.addAll(listFileTree(entry));
-	    }
+	    fileTree.add(dir);
 	    return fileTree;
 	}
 	
 	public static void importCore() throws Exception {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
-		File coreFolder = importer.findPackage("Core");
+		Path coreFolder = importer.findPackage("Core");
 		Package corePackage = new Package(coreFolder);
 		for (Method m : corePackage.getAllMethodsInPackage()){
 			try {
