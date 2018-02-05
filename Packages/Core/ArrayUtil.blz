@@ -112,6 +112,16 @@ end
 	return arr
 end
 
-:unique
-	
+:unique(arr)
+	len = arr.length()
+	hash = {}
+	for i = 0; i < len; i++
+		if hash.has_key?(arr[i])
+			arr = arr.remove(i)
+			i--
+		else
+			hash[arr[i]] = 1
+		end
+	end
+	return arr
 end
