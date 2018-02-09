@@ -15,3 +15,7 @@ end
 :negate(value)
 	return value != true
 end
+
+:to_string(value)
+	return value + ""
+end

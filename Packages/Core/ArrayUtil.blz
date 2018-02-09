@@ -111,3 +111,20 @@ end
 :nil?
 	return false
 end
+
+:empty?(arr)
+	empty = []
+	return arr == empty
+end
+
+:to_string(arr)
+	return "" + arr
+end
+
+:foldl(arr, accumulator, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		accumulator = method!(accumulator, arr[i])
+	end
+	return accumulator
+end

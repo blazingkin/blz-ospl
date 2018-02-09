@@ -114,14 +114,19 @@ public class Executor {
 		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){
+			int variableCount = (m.variables.length > values.length?values.length:m.variables.length);
 			if (passByReference){
-				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				for (int i = 0; i < variableCount; i++){
 					Variable.setValue(m.variables[i], values[i]);
 				}
 			}else{
-				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				for (int i = 0; i < variableCount; i++){
 					Variable.setValue(m.variables[i], (values[i]).clone());
 				}
+			}
+			/* Bind variables that weren't passed to nil */
+			for (int i = variableCount; i < m.variables.length; i++) {
+				Variable.setValue(m.variables[i], Value.nil());
 			}
 		}
 		setLine(m.lineNumber);

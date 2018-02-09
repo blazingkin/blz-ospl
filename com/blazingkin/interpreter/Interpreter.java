@@ -91,6 +91,12 @@ public class Interpreter {
 			}
 			String paths= args[0];
 			File pths = new File(paths);
+			
+			/* If it can't be found, try adding the extension */
+			if (!pths.exists() && !paths.endsWith(".blz")) {
+				pths = new File(paths + ".blz");
+			}
+			
 			int f = 1;
 			List<String> rg = new LinkedList<String>();
 			while (f < args.length){

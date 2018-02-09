@@ -21,3 +21,7 @@ end
 	end
 	return a + (1 - (a % 1))
 end
+
+:to_string(a)
+	return a + ""
+end

@@ -13,6 +13,17 @@ public class ProcessUnitTest {
 		UnitTestUtil.setup();
 	}
 	
+	@Test
+	public void TestMethodRegistration() {
+		String[] twoMethods = {":main", "end", ":other", "end"};
+		Process p = new Process(twoMethods);
+		UnitTestUtil.assertNoErrors();
+		UnitTestUtil.assertEqual(p.methods.size(), 2);
+		UnitTestUtil.assertEqual(p.methods.get(0).functionName, "main");
+		UnitTestUtil.assertEqual(p.methods.get(0).lineNumber, 1);
+		UnitTestUtil.assertEqual(p.methods.get(1).functionName, "other");
+		UnitTestUtil.assertEqual(p.methods.get(1).lineNumber, 3);
+	}
 	
 	@Test
 	public void TestIncompleteBlockOne() {

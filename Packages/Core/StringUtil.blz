@@ -38,6 +38,26 @@ end
 	return true
 end
 
+:to_number(string)
+	length = string.length()
+	result = 0
+	number_strings = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	for i = 0; i < length; i++
+		result = result * 10
+		for j = 0; j < 10; j++
+			if string[i] == number_strings[j]
+				result = result + j
+				break
+			end
+		end
+	end
+	return result
+end
+
+:to_string(string)
+	return string
+end
+
 :to_array(string)
 	length = string.length()
 	result = []
