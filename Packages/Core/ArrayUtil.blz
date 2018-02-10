@@ -115,7 +115,16 @@ end
 :unique(arr)
 	len = arr.length()
 	hash = {}
-	
+	arr_new = []
+	j = 0
+	for i = 0; i < len; i++
+		if (hash.has_key?(arr[i])).negate()
+			hash[arr[i]] = 1
+			arr_new[j] = arr[i]
+			j++
+		end
+	end
+	return arr_new
 end
 
 :nil?
