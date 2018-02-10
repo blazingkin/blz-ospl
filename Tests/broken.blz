@@ -1,8 +1,9 @@
+#!/usr/bin/env blz
 :add(a, b)
 	return a + b
 end
 
 :main
 	arr = [2, 3, 4, 1, 2]
-	print(arr.foldl(0, add))
+	print(arr.fold_left(0, add))
 end
