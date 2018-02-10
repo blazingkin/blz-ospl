@@ -1,7 +1,5 @@
 Test 00 each print strings
-NOTE: original arr: [apple, peach, cherry]
 apple
 peach
 cherry
-NOTE: arr is unchanged: [apple, peach, cherry]
 ----------------------------
