@@ -1,4 +1,4 @@
->>> Test 00 :slice <<<
+>>> Test 00 slice <<<
 arr: [0, 1, 2, 3, 4, 5, , 7, 8]
 arr1 sliced from arr: [0, 1, 2]
 arr2 sliced from arr: [0, 1, 2, 3, 4, 5, , 7, 8]

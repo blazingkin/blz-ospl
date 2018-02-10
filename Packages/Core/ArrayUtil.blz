@@ -56,14 +56,14 @@ end
 #does not work with !
 :remove(arr, index)
 	len = arr.length()
-	if index >= len	# Check for out of bounds
+	if index >= len			# Check for out of bounds
 		return arr
 	end
 	temp_arr = arr.copy()
 	for i = index; i < len - 1; i++
 		arr[i] = temp_arr[i + 1]
 	end
-	return arr.slice!(0, len - 1)
+	return arr.slice(0, len - 1)
 end
 
 :reverse(arr)
@@ -115,13 +115,5 @@ end
 :unique(arr)
 	len = arr.length()
 	hash = {}
-	for i = 0; i < len; i++
-		if hash.has_key?(arr[i])
-			arr = arr.remove(i)
-			i--
-		else
-			hash[arr[i]] = 1
-		end
-	end
-	return arr
+	
 end
