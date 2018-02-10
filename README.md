@@ -3,56 +3,28 @@
 
 [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
 
-An assembly-like interpreted language that implements both imperative and functional programming schema.
+Nightly - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=v2.5)](https://travis-ci.org/blazingkin/blz-ospl/branches)
 
-Currently implemented in Java, but will eventually transition to being a directly compiled language.
+blz is a scripting language implemented using the JVM.
 
-The language will change drastically right now as I build up feature-completeness and polish it.
+The goal is to provide programmers with high levels of abstraction to increase developer velocity.
+
+Getting Started
+====
+
+Directions for installing the language are available on the [wiki page](https://github.com/blazingkin/blz-ospl/wiki/Installation)
+
+
+Reference Material
+====
+
+Check out the [wiki on GitHub](https://github.com/blazingkin/blz-ospl/wiki) for details about the language and its standard library
+
 
 Language Hompage
 ===
 
 Check out the language homepage at [blazingk.in/blz-ospl](http://blazingk.in/blz-ospl).
-
-
-Dependencies:
-===
-* JRE 7+
-
-
-How to setup and use:
-===
-## Windows
-
-1.) Install Java and make sure it is added to your PATH
-
-2.) Download the blz-ospl project from github
-
-3.) Add the bin folder to your PATH
-
-4.) From the command line, run
-
-> blz-ospl ExampleCode.blz
-
-## Unix
-
-1.) Install Java
-
-2.) Download the blz-ospl project from github
-
-3.) Add an alias for blz-ospl, this can be done by adding the following line to your ~/.bashrc
-
-> alias blz-ospl="java -jar INSTALLDIRECTORY/bin/blz-ospl.jar"
-
-Where INSTALLDIRECTORY is the directory where you saved the project
-
-4.) Reload your bash profile
-
-> $ source ~/.bashrc
-
-5.) From the terminal, run
-
-> $ blz-ospl ExampleCode.blz
 
 Contact and License
 ===
@@ -62,4 +34,4 @@ This work includes a [Java BigMath library by Richard Mathar](https://arxiv.org/
 
 See the Extras folder for the full license
 
-Copyright © 2017 Alex Gravenor under the GNU GPL V3 License
+Copyright © 2015-2018 Alex Gravenor under the GNU GPL V3 License
