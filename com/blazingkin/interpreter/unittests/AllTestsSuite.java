@@ -27,12 +27,9 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	ExpressionExecutorUnitTest.class,
 	ExpressionParserUnitTest.class,
 	FunctionCallNodeUnitTest.class,
-	InstructionExecutorStringArrayTest.class,
-	LambdaUnitTest.class,
 	LessThanNodeUnitTest.class,
 	LogicalAndNodeUnitTest.class,
 	LogicalOrNodeUnitTest.class,
-	MathOpsUnitTest.class,
 	ProcessUnitTest.class,
 	VariableUnitTest.class,
 	WhileNodeUnitTest.class

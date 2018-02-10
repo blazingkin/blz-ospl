@@ -117,3 +117,32 @@ end
 	hash = {}
 	
 end
+
+:nil?
+	return false
+end
+
+:empty?(arr)
+	empty = []
+	return arr == empty
+end
+
+:to_string(arr)
+	return "" + arr
+end
+
+:fold_left(arr, accumulator, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		accumulator = method!(accumulator, arr[i])
+	end
+	return accumulator
+end
+
+:fold_right(arr, accumulator, method)
+	length = arr.length()
+	for i = length - 1; i >= 0; i--
+		accumulator = method!(accumulator, arr[i])
+	end
+	return accumulator
+end

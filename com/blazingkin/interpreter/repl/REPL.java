@@ -30,7 +30,7 @@ public class REPL {
 					Executor.getEventHandler().print("> ");
 					in = sc.nextLine();
 					if (in.equals("err")){
-						if (Interpreter.thrownErrors.peek().getMessage() == null &&
+						while (Interpreter.thrownErrors.peek().getMessage() == null &&
 							Interpreter.thrownErrors.size() > 1){
 							Interpreter.thrownErrors.pop();
 						}

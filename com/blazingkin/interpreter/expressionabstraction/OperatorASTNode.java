@@ -54,8 +54,16 @@ public abstract class OperatorASTNode extends ASTNode {
 			OperatorASTNode other = (OperatorASTNode) otherobj;
 			if (this.op == other.op && this.args.length == other.args.length){
 				for (int i = 0; i < this.args.length; i++){
-					if (!this.args[i].equals(other.args[i])){
-						return false;
+					try {
+						if (!this.args[i].equals(other.args[i])){
+							return false;
+						}
+					}catch(NullPointerException npe) {
+						/* For empty arrays, it can be nil */
+						/* This is the the exceptional case, so performance-wise it's better to catch the exception */
+						if (!(this.args[i] == null && other.args[i] == null)) {
+							return false;
+						}
 					}
 				}
 				return true;

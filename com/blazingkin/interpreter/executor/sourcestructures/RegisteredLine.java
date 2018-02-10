@@ -22,7 +22,7 @@ public class RegisteredLine implements RuntimeStackElement{
 	public RegisteredLine(Instruction instr, String line){
 		this.instr = instr;
 		if (instr.executor instanceof InstructionExecutorStringArray){
-			argsArr = InstructionExecutorStringArray.parseExpressions(line);
+			argsArr = line.split(" ");
 		}else if (instr.executor instanceof InstructionExecutorValue){
 			root = ExpressionParser.parseAndCollapse(line);
 		}else if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){

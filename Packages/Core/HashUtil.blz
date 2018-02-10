@@ -8,6 +8,10 @@ end
 	return hash
 end
 
+:put(hash, key, value)
+	hash.set(key, value)
+end
+
 :get(hash, key)
 	if hash.has_key?(key)
 		return hash[key]
@@ -16,6 +20,14 @@ end
 	end
 end
 
+:empty?(hash)
+	return hash == {}
+end
+
 :nil?
 	return false
 end	
+
+:to_string(hash)
+	return hash + ""
+end

@@ -6,11 +6,15 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {
 	
+	private static Stack<Operator> operatorStack = new Stack<Operator>();
+	private static Stack<ASTNode> operandStack = new Stack<ASTNode>();
+	private static Stack<ASTNode> functionNames = new Stack<ASTNode>();
+	
 	public static String[] parseBindingWithArguments(String line){
 		String name = line.split("\\(")[0].trim();
 		String varSplit[] = line.split("\\(|\\)");
 		/* Check to see if the function has any arguments */
-		if ((line.contains("(") && line.contains(")")) && varSplit.length >= 2){
+		if (varSplit.length >= 2 && (line.contains("(") && line.contains(")"))){
 			String vars = varSplit[varSplit.length - 1];
 			String vNames[] = vars.split(",");
 			String[] result = new String[vNames.length + 1];
@@ -32,9 +36,9 @@ public class ExpressionParser {
 	
 	// Use the shunting yard algorithm to parse a line
 	public static ASTNode parseExpression(String line){
-		Stack<Operator> operatorStack = new Stack<Operator>();
-		Stack<ASTNode> operandStack = new Stack<ASTNode>();
-		Stack<ASTNode> functionNames = new Stack<ASTNode>();
+		operatorStack.clear();
+		operandStack.clear();
+		functionNames.clear();
 		char[] lne = line.toCharArray();
 		boolean ignoreMode = false;
 		String building = "";
@@ -42,7 +46,7 @@ public class ExpressionParser {
 		for (int i = 0; i < lne.length; i++){
 			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
 				building += lne[i];
-			}else if (Operator.symbols.contains(""+lne[i]) && (lne[i] != '.' || !Variable.isInteger(building))){
+			}else if (Operator.symbols.contains(""+lne[i]) && !(lne[i] == '.' && Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
 					String subBuilding = ""+lne[i];
 					boolean found = false;

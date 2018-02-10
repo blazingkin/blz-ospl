@@ -1,3 +1,9 @@
+#!/usr/bin/env blz
+:add(a, b)
+	return a + b
+end
+
 :main
-	print("😀")
+	arr = [2, 3, 4, 1, 2]
+	print(arr.fold_left(0, add))
 end

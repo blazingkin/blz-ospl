@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
 import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -68,11 +67,6 @@ public class Executor {
 				setLine(getLine()+1);
 				return;
 			}
-			if (line.charAt(0) == '('){
-				LambdaParser.parseLambdaExpression(line).getValue();
-				setLine(getLine()+1);
-				return;
-			}
 			String split[] = line.split(" ");
 			if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
 				if (RuntimeStack.runtimeStack.peek() instanceof Constructor){
@@ -120,14 +114,19 @@ public class Executor {
 		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){
+			int variableCount = (m.variables.length > values.length?values.length:m.variables.length);
 			if (passByReference){
-				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				for (int i = 0; i < variableCount; i++){
 					Variable.setValue(m.variables[i], values[i]);
 				}
 			}else{
-				for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
+				for (int i = 0; i < variableCount; i++){
 					Variable.setValue(m.variables[i], (values[i]).clone());
 				}
+			}
+			/* Bind variables that weren't passed to nil */
+			for (int i = variableCount; i < m.variables.length; i++) {
+				Variable.setValue(m.variables[i], Value.nil());
 			}
 		}
 		setLine(m.lineNumber);

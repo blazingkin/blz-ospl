@@ -94,30 +94,23 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	private void setup(){
-		registerMethods();
+		registerMethodsAndConstructors();
 		registerBlocks();
-		registerConstructors();
 		preprocessLines();
 		handleImports();
 		processes.add(this);		
 	}
 	
-	private void registerMethods(){
-		for (int i = 0 ; i < lines.length; i++){						//registers all of the functions found in the file
+	private void registerMethodsAndConstructors(){
+		for (int i = 0 ; i < lines.length; i++){
 			if (lines[i].length() > 0){
-				if (lines[i].substring(0,1).equals(":")){
+				// Find all methods (they start with :) 
+				if ((lines[i]).charAt(0) == ':'){
 					Method nM = new Method(this, i+1,lines[i].substring(1));
 					Executor.getMethods().add(nM);
 					methods.add(nM);
-				}
-			}
-		}
-	}
-	
-	private void registerConstructors(){
-		for (int i = 0; i < lines.length; i++){
-			if (lines[i].length() > 0){
-				if (lines[i].startsWith("constructor")){
+				// Find all constructors (they start with the keyword `constructor`)
+				}else if (lines[i].startsWith("constructor")){
 					String constructorName = lines[i].replaceFirst("constructor", "").trim();
 					Constructor con = new Constructor(this, i+1, constructorName);
 					constructors.add(con);
@@ -159,33 +152,51 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
+	private Instruction getInstructionFromString(String line) {
+		/* We need to check the `instruction` type */
+		int firstSpace = line.indexOf(" ");
+		
+		/* Just get the part before the space */
+		String instructionString;
+		if (firstSpace == -1) {
+			instructionString = line;
+		}else {
+			instructionString = line.substring(0, firstSpace);
+		}
+		return InstructionType.getInstructionType(instructionString);
+	}
+	
 	private boolean isBlock(String line){
-		if (line.startsWith(":")){
+		if (line.length() < 1) {
+			return false;
+		}
+		/* A method is a block */
+		if (line.charAt(0) == ':'){
 			return true;
 		}
+		/* A constructor is a block */
 		if (line.startsWith("constructor")){
 			return true;
 		}
-		String[] splits = line.split(" ");
-		Instruction inst = InstructionType.getInstructionType(splits[0]);
-		return inst != null && inst.executor instanceof BlockInstruction;
+		
+		Instruction instruction = getInstructionFromString(line);
+		return instruction != null && instruction.executor instanceof BlockInstruction;
 	}
 	
 	private boolean isEnd(String line){
-		String[] splits = line.split(" ");
-		Instruction inst = InstructionType.getInstructionType(splits[0]);
-		return inst != null && inst.executor instanceof End;		
+		Instruction instruction = getInstructionFromString(line);
+		return instruction != null && instruction.executor instanceof End;		
 	}
 	
 	private boolean isLabel(String line){
-		String[] splits = line.split(" ");
-		Instruction inst = InstructionType.getInstructionType(splits[0]);
-		return inst != null && inst.executor instanceof LabeledInstruction;
+		Instruction instruction = getInstructionFromString(line);
+		return instruction != null && instruction.executor instanceof LabeledInstruction;
 	}
 	
 	private String getLabel(String line){
 		String[] splits = line.split(" ");
 		Instruction inst = InstructionType.getInstructionType(splits[0]);
+		/* Could use getInstructionFromString here, but we need to split anyways */
 		String args = "";
 		for (int i = 1; i < splits.length; i++){
 			args += splits[i] + " ";

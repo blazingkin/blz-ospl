@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.variables.Value;
 
 public class Listener implements InstructionExecutorStringArray {
 
-	public void run(String[] args){
+	public Value run(String[] args){
 		listeners.add(new Listener(args[1], getListenerType(args[0])));
+		return Value.nil();
 	}
 	
 	public ListenerTypes getListenerType(String s){

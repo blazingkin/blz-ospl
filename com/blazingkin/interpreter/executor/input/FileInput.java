@@ -11,7 +11,7 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class FileInput implements InstructionExecutorStringArray {
 
-	public void run(String args[]){
+	public Value run(String args[]){
 		String arrayVarAddress = args[0];
 		String filePath = "";
 		ArrayList<Value> lines = new ArrayList<Value>();
@@ -35,6 +35,7 @@ public class FileInput implements InstructionExecutorStringArray {
 		Value[] lnes = new Value[lines.size()];
 		lines.toArray(lnes);
 		Variable.setValue(arrayVarAddress, Value.arr(lnes));
+		return Variable.getValue(arrayVarAddress);
 	}
 	
 	
