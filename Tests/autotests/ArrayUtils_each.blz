@@ -1,0 +1,8 @@
+:main
+    arr = ["apple", "peach", "cherry"]
+    print("Test 00 each print strings")
+    print("NOTE: original arr: " + arr)
+    arr.each(print)
+    print("NOTE: arr is unchanged: " + arr)
+    print("----------------------------")
+end

@@ -1,0 +1,13 @@
+:main
+    arr = ["apple", "peach", "cherry"]
+    print("Test 00 map print strings")
+    arr.map(print)
+    print("---------------------------")
+
+    print("Test 01 map sort strings")
+    print("original arr: " + arr)
+    arr.map!(sort)
+    print("arr after map: " + arr)
+    print("---------------------------")
+    
+end
