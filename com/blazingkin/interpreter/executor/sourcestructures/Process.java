@@ -37,6 +37,7 @@ public class Process implements RuntimeStackElement {
 	public ArrayList<Method> methods = new ArrayList<Method>();
 	public ArrayList<Constructor> constructors = new ArrayList<Constructor>();
 	public Collection<Method> importedMethods = new HashSet<Method>();
+	public Collection<Constructor> importedConstructors = new HashSet<Constructor>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
 	
@@ -269,6 +270,7 @@ public class Process implements RuntimeStackElement {
 			for (Path f : packagesToImport){
 				Package p = new in.blazingk.blz.packagemanager.Package(f);
 				importedMethods.addAll(p.getAllMethodsInPackage());
+				importedConstructors.addAll(p.getAllConstructorsInPackage());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -359,11 +361,14 @@ public class Process implements RuntimeStackElement {
 
 	@Override
 	public void onBlockStart() {
+		for (Method m : importedMethods){
+			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		}
 		for (Method m : methods){
 			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
 		}
-		for (Method m : importedMethods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		for (Constructor c : importedConstructors) {
+			Variable.setValue(c.getName(), Value.constructor(c));
 		}
 		for (Constructor c : constructors){
 			Variable.setValue(c.getName(), Value.constructor(c));

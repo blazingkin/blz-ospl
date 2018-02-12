@@ -136,3 +136,16 @@ end
 	end
 	return accumulator
 end
+
+:filter(arr, method)
+	result = []
+	result_size = 0
+	arr_length = arr.length()
+	for i = 0; i < arr_length; i++
+		if method!(arr[i])
+			result[result_size] = arr[i]
+			result_size++
+		end
+	end
+	return result
+end

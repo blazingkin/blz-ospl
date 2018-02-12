@@ -62,10 +62,16 @@ public class Constructor implements RuntimeStackElement {
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference){
 		BLZObject newObj = new BLZObject();
+		boolean differentProcess = !con.parent.equals(Executor.getCurrentProcess());
+		
+
+		int startLine = Executor.getLine();
+		if (differentProcess) {
+			RuntimeStack.push(con.parent);
+		}
+		Executor.setLine(con.getLineNum());
 		setReferences(con, newObj);
 		initializeArguments(con, newObj, args, passByReference);
-		int startLine = Executor.getLine();
-		Executor.setLine(con.getLineNum());
 		RuntimeStack.pushContext(newObj.objectContext);
 			int depth = RuntimeStack.runtimeStack.size();
 			RuntimeStack.push(con);
@@ -73,7 +79,9 @@ public class Constructor implements RuntimeStackElement {
 				Executor.executeCurrentLine();
 			}
 		RuntimeStack.popContext();
-		
+		if (differentProcess) {
+			RuntimeStack.pop();
+		}
 		Executor.setLine(startLine);
 		return Value.obj(newObj);
 	}

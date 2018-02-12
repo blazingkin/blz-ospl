@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Value;
@@ -38,11 +39,17 @@ public class Package {
 	public Collection<Method> getAllMethodsInPackage(){
 		Set<Method> methods = new HashSet<Method>();
 		for (Process p : processes.values()){
-			for (Method m : p.methods){
-				methods.add(m);
-			}
+			methods.addAll(p.methods);
 		}
 		return methods;
+	}
+	
+	public Collection<Constructor> getAllConstructorsInPackage(){
+		Set<Constructor> constructors = new HashSet<Constructor>();
+		for (Process p : processes.values()){
+			constructors.addAll(p.constructors);
+		}
+		return constructors;
 	}
 	
 	public Collection<Method> getAllMethodsInProcess(String processName) throws IllegalArgumentException{
