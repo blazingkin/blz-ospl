@@ -1,0 +1,9 @@
+require circular_require_test1
+
+:main
+	from_test_one()
+end
+
+:from_test_two
+	print("from test 2")
+end

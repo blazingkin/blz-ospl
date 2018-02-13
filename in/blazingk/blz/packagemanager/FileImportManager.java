@@ -16,8 +16,9 @@ public class FileImportManager {
 			return importedFiles.get(path);
 		}
 		try {
-			Process process = new Process(path);
+			Process process = new Process(path, false);
 			importedFiles.put(path, process);
+			process.handleImports();
 			return process;
 		}catch(FileNotFoundException e) {
 			Interpreter.throwError("Could not find file at path: "+path);

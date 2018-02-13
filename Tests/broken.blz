@@ -9,3 +9,7 @@ import Lists
 		it.next()
 	end
 end
+
+::test
+	print("test")
+end

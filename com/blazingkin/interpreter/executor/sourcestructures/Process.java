@@ -31,6 +31,7 @@ import in.blazingk.blz.packagemanager.Package;
 
 public class Process implements RuntimeStackElement {
 	public boolean runningFromFile = false;
+	public boolean runImports = true;
 	public File readingFrom;
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
@@ -50,6 +51,12 @@ public class Process implements RuntimeStackElement {
 	
 	public Process(Path runPath) throws FileNotFoundException {
 		runningFromFile = true;
+		setupFileProcess(runPath.toFile());
+	}
+	
+	public Process(Path runPath, boolean runImports) throws FileNotFoundException {
+		runningFromFile = true;
+		this.runImports = runImports;
 		setupFileProcess(runPath.toFile());
 	}
 	
@@ -105,7 +112,9 @@ public class Process implements RuntimeStackElement {
 		registerMethodsAndConstructors();
 		registerBlocks();
 		preprocessLines();
-		handleImports();
+		if (runImports) {
+			handleImports();
+		}
 		processes.add(this);		
 	}
 	
@@ -265,10 +274,10 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	private Path calculateFileLocation(String name) {
-		/* Try a relative path first. Otherwise look for the absolute path */
 		if (!name.endsWith(".blz")) {
 			name = name + ".blz";
 		}
+		/* Try a relative path first. Otherwise look for the absolute path */
 		if (runningFromFile) {
 			Path base = readingFrom.toPath();
 			Path result = Paths.get(base.toString(), name);
@@ -279,7 +288,7 @@ public class Process implements RuntimeStackElement {
 		return Paths.get(name);
 	}
 	
-	private void handleImports(){
+	public void handleImports(){
 		//Always import core
 		Set<Path> packagesToImport = new HashSet<Path>();
 		Set<Path> processesToImport = new HashSet<Path>();
