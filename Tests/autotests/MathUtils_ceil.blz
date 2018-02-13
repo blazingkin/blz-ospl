@@ -1,0 +1,5 @@
+:main
+    print(ceil(20.123456))
+    print(ceil(20))
+    print(ceil(-4))
+end
