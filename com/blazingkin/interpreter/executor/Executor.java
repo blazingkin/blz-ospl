@@ -23,6 +23,8 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+import in.blazingk.blz.packagemanager.FileImportManager;
+
 public class Executor {
 
 	// Instance objects
@@ -179,7 +181,8 @@ public class Executor {
 				startingMethod = args.get(i+1);
 			}
 		}
-		RuntimeStack.push(new Process(runFile));		// puts the file passed to us as the current process
+		// puts the file passed to us as the current process
+		RuntimeStack.push(FileImportManager.importFile(runFile.toPath()));	
 		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(new StandAloneEventHandler());
 		Method startMethod = getMethodInCurrentProcess(startingMethod);

@@ -22,6 +22,7 @@ import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
+import in.blazingk.blz.packagemanager.ImportRelativeInstruction;
 
 public enum Instruction {
 	INVALID("","INVALID", null),													// INVALID - Not for use
@@ -45,6 +46,7 @@ public enum Instruction {
 	RETURN("RETURN", "Return value", new ReturnValue()),
 	INSTANTIATE("NEW", "INSTANTIATE OBJECT", new InitializeObject()),
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
+	REQUIREPROCESS("REQUIRE", "REQUIRE PROCESS", new ImportRelativeInstruction()),
 	ELSE("ELSE", "ELSE BLOCK", new Else()),
 	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey());
 	

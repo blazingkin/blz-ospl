@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.executor.sourcestructures;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
+import in.blazingk.blz.packagemanager.FileImportManager;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 import in.blazingk.blz.packagemanager.Package;
 
@@ -262,20 +264,45 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 	
+	private Path calculateFileLocation(String name) {
+		/* Try a relative path first. Otherwise look for the absolute path */
+		if (!name.endsWith(".blz")) {
+			name = name + ".blz";
+		}
+		if (runningFromFile) {
+			Path base = readingFrom.toPath();
+			Path result = Paths.get(base.toString(), name);
+			if (result.toFile().exists()) {
+				return result;
+			}
+		}
+		return Paths.get(name);
+	}
+	
 	private void handleImports(){
 		//Always import core
 		Set<Path> packagesToImport = new HashSet<Path>();
+		Set<Path> processesToImport = new HashSet<Path>();
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
 			for (RegisteredLine line : registeredLines){
-				if (line != null && line.instr == Instruction.IMPORTPACKAGE){
-					packagesToImport.add(importer.findPackage(line.args));
+				if (line != null){
+					if (line.instr == Instruction.IMPORTPACKAGE) {
+						packagesToImport.add(importer.findPackage(line.args));
+					}else if (line.instr == Instruction.REQUIREPROCESS) {
+						processesToImport.add(calculateFileLocation(line.args));
+					}
 				}
 			}
 			for (Path f : packagesToImport){
 				Package p = new in.blazingk.blz.packagemanager.Package(f);
 				importedMethods.addAll(p.getAllMethodsInPackage());
 				importedConstructors.addAll(p.getAllConstructorsInPackage());
+			}
+			for (Path f: processesToImport) {
+				Process p = FileImportManager.importFile(f);
+				importedMethods.addAll(p.methods);
+				importedConstructors.addAll(p.constructors);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
