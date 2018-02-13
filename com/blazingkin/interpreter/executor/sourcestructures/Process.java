@@ -364,11 +364,11 @@ public class Process implements RuntimeStackElement {
 		for (Method m : importedMethods){
 			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
 		}
-		for (Method m : methods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
-		}
 		for (Constructor c : importedConstructors) {
 			Variable.setValue(c.getName(), Value.constructor(c));
+		}
+		for (Method m : methods){
+			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
 		}
 		for (Constructor c : constructors){
 			Variable.setValue(c.getName(), Value.constructor(c));

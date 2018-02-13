@@ -90,13 +90,15 @@ public class Constructor implements RuntimeStackElement {
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
 		Variable.setValue("this", Value.obj(newObj), newObj.objectContext);
-		for (Method m : constructor.getParent().methods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
-		}
 		for (Method m : constructor.getParent().importedMethods){
 			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
 		}
-
+		for (Constructor c : constructor.getParent().importedConstructors) {
+			Variable.setValue(c.getName(), Value.constructor(c));
+		}
+		for (Method m : constructor.getParent().methods){
+			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
+		}
 		for (Constructor c : constructor.getParent().constructors){
 			Variable.setValue(c.getName(), Value.constructor(c));
 		}

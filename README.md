@@ -1,7 +1,7 @@
 ﻿The blazingkin open source programming language (blz-ospl)
 ===
 
-[![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
+Stable - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
 
 Nightly - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=v2.5)](https://travis-ci.org/blazingkin/blz-ospl/branches)
 
