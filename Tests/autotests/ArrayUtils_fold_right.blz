@@ -1,0 +1,10 @@
+:add(a, b)
+    return a + b
+end
+
+:main
+    arr = [1, 2, 3, 4, 5]
+    print(arr.fold_right(0, add))
+
+    print(arr.fold_right(5, add))
+end

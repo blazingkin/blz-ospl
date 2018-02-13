@@ -26,4 +26,10 @@
 	#arr2 = arr.remove!(1)
 	#print("arr2 makes a copy of arr and removes index 1: " + arr2)
 	#print("--------------------------------")
+
+	# >>> POSSIBLE CALLS <<<
+	#	arr = arr.remove(index)
+	#	arr.remove(index)
+	#	arr = arr.remove!(index)
+	#	arr.remove!(index)
 end

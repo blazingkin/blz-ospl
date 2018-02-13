@@ -1,0 +1,9 @@
+Test 00 map print strings
+apple
+peach
+cherry
+---------------------------
+Test 01 map sort strings
+original arr: [apple, peach, cherry]
+arr after map: [aelpp, acehp, cehrry]
+---------------------------

@@ -1,0 +1,7 @@
+:main
+    arr = []
+    print(arr.empty?())
+
+    arr2 = [1]
+    print(arr2.empty?())
+end

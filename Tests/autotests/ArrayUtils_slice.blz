@@ -1,6 +1,6 @@
 :main
     #Test 00 :slice
-	print(">>> Test 00 :slice <<<")
+	print(">>> Test 00 slice <<<")
 	arr = [0,1,2,3,4,5,{nil},7,8]
 	print("arr: " + arr)
 	arr1 = arr.slice(0,3)
@@ -14,4 +14,5 @@
 	print("--------------------------------")
 
 	#does not really make sense to use slice!()
+	
 end

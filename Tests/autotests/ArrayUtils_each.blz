@@ -1,0 +1,6 @@
+:main
+    arr = ["apple", "peach", "cherry"]
+    print("Test 00 each print strings")
+    arr.each(print)
+    print("----------------------------")
+end
