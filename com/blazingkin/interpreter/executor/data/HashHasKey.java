@@ -18,6 +18,7 @@ public class HashHasKey implements InstructionExecutorCommaDelimited {
 		if (args[0].type != VariableTypes.Hash){
 			Interpreter.throwError("Hash has key check was not passed a hash as the first argument");
 		}
+		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) args[0].value;
 		Value result = Value.bool(hsh.containsKey(args[1]));
 		String name = (String) args[2].value;

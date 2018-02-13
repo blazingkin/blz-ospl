@@ -30,6 +30,7 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	LessThanNodeUnitTest.class,
 	LogicalAndNodeUnitTest.class,
 	LogicalOrNodeUnitTest.class,
+	PackageUnitTest.class,
 	ProcessUnitTest.class,
 	VariableUnitTest.class,
 	WhileNodeUnitTest.class

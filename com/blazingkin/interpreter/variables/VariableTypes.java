@@ -32,9 +32,15 @@ public enum VariableTypes {
 
 	public final Class dataType;
 	public static HashMap<VariableTypes, Context> primitiveContexts = new HashMap<VariableTypes, Context>();
-	static {
+	public static void initialize() {
 		for (VariableTypes vt : VariableTypes.values()) {
 			primitiveContexts.put(vt, new Context(null));
 		}
+	}
+	public static void clear() {
+		primitiveContexts = new HashMap<VariableTypes, Context>();
+	}
+	static {
+		initialize();
 	}
 }

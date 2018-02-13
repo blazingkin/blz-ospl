@@ -57,7 +57,7 @@ public class Variable {
 			c.variables.clear();
 		}
 		Context.contexts = new ArrayList<Context>();
-		globalContext = new Context();
+		globalContext = new Context(null);
 	}
 	
 	public static void killContext(Context con){

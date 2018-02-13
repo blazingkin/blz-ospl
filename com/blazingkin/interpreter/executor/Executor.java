@@ -212,6 +212,8 @@ public class Executor {
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program
 	public static void cleanup(){
 		RuntimeStack.cleanup();
+		in.blazingk.blz.packagemanager.FileImportManager.importedFiles.clear();
+		VariableTypes.clear();
 		setLoopStack(new Stack<LoopWrapper>());
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();

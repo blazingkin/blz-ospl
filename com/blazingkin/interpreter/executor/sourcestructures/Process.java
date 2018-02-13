@@ -46,6 +46,11 @@ public class Process implements RuntimeStackElement {
 		setupFileProcess(runFile);
 	}
 	
+	public Process(Path runPath) throws FileNotFoundException {
+		runningFromFile = true;
+		setupFileProcess(runPath.toFile());
+	}
+	
 	public String toString() {
 		if (readingFrom != null) {
 			return "<Process "+readingFrom.getName()+">";

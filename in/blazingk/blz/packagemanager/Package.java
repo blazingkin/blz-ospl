@@ -30,7 +30,7 @@ public class Package {
 			String fileName = f.getFileName().toString();
 			String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
 			if (extension.toLowerCase().equals("blz")){
-				Process fileProcess = new Process(f.toFile());
+				Process fileProcess = FileImportManager.importFile(f);
 				processes.put(fileName.replace(".blz", ""), fileProcess);
 			}
 		}
