@@ -39,6 +39,7 @@ public enum VariableTypes {
 	}
 	public static void clear() {
 		primitiveContexts = new HashMap<VariableTypes, Context>();
+		initialize();
 	}
 	static {
 		initialize();
