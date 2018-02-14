@@ -91,11 +91,6 @@ public class Executor {
 			setLine(getLine()+1);
 			ExpressionExecutor.parseExpression(line, Executor.getCurrentContext());	// If it hasn't been anything so far it must be a simple expression
 		}
-		if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-			currentProcess.lineReturns.add(getLine()+1);
-			Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
-			getEventsToBeHandled().remove(0);
-		}
 		if (isCloseRequested()){
 			getEventHandler().exitProgram("Close was requested");
 			cleanup();

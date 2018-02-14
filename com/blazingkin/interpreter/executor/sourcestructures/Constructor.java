@@ -69,16 +69,16 @@ public class Constructor implements RuntimeStackElement {
 		if (differentProcess) {
 			RuntimeStack.push(con.parent);
 		}
-		Executor.setLine(con.getLineNum());
-		setReferences(con, newObj);
-		initializeArguments(con, newObj, args, passByReference);
-		RuntimeStack.pushContext(newObj.objectContext);
-			int depth = RuntimeStack.runtimeStack.size();
-			RuntimeStack.push(con);
-			while (RuntimeStack.runtimeStack.size() > depth){
-				Executor.executeCurrentLine();
-			}
-		RuntimeStack.popContext();
+			Executor.setLine(con.getLineNum());
+			setReferences(con, newObj);
+			initializeArguments(con, newObj, args, passByReference);
+			RuntimeStack.pushContext(newObj.objectContext);
+				int depth = RuntimeStack.runtimeStack.size();
+				RuntimeStack.push(con);
+				while (RuntimeStack.runtimeStack.size() > depth){
+					Executor.executeCurrentLine();
+				}
+			RuntimeStack.popContext();
 		if (differentProcess) {
 			RuntimeStack.pop();
 		}

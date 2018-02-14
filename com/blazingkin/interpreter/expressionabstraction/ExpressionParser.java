@@ -11,21 +11,37 @@ public class ExpressionParser {
 	private static Stack<ASTNode> functionNames = new Stack<ASTNode>();
 	
 	public static String[] parseBindingWithArguments(String line){
-		String name = line.split("\\(")[0].trim();
-		String varSplit[] = line.split("\\(|\\)");
-		/* Check to see if the function has any arguments */
-		if (varSplit.length >= 2 && (line.contains("(") && line.contains(")"))){
-			String vars = varSplit[varSplit.length - 1];
+		int firstParensIndex = line.indexOf('(');
+		if (firstParensIndex != -1) {
+			/* Get the name as the part before ( */
+			String name = line.substring(0,firstParensIndex).trim();
+			
+			/* Get the index of ) */
+			int lastParensIndex = line.lastIndexOf(')');
+			if (lastParensIndex == -1) {
+				lastParensIndex = line.length();
+			}
+			
+			/* Split out the part that is just variables */
+			String vars = line.substring(firstParensIndex + 1, lastParensIndex);
+			
+			/* If there are none, then just return the function name */
+			if (vars.length() == 0) {
+				String result[] = {name};
+				return result;
+			}
+			
+			/* Split out the variables and return the whole list */
 			String vNames[] = vars.split(",");
-			String[] result = new String[vNames.length + 1];
-			for (int i = 1; i <= vNames.length; i++){
+			String result[] = new String[vNames.length + 1];
+			for (int i = 1; i <= vNames.length; i++) {
 				result[i] = vNames[i - 1].trim();
 			}
 			result[0] = name;
 			return result;
-		}else{
-			// Why won't you let me do this on one line Java!
-			String[] result = {name};
+		}else {
+			/* It has no (, so we can return the name and we're done */
+			String[] result = {line};
 			return result;
 		}
 	}

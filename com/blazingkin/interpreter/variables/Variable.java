@@ -7,7 +7,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.nevec.rjm.BigDecimalMath;
@@ -217,32 +216,33 @@ public class Variable {
 	}
 	
 	
-	private static Pattern curlyBracketPattern = Pattern.compile("^\\{\\S*\\}$");
 	static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
-		if (isInteger(line)){	//If its an integer, then return it
-			return new Value(VariableTypes.Integer, new BigInteger(line));
-		}
 		if (Variable.isDouble(line)){	//If its a double, then return it
+			if (isInteger(line)){	//If its an integer, then return it
+				return new Value(VariableTypes.Integer, new BigInteger(line));
+			}
 			return new Value(VariableTypes.Double, new BigDecimal(line));
 		}
 		if (Variable.isBool(line)){		//If its a bool, then return it
 			return new Value(VariableTypes.Boolean, Variable.convertToBool(line));
 		}
-		Matcher quoteMatcher = quotePattern.matcher(line);
-		if (quoteMatcher.find()){
-			return new Value(VariableTypes.String, line.replace("\"",""));
+		if (con.hasValue(line)) {
+			return con.getValue(line);
 		}
-		Matcher curlyBracketMatcher = curlyBracketPattern.matcher(line);
-		if (curlyBracketMatcher.find()){
-			String gp = curlyBracketMatcher.group();
-			gp = gp.substring(1, gp.length()-1);
-			for (SystemEnv env : SystemEnv.values()){
-				if (gp.equals(env.name)){
-					return Variable.getEnvVariable(env);
+		if (line.length() >= 2){
+			if (line.charAt(0) == '"' && line.charAt(line.length() - 1) == '"'){
+				return new Value(VariableTypes.String, line.replace("\"",""));
+			}
+			if (line.startsWith("{") && line.endsWith("}")) {
+				String gp = line.substring(1, line.length() - 1);
+				gp = gp.substring(1, gp.length()-1);
+				for (SystemEnv env : SystemEnv.values()){
+					if (gp.equals(env.name)){
+						return Variable.getEnvVariable(env);
+					}
 				}
 			}
-			Interpreter.throwError("Failed to find an environment variable to match: "+gp);
 		}
 		return con.getValue(line);
 	}
@@ -283,15 +283,6 @@ public class Variable {
 
 	
 	
-	public static Value[] getValuesFromList(String[] args){
-		Value[] vals = new Value[args.length];
-		String[] done = new String[args.length];
-		for (int i = 0; i < args.length; i++){
-			done[i] = args[i].replace(",", "").replace("(", "").replace(")", "").trim();
-			vals[i] = getValue(done[i]);
-		}
-		return vals;
-	}
 	
 
 
@@ -311,7 +302,7 @@ public class Variable {
 	
 
 
-	
+	/* Checks the string one character at a time to see if it is an int string */
 	public static boolean isInteger(String s) {
 		if (!s.isEmpty() && s.charAt(0) == '-'){
 			s = s.substring(1);
@@ -323,6 +314,8 @@ public class Variable {
 		}
 		return !s.isEmpty();
 	}
+	
+	/* Checks the string one character at a time to see if it is a double string */
 	public static boolean isDouble(String s){
 		if (!s.isEmpty() && s.charAt(0) == '-'){
 			s = s.substring(1);
@@ -344,13 +337,21 @@ public class Variable {
 	
 	
 	public static boolean isBool(String s){
-		String lower = s.toLowerCase();
-		return lower.equals("true") || lower.equals("false");
+		/* Crazy inlining here for speed purposes */
+		/* Basically it checks if the string is (case-insensitively) equal to true or false */
+		return (s.length() == 4 && 	(s.charAt(0) == 't' || s.charAt(0) == 'T') &&
+									(s.charAt(1) == 'r' || s.charAt(1) == 'R') &&
+									(s.charAt(2) == 'u' || s.charAt(2) == 'U') &&
+									(s.charAt(3) == 'e' || s.charAt(3) == 'E')) ||
+			 ((s.length() == 5) && 	(s.charAt(0) == 'f' || s.charAt(0) == 'F') &&
+									(s.charAt(1) == 'a' || s.charAt(1) == 'A') &&
+									(s.charAt(2) == 'l' || s.charAt(2) == 'L') &&
+									(s.charAt(3) == 's' || s.charAt(3) == 'S') &&
+									(s.charAt(4) == 'e' || s.charAt(4) == 'E'));
 	}
 	
 	public static boolean isString(String s){
-		Matcher quoteMatcher = quotePattern.matcher(s);
-		return quoteMatcher.find();
+		return s.length() >= 2 && s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"';
 	}
 	
 	public static boolean isFraction(String s){
@@ -472,18 +473,10 @@ public class Variable {
 	}
 	
 	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
-		if (con.variables.containsKey(arrayName) && getValue(arrayName, con).type == VariableTypes.Array){
-			Value v = getValue(arrayName, con);
-			if (v.value instanceof Value[]){
-				Value[] arr = (Value[]) v.value;
-				return arr[index.intValue()];
-			}
-			HashMap<?, ?> vars = (HashMap<?, ?>) v.value;
-			return (Value) vars.get(index);
-		}
-		HashMap<?, ?> arrLookup = getArray(arrayName, con);
-		if (arrLookup != null && arrLookup.containsKey(index)){
-			return (Value) arrLookup.get(index);	
+		Value v = con.getValue(arrayName);
+		if (v.value instanceof Value[]){
+			Value[] arr = (Value[]) v.value;
+			return arr[index.intValue()];
 		}
 		return new Value(VariableTypes.Nil, null);
 	}
@@ -506,7 +499,7 @@ public class Variable {
 	}
 	
 	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con){
-		Value arr = getValue(arrayName, con);
+		Value arr = con.getValue(arrayName);
 		if (arr.type != VariableTypes.Array){
 			Interpreter.throwError(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
 		}
@@ -545,7 +538,7 @@ public class Variable {
 	}
 	
 	public static Value getValueOfHash(String hashName, Value key, Context con){
-		Value hash = getValue(hashName, con);
+		Value hash = con.getValue(hashName);
 		if (hash.type != VariableTypes.Hash){
 			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
 		}
