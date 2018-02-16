@@ -35,7 +35,6 @@ public class Executor {
 
 	//State Variables
 	private static long timeStarted = 0;
-	private static int frames = 0;	
 	public static boolean immediateMode = false;
 	private static boolean closeRequested = false;
 	private static boolean breakMode = false;
@@ -214,7 +213,6 @@ public class Executor {
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
-		setFrames(0);
 		Variable.clearVariables();
 		setMethods(new ArrayList<Method>());
 		setCloseRequested(false);
@@ -277,14 +275,6 @@ public class Executor {
 	
 	public static void setCloseRequested(boolean closeRequested) {
 		Executor.closeRequested = closeRequested;
-	}
-	
-	public static int getFrames() {
-		return frames;
-	}
-	
-	public static void setFrames(int frames) {
-		Executor.frames = frames;
 	}
 	
 	public static long getTimeStarted() {
