@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.listener.Event;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Method;
@@ -33,7 +32,6 @@ public class Executor {
 	private static HashMap<String, Constructor> constructor = new HashMap<String, Constructor>();
 	private static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
-	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
 
 	//State Variables
 	private static long timeStarted = 0;
@@ -217,7 +215,6 @@ public class Executor {
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
 		setFrames(0);
-		setEventsToBeHandled(new ArrayList<Event>());
 		Variable.clearVariables();
 		setMethods(new ArrayList<Method>());
 		setCloseRequested(false);
@@ -298,13 +295,6 @@ public class Executor {
 		Executor.timeStarted = timeStarted;
 	}
 	
-	public static ArrayList<Event> getEventsToBeHandled() {
-		return eventsToBeHandled;
-	}
-	
-	public static void setEventsToBeHandled(ArrayList<Event> eventsToBeHandled) {
-		Executor.eventsToBeHandled = eventsToBeHandled;
-	}
 	
 	static int lineNum = -1;
 	// Sets line within the current process

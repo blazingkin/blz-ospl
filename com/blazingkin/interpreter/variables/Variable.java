@@ -271,36 +271,9 @@ public class Variable {
 		setValue(key, value, Executor.getCurrentContext());
 	}
 	
-	//Sets a global value (i.e. its scope is the entire program)
-	public static void setGlobalValue(String key, Value value){
-		setValue(key, value, getGlobalContext());
-	}
-	
 	public static void setValue(String key, Value value, Context con){
 		con.variables.put(key, value);
 	}
-	
-
-	
-	
-	
-
-
-	/*	Checks to see if a variables has been set	
-	 */
-	public static boolean contains(String key){
-		return contains(key, Executor.getCurrentContext());
-	}
-	
-	public static boolean contains(String key, Context con){
-		if (con.getParentContext() == null){
-			return con.variables.containsKey(key);
-		}
-		return con.variables.containsKey(key) || contains(key, con.getParentContext());
-	}
-	
-	
-
 
 	/* Checks the string one character at a time to see if it is an int string */
 	public static boolean isInteger(String s) {
@@ -352,23 +325,6 @@ public class Variable {
 	
 	public static boolean isString(String s){
 		return s.length() >= 2 && s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"';
-	}
-	
-	public static boolean isFraction(String s){
-		String[] splits = s.split("/");
-		if (splits.length == 2){
-			return isInteger(splits[0]) && isInteger(splits[1]);
-		}
-		return false;
-	}
-	
-	public static Value convertToString(String s){
-		return new Value(VariableTypes.String, s.substring(1, s.length() - 1));
-	}
-	
-	public static Value convertToFraction(String s){
-		String[] splits = s.split("/");
-		return Value.rational(Integer.parseInt(splits[0]), Integer.parseInt(splits[1]));
 	}
 	
 	public static boolean convertToBool(String s){
@@ -463,15 +419,6 @@ public class Variable {
 		}
 	}
 	
-	public static void clearLocalVariables(Context con){
-		con.variables.clear();
-	}
-	
-	//Parses an array value
-	public static Value getValueOfArray(String arrayName, BigInteger index){
-		return getValueOfArray(arrayName, index, Executor.getCurrentContext());
-	}
-	
 	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
 		Value v = con.getValue(arrayName);
 		if (v.value instanceof Value[]){
@@ -491,11 +438,6 @@ public class Variable {
 		}
 		HashMap<?, ?> arr = (HashMap<?, ?>) value.value;
 		return (Value) arr.get(index);
-	}
-	
-	//Sets the value of an array
-	public static void setValueOfArray(String key,BigInteger index, Value value){
-		setValueOfArray(key,index,value,Executor.getCurrentContext());
 	}
 	
 	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con){
