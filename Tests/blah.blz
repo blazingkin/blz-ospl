@@ -1,16 +1,45 @@
 :main
-	test()	
+	print("Hello from main")
+	asdf = Blah()
+	print(asdf.x)
+	print(asdf.a * asdf.b)
+	asdf.closure()
+	asdf.closure()
+	asdf.closure_with_args({e}, {pi})
 	print("back in main")
 end
 
-:test
-	a = 0
-	while true
-		if a++ < 20
-			print(a)
-		else
-			print("done")
-			return 0
-		end
+:print_this
+	print({blz.context.id})
+	#print(this)
+end
+
+constructor Blah
+	print({blz.context.id})
+	print("Hello from Blah")
+	x = 2
+	a = 20
+	:closure
+		print("hello from closure")
+		print("variable should be defined within the closure " + x)
 	end
+	:closure_with_args(q, w)
+		print("should have all args " + a + " " + b + " " + x + " " + q + " " + w)
+	end
+	b = 30
+	pr = print_this
+end
+
+constructor Random
+	print("Hello from Random")
+	x = "From Random"
+	a = 10
+	b = 40
+end
+
+constructor Last
+	print("Hello from Last")
+	x = {e}
+	a = {e}
+	b = {pi}
 end

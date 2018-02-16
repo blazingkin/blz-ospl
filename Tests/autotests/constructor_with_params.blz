@@ -1,0 +1,11 @@
+:main
+	p_1 = Point(0, 0)
+	p_2 = Point(1, 0)
+	print(p_1.distance(p_2))
+end
+
+constructor Point(x, y)
+	:distance(other)
+		return (((x - other.x) ** 2) + ((y - other.y) ** 2)) ** 0.5
+	end
+end

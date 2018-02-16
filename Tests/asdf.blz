@@ -1,0 +1,3 @@
+:say_hello
+	print("hello")
+end

@@ -10,10 +10,11 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class FileOutput implements InstructionExecutorStringArray {
 
-	public void run(String args[]){
+	public Value run(String args[]){
 		String arrayVarAddress = args[0];
 		String filePath = "";
 		for (int i = 1; i < args.length; i++){
@@ -29,9 +30,14 @@ public class FileOutput implements InstructionExecutorStringArray {
 				f.createNewFile();
 			}
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-			int size = Variable.getArray(arrayVarAddress).size();
+			Value arr = Variable.getValue(arrayVarAddress);
+			if (arr.type != VariableTypes.Array){
+				Interpreter.throwError(arr+" was not an array");
+			}
+			Value[] vals = (Value[]) arr.value;
+			int size = vals.length;
 			for (int i = 0; i < size; i++){
-				writer.write(((Value)Variable.getArray(arrayVarAddress).values().toArray()[i]).value+"");
+				writer.write((vals[i]).value+"");
 				if (i != size -1){
 					writer.write("\n");
 				}
@@ -40,8 +46,9 @@ public class FileOutput implements InstructionExecutorStringArray {
 		}catch(Exception e){
 			e.printStackTrace();
 			Interpreter.throwError("there was an error writing to file "+filePath);
+			return Value.bool(false);
 		}
-		
+		return Value.bool(true);
 	}
 	
 	

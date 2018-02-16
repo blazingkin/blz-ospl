@@ -3,17 +3,15 @@ package com.blazingkin.interpreter.executor.astnodes;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.variables.BLZObject;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
-
-import jdk.nashorn.internal.runtime.Context;
 
 public class AssignmentNode extends BinaryNode {
 
@@ -26,38 +24,61 @@ public class AssignmentNode extends BinaryNode {
 	
 	// TODO handle multiple assignment (e.g a,b = 2,3)
 	@Override
-	public Value execute(){
-		if (args[0].getStoreName() == null){
+	public Value execute(Context con){
+		String storeName = args[0].getStoreName();
+		if (storeName == null){
 			if (args[0].getOperator() == Operator.arrayLookup){
 				OperatorASTNode lookupNode = (OperatorASTNode) args[0];
 				String arrayName = lookupNode.args[0].getStoreName();
-				VariableTypes type = Variable.typeOf(arrayName, Executor.getCurrentContext());
+				VariableTypes type = Variable.typeOf(arrayName, con);
 				if (type == VariableTypes.Array){
-					BigInteger index = Variable.getIntValue(lookupNode.args[1].execute());
-					Value newVal = args[1].execute();
-					Variable.setValueOfArray(arrayName, index, newVal);
+					BigInteger index = Variable.getIntValue(lookupNode.args[1].execute(con));
+					Value newVal = args[1].execute(con);
+					Variable.setValueOfArray(arrayName, index, newVal, con);
 					return newVal;					
+				}else if (type == VariableTypes.String){
+					Value newVal = args[1].execute(con);
+					if (newVal.type != VariableTypes.String){
+						Interpreter.throwError("Expected "+ newVal +" to be a string");
+						return Value.nil();
+					}
+					String newString = (String) newVal.value;
+					if (newString.length() != 1){
+						Interpreter.throwError("Expected "+newVal+" to be a string of length 1");
+						return Value.nil();
+					}
+					String oldString = (String) con.getValue(arrayName).value;
+					int index = Variable.getIntValue(lookupNode.args[1].execute(con)).intValue();
+					if (oldString.length() < index){
+						Interpreter.throwError("Out of bounds! Tried to set index: "+index+" of string: "+oldString);
+						return Value.nil();
+					}
+					char[] chars = oldString.toCharArray();
+					chars[index] = newString.charAt(0);
+					Value newStrVal = Value.string(String.valueOf(chars));
+					Variable.setValue(arrayName, newStrVal, con);
+					return newStrVal;
 				}else{ // Assume it's a hash
-					Value key = lookupNode.args[1].execute();
-					Value newVal = args[1].execute();
-					Variable.setValueOfHash(arrayName, key, newVal, Executor.getCurrentContext());
+					Value key = lookupNode.args[1].execute(con);
+					Value newVal = args[1].execute(con);
+					Variable.setValueOfHash(arrayName, key, newVal, con);
 					return newVal;
 				}
 			}else if (args[0].getOperator() == Operator.DotOperator){
 				OperatorASTNode dotNode = (OperatorASTNode) args[0];
-				Value object = dotNode.args[0].execute();
+				Value object = dotNode.args[0].execute(con);
 				if (object.type != VariableTypes.Object){
 					Interpreter.throwError("Tried accessing "+object.typedToString()+" as an object");
 				}
 				BLZObject obj = (BLZObject) object.value;
-				Value newVal = args[1].execute();
-				Variable.setValue(dotNode.args[1].getStoreName(), newVal, obj.objectContext);
+				Value newVal = args[1].execute(con);
+				obj.objectContext.setValue(dotNode.args[1].getStoreName(), newVal);
 				return newVal;
 			}
 			Interpreter.throwError("Did not know how to handle assignment of: "+args[0]);
 		}
-		Variable.setValue(args[0].getStoreName(), args[1].execute());
-		return Variable.getValue(args[0].getStoreName());
+		con.setValue(storeName, args[1].execute(con));
+		return con.getValue(storeName);
 	}
 
 }

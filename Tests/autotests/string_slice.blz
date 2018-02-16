@@ -1,0 +1,7 @@
+:main
+		print("asdf".slice(0,0) == "")
+		print("asdf".slice(0, 1) == "a")
+		print("asdf".slice(0,4) == "asdf")
+		print("asdf".slice(1,2) == "s")
+		print("adsf".slice(2,4) == "sf")
+end

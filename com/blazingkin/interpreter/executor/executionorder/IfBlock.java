@@ -2,16 +2,15 @@ package com.blazingkin.interpreter.executor.executionorder;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
-import com.blazingkin.interpreter.executor.lambda.LambdaFunction;
+import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockInstruction {
+public class IfBlock implements InstructionExecutorValue, BlockInstruction {
 	public static final Value FALSE_VAL = Value.bool(false);
 	public static final Value NIL_VAL = new Value(VariableTypes.Nil, null);
 	
@@ -23,7 +22,8 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 					RuntimeStack.push(this);
 					Executor.setLine(currentArc.getBlockLine("else"));
 				}catch(Exception e){
-					System.out.println("Oh god, you broke something really badly");
+					Executor.getEventHandler().err("Oh god, you broke something really badly");
+					Executor.getEventHandler().err("This is related to `else` tags from if statements");
 					Interpreter.throwError("Like this branch should not be reachable");
 				}
 			}else{
@@ -133,31 +133,6 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 		return pureComparison(arr);
 	}
 
-	//First variable is the condition
-	//Second condition is the value returned if the condition is true
-	//Third condition is the else-value
-	@Override
-	public Value evaluate(String[] args) {
-		if (isIfStatement(args[0])){
-			if (pureComparison(args[0])){
-				return Variable.getValue(args[1]);
-			}else{
-				return Variable.getValue(args[2]);
-			}
-		}
-		Value cond = Variable.getValue(args[0]);
-		if (cond.type == VariableTypes.Boolean){
-			boolean co = (boolean) cond.value;
-			if (co){
-				return Variable.getValue(args[1]);
-			}else{
-				return Variable.getValue(args[2]);
-			}
-		}
-		Interpreter.throwError("If block expected a boolean or a comparison as first statement - not found");
-		return new Value(VariableTypes.Nil, null);
-		
-	}
 
 	@Override
 	public void onBlockEnd() {
@@ -169,6 +144,11 @@ public class IfBlock implements InstructionExecutorValue, LambdaFunction, BlockI
 	public void onBlockStart() {
 		
 		
+	}
+
+	@Override
+	public int getLineNum() {
+		return -1;
 	}
 	
 

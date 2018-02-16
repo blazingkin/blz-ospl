@@ -1,0 +1,21 @@
+:nil?
+	return false
+end
+
+:true?(value)
+	return value
+end
+
+:false?(value)
+	return value == false
+end
+
+# Negate -  negates a boolean value
+# I need a unary not
+:negate(value)
+	return value != true
+end
+
+:to_string(value)
+	return value + ""
+end

@@ -1,0 +1,19 @@
+:main
+    #Test 00 :copy
+	print(">>> Test 00 :copy <<<")
+	arr1 = [0,1,2]
+	arr2 = arr1.copy()
+	arr2[0] = 4
+	print("arr1: " + arr1)
+	print("arr2: " + arr2)
+	print("--------------------------------")
+	
+	#Test 01 :copy!
+	print(">>> Test 00 :copy! <<<")
+	arr3 = arr1.copy!()
+	print("arr3: " + arr3)
+	arr3[0] = {nil}
+	print("arr3: " + arr3)
+	print("arr1: " + arr1)
+	print("--------------------------------")
+end

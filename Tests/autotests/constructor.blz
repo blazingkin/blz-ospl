@@ -1,0 +1,9 @@
+:main
+	asdf = Container()
+	print(asdf.x)
+end
+
+constructor Container
+	print("Hello from container")
+	this.x = 2
+end

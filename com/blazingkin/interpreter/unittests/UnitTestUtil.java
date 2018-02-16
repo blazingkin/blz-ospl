@@ -9,7 +9,9 @@ import java.util.Queue;
 import java.util.Random;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -30,6 +32,7 @@ public class UnitTestUtil {
 	
 	public static void clearEnv(){
 		Variable.clearVariables();
+		RuntimeStack.cleanup();
 		inputBuffer = new LinkedList<String>();
 		outputLog = new ArrayList<String>();
 		exitLog = new ArrayList<String>();
@@ -70,7 +73,7 @@ public class UnitTestUtil {
 			System.err.println("An assertion was false!");
 			System.err.println(a + "!=" + b);
 		}
-		assert a == b;
+		assert a.equals(b);
 	}
 	
 	public static void assertEqual(Value a, Value b){
@@ -106,14 +109,14 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 	}
 	
-	public static void assertValEqual(String name, Value b){
+	public static void assertValEqual(String name, Value b, Context con){
 		Value a = ExpressionExecutor.parseExpression(name);
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println(name + " != "+ b.value);
 			new Exception().printStackTrace();
 		}
-		assert Variable.getValue(name).equals(b);
+		assert con.getValue(name).equals(b);
 	}
 	
 	public static void assertEqualArrays(Object[] a, Object[] b){

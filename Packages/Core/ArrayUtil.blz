@@ -1,20 +1,170 @@
 
-# Currently implemented via bubble sort, will make quicksort at some point
-:sort(arr)
-	len = array_length(arr)
+ # Array Utilities
+ #
+ # <insert some kind of cool header or discription here>
+ #
+ #
+
+:length(arr)
+	ALEN arr len	# Call the internal function
+	return len
+end
+
+:concatenate(arr_A, arr_B)
+	len1 = arr_A.length()
+	len2 = arr_B.length()
+	for i = 0; i < len2; i++
+		arr_A[len1+i] = arr_B[i]
+	end
+	return arr_A
+end
+
+:contains?(arr, element)
+	len = arr.length()
 	for i = 0; i < len; i++
-		for j = 0; j < len - 1; j++
-			if arr[j] > arr[j + 1]
-				temp = arr[j]
-				arr[j] = arr[j + 1]
-				arr[j + 1] = temp
-			end
+		if arr[i] == element
+			return true
 		end
+	end
+	return false
+end
+
+:copy(arr)
+	return arr
+end
+
+:each(arr, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		method(arr[i])
 	end
 	return arr
 end
 
-:array_length(arr)
-	ALEN arr len	# Call the internal function
-	return len
+:empty?(arr)
+	empty = []
+	return arr == empty
+end
+
+:fold_left(arr, accumulator, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		accumulator = method!(accumulator, arr[i])
+	end
+	return accumulator
+end
+
+:fold_right(arr, accumulator, method)
+	length = arr.length()
+	for i = length - 1; i >= 0; i--
+		accumulator = method!(accumulator, arr[i])
+	end
+	return accumulator
+end
+
+:map(arr, method)
+	length = arr.length()
+	for i = 0; i < length; i++
+		arr[i] = method(arr[i])
+	end
+	return arr
+end
+
+:nil?
+	return false
+end
+
+#does not work with !
+:remove(arr, index)
+	len = arr.length()
+	if index >= len			# Check for out of bounds
+		return arr
+	end
+	temp_arr = arr.copy()
+	for i = index; i < len - 1; i++
+		arr[i] = temp_arr[i + 1]
+	end
+	return arr.slice(0, len - 1)
+end
+
+:reverse(arr)
+	len = arr.length()
+	for i = 0; i < len / 2; i++
+		temp = arr[i]
+		arr[i] = arr[len - i - 1]
+		arr[len - i - 1] = temp
+	end
+	return arr
+end
+
+:shuffle(arr)
+	len = arr.length()
+	for i = 0; i < len; i++
+		x = random(len - 1)
+		temp_element = arr[i]
+		arr[i] = arr[x]
+		arr[x] = temp_element
+	end
+	return arr
+end
+
+:slice(arr, start, end)
+	# Later: add check for start/end that are out of bounds
+	arr_new = []
+	for i = start; i < end; i++
+		arr_new[i - start] = arr[i]
+	end
+	return arr_new
+end
+
+# Uses insertion sort algorithm from wikipedia
+:sort(arr)
+	i = 1
+	while i < arr.length()
+		j = i
+		while (j > 0) && (arr[j - 1] > arr[j])
+			temp = arr[j]
+			arr[j] = arr[j - 1]
+			arr[j - 1] = temp
+			j--
+		end
+		i++
+	end
+	return arr
+end
+
+:to_string(arr)
+	return "" + arr
+end
+
+:unique(arr)
+	len = arr.length()
+	hash = {}
+	arr_new = []
+	j = 0
+	for i = 0; i < len; i++
+		if (hash.has_key?(arr[i])).negate()
+			hash[arr[i]] = 1
+			arr_new[j] = arr[i]
+			j++
+		end
+	end
+	return arr_new
+end
+
+:nil?
+	return false
+end
+
+:filter(arr, method)
+	result = []
+	result_size = 0
+	arr_length = arr.length()
+	for i = 0; i < arr_length; i++
+		if method!(arr[i])
+			result[result_size] = arr[i]
+			result_size++
+		end
+	end
+	return result
 end

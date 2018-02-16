@@ -1,11 +1,11 @@
-﻿blz-ospl
+﻿The blazingkin open source programming language (blz-ospl)
 ===
 
-[![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
+Stable - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
 
 Nightly - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=v2.5)](https://travis-ci.org/blazingkin/blz-ospl/branches)
 
-blz is a scripting language implemented using the JVM.
+blz is an easy to use, fast, and portable scripting language implemented using the JVM.
 
 The goal is to provide programmers with high levels of abstraction to increase developer velocity.
 
@@ -13,6 +13,57 @@ Getting Started
 ====
 
 Directions for installing the language are available on the [wiki page](https://github.com/blazingkin/blz-ospl/wiki/Installation)
+
+
+Example Code
+====
+
+Hello World
+```
+print("Hello World!")
+```
+
+Factorial
+```
+:main
+	print("What number would you like the factorial of?")
+	input = number_input()
+	print(fact(input))
+end
+
+:fact(num)
+	if num <= 1
+		return 1
+	end
+	return num * fact(num - 1)
+end
+```
+
+Constructors / Objects
+```
+:main
+	# Make a new Ball and name it red_ball
+	red_ball = Ball("red", 2)
+	
+	# Examine its properties
+	print(red_ball.name())
+	print(red_ball.volume())
+	
+end
+
+# Constructors can take parameters (that automatically become properties)
+constructor Ball(color, radius)
+	
+	# Objects can also have functions (closures)
+	:volume
+		return 4/3 * {pi} * (radius ** 3)
+	end
+	:name
+		return "a " + color + " ball with radius " + radius
+	end
+	
+end
+```
 
 
 Reference Material

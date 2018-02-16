@@ -2,10 +2,49 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.Stack;
 
-import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionParser {
+	
+	private static Stack<Operator> operatorStack = new Stack<Operator>();
+	private static Stack<ASTNode> operandStack = new Stack<ASTNode>();
+	private static Stack<ASTNode> functionNames = new Stack<ASTNode>();
+	
+	public static String[] parseBindingWithArguments(String line){
+		int firstParensIndex = line.indexOf('(');
+		if (firstParensIndex != -1) {
+			/* Get the name as the part before ( */
+			String name = line.substring(0,firstParensIndex).trim();
+			
+			/* Get the index of ) */
+			int lastParensIndex = line.lastIndexOf(')');
+			if (lastParensIndex == -1) {
+				lastParensIndex = line.length();
+			}
+			
+			/* Split out the part that is just variables */
+			String vars = line.substring(firstParensIndex + 1, lastParensIndex);
+			
+			/* If there are none, then just return the function name */
+			if (vars.length() == 0) {
+				String result[] = {name};
+				return result;
+			}
+			
+			/* Split out the variables and return the whole list */
+			String vNames[] = vars.split(",");
+			String result[] = new String[vNames.length + 1];
+			for (int i = 1; i <= vNames.length; i++) {
+				result[i] = vNames[i - 1].trim();
+			}
+			result[0] = name;
+			return result;
+		}else {
+			/* It has no (, so we can return the name and we're done */
+			String[] result = {line};
+			return result;
+		}
+	}
 	
 	public static ASTNode parseAndCollapse(String line){
 		return parseExpression(line).collapse();
@@ -13,9 +52,9 @@ public class ExpressionParser {
 	
 	// Use the shunting yard algorithm to parse a line
 	public static ASTNode parseExpression(String line){
-		Stack<Operator> operatorStack = new Stack<Operator>();
-		Stack<ASTNode> operandStack = new Stack<ASTNode>();
-		Stack<ASTNode> functionNames = new Stack<ASTNode>();
+		operatorStack.clear();
+		operandStack.clear();
+		functionNames.clear();
 		char[] lne = line.toCharArray();
 		boolean ignoreMode = false;
 		String building = "";
@@ -23,7 +62,7 @@ public class ExpressionParser {
 		for (int i = 0; i < lne.length; i++){
 			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
 				building += lne[i];
-			}else if (Operator.symbols.contains(""+lne[i]) && (lne[i] != '.' || !Variable.isInteger(building))){
+			}else if (Operator.symbols.contains(""+lne[i]) && !(lne[i] == '.' && Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
 					String subBuilding = ""+lne[i];
 					boolean found = false;

@@ -3,6 +3,7 @@
 .metadata/*
 .recommenders/*
 .settings/*
+.vscode/*
 *.project
 *.class
 *.classpath

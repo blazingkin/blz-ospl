@@ -1,0 +1,27 @@
+:nil?
+	return false
+end
+
+:multiply(a, b)
+	return a * b
+end
+
+# Forces a number to be a double
+:to_double(a)
+	return a * 1.0
+end
+
+:floor(a)
+	return a - (a % 1)
+end
+
+:ceil(a)
+	if a % 1 == 0
+		return a + 1
+	end
+	return a + (1 - (a % 1))
+end
+
+:to_string(a)
+	return a + ""
+end

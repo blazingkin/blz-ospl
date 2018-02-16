@@ -1,0 +1,6 @@
+print("asdf".contains?("a"))
+print("asdf".contains?(""))
+print("adsf".contains?("g"))
+print("asdf".contains?("asdf"))
+print("asdf".contains?("asdfuiop")
+print("asdf".contains?("dfasdf"))

@@ -8,6 +8,9 @@ import com.blazingkin.interpreter.unittests.astnodes.ApproximateComparisonNodeUn
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLiteralNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.ArrayLookupNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.AssignmentNodeUnitTest;
+import com.blazingkin.interpreter.unittests.astnodes.LessThanNodeUnitTest;
+import com.blazingkin.interpreter.unittests.astnodes.LogicalAndNodeUnitTest;
+import com.blazingkin.interpreter.unittests.astnodes.LogicalOrNodeUnitTest;
 import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 
 // This is not scalable.... TODO Find a better way
@@ -18,15 +21,19 @@ import com.blazingkin.interpreter.unittests.astnodes.WhileNodeUnitTest;
 	ArrayLiteralNodeUnitTest.class,
 	ArrayLookupNodeUnitTest.class,
 	AssignmentNodeUnitTest.class,
-	WhileNodeUnitTest.class,
-	InstructionExecutorStringArrayTest.class,
+	ConstructorUnitTest.class,
+	ContextUnitTest.class,
 	ExecutorUnitTest.class,
 	ExpressionExecutorUnitTest.class,
 	ExpressionParserUnitTest.class,
-	LambdaUnitTest.class,
-	MathOpsUnitTest.class,
+	FunctionCallNodeUnitTest.class,
+	LessThanNodeUnitTest.class,
+	LogicalAndNodeUnitTest.class,
+	LogicalOrNodeUnitTest.class,
+	PackageUnitTest.class,
 	ProcessUnitTest.class,
-	VariableUnitTest.class
+	VariableUnitTest.class,
+	WhileNodeUnitTest.class
 })
 public class AllTestsSuite {
 

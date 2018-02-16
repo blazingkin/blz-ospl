@@ -1,0 +1,10 @@
+Hello from main
+Hello from Blah
+2
+600
+hello from closure
+variable should be defined within the closure 2
+hello from closure
+variable should be defined within the closure 2
+should have all args 20 30 2 2.718281828459045 3.141592653589793
+back in main

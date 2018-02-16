@@ -1,6 +1,13 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# BLZ files
+*.out text eol=lf
+*.blz text eol=crlf
+*.java text eol=crlf
+*.in text eof=lf
+*.md text eof=crlf
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union

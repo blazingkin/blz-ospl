@@ -1,0 +1,116 @@
+:sort(string)
+	i = 1
+	while i < string.length()
+		j = i
+		while (j > 0) && (string[j - 1] > string[j])
+			temp = string[j]
+			string[j] = string[j - 1]
+			string[j - 1] = temp
+			j--
+		end
+		i++
+	end
+	return string
+end
+
+:length(string)
+	SLEN string len
+	return len
+end
+
+:nil?
+	return false
+end
+
+# Note, does not currently work with !
+:slice(string, start, end)
+	# Later: add check for start/end that are out of bounds
+	string_new = ""
+	for i = start; i < end; i++
+		string_new = string_new + string[i]
+	end
+	return string_new
+end
+
+:is_number?(string)
+	length = string.length()
+	number_strings = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	no_decimal = true
+	for i = 0; i < length; i++
+		if number_strings.contains?(string[i]).false?()
+			if no_decimal && string[i] == "."
+				no_decimal = false
+			else
+				return false
+			end
+		end
+	end
+	return true
+end
+
+:to_number(string)
+	length = string.length()
+	result = 0
+	number_strings = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+	for i = 0; i < length; i++
+		result = result * 10
+		for j = 0; j < 10; j++
+			if string[i] == number_strings[j]
+				result = result + j
+				break
+			end
+		end
+	end
+	return result
+end
+
+:to_string(string)
+	return string
+end
+
+:to_array(string)
+	length = string.length()
+	result = []
+	for i = 0; i < length; i++
+		result[i] = string[i]
+	end
+	return result
+end
+
+# Trims whitespace
+# Note, does not currently work with !
+:trim(string)
+	whitespace_chars = [{text.space}, {text.newline}, {text.tab}]
+	while (string.length() != 0 && whitespace_chars.contains?(string[0]))
+		string = string.slice!(1, string.length())
+	end
+	while (string.length() != 0 && whitespace_chars.contains?(string[string.length() - 1]))
+		string = string.slice!(0, string.length() - 1)
+	end
+	return string
+end
+
+# Contains? - Does a string contain a substring
+:contains?(string, substring)
+	string_length = string.length()
+	substring_length = substring.length()
+	# Any string always contains the empty string
+	if substring_length == 0
+		return true
+	end
+	for i = 0; i < string_length; i++
+		j = 0
+		# Check for each character in the substring
+		while string[i + j] == substring[j]
+			j++
+			if j == substring_length
+				return true
+			end
+			# Don't run off the end of our string
+			if i + j == string_length
+				break
+			end
+		end
+	end
+	return false
+end

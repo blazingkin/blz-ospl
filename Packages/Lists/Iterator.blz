@@ -1,0 +1,16 @@
+constructor Iterator(list)
+	size = list.length()
+	i = 0
+	:has_next?
+		return i < size
+	end
+	
+	:next
+		i++
+		return this.list[i - 1]
+	end
+	
+	:remaining
+		return this.list.slice(i, size)
+	end
+end

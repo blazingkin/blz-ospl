@@ -1,0 +1,15 @@
+require asdf
+import Lists
+
+:main
+	it = Iterator([2, 3, 4, 1, 2])
+	while it.has_next?()
+		say_hello()
+		print(it.remaining())
+		it.next()
+	end
+end
+
+::test
+	print("test")
+end

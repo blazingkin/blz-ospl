@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class IfNode extends ASTNode {
@@ -21,7 +22,7 @@ public class IfNode extends ASTNode {
 
 	@Override
 	public ASTNode collapse() {
-		if (condition.execute().equals(TRUE_VAL)){
+		if (condition.execute(new Context()).equals(TRUE_VAL)){
 			return mainBlock;
 		}else{
 			return elseBlock;
@@ -29,11 +30,12 @@ public class IfNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute() {
-		if (condition.execute().equals(TRUE_VAL)){
-			return mainBlock.execute();
+	public Value execute(Context con) {
+		Context closure = new Context(con);
+		if (condition.execute(closure).equals(TRUE_VAL)){
+			return mainBlock.execute(closure);
 		}else{
-			return elseBlock.execute();
+			return elseBlock.execute(closure);
 		}
 	}
 

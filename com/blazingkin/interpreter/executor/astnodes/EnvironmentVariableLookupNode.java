@@ -1,9 +1,12 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import java.util.HashMap;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.UnaryNode;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -19,14 +22,16 @@ public class EnvironmentVariableLookupNode extends UnaryNode {
 	}
 	
 	@Override
-	public Value execute(){
+	public Value execute(Context con){
+		if (args[0].getStoreName().equals("")){
+			return new Value(VariableTypes.Hash, new HashMap<Value, Value>());
+		}
 		for (SystemEnv se : SystemEnv.values()){
 			if (se.name.equals(args[0].getStoreName())){
 				return Variable.getEnvVariable(se);
 			}
 		}
-		System.out.println("Could Not Find Environment Variable "+args[0].getStoreName());
-		return new Value(VariableTypes.Nil, null);
+		return Value.string(System.getenv(args[0].getStoreName()));
 	}
 
 }

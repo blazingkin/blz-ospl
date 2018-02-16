@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
@@ -28,12 +29,13 @@ public class ForNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute() {
+	public Value execute(Context con) {
 		Value cache = NULL_VAL;
-		init.execute();
-		while (term.execute().equals(TRUE_VAL)){
-			cache = block.execute();
-			loop.execute();
+		Context closure = new Context(con);
+		init.execute(closure);
+		while (term.execute(closure).equals(TRUE_VAL)){
+			cache = block.execute(closure);
+			loop.execute(closure);
 		}
 		return cache;
 	}

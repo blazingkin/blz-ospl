@@ -1,0 +1,6 @@
+:main
+	print(true.to_string() == "true")
+	print({}.to_string() == "{}")
+	print((2).to_string() == "2")
+	print(2.0.to_string() == "2.0")
+end

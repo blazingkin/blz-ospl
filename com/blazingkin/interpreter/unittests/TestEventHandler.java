@@ -8,6 +8,11 @@ public class TestEventHandler implements BlzEventHandler {
 	public void print(String contents) {
 		UnitTestUtil.log(contents);
 	}
+	
+	@Override
+	public void err(String contents){
+		UnitTestUtil.log(contents);
+	}
 
 	@Override
 	public void exitProgram(String exitMessage) {

@@ -1,0 +1,7 @@
+>>> Test 00 :remove <<<
+before remove: [0, 1, 2, 3, 4, 5, 6]
+after removing index 3: [0, 1, 2, 4, 5, 6]
+after removing index 5: [0, 1, 2, 4, 5]
+after removing index 0: [1, 2, 4, 5]
+arr2 makes a copy of arr and removes index 1: [1, 4, 5]
+--------------------------------

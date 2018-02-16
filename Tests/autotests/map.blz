@@ -1,0 +1,4 @@
+:main
+	arr = ["one", "two", "three"]
+	print(arr.map(sort))
+end

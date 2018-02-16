@@ -1,6 +1,32 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import com.blazingkin.interpreter.executor.astnodes.*;
+import com.blazingkin.interpreter.executor.astnodes.AdditionNode;
+import com.blazingkin.interpreter.executor.astnodes.ApproximateComparisonNode;
+import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
+import com.blazingkin.interpreter.executor.astnodes.ArrayLookupNode;
+import com.blazingkin.interpreter.executor.astnodes.AssignmentNode;
+import com.blazingkin.interpreter.executor.astnodes.CommaDelimitNode;
+import com.blazingkin.interpreter.executor.astnodes.ComparisonNode;
+import com.blazingkin.interpreter.executor.astnodes.DecrementNode;
+import com.blazingkin.interpreter.executor.astnodes.DivisionNode;
+import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
+import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
+import com.blazingkin.interpreter.executor.astnodes.ExponentiationNode;
+import com.blazingkin.interpreter.executor.astnodes.ExpressionDelimitNode;
+import com.blazingkin.interpreter.executor.astnodes.FunctionCallNode;
+import com.blazingkin.interpreter.executor.astnodes.GreaterThanEqualsNode;
+import com.blazingkin.interpreter.executor.astnodes.GreaterThanNode;
+import com.blazingkin.interpreter.executor.astnodes.IncrementNode;
+import com.blazingkin.interpreter.executor.astnodes.LessThanEqualsNode;
+import com.blazingkin.interpreter.executor.astnodes.LessThanNode;
+import com.blazingkin.interpreter.executor.astnodes.LogarithmNode;
+import com.blazingkin.interpreter.executor.astnodes.LogicalAndNode;
+import com.blazingkin.interpreter.executor.astnodes.LogicalOrNode;
+import com.blazingkin.interpreter.executor.astnodes.ModulusNode;
+import com.blazingkin.interpreter.executor.astnodes.MultiplicationNode;
+import com.blazingkin.interpreter.executor.astnodes.NotEqualNode;
+import com.blazingkin.interpreter.executor.astnodes.SubtractionNode;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 
 public abstract class OperatorASTNode extends ASTNode {
@@ -28,8 +54,16 @@ public abstract class OperatorASTNode extends ASTNode {
 			OperatorASTNode other = (OperatorASTNode) otherobj;
 			if (this.op == other.op && this.args.length == other.args.length){
 				for (int i = 0; i < this.args.length; i++){
-					if (!this.args[i].equals(other.args[i])){
-						return false;
+					try {
+						if (!this.args[i].equals(other.args[i])){
+							return false;
+						}
+					}catch(NullPointerException npe) {
+						/* For empty arrays, it can be nil */
+						/* This is the the exceptional case, so performance-wise it's better to catch the exception */
+						if (!(this.args[i] == null && other.args[i] == null)) {
+							return false;
+						}
 					}
 				}
 				return true;
@@ -69,7 +103,7 @@ public abstract class OperatorASTNode extends ASTNode {
 	@Override
 	public ASTNode collapse() {
 		if (canCollapse()){
-			return new ValueASTNode(execute());
+			return new ValueASTNode(execute(new Context()));
 		}else{
 			if (args != null){
 				ASTNode[] newChildren = new ASTNode[args.length];
@@ -133,6 +167,10 @@ public abstract class OperatorASTNode extends ASTNode {
 			return new LessThanEqualsNode(args);
 		case Logarithm:
 			return new LogarithmNode(args);
+		case LogicalAnd:
+			return new LogicalAndNode(args);
+		case LogicalOr:
+			return new LogicalOrNode(args);
 		case Modulus:
 			return new ModulusNode(args);
 		case Multiplication:

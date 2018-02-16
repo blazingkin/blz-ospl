@@ -1,0 +1,7 @@
+import Lists
+:main
+	it = Iterator([1,2,3,5])
+	while it.has_next?()
+		print(it.next())
+	end
+end

@@ -1,0 +1,4 @@
+print("  asdf".trim() == "asdf")
+print("   adf    ".trim() == "adf")
+print("asdf".trim() == "asdf")
+print(" 	 ".trim() == "")

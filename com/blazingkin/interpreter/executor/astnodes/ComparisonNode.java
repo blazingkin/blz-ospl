@@ -4,6 +4,7 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ComparisonNode extends BinaryNode {
@@ -16,8 +17,8 @@ public class ComparisonNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(){
-		return Value.bool(args[0].execute().equals(args[1].execute()));
+	public Value execute(Context con){
+		return Value.bool(args[0].execute(con).equals(args[1].execute(con)));
 	}
 
 }

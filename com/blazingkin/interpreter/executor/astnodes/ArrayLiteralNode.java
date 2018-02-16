@@ -5,6 +5,7 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.UnaryNode;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class ArrayLiteralNode extends UnaryNode {
@@ -17,8 +18,8 @@ public class ArrayLiteralNode extends UnaryNode {
 	}
 	
 	@Override
-	public Value execute(){
-		return Value.arr(ExpressionExecutor.extractCommaDelimits(args[0]));
+	public Value execute(Context con){
+		return Value.arr(ExpressionExecutor.extractCommaDelimits(args[0], con));
 	}
 
 }

@@ -1,40 +1,41 @@
 package com.blazingkin.interpreter.executor;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Stack;
 
-import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Process.BlockArc;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.lambda.LambdaParser;
-import com.blazingkin.interpreter.executor.listener.Event;
+import com.blazingkin.interpreter.executor.sourcestructures.Closure;
+import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
+import com.blazingkin.interpreter.executor.sourcestructures.Method;
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;
-import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
+
+import in.blazingk.blz.packagemanager.FileImportManager;
 
 public class Executor {
 
 	// Instance objects
 	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
 	private static ArrayList<Method> methods = new ArrayList<Method>();	// List of all functions within their respective processes
+	private static HashMap<String, Constructor> constructor = new HashMap<String, Constructor>();
 	private static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
-	private static ArrayList<Event> eventsToBeHandled = new ArrayList<Event>();
 
 	//State Variables
 	private static long timeStarted = 0;
-	private static int frames = 0;	
-	private static boolean immediateMode = false;
+	public static boolean immediateMode = false;
 	private static boolean closeRequested = false;
 	private static boolean breakMode = false;
 	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
@@ -57,7 +58,7 @@ public class Executor {
 		if (currentProcess.isRegistered(getLine())){	// If we've already registered this line, we can just run it
 			RegisteredLine line = currentProcess.getRegisteredLine(getLine());
 			setLine(getLine()+1);
-			line.run();
+			line.run(Executor.getCurrentContext());
 		}
 		else{
 			String line = currentProcess.getLine(getLine());
@@ -65,17 +66,19 @@ public class Executor {
 				setLine(getLine()+1);
 				return;
 			}
-			if (line.charAt(0) == '('){
-				LambdaParser.parseLambdaExpression(line).getValue();
-				setLine(getLine()+1);
-				return;
-			}
 			String split[] = line.split(" ");
 			if (split[0].length() > 0 && split[0].substring(0,1).equals(":")){
-				Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
-				getMethods().add(nM);
-				RuntimeStack.push(nM);
-				setLine(getLine()+1);
+				if (RuntimeStack.runtimeStack.peek() instanceof Constructor){
+					setLine(getLine()+1);
+					Closure closure = new Closure(currentProcess, getLine(), line.trim(), Executor.getCurrentContext());
+					Variable.setValue(closure.functionName, Value.closure(closure), closure.context);
+					setLine(getCurrentBlockEnd());
+				}else{
+					Method nM = new Method(currentProcess,getLine(), split[0].substring(1));
+					getMethods().add(nM);
+					RuntimeStack.push(nM);
+					setLine(getLine()+1);
+				}				
 				return;
 			}
 			if (split.length == 1 && split[0].equals("")){
@@ -83,12 +86,7 @@ public class Executor {
 				return;
 			}
 			setLine(getLine()+1);
-			ExpressionExecutor.parseExpression(line);	// If it hasn't been anything so far it must be a simple expression
-		}
-		if (getEventsToBeHandled().size() > 0 && getCurrentMethod().interuptable){
-			currentProcess.lineReturns.add(getLine()+1);
-			Executor.executeMethod(getEventsToBeHandled().get(0).method, Variable.getValuesFromList(getEventsToBeHandled().get(0).arguments));
-			getEventsToBeHandled().remove(0);
+			ExpressionExecutor.parseExpression(line, Executor.getCurrentContext());	// If it hasn't been anything so far it must be a simple expression
 		}
 		if (isCloseRequested()){
 			getEventHandler().exitProgram("Close was requested");
@@ -97,17 +95,32 @@ public class Executor {
 		}
 	}
 	
-	public static Value functionCall(Method m, Value[] values){
+	public static Value functionCall(Method m, Value[] values, boolean passByReference){
 		int runtimeStackDepth = RuntimeStack.runtimeStack.size();
 		if (m.parent != getCurrentProcess()){
 			RuntimeStack.push(m.parent);
 		}else{
 			getCurrentProcess().lineReturns.add(getLine());
 		}
+		if (m instanceof Closure){
+			Closure clos = (Closure) m;
+			RuntimeStack.pushContext(clos.context);
+		}
 		RuntimeStack.push(m);
 		if (m.takesVariables){
-			for (int i = 0; i < (m.variables.length > values.length?values.length:m.variables.length); i++){
-				Variable.setValue(m.variables[i], values[i]);
+			int variableCount = (m.variables.length > values.length?values.length:m.variables.length);
+			if (passByReference){
+				for (int i = 0; i < variableCount; i++){
+					Variable.setValue(m.variables[i], values[i]);
+				}
+			}else{
+				for (int i = 0; i < variableCount; i++){
+					Variable.setValue(m.variables[i], (values[i]).clone());
+				}
+			}
+			/* Bind variables that weren't passed to nil */
+			for (int i = variableCount; i < m.variables.length; i++) {
+				Variable.setValue(m.variables[i], Value.nil());
 			}
 		}
 		setLine(m.lineNumber);
@@ -140,7 +153,7 @@ public class Executor {
 	
 	public static void executeMethod(Method m){
 		RuntimeStack.push(m);
-		setLine(m.lineNumber);
+		setLine(m.getLineNum());
 	}
 	
 	public static void executeMethod(Method m, Value[] values){
@@ -160,13 +173,15 @@ public class Executor {
 				startingMethod = args.get(i+1);
 			}
 		}
-		RuntimeStack.push(new Process(runFile));		// puts the file passed to us as the current process
+		// puts the file passed to us as the current process
+		RuntimeStack.push(FileImportManager.importFile(runFile.toPath()));	
 		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(new StandAloneEventHandler());
 		Method startMethod = getMethodInCurrentProcess(startingMethod);
 		if (startMethod != null){
 			executeMethod(startMethod);
 		}
+		importCore();
 		codeLoop();
 			
 	}
@@ -185,54 +200,33 @@ public class Executor {
 		if (startMethod != null){
 			executeMethod(startMethod);
 		}
+		importCore();
 		codeLoop();
 	}
 	
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program
 	public static void cleanup(){
 		RuntimeStack.cleanup();
+		in.blazingk.blz.packagemanager.FileImportManager.importedFiles.clear();
+		VariableTypes.clear();
 		setLoopStack(new Stack<LoopWrapper>());
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
-		setFrames(0);
-		setEventsToBeHandled(new ArrayList<Event>());
 		Variable.clearVariables();
 		setMethods(new ArrayList<Method>());
 		setCloseRequested(false);
 		startingMethod = "";
 	}
 	
-	public static void immediateModeLoop(InputStream is){
-		System.out.println("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:");
-		System.out.println("Type 'exit' to exit");
-		String in = "";
-		Scanner sc = new Scanner(is);
-		immediateMode = true;
-		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
-		try{
-			do{
-				try{
-					in = sc.nextLine();
-					if (in.equals("err")){
-						Interpreter.thrownErrors.peek().printStackTrace();
-						continue;
-					}
-					if (in.equals("exit") || in.equals("quit")){
-						break;
-					}
-					if (in.equals("")){
-						continue;
-					}
-					System.out.println(ExpressionExecutor.parseExpression(in));
-				}catch(Exception e){
-					Interpreter.thrownErrors.add(e);
-					System.err.println("There was an issue running your last command");
-					System.err.println("Type 'err' to see the error");
-				}
-			}while (in.toLowerCase() != "exit");
-		}finally{
-			sc.close();
+
+	public static void importCore(){
+		try {
+			in.blazingk.blz.packagemanager.Package.importCore();
+		}catch(Exception e){
+			e.printStackTrace();
+			eventHandler.err(e.getMessage());
+			eventHandler.exitProgram("Failed to import core directory");
 		}
 	}
 	
@@ -283,14 +277,6 @@ public class Executor {
 		Executor.closeRequested = closeRequested;
 	}
 	
-	public static int getFrames() {
-		return frames;
-	}
-	
-	public static void setFrames(int frames) {
-		Executor.frames = frames;
-	}
-	
 	public static long getTimeStarted() {
 		return timeStarted;
 	}
@@ -299,13 +285,6 @@ public class Executor {
 		Executor.timeStarted = timeStarted;
 	}
 	
-	public static ArrayList<Event> getEventsToBeHandled() {
-		return eventsToBeHandled;
-	}
-	
-	public static void setEventsToBeHandled(ArrayList<Event> eventsToBeHandled) {
-		Executor.eventsToBeHandled = eventsToBeHandled;
-	}
 	
 	static int lineNum = -1;
 	// Sets line within the current process
@@ -349,6 +328,14 @@ public class Executor {
 	public static void addProcess(Process p){
 		processLineStack.push(getLine());
 		RuntimeStack.push(p);
+	}
+	
+	public static void addConstructor(String name, Constructor con){
+		constructor.put(name, con);
+	}
+	
+	public static Constructor getConstructor(String name){
+		return constructor.get(name);
 	}
 	
 	public static Stack<Method> getMethodStack(){

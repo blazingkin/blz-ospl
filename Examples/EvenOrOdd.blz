@@ -5,8 +5,7 @@
 		input = number_input()
 		if input % 2 == 0
 			print("even")
-		end
-		if input % 2 == 1
+		else
 			print("odd")
 		end
 	end

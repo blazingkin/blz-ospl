@@ -1,0 +1,33 @@
+:main
+	three = 3
+	new obj
+	new other
+	other.second = obj
+	obj.hello = say_hello
+	other.second.hello()
+	other.second.x = 3
+	print(other.second.x)
+	other.second.arr_func = arr
+	print([1,2,3,4])
+	print(other.second.arr_func()[2])
+end
+
+:two
+	return 2
+end
+
+:funct(obj)
+	obj.x = 2
+end
+
+:say_hello
+	echo "hello"
+end
+
+:arr
+	return [0,1,3,2]
+end
+
+:print(x)
+	echo x
+end

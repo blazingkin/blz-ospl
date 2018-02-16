@@ -1,0 +1,33 @@
+:has_key?(hash, key)
+	BLZINTERNALHASHHASKEY hash, key, "result"
+	return result
+end
+
+:set(hash, key, value)
+	hash[key] = value
+	return hash
+end
+
+:put(hash, key, value)
+	hash.set(key, value)
+end
+
+:get(hash, key)
+	if hash.has_key?(key)
+		return hash[key]
+	else
+		return {blz.nil}
+	end
+end
+
+:empty?(hash)
+	return hash == {}
+end
+
+:nil?
+	return false
+end	
+
+:to_string(hash)
+	return hash + ""
+end
