@@ -3,7 +3,7 @@
 
 Stable - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=master)](https://travis-ci.org/blazingkin/blz-ospl)
 
-Nightly - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=v2.5)](https://travis-ci.org/blazingkin/blz-ospl/branches)
+Nightly - [![Build Status](https://travis-ci.org/blazingkin/blz-ospl.svg?branch=v2.6)](https://travis-ci.org/blazingkin/blz-ospl/branches)
 
 blz is an easy to use, fast, and portable scripting language implemented using the JVM.
 
