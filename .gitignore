@@ -8,4 +8,5 @@
 *.class
 *.classpath
 *.outran
+target/*
 CHANGELOG
