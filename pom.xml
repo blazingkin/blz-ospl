@@ -53,7 +53,7 @@
 					<outputDirectory>${project.basedir}/bin</outputDirectory>
 					<archive>
 						<manifest>
-							<mainClass>com.blazingkin.interpreter.Interpreter</mainClass>
+							<mainClass>com.blazingkin.interpreter.BLZMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
