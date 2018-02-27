@@ -11,6 +11,12 @@ import com.oracle.truffle.api.instrumentation.StandardTags;
 public class BLZLanguage extends TruffleLanguage {
 
 	public static final String MIME_TYPE = "application/x-blz";
+	public static volatile int counter = 0;
+	
+	public BLZLanguage() {
+		//no-op
+		counter++;
+	}
 	
 	@Override
 	protected Object createContext(Env env) {
