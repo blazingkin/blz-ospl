@@ -25,9 +25,7 @@ public class RuntimeStack {
 	
 	public static void push(RuntimeStackElement se){
 		runtimeStack.push(se);
-		if (se instanceof RegisteredLine){
-			
-		}else if (se instanceof LoopWrapper){
+		if (se instanceof LoopWrapper){
 			loopStack.push((LoopWrapper)se);
 		}else if (se instanceof Closure){
 			methodStack.push((Method) se);
@@ -46,9 +44,7 @@ public class RuntimeStack {
 	
 	public static Value pop(){
 		RuntimeStackElement se = runtimeStack.pop();
-		if (se instanceof RegisteredLine){
-			return ((RegisteredLine) se).run();
-		}else if (se instanceof LoopWrapper){
+		if (se instanceof LoopWrapper){
 			loopStack.pop();
 		}else if (se instanceof Method){
 			Method m = methodStack.pop();
