@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.ArrayDeque;
 
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
@@ -209,7 +210,7 @@ public class Executor {
 		RuntimeStack.cleanup();
 		in.blazingk.blz.packagemanager.FileImportManager.importedFiles.clear();
 		VariableTypes.clear();
-		setLoopStack(new Stack<LoopWrapper>());
+		setLoopStack(new ArrayDeque<LoopWrapper>());
 		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
@@ -241,11 +242,11 @@ public class Executor {
 		return id;
 	}
 	
-	public static Stack<LoopWrapper> getLoopStack() {
+	public static ArrayDeque<LoopWrapper> getLoopStack() {
 		return RuntimeStack.loopStack;
 	}
 	
-	public static void setLoopStack(Stack<LoopWrapper> loopStack) {
+	public static void setLoopStack(ArrayDeque<LoopWrapper> loopStack) {
 		RuntimeStack.loopStack = loopStack;
 	}
 	
@@ -296,7 +297,7 @@ public class Executor {
 		return lineNum;
 	}
 	
-	public static Stack<Process> getRunningProcesses(){
+	public static ArrayDeque<Process> getRunningProcesses(){
 		return RuntimeStack.processStack;
 	}
 	
@@ -338,7 +339,7 @@ public class Executor {
 		return constructor.get(name);
 	}
 	
-	public static Stack<Method> getMethodStack(){
+	public static ArrayDeque<Method> getMethodStack(){
 		return RuntimeStack.methodStack;
 	}
 	

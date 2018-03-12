@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.blazingkin.interpreter</groupId>
+	<artifactId>blz-ospl</artifactId>
+	<version>2.6</version>
+	<name>blz open source programming language</name>
+	<url>http://blazingk.in/blz</url>
+	<description>The blz open source programming language</description>
+	<inceptionYear>2015-7-01</inceptionYear>
+	<scm>
+		<url>https://github.com/blazingkin/blz-ospl</url>
+		<developerConnection>blazingkin</developerConnection>
+	</scm>
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/blazingkin/blz-ospl/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/blazingkin/blz-ospl</url>
+	</ciManagement>
+    <dependencies>
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		</dependency>
+	</dependencies>
+	<build>
+	  <directory>target</directory>
+	  <outputDirectory>target/classes</outputDirectory>
+	  <finalName>${project.artifactId}-${project.version}</finalName>
+	  <sourceDirectory>src/</sourceDirectory>
+	  <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.basedir}/bin</outputDirectory>
+					<archive>
+						<manifest>
+							<mainClass>com.blazingkin.interpreter.Interpreter</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	  
+    <properties>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+</project>

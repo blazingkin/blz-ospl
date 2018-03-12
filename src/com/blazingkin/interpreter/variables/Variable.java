@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+import java.util.ArrayDeque;
 
 import org.nevec.rjm.BigDecimalMath;
 
@@ -356,8 +357,7 @@ public class Variable {
 			return Value.integer(Executor.getRunningProcesses().size());
 		case methodStack:
 			String stackString = "";
-			Method[] stck = new Method[Executor.getMethodStack().size()];
-			Executor.getMethodStack().copyInto(stck);
+			ArrayDeque<Method> stck = Executor.getMethodStack().clone();
 			for (Method m : stck){
 				stackString = m.functionName + "\n" + stackString;
 			}
@@ -372,7 +372,7 @@ public class Variable {
 			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.5");
+			return new Value(VariableTypes.String, "2.6");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");

@@ -1,6 +1,6 @@
 package com.blazingkin.interpreter.executor.executionstack;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
@@ -15,13 +15,13 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class RuntimeStack {
 	
-	public static Stack<RuntimeStackElement> runtimeStack = new Stack<RuntimeStackElement>();
-	public static Stack<Process> processStack = new Stack<Process>();
-	public static Stack<Method> methodStack = new Stack<Method>();
-	public static Stack<Context> contextStack = new Stack<Context>();
-	public static Stack<LoopWrapper> loopStack = new Stack<LoopWrapper>();
-	public static Stack<Integer> processLineStack = new Stack<Integer>();
-	public static Stack<Context> processContextStack = new Stack<Context>();
+	public static ArrayDeque<RuntimeStackElement> runtimeStack = new ArrayDeque<RuntimeStackElement>();
+	public static ArrayDeque<Process> processStack = new ArrayDeque<Process>();
+	public static ArrayDeque<Method> methodStack = new ArrayDeque<Method>();
+	public static ArrayDeque<Context> contextStack = new ArrayDeque<Context>();
+	public static ArrayDeque<LoopWrapper> loopStack = new ArrayDeque<LoopWrapper>();
+	public static ArrayDeque<Integer> processLineStack = new ArrayDeque<Integer>();
+	public static ArrayDeque<Context> processContextStack = new ArrayDeque<Context>();
 	
 	public static void push(RuntimeStackElement se){
 		runtimeStack.push(se);
@@ -58,7 +58,7 @@ public class RuntimeStack {
 			Executor.setLine(processLineStack.pop());
 		}
 		se.onBlockEnd();
-		if (runtimeStack.empty() && !Executor.immediateMode){
+		if (runtimeStack.isEmpty() && !Executor.immediateMode){
 			Executor.setCloseRequested(true);
 			Executor.getEventHandler().exitProgram("Reached end of program");
 			return null;
