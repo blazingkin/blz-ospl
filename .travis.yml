@@ -6,6 +6,5 @@ install:
  
 script:
 - mvn package
-- java -jar bin/blz-ospl-v2.6.jar -t
 - cd Tests/autotests/
 - python3 runtests.py

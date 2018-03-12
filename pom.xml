@@ -34,6 +34,7 @@
 	  <outputDirectory>target/classes</outputDirectory>
 	  <finalName>${project.artifactId}-${project.version}</finalName>
 	  <sourceDirectory>src/</sourceDirectory>
+      <testSourceDirectory>src/com/blazingkin/interpreter/unittests</testSourceDirectory>
 	  <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
