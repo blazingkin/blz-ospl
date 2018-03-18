@@ -15,7 +15,6 @@ import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.repl.REPL;
-import com.blazingkin.interpreter.unittests.AllTestsSuite;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
 
@@ -77,14 +76,6 @@ public class Interpreter {
 						break;
 					case 'v':
 						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
-						break;
-					case 't':
-						Result result = JUnitCore.runClasses(AllTestsSuite.class);
-						for (Failure failure : result.getFailures()){
-							System.out.println(failure.toString());
-						}
-						System.out.println(result.wasSuccessful() ? result.getRunCount() + " Tests Passed" : "Tests Failed");
-						System.exit(result.wasSuccessful() ? 0 : 1);
 						break;
 				}
 				System.exit(0);
