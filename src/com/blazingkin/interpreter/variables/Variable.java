@@ -164,7 +164,7 @@ public class Variable {
 		if (Variable.isValRational(top) && Variable.isValRational(bottom)){
 			BLZRational toprat = Variable.getRationalVal(top);
 			BLZRational botrat = Variable.getRationalVal(bottom);
-			BLZRational botratopp = (BLZRational) Value.rational(botrat.den, botrat.num).value;
+			BLZRational botratopp = getRationalVal(Value.rational(botrat.den, botrat.num));
 			BLZRational prod = toprat.multiply(botratopp);
 			if (prod.den.equals(BigInteger.ONE)){
 				return new Value(VariableTypes.Integer, prod.num);

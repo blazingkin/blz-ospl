@@ -32,7 +32,7 @@
 	<build>
 	  <directory>target</directory>
 	  <outputDirectory>target/classes</outputDirectory>
-	  <finalName>${project.artifactId}-${project.version}</finalName>
+	  <finalName>${project.artifactId}</finalName>
 	  <sourceDirectory>src/</sourceDirectory>
       <testSourceDirectory>src/com/blazingkin/interpreter/unittests</testSourceDirectory>
 	  <plugins>
