@@ -184,11 +184,16 @@ public class Variable {
 	public static Value expValues(Value v1, Value v2){
 		if (isValInt(v1) && isValInt(v2)){
 			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).pow(((BigInteger)v2.value).intValue()));
-		}
-		if (isDecimalValue(v1) && isDecimalValue(v2)){
+		}else if (isValRational(v1) && isValInt(v2)){
+			BLZRational base = getRationalVal(v1);
+			BigInteger num = base.num;
+			BigInteger den = base.den;
+			int exp = getIntValue(v2).intValue();
+			return Value.rational(num.pow(exp), den.pow(exp));
+		}else if (isDecimalValue(v1) && isDecimalValue(v2)){
 			BigDecimal d1 = getDoubleVal(v1);
 			BigDecimal d2 = getDoubleVal(v2);
-			return new Value(VariableTypes.Double, powerBig(d1,d2));
+			return Value.doub(powerBig(d1, d2));
 		}
 		Interpreter.throwError("Failed Taking an Exponent with "+v1.value + " and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
