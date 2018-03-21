@@ -46,12 +46,14 @@ public class Value implements Cloneable {
 	
 	@Override
 	public Value clone() {
-		if (type == VariableTypes.Array) {
-			return new Value(type, ((Value[]) value).clone(), parent, isGlobal);
-		}else if (type == VariableTypes.Object){
-			return new Value(type, ((BLZObject)value).clone(), parent, isGlobal);
+		switch(type){
+			case Array:
+				return new Value(type, ((Value[]) value).clone(), parent, isGlobal);
+			case Object:
+				return new Value(type, ((BLZObject)value).clone(), parent, isGlobal);
+			default:
+				return this;
 		}
-		return this;
 	}
 	
 	public String typedToString(){
@@ -121,6 +123,10 @@ public class Value implements Cloneable {
 	
 	public static Value doub(double num){
 		return new Value(VariableTypes.Double, BigDecimal.valueOf(num));
+	}
+
+	public static Value doub(BigDecimal num){
+		return new Value(VariableTypes.Double, num);
 	}
 	
 	public static Value integer(int val){
