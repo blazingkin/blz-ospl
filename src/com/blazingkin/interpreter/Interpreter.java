@@ -17,7 +17,8 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class Interpreter {
 	public static boolean logging = true;
-	
+	public static int exitCode = 0;
+
 	public static void main(String args[]){
 		try{
 			switch(args.length){
@@ -33,7 +34,7 @@ public class Interpreter {
 			throwError("Unhandled Exception Within Java\nErrorDump:"); 
 			e.printStackTrace();
 		}
-		
+		System.exit(exitCode);
 	}
 	
 	public static void printHelp(){
@@ -69,7 +70,7 @@ public class Interpreter {
 			Interpreter.printHelp();
 			System.err.println("Unrecognized option: "+option);
 		}
-		System.exit(0);
+		System.exit(exitCode);
 	}
 	
 	public void run(String args[]) throws FileNotFoundException{
@@ -124,6 +125,10 @@ public class Interpreter {
 	
 	public static void terminate(){
 		Executor.setCloseRequested(true);
+	}
+
+	public static void setExitCode(int val){
+		exitCode = val;
 	}
 	
 	public void runExecutor(File path, List<String> args) throws Exception{

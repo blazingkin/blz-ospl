@@ -66,7 +66,7 @@ public class StandAloneEventHandler implements BlzEventHandler {
 		if (exitMessage.equals("An Error Occured")) {
 			System.exit(-1);
 		}
-		System.exit(0);
+		System.exit(Interpreter.exitCode);
 	}
 
 	@Override

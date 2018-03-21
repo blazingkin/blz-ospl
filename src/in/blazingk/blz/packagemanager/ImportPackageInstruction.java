@@ -28,7 +28,7 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		try {
 			return Paths.get(ClassLoader.getSystemClassLoader().getResource(".").toURI()).getParent();
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
+			// If you can tell me a system that doesn't define . I'll buy you a drink
 			e.printStackTrace();
 		}
 		return null;

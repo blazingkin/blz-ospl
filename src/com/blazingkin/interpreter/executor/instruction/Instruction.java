@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.Else;
 import com.blazingkin.interpreter.executor.executionorder.End;
+import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ForLoop;
 import com.blazingkin.interpreter.executor.executionorder.IfBlock;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
@@ -48,6 +49,7 @@ public enum Instruction {
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
 	REQUIREPROCESS("REQUIRE", "REQUIRE PROCESS", new ImportRelativeInstruction()),
 	ELSE("ELSE", "ELSE BLOCK", new Else()),
+	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
 	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey());
 	
 	
