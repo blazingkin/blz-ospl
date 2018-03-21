@@ -34,7 +34,7 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		return null;
 	}
 	
-	public Path findPackageDirectory() throws Exception {
+	public Path findPackageDirectory() throws IOException {
 		try {
 			return getEnvironmentPackageDirectory();
 		}catch(Exception e) {
@@ -58,7 +58,7 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		return Paths.get(PackageDirectory);
 	}
 
-	public Path findPackage(String packageName) throws Exception{
+	public Path findPackage(String packageName) throws IOException {
 		Path dir = findPackageDirectory();
 		for (Path f : Files.newDirectoryStream(dir)){
 			if (f.getFileName().toString().equals(packageName)){
@@ -68,6 +68,10 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		throw new FileNotFoundException("Could not find the package "+packageName+" in "+dir);
 	}
 	
+	public DirectoryStream<Path> listPackages() throws IOException {
+		return Files.newDirectoryStream(findPackageDirectory());
+	}
+
 	public Collection<Path> listFileTree(Path dir) {
 	    Set<Path> fileTree = new HashSet<Path>();
 	    try {

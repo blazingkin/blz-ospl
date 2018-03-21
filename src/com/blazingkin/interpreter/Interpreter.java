@@ -5,10 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
+import in.blazingk.blz.packagemanager.FileImportManager;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
@@ -32,32 +29,47 @@ public class Interpreter {
 				new Interpreter().run(args);
 			break;
 			}
-		}catch(Exception e){throwError("Unhandled Exception Within Java\nErrorDump:"); e.printStackTrace();}
+		}catch(Exception e){
+			throwError("Unhandled Exception Within Java\nErrorDump:"); 
+			e.printStackTrace();
+		}
 		
 	}
 	
 	public static void printHelp(){
 		System.out.println("How to use BLZ-OSPL:");
 		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
-/*		System.out.println();
-		System.out.println("Compile a pre-blz file (typically .pblz extension)");
-		System.out.println("blz-ospl -c *INPATH* *OUTPATH*");
-		This feature is deprecated, but will be recreated at a later date*/
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
-		System.out.println("blz-ospl *PATH*");
-		System.out.println("The -m flag lets you specify a main function");
+		System.out.println("blz PATH [-m MAIN]");
 		System.out.println();
 		System.out.println("Run in immediate mode");
-		System.out.println("blz-ospl -i");
+		System.out.println("blz -i[mmediate]");
 		System.out.println();
+		System.out.println("Manage Packages");
+		System.out.println("blz -p[ackage] [help | list]");
 		System.out.println("Print version number");
-		System.out.println("blz-ospl -v");
+		System.out.println("blz -v[ersion]");
 		System.out.println();
 		System.out.println("See this help message");
-		System.out.println("blz-ospl -h");
+		System.out.println("blz -h[elp]");
 	}
 	
+	public void selectOption(String option, String[] fullArgs){
+		if (option.equals("h") || option.equals("help")){
+			Interpreter.printHelp();
+		}else if (option.equals("i") || option.equals("immediate")){
+			REPL.immediateModeLoop(System.in);
+		}else if (option.equals("v") || option.equals("version")){
+			System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
+		}else if (option.equals("p") || option.equals("package")){
+			FileImportManager.handlePackageInstruction(fullArgs);
+		}else{
+			Interpreter.printHelp();
+			System.err.println("Unrecognized option: "+option);
+		}
+		System.exit(0);
+	}
 	
 	public void run(String args[]) throws FileNotFoundException{
 		try{
@@ -65,22 +77,14 @@ public class Interpreter {
 				Interpreter.printHelp();
 				System.exit(0);
 			}
-			if (args[0].charAt(0) == '-'){
-				switch(args[0].charAt(1)){
-					case 'h':
-						Interpreter.printHelp();
-						System.exit(0);
-						break;
-					case 'i':
-						REPL.immediateModeLoop(System.in);
-						break;
-					case 'v':
-						System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
-						break;
+			int fileArg = 0;
+			for (; fileArg < args.length; fileArg++){
+				if (args[fileArg].charAt(0) != '-'){
+					break;
 				}
-				System.exit(0);
+				selectOption(args[fileArg].substring(1).toLowerCase(), args);
 			}
-			String paths= args[0];
+			String paths= args[fileArg];
 			File pths = new File(paths);
 			
 			/* If it can't be found, try adding the extension */
@@ -88,13 +92,13 @@ public class Interpreter {
 				pths = new File(paths + ".blz");
 			}
 			
-			int f = 1;
-			List<String> rg = new LinkedList<String>();
-			while (f < args.length){
-				rg.add(args[f]);
-				f++;
+			int programArgsIndex = fileArg + 1;
+			List<String> programArgs = new LinkedList<String>();
+			while (programArgsIndex < args.length){
+				programArgs.add(args[programArgsIndex]);
+				programArgsIndex++;
 			}
-			runExecutor(pths, rg);
+			runExecutor(pths, programArgs);
 		}catch(Exception e){
 			e.printStackTrace();
 			if (!Executor.getCurrentProcess().runningFromFile){
