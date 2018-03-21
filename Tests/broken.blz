@@ -5,7 +5,3 @@
         print(arr[i])
    end 
 end
-
-:other
-    print("test")
-end

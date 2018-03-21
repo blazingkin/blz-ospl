@@ -19,6 +19,7 @@ import com.blazingkin.interpreter.executor.output.BLZLogging;
 import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
+import com.blazingkin.interpreter.executor.output.RawEcho;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
@@ -29,6 +30,7 @@ public enum Instruction {
 	INVALID("","INVALID", null),													// INVALID - Not for use
 	ECHO("ECHO", "ECHO", new Echo()),												// Echo - prints a replacing string
 	SAMELINEECHO("SECHO", "SAME LINE ECHO", new SameLineEcho()),
+	RAWECHO("BLZINTERNALRAWECHO", "RAWECHO", new RawEcho()),
 	NUMINPUT("NIN", "NUM INPUT", new NumInput()),									// Number input - inputs a string and parses to an int stores to a variable
 	RANDOM("RAND", "RANDOM", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
 	STRINGINPUT("STRIN", "STRINGIN", new StringInput()),								// Input String - gets a string through input

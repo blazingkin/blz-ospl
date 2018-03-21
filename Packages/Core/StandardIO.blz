@@ -24,3 +24,7 @@ end
 :exit(code)
 	BLZINTERNALEXIT code
 end
+
+:raw_print(char)
+	BLZINTERNALRAWECHO char
+end
