@@ -1,0 +1,3 @@
+:main
+    raw_print(10)
+end

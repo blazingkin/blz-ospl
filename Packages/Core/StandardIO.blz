@@ -20,3 +20,11 @@ end
 :write_file_lines(path, contents)
 	print(contents)
 end
+
+:exit(code)
+	BLZINTERNALEXIT code
+end
+
+:raw_print(char)
+	BLZINTERNALRAWECHO char
+end

@@ -1,4 +1,4 @@
-import TestUtil
+import __ignore_me
 
 :main
 	print(gimme_two())

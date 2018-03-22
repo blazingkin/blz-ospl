@@ -1,0 +1,17 @@
+constructor Expect(value)
+
+    :to_be(other)
+        if value != other
+            print("Assertion Failed!")
+            print("Expected "+value+" to be "+other)
+            exit(1)
+        end
+        return true
+    end
+
+
+end
+
+:expect(value)
+    return Expect(value)
+end

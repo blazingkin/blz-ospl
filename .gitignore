@@ -9,4 +9,6 @@
 *.classpath
 *.outran
 target/*
+language/target/*
+launcher/target/*
 CHANGELOG
