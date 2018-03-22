@@ -38,9 +38,7 @@ public class BLZLanguage extends TruffleLanguage {
 	
 	@Override
 	protected CallTarget parse(ParsingRequest request) throws Exception {
-		//Source source = request.getSource();
-		//System.out.println(source.getCode());
-		return null;
+		return new BLZCallTarget(request.getSource());
 	}
 
 }

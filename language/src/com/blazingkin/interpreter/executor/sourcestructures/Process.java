@@ -199,6 +199,14 @@ public class Process implements RuntimeStackElement {
 		Instruction instruction = getInstructionFromString(line);
 		return instruction != null && instruction.executor instanceof BlockInstruction;
 	}
+
+	private boolean isConstructor(String line){
+		return line.startsWith("constructor");
+	}
+
+	private boolean isMethod(String line){
+		return line.length() >= 1 && line.charAt(0) == ':';
+	}
 	
 	private boolean isEnd(String line){
 		Instruction instruction = getInstructionFromString(line);

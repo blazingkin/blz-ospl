@@ -12,3 +12,5 @@ target/*
 language/target/*
 launcher/target/*
 CHANGELOG
+language/.settings/*
+launcher/.settings/*

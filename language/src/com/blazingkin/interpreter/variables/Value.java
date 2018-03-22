@@ -96,6 +96,10 @@ public class Value implements Cloneable {
 					}
 				}
 				return true;
+			}else if (type == VariableTypes.Object && v2.type == VariableTypes.Object){
+				BLZObject me = (BLZObject) this.value;
+				BLZObject you = (BLZObject) v2.value;
+				return me.objectContext.contextID == you.objectContext.contextID;
 			}
 			return (this.value == v2.value || this.value.equals(v2.value)) && this.type.equals(v2.type);
 		}

@@ -1,5 +1,7 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
+import java.util.ArrayList;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
@@ -17,6 +19,7 @@ public class Constructor implements RuntimeStackElement {
 	public String name;
 	private boolean takesArguments;
 	private String[] argumentNames = {};
+	private ArrayList<Method> methods = new ArrayList<Method>();
 	
 	public Constructor(Process parent, int lineNum, String line){
 		if (line.equals("")){
@@ -90,6 +93,7 @@ public class Constructor implements RuntimeStackElement {
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
 		Variable.setValue("this", Value.obj(newObj), newObj.objectContext);
+		Variable.setValue("constructor", Value.constructor(constructor), newObj.objectContext);
 		for (Method m : constructor.getParent().importedMethods){
 			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
 		}

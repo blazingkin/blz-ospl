@@ -43,7 +43,7 @@ public final class BLZMain {
         }
 
         System.exit(executeSource(source, System.in, System.out, options));
-    }
+    } 
 
     private static int executeSource(Source source, InputStream in, PrintStream out, Map<String, String> options) {
         Context context;
