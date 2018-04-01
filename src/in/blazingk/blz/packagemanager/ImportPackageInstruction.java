@@ -2,7 +2,9 @@ package in.blazingk.blz.packagemanager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,9 +28,13 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	
 	public Path getRunningDirectory(){
 		try {
-			return Paths.get(ClassLoader.getSystemClassLoader().getResource(".").toURI()).getParent();
+			URL cwd = ImportPackageInstruction.class.getProtectionDomain().getCodeSource().getLocation();
+			return Paths.get(cwd.toURI()).getParent().getParent();
 		} catch (URISyntaxException e) {
 			// If you can tell me a system that doesn't define . I'll buy you a drink
+			e.printStackTrace();
+		} catch (Exception e){
+			System.err.println("Failed importing packages");
 			e.printStackTrace();
 		}
 		return null;
