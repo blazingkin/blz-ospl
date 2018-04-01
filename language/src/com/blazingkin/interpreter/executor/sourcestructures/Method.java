@@ -48,11 +48,6 @@ public class Method implements RuntimeStackElement {
 		return "<Method " + functionName + "(" + args + ")>";
 	}
 	
-	//Checks to see if this is a specific method object
-	public boolean isItThis(String name, int parentID){
-		return (functionName.equals(name) && (parentID == parent.UUID));
-	}
-	
 	/**
 	 * @param ar - The array to search through
 	 * @param s - The name of the target method
