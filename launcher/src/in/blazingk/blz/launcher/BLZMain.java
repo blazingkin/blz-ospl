@@ -53,7 +53,6 @@ public final class BLZMain {
             System.err.println(e.getMessage());
             return 1;
         }
-        out.println("== running on " + context.getEngine());
         out.println(context.getEngine().getLanguages());
         try {
             Value result = context.eval(source);

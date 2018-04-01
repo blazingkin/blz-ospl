@@ -32,6 +32,7 @@ public class Value implements Cloneable {
 		parent = par;
 
 	}
+
 	public Value(VariableTypes t, Object val, Method par){
 		if (val == null){
 			type = VariableTypes.Nil;
