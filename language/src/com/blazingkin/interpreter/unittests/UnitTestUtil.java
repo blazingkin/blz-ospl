@@ -69,7 +69,7 @@ public class UnitTestUtil {
 
 	public static void assertEqual(Object a, Object b){
 		org.junit.Assert.assertEquals(a, b);
-		if (a != b){
+		if (!a.equals(b)){
 			System.err.println("An assertion was false!");
 			System.err.println(a + "!=" + b);
 		}
