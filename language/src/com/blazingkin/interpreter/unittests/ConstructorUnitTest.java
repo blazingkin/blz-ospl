@@ -30,9 +30,9 @@ public class ConstructorUnitTest {
 		Value result = Constructor.initialize(getBallConstructor(), args, false);
 		UnitTestUtil.assertEqual(result.type, VariableTypes.Object);
 		BLZObject obj = (BLZObject) result.value;
-		UnitTestUtil.assertEqual(result, Variable.getValue("this", obj.objectContext));
-		UnitTestUtil.assertEqual(Value.integer(2), Variable.getValue("radius", obj.objectContext));
-		UnitTestUtil.assertEqual(Value.string("red"), Variable.getValue("color", obj.objectContext));
+		UnitTestUtil.assertEqual(result, obj.objectContext.getValue("this"));
+		UnitTestUtil.assertEqual(Value.integer(2), obj.objectContext.getValue("radius"));
+		UnitTestUtil.assertEqual(Value.string("red"), obj.objectContext.getValue("color"));
 	}
 	
 	
@@ -42,9 +42,9 @@ public class ConstructorUnitTest {
 		Value result = Constructor.initialize(getParamatizedBallConstructor(), args, false);
 		UnitTestUtil.assertEqual(result.type, VariableTypes.Object);
 		BLZObject obj = (BLZObject) result.value;
-		UnitTestUtil.assertEqual(result, Variable.getValue("this", obj.objectContext));
-		UnitTestUtil.assertEqual(Value.integer(5), Variable.getValue("radius", obj.objectContext));
-		UnitTestUtil.assertEqual(Value.string("blue"), Variable.getValue("color", obj.objectContext));
+		UnitTestUtil.assertEqual(result, obj.objectContext.getValue("this"));
+		UnitTestUtil.assertEqual(Value.integer(5), obj.objectContext.getValue("radius"));
+		UnitTestUtil.assertEqual(Value.string("blue"), obj.objectContext.getValue("color"));
 	}
 	
 	@Test
@@ -65,8 +65,8 @@ public class ConstructorUnitTest {
 		Value result = Constructor.initialize(getParamatizedBallConstructor(), args, false);
 		UnitTestUtil.assertEqual(result.type, VariableTypes.Object);
 		BLZObject obj = (BLZObject) result.value;
-		UnitTestUtil.assertEqual(result, Variable.getValue("this", obj.objectContext));
-		UnitTestUtil.assertEqual(Value.string("blue"), Variable.getValue("color", obj.objectContext));
+		UnitTestUtil.assertEqual(result, obj.objectContext.getValue("this"));
+		UnitTestUtil.assertEqual(Value.string("blue"), obj.objectContext.getValue("color"));
 		UnitTestUtil.assertNil(Variable.getValue("radius"));
 	}
 	

@@ -104,7 +104,7 @@ public class Variable {
 			String s2 = v2.toString();
 			return new Value(VariableTypes.String, s1+s2);
 		}
-		Interpreter.throwError("Failed Adding Variables "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Adding Values "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -124,7 +124,7 @@ public class Variable {
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
-		Interpreter.throwError("Failed Subtracting Variables "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Subtracting Values "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -142,7 +142,7 @@ public class Variable {
 		if ((isValRational(v1) || isValDouble(v1)) && (isValRational(v2) || isValDouble(v2))){
 			return new Value(VariableTypes.Double, getDoubleVal(v1).multiply(getDoubleVal(v2)));
 		}
-		Interpreter.throwError("Failed Multiplying Variables "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Multiplying Values "+v1.value+" and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -208,21 +208,11 @@ public class Variable {
 		if (isDecimalValue(v1) && (v2.type == VariableTypes.String && ((String) v2.value).toLowerCase().equals("e"))){
 			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
-		Interpreter.throwError("Failed Taking an Logarithm with "+v1.value + " and "+v2.value);
-		return new Value(VariableTypes.Nil, null);
-	}
-	
-	public static Value lnValue(Value v){
-		if (isDecimalValue(v)){
-			BigDecimal d1 = getDoubleVal(v);
-			return new Value(VariableTypes.Double, BigDecimalMath.log(d1.setScale(12, RoundingMode.HALF_UP)));
-		}
-		Interpreter.throwError("Failed taking the natural log of "+v.value);
+		Interpreter.throwError("Failed Taking a Logarithm with "+v1.value + " and "+v2.value);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
 	
-	static Pattern quotePattern = Pattern.compile("^\".*\"$");
 	public static Value getValue(String line, Context con){
 		if (Variable.isDouble(line)){	//If its a double, then return it
 			if (isInteger(line)){	//If its an integer, then return it

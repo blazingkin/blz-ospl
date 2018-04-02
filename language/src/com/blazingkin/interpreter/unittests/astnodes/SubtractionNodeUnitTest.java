@@ -54,7 +54,7 @@ public class SubtractionNodeUnitTest {
     public void shouldFailToSubtractStrings(){
         ASTNode args[] = {new ValueASTNode("\"asdf\""), new ValueASTNode("\"asd\"")};
         new SubtractionNode(args).execute(new Context());
-        UnitTestUtil.assertLastError("Failed Subtracting Variables asdf and asd");
+        UnitTestUtil.assertLastError("Failed Subtracting Values asdf and asd");
     }
 
     @Test
