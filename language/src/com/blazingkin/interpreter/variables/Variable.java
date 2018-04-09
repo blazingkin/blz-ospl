@@ -553,9 +553,11 @@ public class Variable {
 	}
 	
 	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
+		base = base.setScale(12);
+		exponent = exponent.setScale(12);
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base)));
 	}
-	
+
 	public static VariableTypes typeOf(String name, Context con){
 		return getValue(name, con).type;
 	}
