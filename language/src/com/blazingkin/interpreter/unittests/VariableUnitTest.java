@@ -123,5 +123,4 @@ public class VariableUnitTest {
 		UnitTestUtil.assertEqual(Value.integer(2).value, Variable.getIntValue(Value.rational(4, 2)));
 	}
 	
-	
 }
