@@ -1,7 +1,11 @@
 package com.blazingkin.interpreter.parser;
 
+import java.util.Optional;
 import java.util.Stack;
 
+import com.blazingkin.interpreter.executor.instruction.Instruction;
+import com.blazingkin.interpreter.executor.instruction.InstructionType;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
@@ -14,6 +18,26 @@ public class ExpressionParser {
 	private static Stack<ASTNode> operandStack = new Stack<ASTNode>();
 	private static Stack<ASTNode> functionNames = new Stack<ASTNode>();
 	
+	public static Optional<RegisteredLine> parseLine(String line) throws SyntaxException {
+		String splits[] = line.split(" ");
+			if (splits.length == 0){
+				return Optional.empty();
+			}
+			try{
+				Instruction instr = InstructionType.getInstructionType(splits[0]);
+				if (instr == null || instr == Instruction.INVALID){
+					if (line.trim().isEmpty() || line.trim().charAt(0) == ':'){
+						return Optional.empty();
+					}
+					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(line)));
+				}
+				String newStr = line.replaceFirst(splits[0], "").trim();
+				return Optional.of(new RegisteredLine(instr, newStr));
+			}catch(Exception e){
+				throw new SyntaxException("Did not know how to parse line: "+line);
+			}
+	}
+
 	public static String[] parseBindingWithArguments(String line){
 		int firstParensIndex = line.indexOf('(');
 		if (firstParensIndex != -1) {
