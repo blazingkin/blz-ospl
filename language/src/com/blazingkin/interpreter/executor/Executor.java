@@ -366,5 +366,9 @@ public class Executor {
 	public static void setReturnBuffer(Value v){
 		returnBuffer = v;
 	}
+
+	public static Value getReturnBuffer(){
+		return returnBuffer;
+	}
 	
 }

@@ -34,7 +34,7 @@ public class MethodNode extends ASTNode {
 				variables[i] = nameAndArgs[i + 1];
 			}
         }
-        this.body = new BlockNode(body);
+        this.body = new BlockNode(body, true);
     }
 
     public Value execute(Context c){
@@ -45,7 +45,7 @@ public class MethodNode extends ASTNode {
 
     public Value execute(Context c, Value[] values, boolean passByReference){
         boolean pushedParent = false;
-        if (RuntimeStack.processStack.peek().UUID != parent.UUID){
+        if (parent != null && RuntimeStack.processStack.peek().UUID != parent.UUID){
             pushedParent = true;
             RuntimeStack.push(parent);
         }
@@ -84,7 +84,7 @@ public class MethodNode extends ASTNode {
     }
 
     public String getStoreName(){
-        return "";
+        return name;
     }
 
     public ASTNode collapse(){
