@@ -5,18 +5,18 @@ import static com.blazingkin.interpreter.expressionabstraction.ExpressionExecuto
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertAlmostEqual;
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ExpressionExecutorUnitTest {
 	

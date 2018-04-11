@@ -2,16 +2,16 @@ package com.blazingkin.interpreter.unittests.astnodes;
 
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.blazingkin.interpreter.executor.astnodes.WhileNode;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class WhileNodeUnitTest {
 

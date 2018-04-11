@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.executor.instruction;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 
 public interface InstructionExecutorCommaDelimited extends InstructionExecutor {

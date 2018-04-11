@@ -1,15 +1,15 @@
 package com.blazingkin.interpreter.unittests;
 
-import static com.blazingkin.interpreter.expressionabstraction.ExpressionParser.parseExpression;
+import static com.blazingkin.interpreter.parser.ExpressionParser.parseExpression;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
+import com.blazingkin.interpreter.parser.ExpressionParser;
+
+import org.junit.Test;
 
 public class ExpressionParserUnitTest {
 

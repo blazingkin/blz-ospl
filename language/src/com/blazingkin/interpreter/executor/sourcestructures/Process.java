@@ -20,7 +20,7 @@ import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
 import com.blazingkin.interpreter.executor.instruction.LabeledInstruction;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;

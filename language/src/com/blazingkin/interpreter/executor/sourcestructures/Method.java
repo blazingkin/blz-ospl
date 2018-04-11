@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 
 public class Method implements RuntimeStackElement {
 	

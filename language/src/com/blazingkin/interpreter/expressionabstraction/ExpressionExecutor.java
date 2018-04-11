@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 
 public class ExpressionExecutor {
 	
 	public static double EPSILON = 1E-8; 
 	
 	public static Value parseExpression(String line, Context con){
-		return executeNode(ExpressionParser.parseExpression(line), con);
+		return ExpressionParser.parseExpression(line).execute(con);
 	}
 	
 	public static Value parseExpression(String line){
@@ -63,8 +64,5 @@ public class ExpressionExecutor {
 		}
 	}
 	
-	public static Value executeNode(ASTNode root, Context con){
-		return root.execute(con);
-	}
 	
 }

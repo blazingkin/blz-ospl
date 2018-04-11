@@ -8,7 +8,7 @@ import com.blazingkin.interpreter.executor.instruction.InstructionExecutorString
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionParser;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -51,9 +51,9 @@ public class RegisteredLine implements RuntimeStackElement{
 	public Value run(Context con){
 		if (root != null){
 			if (instr != null && instr != Instruction.INVALID){
-				return ((InstructionExecutorValue)instr.executor).run(ExpressionExecutor.executeNode(root, con));
+				return ((InstructionExecutorValue)instr.executor).run(root.execute(con));
 			}
-			return ExpressionExecutor.executeNode(root, con);
+			return root.execute(con);
 		}
 		if (instr.executor instanceof InstructionExecutorStringArray){
 			((InstructionExecutorStringArray) instr.executor).run(argsArr);
