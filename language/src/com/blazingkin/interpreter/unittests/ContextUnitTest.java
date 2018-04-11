@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
-import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;;
+import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 
 public class ContextUnitTest {
 
