@@ -20,7 +20,7 @@ public class BlockParser {
                 ParseBlock newBlock = new ParseBlock(line, childBlock);
                 result.add(Either.right(newBlock));
             }else{
-                result.add(Either.left(line));
+                result.add(Either.left(line.split("(?<!\\\\)#")[0].trim()));
             }
         }
         return result;        

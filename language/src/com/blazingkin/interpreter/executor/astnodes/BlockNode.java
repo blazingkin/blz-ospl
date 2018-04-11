@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.List;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
@@ -18,7 +19,7 @@ public class BlockNode extends ASTNode {
 
     RegisteredLine body[];
     boolean shouldClearReturns;
-    public BlockNode(ArrayList<Either<String, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
+    public BlockNode(List<Either<String, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
         ArrayList<RegisteredLine> lines = new ArrayList<RegisteredLine>();
         for (Either<String, ParseBlock> line : body){
             if (line.isLeft()){
