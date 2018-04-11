@@ -14,3 +14,4 @@ launcher/target/*
 CHANGELOG
 language/.settings/*
 launcher/.settings/*
+language/.vscode/*
