@@ -31,3 +31,4 @@ end
 :to_string(hash)
 	return hash + ""
 end
+

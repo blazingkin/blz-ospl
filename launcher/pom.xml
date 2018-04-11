@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.blazingkin.interpreter</groupId>
+		<artifactId>blz-ospl-parent</artifactId>
+		<version>2.6</version>
+	</parent>
+	 <artifactId>blz-ospl-launcher</artifactId>
+	<dependencies>
+		<dependency>
+		    <groupId>com.oracle.truffle</groupId>
+		    <artifactId>truffle-api</artifactId>
+		    <version>0.30</version> <!-- or any later version -->
+		</dependency>
+		<dependency>
+		    <groupId>com.oracle.truffle</groupId>
+		    <artifactId>truffle-dsl-processor</artifactId>
+		    <version>0.30</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		</dependency>
+	</dependencies>
+	<build>
+	  <directory>target</directory>
+	  <outputDirectory>target/classes</outputDirectory>
+	  <finalName>${project.artifactId}</finalName>
+	  <sourceDirectory>src</sourceDirectory>
+	  <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.parent.basedir}/bin</outputDirectory>
+					<archive>
+						<manifest>
+							<mainClass>in.blazingk.blz.launcher.BLZMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	  
+    <properties>
+      <maven.compiler.source>1.7</maven.compiler.source>
+      <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+</project>
