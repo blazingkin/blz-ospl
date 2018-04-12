@@ -20,7 +20,7 @@ public class FileImportManager {
 		try {
 			Process process = new Process(path, false);
 			importedFiles.put(path, process);
-			process.handleImports();
+			/* import stuff for the package */
 			return process;
 		}catch(FileNotFoundException e) {
 			Interpreter.throwError("Could not find file at path: "+path);

@@ -124,14 +124,11 @@ public class Constructor implements RuntimeStackElement {
 			RuntimeStack.push(con.parent);
 		}
 			Executor.setLine(con.getLineNum());
-			setReferences(con, newObj);
+			setReferences(con, newObj); 
 			initializeArguments(con, newObj, args, passByReference);
 			RuntimeStack.pushContext(newObj.objectContext);
-				int depth = RuntimeStack.runtimeStack.size();
-				RuntimeStack.push(con);
-				while (RuntimeStack.runtimeStack.size() > depth){
-					Executor.executeCurrentLine();
-				}
+			RuntimeStack.push(con);
+			con.blockNode.execute(newObj.objectContext);	
 			RuntimeStack.popContext();
 		if (differentProcess) {
 			RuntimeStack.pop();
@@ -145,14 +142,17 @@ public class Constructor implements RuntimeStackElement {
 	private static void setReferences(Constructor constructor, BLZObject newObj){
 		Variable.setValue("this", Value.obj(newObj), newObj.objectContext);
 		Variable.setValue("constructor", Value.constructor(constructor), newObj.objectContext);
-		for (Method m : constructor.getParent().importedMethods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
+		for (MethodNode m : constructor.getParent().importedMethods){
+			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), newObj.objectContext);
 		}
 		for (Constructor c : constructor.getParent().importedConstructors) {
 			Variable.setValue(c.getName(), Value.constructor(c));
 		}
-		for (Method m : constructor.getParent().methods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m), newObj.objectContext);
+		for (MethodNode m : constructor.methods){
+			newObj.objectContext.setValue(m.getStoreName(), Value.method(m));
+		}
+		for (MethodNode m : constructor.getParent().methods){
+			Variable.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : constructor.getParent().constructors){
 			Variable.setValue(c.getName(), Value.constructor(c));

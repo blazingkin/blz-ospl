@@ -1,0 +1,7 @@
+:main
+	print(two())
+end
+
+:two
+	2
+end

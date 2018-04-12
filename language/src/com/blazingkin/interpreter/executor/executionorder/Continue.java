@@ -9,13 +9,8 @@ public class Continue implements InstructionExecutorStringArray {
 
 	@Override
 	public Value run(String[] args) {
-		while (!(RuntimeStack.runtimeStack.peek() instanceof LoopWrapper)){
-			RuntimeStack.pop();
-		}
-		LoopWrapper lw = (LoopWrapper) RuntimeStack.runtimeStack.peek();
-		Executor.setLine(lw.startLine);
-		Executor.setLine(Executor.getCurrentBlockEnd());
-		return RuntimeStack.pop();
+		Executor.setBreakMode(true);
+		return Value.nil();
 	}
 
 }

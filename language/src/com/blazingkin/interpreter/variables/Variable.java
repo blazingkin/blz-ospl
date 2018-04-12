@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 import org.nevec.rjm.BigDecimalMath;
 
@@ -350,14 +349,6 @@ public class Variable {
 			return Value.integer(Executor.getCurrentProcess().UUID);
 		case processesRunning:
 			return Value.integer(Executor.getRunningProcesses().size());
-		case methodStack:
-			String stackString = "";
-			ArrayDeque<Method> stck = Executor.getMethodStack().clone();
-			for (Method m : stck){
-				stackString = m.functionName + "\n" + stackString;
-			}
-			stackString = stackString.trim();
-			return new Value(VariableTypes.String, stackString);
 		case runtimeStack:
 			return Value.string(RuntimeStack.runtimeStack.toString());
 		case lineReturns:

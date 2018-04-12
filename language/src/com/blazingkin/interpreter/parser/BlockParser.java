@@ -32,6 +32,7 @@ public class BlockParser {
 	}
 
     private static boolean isBlockHeader(String line){
+		line = line.toLowerCase();
         if (line.length() < 1) {
 			return false;
 		}
@@ -43,8 +44,16 @@ public class BlockParser {
 		if (line.startsWith("constructor")){
 			return true;
 		}
-		Instruction instruction = getInstructionFromString(line);
-		return instruction != null && instruction.executor instanceof BlockInstruction;
+		if (line.startsWith("if")){
+			return true;
+		}
+		if (line.startsWith("for")){
+			return true;
+		}
+		if (line.startsWith("while")){
+			return true;
+		}
+		return false;
     }
 
     private static Instruction getInstructionFromString(String line) {

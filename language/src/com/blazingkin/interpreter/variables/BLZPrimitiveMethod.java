@@ -1,12 +1,12 @@
 package com.blazingkin.interpreter.variables;
 
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 
 public class BLZPrimitiveMethod {
-	public Method m;
+	public MethodNode m;
 	public Value v;
 	public boolean passByReference;
-	public BLZPrimitiveMethod(Method m, Value v, boolean passByReference) {
+	public BLZPrimitiveMethod(MethodNode m, Value v, boolean passByReference) {
 		this.m = m;
 		this.v = v;
 		this.passByReference = passByReference;

@@ -1,13 +1,14 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.parser.ForBlockParser;
@@ -50,6 +51,10 @@ public class BlockNode extends ASTNode {
         this.body = new RegisteredLine[lines.size()];
         this.shouldClearReturns = shouldClearReturns;
         lines.toArray(this.body);
+        if (lines.isEmpty()){
+            this.body = new RegisteredLine[1];
+            this.body[0] = new RegisteredLine(new ValueASTNode(Value.nil()));
+        }
     }
 
     public Value execute(Context c){

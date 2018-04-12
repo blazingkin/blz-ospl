@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
-
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {
 	
@@ -18,7 +17,7 @@ public enum VariableTypes {
 	Double(BigDecimal.class),
 	Hash(HashMap.class),
 	Integer(BigInteger.class),
-	Method(Method.class),
+	Method(MethodNode.class),
 	Nil(null),
 	Object(BLZObject.class),
 	PrimitiveMethod(BLZPrimitiveMethod.class),

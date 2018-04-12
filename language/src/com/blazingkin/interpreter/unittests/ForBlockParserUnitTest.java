@@ -57,6 +57,7 @@ public class ForBlockParserUnitTest {
         ForBlockParser parser = new ForBlockParser();
         String input[] = {"for i = 0; i < 10; i++", "20", "i ** 2", "end"};
         ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+        UnitTestUtil.assertEqual(block.get(0).isRight(), true);
         ParseBlock forBlock = block.get(0).getRight().get();
         try{
             ASTNode node = parser.parseBlock(forBlock);

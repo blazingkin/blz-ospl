@@ -3,22 +3,22 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 
 public class Value implements Cloneable {
 	public VariableTypes type;
 	public Object value = null;
 	public boolean isGlobal = false;
-	public Method parent = null;
+	public MethodNode parent = null;
 	
 	public Value(VariableTypes t, Object val){	//This stores the value and the type of value that it is
 		type = t;
 		value = val;
 	}
 	
-	public Value(VariableTypes t, Object val, Method par, boolean global){
+	public Value(VariableTypes t, Object val, MethodNode par, boolean global){
 		if (val == null){
 			type = VariableTypes.Nil;
 			value = null;
@@ -33,7 +33,7 @@ public class Value implements Cloneable {
 
 	}
 
-	public Value(VariableTypes t, Object val, Method par){
+	public Value(VariableTypes t, Object val, MethodNode par){
 		if (val == null){
 			type = VariableTypes.Nil;
 			value = null;
@@ -162,7 +162,7 @@ public class Value implements Cloneable {
 		return new Value(VariableTypes.Constructor, constructor);
 	}
 	
-	public static Value method(Method m){
+	public static Value method(MethodNode m){
 		return new Value(VariableTypes.Method, m);
 	}
 	

@@ -2,22 +2,17 @@ package com.blazingkin.interpreter.executor.output;
 
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 
-public class Echo implements InstructionExecutorStringArray {
+public class Echo implements InstructionExecutorValue {
 	/*	Print
 	 * 	Outputs the given text
 	 */
-	public Value run(String[] args) {
-		String out = "";
-		for (int i = 0; i < args.length; i++){
-				out += Variable.getValue(args[i]).toString();
-		}
-		out += "\n";
-		Executor.getEventHandler().print(out);
-		return Value.string(out);
+
+	public Value run(Value arg){
+		Executor.getEventHandler().print(arg.toString());
+		return Value.string(arg.toString());
 	}
 	
 

@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
@@ -87,8 +87,8 @@ public class REPL {
 			path = Paths.get(path.toString(), fileName);
 			p = in.blazingk.blz.packagemanager.FileImportManager.importFile(path);
 		}
-		for (Method m : p.methods) {
-			Variable.setValue(m.functionName, Value.method(m));
+		for (MethodNode m : p.methods) {
+			Variable.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.constructors) {
 			Variable.setValue(c.name, Value.constructor(c));
@@ -98,8 +98,8 @@ public class REPL {
 	private static void importPackage(String packageName) throws IOException, Exception {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		in.blazingk.blz.packagemanager.Package p = new in.blazingk.blz.packagemanager.Package(importer.findPackage(packageName));
-		for (Method m : p.getAllMethodsInPackage()) {
-			Variable.setValue(m.functionName, Value.method(m));
+		for (MethodNode m : p.getAllMethodsInPackage()) {
+			Variable.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.getAllConstructorsInPackage()) {
 			Variable.setValue(c.name, Value.constructor(c));

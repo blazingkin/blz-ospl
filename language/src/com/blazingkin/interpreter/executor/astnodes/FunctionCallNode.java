@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.executor.astnodes;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
@@ -66,8 +65,8 @@ public class FunctionCallNode extends BinaryNode {
 			args = nargs;
 			methodVal = new Value(VariableTypes.Method, pm.m);
 		}
-		Method toCall = (Method) methodVal.value;
-		return Executor.functionCall(toCall, args, passByReference);
+		MethodNode toCall = (MethodNode) methodVal.value;
+		return toCall.execute(con, args, passByReference);
 	}
 
 }

@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -36,8 +36,8 @@ public class Package {
 		}
 	}
 	
-	public Collection<Method> getAllMethodsInPackage(){
-		Set<Method> methods = new HashSet<Method>();
+	public Collection<MethodNode> getAllMethodsInPackage(){
+		Set<MethodNode> methods = new HashSet<MethodNode>();
 		for (Process p : processes.values()){
 			methods.addAll(p.methods);
 		}
@@ -52,10 +52,10 @@ public class Package {
 		return constructors;
 	}
 	
-	public Collection<Method> getAllMethodsInProcess(String processName) throws IllegalArgumentException{
+	public Collection<MethodNode> getAllMethodsInProcess(String processName) throws IllegalArgumentException{
 		if (processes.containsKey(processName)){
-			Set<Method> methods = new HashSet<Method>();
-			for (Method m : processes.get(processName).methods){
+			Set<MethodNode> methods = new HashSet<MethodNode>();
+			for (MethodNode m : processes.get(processName).methods){
 				methods.add(m);
 			}
 			return methods;
@@ -83,34 +83,34 @@ public class Package {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		Path coreFolder = importer.findPackage("Core");
 		Package corePackage = new Package(coreFolder);
-		for (Method m : corePackage.getAllMethodsInPackage()){
+		for (MethodNode m : corePackage.getAllMethodsInPackage()){
 			try {
 				String fileName = m.parent.readingFrom.getName();
 				if (fileName.equals("ArrayUtil.blz")) {
-					VariableTypes.primitiveContexts.get(VariableTypes.Array).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Array).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("StringUtil.blz")) {
-					VariableTypes.primitiveContexts.get(VariableTypes.String).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.String).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("NilUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Nil).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Nil).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("NumberUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Integer).setValue(m.functionName, Value.method(m));
-					VariableTypes.primitiveContexts.get(VariableTypes.Rational).setValue(m.functionName, Value.method(m));
-					VariableTypes.primitiveContexts.get(VariableTypes.Double).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Integer).setValue(m.getStoreName(), Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Rational).setValue(m.getStoreName(), Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Double).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("MethodUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Method).setValue(m.functionName, Value.method(m));
-					VariableTypes.primitiveContexts.get(VariableTypes.Constructor).setValue(m.functionName, Value.method(m));
-					VariableTypes.primitiveContexts.get(VariableTypes.Closure).setValue(m.functionName, Value.method(m));
-					VariableTypes.primitiveContexts.get(VariableTypes.PrimitiveMethod).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Method).setValue(m.getStoreName(), Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Constructor).setValue(m.getStoreName(), Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Closure).setValue(m.getStoreName(), Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.PrimitiveMethod).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("BooleanUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Boolean).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Boolean).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("HashUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Hash).setValue(m.functionName, Value.method(m));
+					VariableTypes.primitiveContexts.get(VariableTypes.Hash).setValue(m.getStoreName(), Value.method(m));
 				}
 				else{
-					Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+					Variable.getGlobalContext().setValue(m.getStoreName(), Value.method(m));
 				}
 			}catch(NullPointerException e) {
-				Variable.getGlobalContext().setValue(m.functionName, new Value(VariableTypes.Method, m));
+				Variable.getGlobalContext().setValue(m.getStoreName(), Value.method(m));
 			}
 		}
 	}

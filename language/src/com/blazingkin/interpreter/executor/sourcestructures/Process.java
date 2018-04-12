@@ -14,13 +14,17 @@ import java.util.Stack;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.executionorder.End;
+import com.blazingkin.interpreter.executor.astnodes.BlockNode;
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
-import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionType;
-import com.blazingkin.interpreter.executor.instruction.LabeledInstruction;
-import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.expressionabstraction.ASTNode;
+import com.blazingkin.interpreter.parser.BlockParser;
+import com.blazingkin.interpreter.parser.Either;
+import com.blazingkin.interpreter.parser.MethodBlockParser;
+import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SplitStream;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -36,14 +40,15 @@ public class Process implements RuntimeStackElement {
 	public int UUID;
 	public Stack<Integer> lineReturns = new Stack<Integer>();
 	private String[] lines;
-	private RegisteredLine[] registeredLines;
-	public ArrayList<Method> methods = new ArrayList<Method>();
+	public ArrayList<MethodNode> methods = new ArrayList<MethodNode>();
 	public ArrayList<Constructor> constructors = new ArrayList<Constructor>();
-	public Collection<Method> importedMethods = new HashSet<Method>();
+	public Collection<MethodNode> importedMethods = new HashSet<MethodNode>();
 	public Collection<Constructor> importedConstructors = new HashSet<Constructor>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
-	
+	private static ASTNode staticCode;
+
+
 	public Process(File runFile) throws FileNotFoundException{
 		runningFromFile = true;
 		setupFileProcess(runFile);
@@ -109,175 +114,54 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	private void setup(){
-		registerMethodsAndConstructors();
-		registerBlocks();
-		preprocessLines();
-		if (runImports) {
-			handleImports();
-		}
-		processes.add(this);		
-	}
-	
-	private void registerMethodsAndConstructors(){
-		for (int i = 0 ; i < lines.length; i++){
-			if (lines[i].length() > 0){
-				// Find all methods (they start with :) 
-				if ((lines[i]).charAt(0) == ':'){
-					Method nM = new Method(this, i+1,lines[i].substring(1));
-					Executor.getMethods().add(nM);
-					methods.add(nM);
-				// Find all constructors (they start with the keyword `constructor`)
-				}else if (lines[i].startsWith("constructor")){
-					String constructorName = lines[i].replaceFirst("constructor", "").trim();
-					Constructor con = new Constructor(this, i+1, constructorName);
-					constructors.add(con);
-					Executor.addConstructor(constructorName, con);
-				}
+		ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines));
+		try {
+			registerMethodsAndConstructors(parsed);
+			staticCode = new BlockNode(parsed, false);
+			if (runImports) {
+				handleImports(parsed);
 			}
+			processes.add(this);	
+		}catch(SyntaxException exception){
+			Interpreter.throwError(exception.getMessage());
 		}
 	}
 
-	
-	private void preprocessLines(){
-		String errors = "";
-		registeredLines = new RegisteredLine[lines.length];
-		for (int i = 0; i < lines.length; i++){
-			String splits[] = lines[i].split(" ");
-			if (splits.length == 0){
-				registeredLines[i] = null;
-				continue;
+	private void registerMethodsAndConstructors(ArrayList<Either<String, ParseBlock>> code) throws SyntaxException {
+		MethodBlockParser parser = new MethodBlockParser(this);
+		ArrayList<Either<String, ParseBlock>> methods = new ArrayList<Either<String, ParseBlock>>();
+		ArrayList<Either<String, ParseBlock>> constructors = new ArrayList<Either<String, ParseBlock>>();
+		for (Either<String, ParseBlock> line : code){
+			if (line.isRight()){
+				ParseBlock block = line.getRight().get();
+				if (parser.shouldParse(block.getHeader())){
+					methods.add(line);
+				}else if (block.getHeader().startsWith("constructor")){
+					constructors.add(line);
+				}
 			}
+		}
+		for (Either<String, ParseBlock> line : methods) {
+			code.remove(line);
+			ParseBlock method = line.getRight().get();
 			try{
-				Instruction instr = InstructionType.getInstructionType(splits[0]);
-				if (instr == null || instr == Instruction.INVALID){
-					if (lines[i].trim().isEmpty() || lines[i].trim().charAt(0) == ':' || lines[i].trim().charAt(0) == '('){
-						continue;
-					}
-					registeredLines[i] = new RegisteredLine(ExpressionParser.parseExpression(lines[i]));
-					continue;
-				}
-				String newStr = lines[i].replaceFirst(splits[0], "").trim();
-				registeredLines[i] = new RegisteredLine(instr, newStr);
-			}catch(Exception e){
-				valid = false;
-				errors += "Syntax error on line: "+(i+1)+"\n"+lines[i]+"\n";
+				this.methods.add(new MethodNode(method.getHeader(), method.getLines(), this));
+			}catch(SyntaxException e){
+				String message = e.getMessage();
+				message = "In "+this.toString()+":\n" + message;
+				throw new SyntaxException(message);
 			}
 		}
-		if (!errors.isEmpty()){
-			errors += "In process: "+ this.toString() + "\n";
-			Interpreter.throwError(errors);
-		}
-	}
-	
-	private Instruction getInstructionFromString(String line) {
-		/* We need to check the `instruction` type */
-		int firstSpace = line.indexOf(" ");
-		
-		/* Just get the part before the space */
-		String instructionString;
-		if (firstSpace == -1) {
-			instructionString = line;
-		}else {
-			instructionString = line.substring(0, firstSpace);
-		}
-		return InstructionType.getInstructionType(instructionString);
-	}
-	
-	private boolean isBlock(String line){
-		if (line.length() < 1) {
-			return false;
-		}
-		/* A method is a block */
-		if (line.charAt(0) == ':'){
-			return true;
-		}
-		/* A constructor is a block */
-		if (line.startsWith("constructor")){
-			return true;
-		}
-		
-		Instruction instruction = getInstructionFromString(line);
-		return instruction != null && instruction.executor instanceof BlockInstruction;
-	}
-
-	private boolean isConstructor(String line){
-		return line.startsWith("constructor");
-	}
-
-	private boolean isMethod(String line){
-		return line.length() >= 1 && line.charAt(0) == ':';
-	}
-	
-	private boolean isEnd(String line){
-		Instruction instruction = getInstructionFromString(line);
-		return instruction != null && instruction.executor instanceof End;		
-	}
-	
-	private boolean isLabel(String line){
-		Instruction instruction = getInstructionFromString(line);
-		return instruction != null && instruction.executor instanceof LabeledInstruction;
-	}
-	
-	private String getLabel(String line){
-		String[] splits = line.split(" ");
-		Instruction inst = InstructionType.getInstructionType(splits[0]);
-		/* Could use getInstructionFromString here, but we need to split anyways */
-		String args = "";
-		for (int i = 1; i < splits.length; i++){
-			args += splits[i] + " ";
-		}
-		args.trim();
-		return ((LabeledInstruction) inst.executor).getLabel(args);
-	}
-	
-	private void registerBlocks(){
-		Stack<Integer> blckStack = new Stack<Integer>();
-		HashMap<Integer, HashMap<String, Integer>> labelMap = new HashMap<Integer, HashMap<String, Integer>>();
-		for (int i = 0; i < lines.length; i++){
-			if (isBlock(lines[i])){
-				blckStack.push(i+1);	// Array 0 indexed - File 1 indexed
+		for (Either<String, ParseBlock> line : constructors){
+			code.remove(line);
+			ParseBlock constructor = line.getRight().get();
+			try{
+				this.constructors.add(new Constructor(this, constructor));
+			}catch(SyntaxException e){
+				String message = e.getMessage();
+				message = "In "+this.toString()+":\n" + message;
+				throw new SyntaxException(message);
 			}
-			else if (isEnd(lines[i])){
-				if (blckStack.empty()){
-					valid = false;
-					Executor.getEventHandler().err("Error in process: "+this.toString()+"\n");
-					Interpreter.throwError("Unexpected end of block on line "+(i+1));
-				}
-				BlockArc ba = new BlockArc(blckStack.pop(), i+1);// Array 0 indexed - File 1 indexed
-				
-				if (labelMap.containsKey(ba.start)){
-					for (String key : labelMap.get(ba.start).keySet()){
-						int line = labelMap.get(ba.start).get(key);
-						ba.addLabel(key, line);
-						blockArcs.put(line, ba);
-					}
-				}
-				
-				blockArcs.put(ba.start, ba);
-				blockArcs.put(ba.end, ba);
-			}else if (isLabel(lines[i])){
-				String label = getLabel(lines[i]);
-				if (blckStack.empty()){
-					Executor.getEventHandler().err("Error in process: "+ this.toString() + "\n");
-					Interpreter.throwError("Unexpected label "+label+" on line "+(i+1));
-				}
-				int startLine = blckStack.peek();
-				if (!labelMap.containsKey(startLine)){
-					labelMap.put(startLine, new HashMap<String, Integer>());
-				}
-				labelMap.get(startLine).put(label, i+1);
-			}
-		}
-		if (!blckStack.empty()){
-			while (!blckStack.empty()){
-				valid = false;
-				if (!Executor.isImmediateMode()){
-					Executor.getEventHandler().err("Error in process: " + this.toString() + "\n");
-					Executor.getEventHandler().err("Block starting on line "+blckStack.pop()+" not closed");
-				}
-			}
-			valid = false;
-			Interpreter.throwError("Some blocks not closed!");
 		}
 	}
 	
@@ -296,20 +180,32 @@ public class Process implements RuntimeStackElement {
 		return Paths.get(name);
 	}
 	
-	public void handleImports(){
+	public void handleImports(ArrayList<Either<String, ParseBlock>> lines){
 		//Always import core
 		Set<Path> packagesToImport = new HashSet<Path>();
 		Set<Path> processesToImport = new HashSet<Path>();
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
-			for (RegisteredLine line : registeredLines){
-				if (line != null){
-					if (line.instr == Instruction.IMPORTPACKAGE) {
-						packagesToImport.add(importer.findPackage(line.args));
-					}else if (line.instr == Instruction.REQUIREPROCESS) {
-						processesToImport.add(calculateFileLocation(line.args));
+			ArrayList<Either<String, ParseBlock>> importInstructions = new ArrayList<Either<String, ParseBlock>>();
+			ArrayList<Either<String, ParseBlock>> requireInstructions = new ArrayList<Either<String, ParseBlock>>();;
+			for (Either<String, ParseBlock> line : lines){
+				if (line.isLeft()){
+					if (line.getLeft().get().startsWith("import")){
+						importInstructions.add(line);
+					}else if (line.getLeft().get().startsWith("require")){
+						requireInstructions.add(line);
 					}
 				}
+			}
+			for (Either<String, ParseBlock> line : importInstructions){
+				lines.remove(line);
+				String packageName = line.getLeft().get().replaceFirst("import", "").trim();
+				packagesToImport.add(importer.findPackage(packageName));
+			}
+			for (Either<String, ParseBlock> line : requireInstructions){
+				lines.remove(line);
+				String fileName = line.getLeft().get().replaceFirst("requuire", "").trim();
+				processesToImport.add(calculateFileLocation(fileName));
 			}
 			for (Path f : packagesToImport){
 				Package p = new in.blazingk.blz.packagemanager.Package(f);
@@ -328,21 +224,6 @@ public class Process implements RuntimeStackElement {
 		
 	}
 	
-	public boolean isRegistered(int lineNumber){
-		if (lineNumber >= lines.length){
-			valid = false;
-			Interpreter.throwError("Attempted to get a line out of code range");
-		}
-		return registeredLines[lineNumber] != null;
-	}
-	
-	public RegisteredLine getRegisteredLine(int lineNumber){
-		if (lineNumber >= lines.length){
-			valid = false;
-			Interpreter.throwError("Attempted to get a line out of code range");
-		}
-		return registeredLines[lineNumber];
-	}
 	
 	public String getLine(int lineNumber){
 		if (lineNumber >= lines.length){
@@ -410,14 +291,14 @@ public class Process implements RuntimeStackElement {
 
 	@Override
 	public void onBlockStart() {
-		for (Method m : importedMethods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		for (MethodNode m : importedMethods){
+			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}
 		for (Constructor c : importedConstructors) {
 			Variable.setValue(c.getName(), Value.constructor(c));
 		}
-		for (Method m : methods){
-			Variable.setValue(m.functionName, new Value(VariableTypes.Method, m));
+		for (MethodNode m : methods){
+			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}
 		for (Constructor c : constructors){
 			Variable.setValue(c.getName(), Value.constructor(c));

@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.executor.astnodes;
 import java.math.BigInteger;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.sourcestructures.Method;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
@@ -32,7 +31,7 @@ public class DotOperatorNode extends BinaryNode {
 			if (args[1].getStoreName().contains("!")) {
 				passByReference = true;
 			}
-			Method primitiveMethod = (Method) VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", "")).value;
+			MethodNode primitiveMethod = (MethodNode) VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", "")).value;
 			return new Value(VariableTypes.PrimitiveMethod, new BLZPrimitiveMethod(primitiveMethod, object, passByReference));
 		}
 		BLZObject obj = (BLZObject) object.value;
