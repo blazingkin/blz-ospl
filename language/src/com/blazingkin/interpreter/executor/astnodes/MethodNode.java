@@ -60,6 +60,17 @@ public class MethodNode extends ASTNode {
         return result;
     }
 
+	public String toString(){
+		String args = "";
+		for (String s : variables){
+			args += s + ", ";
+		}
+		if (args.length() > 0) {
+			args = args.substring(0, args.lastIndexOf(','));
+		}
+		return "<Method " + name + "(" + args + ")>";
+	}
+
     private void bindArguments(Value values[], boolean passByReference, Context methodContext){
         int variableCount = (variables.length > values.length?values.length:variables.length);
         if (passByReference){

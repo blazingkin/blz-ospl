@@ -10,12 +10,19 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.ForBlockParser;
+import com.blazingkin.interpreter.parser.IfBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.parser.WhileBlockParser;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
 public class BlockNode extends ASTNode {
+
+    private static IfBlockParser ifParser = new IfBlockParser();
+    private static ForBlockParser forParser = new ForBlockParser();
+    private static WhileBlockParser whileParser = new WhileBlockParser();
 
     RegisteredLine body[];
     boolean shouldClearReturns;
@@ -30,7 +37,14 @@ public class BlockNode extends ASTNode {
                 }
             } else {
                 /* It is some block, parse it to a blocknode */
-                // TODO implement some behavior to parse different blocks (i.e. if, method, for, while, etc..)
+                ParseBlock block = line.getRight().get();
+                if (ifParser.shouldParse(block.getHeader())){
+                    lines.add(new RegisteredLine(ifParser.parseBlock(block)));
+                }else if (forParser.shouldParse(block.getHeader())){
+                    lines.add(new RegisteredLine(forParser.parseBlock(block)));
+                }else if (whileParser.shouldParse(block.getHeader())){
+                    lines.add(new RegisteredLine(whileParser.parseBlock(block)));
+                }
             }
         }
         this.body = new RegisteredLine[lines.size()];

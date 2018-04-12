@@ -3,8 +3,10 @@ package com.blazingkin.interpreter.unittests.astnodes;
 import java.util.ArrayList;
 
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
+import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -89,5 +91,20 @@ public class BlockNodeUnitTest {
         }
     }
 
+
+    @Test
+    public void shouldHandleBlocks(){
+        try {
+            String code[] = {"a = 20", "for i = 0; i < 5; i++", "if i % 2 == 0", "a++", "end", "end", "a"};
+            ArrayList<Either<String, ParseBlock>> input = BlockParser.parseBody(new SplitStream<String>(code));
+            Value result = new BlockNode(input, true).execute(new Context());
+            UnitTestUtil.assertEqual(result, Value.integer(23));
+        } catch (Exception e){
+            e.printStackTrace();
+            UnitTestUtil.assertNoErrors();
+            /* Assert False */
+            UnitTestUtil.assertEqual(false, true);
+        }
+    }
 
 }
