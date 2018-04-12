@@ -26,7 +26,6 @@ public class RandomImplementor implements InstructionExecutorStringArray {
 		}else{
 			v = new Value(VariableTypes.Integer, BigInteger.valueOf((long)(Math.random()*100)));
 		}
-		Variable.setValue(args[0], v);
 		return v;
 	}
 

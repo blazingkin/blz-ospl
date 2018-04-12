@@ -34,8 +34,7 @@ public class FileInput implements InstructionExecutorStringArray {
 		}
 		Value[] lnes = new Value[lines.size()];
 		lines.toArray(lnes);
-		Variable.setValue(arrayVarAddress, Value.arr(lnes));
-		return Variable.getValue(arrayVarAddress);
+		return Value.arr(lnes);
 	}
 	
 	

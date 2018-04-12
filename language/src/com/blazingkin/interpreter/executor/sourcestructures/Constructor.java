@@ -146,16 +146,16 @@ public class Constructor implements RuntimeStackElement {
 			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), newObj.objectContext);
 		}
 		for (Constructor c : constructor.getParent().importedConstructors) {
-			Variable.setValue(c.getName(), Value.constructor(c));
+			Variable.setValue(c.getName(), Value.constructor(c), newObj.objectContext);
 		}
 		for (MethodNode m : constructor.methods){
 			newObj.objectContext.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (MethodNode m : constructor.getParent().methods){
-			Variable.setValue(m.getStoreName(), Value.method(m));
+			Variable.setValue(m.getStoreName(), Value.method(m), newObj.objectContext);
 		}
 		for (Constructor c : constructor.getParent().constructors){
-			Variable.setValue(c.getName(), Value.constructor(c));
+			Variable.setValue(c.getName(), Value.constructor(c), newObj.objectContext);
 		}
 	}
 	

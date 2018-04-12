@@ -18,11 +18,9 @@ public class NumInput implements InstructionExecutorStringArray {
 		try{
 			String str = Executor.getEventHandler().getInput();
 			if (Variable.isInteger(str)){
-				Variable.setValue(vars[0], new Value(VariableTypes.Integer,new BigInteger(str)));
-				return Variable.getValue(vars[0]);
+				return Value.integer(Integer.parseInt(str));
 			}else{
-				Variable.setValue(vars[0], new Value(VariableTypes.Double,new BigDecimal(str)));
-				return Variable.getValue(vars[0]);
+				return Value.doub(new BigDecimal(str));
 			}
 		}catch(Exception e){
 			System.err.println("Invalid Input, Please Input A Number");

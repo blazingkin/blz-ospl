@@ -21,8 +21,6 @@ public class HashHasKey implements InstructionExecutorCommaDelimited {
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) args[0].value;
 		Value result = Value.bool(hsh.containsKey(args[1]));
-		String name = (String) args[2].value;
-		Variable.setValue(name, result);
 		return result;
 	}
 

@@ -6,8 +6,7 @@
  #
 
 :length(arr)
-	ALEN arr len	# Call the internal function
-	return len
+	ALEN arr # Call the internal function
 end
 
 :concatenate(arr_A, arr_B)
@@ -16,7 +15,7 @@ end
 	for i = 0; i < len2; i++
 		arr_A[len1+i] = arr_B[i]
 	end
-	return arr_A
+	arr_A
 end
 
 :contains?(arr, element)
@@ -67,7 +66,7 @@ end
 	for i = 0; i < length; i++
 		arr[i] = method(arr[i])
 	end
-	return arr
+	arr
 end
 
 :nil?

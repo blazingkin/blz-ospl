@@ -1,6 +1,10 @@
 :main
 	test = [3, 5, 6, 1, 8, 2, 0, {e}, {pi}, 0.123]
-	result = sort(test)
-	print(result)
+	print({blz.context.id})
+	print(test)
+	asdf = test.sort()
+	print("literally anything")
+	print({blz.context.id})
+	print(asdf)
 	print(test)
 end

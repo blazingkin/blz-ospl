@@ -35,7 +35,7 @@ public class StandAloneEventHandler implements BlzEventHandler {
 	
 	@Override
 	public void print(String contents) {
-		System.out.println(contents);
+		System.out.print(contents);
 		/*try{
 			writer.write(contents);
 			if (!flushScheduled){

@@ -11,7 +11,7 @@ public class Echo implements InstructionExecutorValue {
 	 */
 
 	public Value run(Value arg){
-		Executor.getEventHandler().print(arg.toString());
+		Executor.getEventHandler().print(arg.toString()+"\n");
 		return Value.string(arg.toString());
 	}
 	

@@ -1,6 +1,5 @@
 :has_key?(hash, key)
 	BLZINTERNALHASHHASKEY hash, key, "result"
-	return result
 end
 
 :set(hash, key, value)

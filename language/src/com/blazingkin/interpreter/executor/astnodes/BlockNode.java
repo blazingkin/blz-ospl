@@ -67,7 +67,13 @@ public class BlockNode extends ASTNode {
                 return Executor.getReturnBuffer();
             }
         }
-        return body[body.length - 1].run(c);
+        Value result = body[body.length - 1].run(c);
+        if (Executor.isBreakMode()){
+            if (shouldClearReturns){
+                Executor.setBreakMode(false);
+            }
+        }
+        return result;
     }
 
     public String getStoreName(){

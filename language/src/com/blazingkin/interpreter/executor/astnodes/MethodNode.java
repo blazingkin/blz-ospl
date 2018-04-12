@@ -45,11 +45,16 @@ public class MethodNode extends ASTNode {
 
     public Value execute(Context c, Value[] values, boolean passByReference){
         boolean pushedParent = false;
-        if (parent != null && RuntimeStack.processStack.peek().UUID != parent.UUID){
+        if (parent != null && (RuntimeStack.processStack.isEmpty() || RuntimeStack.processStack.peek().UUID != parent.UUID)){
             pushedParent = true;
             RuntimeStack.push(parent);
         }
-        Context methodContext = new Context(RuntimeStack.processContextStack.peek());
+        Context methodContext;
+        if (parent == null){
+            methodContext = new Context();
+        }else{
+            methodContext = new Context(parent.processContext);
+        }
         if (takesVariables){
             bindArguments(values, passByReference, methodContext);
         }

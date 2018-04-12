@@ -15,11 +15,13 @@ import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.Context;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 public class REPL {
 	
+	public static Context replContext = new Context();
 	public static void immediateModeLoop(InputStream is){
 		Executor.getEventHandler().print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
 		Executor.getEventHandler().print("Type 'exit' to exit\n");
@@ -88,10 +90,10 @@ public class REPL {
 			p = in.blazingk.blz.packagemanager.FileImportManager.importFile(path);
 		}
 		for (MethodNode m : p.methods) {
-			Variable.setValue(m.getStoreName(), Value.method(m));
+			Variable.setValue(m.getStoreName(), Value.method(m), replContext);
 		}
 		for (Constructor c : p.constructors) {
-			Variable.setValue(c.name, Value.constructor(c));
+			Variable.setValue(c.name, Value.constructor(c), replContext);
 		}
 	}
 	
@@ -99,10 +101,10 @@ public class REPL {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		in.blazingk.blz.packagemanager.Package p = new in.blazingk.blz.packagemanager.Package(importer.findPackage(packageName));
 		for (MethodNode m : p.getAllMethodsInPackage()) {
-			Variable.setValue(m.getStoreName(), Value.method(m));
+			Variable.setValue(m.getStoreName(), Value.method(m), replContext);
 		}
 		for (Constructor c : p.getAllConstructorsInPackage()) {
-			Variable.setValue(c.name, Value.constructor(c));
+			Variable.setValue(c.name, Value.constructor(c), replContext);
 		}
 	}
 

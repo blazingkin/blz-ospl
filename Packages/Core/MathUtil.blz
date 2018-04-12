@@ -43,5 +43,4 @@ end
 
 :random(range)
 	RAND x range
-	return x
 end

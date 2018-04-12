@@ -262,9 +262,6 @@ public class Variable {
 	}
 	
 	
-	public static void setValue(String key, Value value){		//sets a local variable
-		setValue(key, value, Executor.getCurrentContext());
-	}
 	
 	public static void setValue(String key, Value value, Context con){
 		con.variables.put(key, value);
@@ -443,7 +440,7 @@ public class Variable {
 			}
 			
 			NArr[index.intValue()] = value;
-			setValue(arrayName, new Value(VariableTypes.Array, NArr));
+			setValue(arrayName, new Value(VariableTypes.Array, NArr), con);
 		}else{
 			VArr[index.intValue()] = value;
 		}

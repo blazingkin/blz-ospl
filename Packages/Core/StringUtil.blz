@@ -14,8 +14,7 @@
 end
 
 :length(string)
-	SLEN string len
-	return len
+	SLEN string
 end
 
 :nil?

@@ -2,6 +2,8 @@ package com.blazingkin.interpreter.executor.sourcestructures;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,9 +27,10 @@ import com.blazingkin.interpreter.parser.MethodBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
+import com.blazingkin.interpreter.variables.Variable;
 
 import in.blazingk.blz.packagemanager.FileImportManager;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
@@ -46,7 +49,10 @@ public class Process implements RuntimeStackElement {
 	public Collection<Constructor> importedConstructors = new HashSet<Constructor>();
 	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
+	Set<Path> packagesToImport = new HashSet<Path>();
+	Set<Path> processesToImport = new HashSet<Path>();
 	private static ASTNode staticCode;
+	public Context processContext = new Context();
 
 
 	public Process(File runFile) throws FileNotFoundException{
@@ -118,11 +124,14 @@ public class Process implements RuntimeStackElement {
 		try {
 			registerMethodsAndConstructors(parsed);
 			staticCode = new BlockNode(parsed, false);
+			findImports(parsed);
 			if (runImports) {
-				handleImports(parsed);
+				handleImports();
 			}
 			processes.add(this);	
 		}catch(SyntaxException exception){
+			Interpreter.throwError(exception.getMessage());
+		}catch (IOException exception){
 			Interpreter.throwError(exception.getMessage());
 		}
 	}
@@ -180,10 +189,21 @@ public class Process implements RuntimeStackElement {
 		return Paths.get(name);
 	}
 	
-	public void handleImports(ArrayList<Either<String, ParseBlock>> lines){
+	public void handleImports() throws IOException{
+		for (Path f : packagesToImport){
+			Package p = new in.blazingk.blz.packagemanager.Package(f);
+			importedMethods.addAll(p.getAllMethodsInPackage());
+			importedConstructors.addAll(p.getAllConstructorsInPackage());
+		}
+		for (Path f: processesToImport) {
+			Process p = FileImportManager.importFile(f);
+			importedMethods.addAll(p.methods);
+			importedConstructors.addAll(p.constructors);
+		}
+	}
+
+	public void findImports(ArrayList<Either<String, ParseBlock>> lines){
 		//Always import core
-		Set<Path> packagesToImport = new HashSet<Path>();
-		Set<Path> processesToImport = new HashSet<Path>();
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
 			ArrayList<Either<String, ParseBlock>> importInstructions = new ArrayList<Either<String, ParseBlock>>();
@@ -206,16 +226,6 @@ public class Process implements RuntimeStackElement {
 				lines.remove(line);
 				String fileName = line.getLeft().get().replaceFirst("requuire", "").trim();
 				processesToImport.add(calculateFileLocation(fileName));
-			}
-			for (Path f : packagesToImport){
-				Package p = new in.blazingk.blz.packagemanager.Package(f);
-				importedMethods.addAll(p.getAllMethodsInPackage());
-				importedConstructors.addAll(p.getAllConstructorsInPackage());
-			}
-			for (Path f: processesToImport) {
-				Process p = FileImportManager.importFile(f);
-				importedMethods.addAll(p.methods);
-				importedConstructors.addAll(p.constructors);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -292,25 +302,24 @@ public class Process implements RuntimeStackElement {
 	@Override
 	public void onBlockStart() {
 		for (MethodNode m : importedMethods){
-			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
+			Variable.setValue(m.getStoreName(), Value.method(m), processContext);
 		}
 		for (Constructor c : importedConstructors) {
-			Variable.setValue(c.getName(), Value.constructor(c));
+			Variable.setValue(c.getName(), Value.constructor(c), processContext);
 		}
 		for (MethodNode m : methods){
-			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
+			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), processContext);
 		}
 		for (Constructor c : constructors){
-			Variable.setValue(c.getName(), Value.constructor(c));
+			Variable.setValue(c.getName(), Value.constructor(c), processContext);
 		}
+		staticCode.execute(processContext);
 	}
 
 
 	@Override
 	public void onBlockEnd() {
-		if (!Executor.getProcessLineStack().empty()){
-			Executor.setLine(Executor.getProcessLineStack().pop());
-		}
+
 	}
 
 	@Override
