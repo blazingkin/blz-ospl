@@ -40,19 +40,13 @@ public class BlockNode extends ASTNode {
 
     public Value execute(Context c){
         for (int i = 0; i < body.length - 1; i++){
+            body[i].run(c);
             if (Executor.isBreakMode()){
                 if (shouldClearReturns){
                     Executor.setBreakMode(false);
                 }
                 return Executor.getReturnBuffer();
             }
-            body[i].run(c);
-        }
-        if (Executor.isBreakMode()){
-            if (shouldClearReturns){
-                Executor.setBreakMode(false);
-            }
-            return Executor.getReturnBuffer();
         }
         return body[body.length - 1].run(c);
     }
