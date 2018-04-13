@@ -1,15 +1,12 @@
 :main
 	p_1 = Point(0, 0)
 	p_2 = Point(1, 0)
+	Point(3,5)
 	print(p_1.distance(p_2))
 end
 
 constructor Point(x, y)
 	:distance(other)
-		print(other.x)
-		print(other.y)
-		print(x)
-		print(y)
 		a = (x - other.x) ** 2
 		b = (y - other.y) ** 2
 		return (a + b) ** 0.5

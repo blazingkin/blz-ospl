@@ -41,25 +41,32 @@ class TestFile:
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
-				exitcode = 1
+				print()
+				return 1
 			elif err != 0:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Program returned exit code: "+str(err))
-				exitcode = 1
+				print()
+				return 1
 			else:
 				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
 		print()
 
-for file in os.listdir("."):
-    if file.endswith(".blz"):
-    	src = file
-    	inp = None
-    	output = None
-    	if os.access(file.split(".")[0] + ".in", os.R_OK):
-    		inp = file.split(".")[0] + ".in"
-    	if os.access(file.split(".")[0] + ".out", os.R_OK):
-    		output = file.split(".")[0] + ".out"
-    	tf = TestFile(src, output, inp)
-    	tf.test()
+def run_tests():
+	result = 0
+	for file in os.listdir("."):
+	    if file.endswith(".blz"):
+	    	src = file
+	    	inp = None
+	    	output = None
+	    	if os.access(file.split(".")[0] + ".in", os.R_OK):
+	    		inp = file.split(".")[0] + ".in"
+	    	if os.access(file.split(".")[0] + ".out", os.R_OK):
+	    		output = file.split(".")[0] + ".out"
+	    	tf = TestFile(src, output, inp)
+	    	if tf.test() == 1:
+	    		result = 1
+	sys.exit(result)
 
-sys.exit(exitcode)
+if __name__ == '__main__':
+	run_tests()

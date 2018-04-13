@@ -7,5 +7,5 @@
 		i++
 		num = number_input()
 	end
-	print(sort(arr))
+	print(arr.sort())
 end

@@ -77,6 +77,10 @@ public class Context {
 			parent.setValue(storeName, value);
 		}
 	}
+
+	public void setValueInPresent(String storeName, Value value){
+		variables.put(storeName, value);
+	}
 	
 	
 	private static int getUID(){

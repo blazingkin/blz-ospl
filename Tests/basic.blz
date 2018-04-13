@@ -1,9 +1,8 @@
-print("beforetest")
-[2,3,4].length()
+x = 20
 :main
-
-	print("hi")
+	other(2)
 end
-print("test")
-print("test2")
-print("test3")
+
+:other(y)
+	print(x + ", " + y)
+end

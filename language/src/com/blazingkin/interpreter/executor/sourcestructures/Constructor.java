@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.Either;
@@ -125,22 +123,23 @@ public class Constructor implements RuntimeStackElement {
 	/* Set all the 'this' references 
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
-		newObj.objectContext.setValue("this", Value.obj(newObj));
-		newObj.objectContext.setValue("constructor", Value.constructor(constructor));
+		newObj.objectContext.setValueInPresent("this", Value.obj(newObj));
+		newObj.objectContext.setValueInPresent("constructor", Value.constructor(constructor));
 		for (MethodNode m : constructor.getParent().importedMethods){
-			newObj.objectContext.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
+			newObj.objectContext.setValueInPresent(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}
 		for (Constructor c : constructor.getParent().importedConstructors) {
-			newObj.objectContext.setValue(c.getName(), Value.constructor(c));
-		}
-		for (MethodNode m : constructor.methods){
-			newObj.objectContext.setValue(m.getStoreName(), Value.closure(new Closure(newObj.objectContext, m)));
+			newObj.objectContext.setValueInPresent(c.getName(), Value.constructor(c));
 		}
 		for (MethodNode m : constructor.getParent().methods){
-			newObj.objectContext.setValue(m.getStoreName(), Value.method(m));
+			newObj.objectContext.setValueInPresent(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : constructor.getParent().constructors){
-			newObj.objectContext.setValue(c.getName(), Value.constructor(c));
+			newObj.objectContext.setValueInPresent(c.getName(), Value.constructor(c));
+		}
+		for (MethodNode m : constructor.methods){
+			Value closure = Value.closure(new Closure(newObj.objectContext, m));
+			newObj.objectContext.setValueInPresent(m.getStoreName(), closure);
 		}
 	}
 	
@@ -152,11 +151,11 @@ public class Constructor implements RuntimeStackElement {
 		if (constructor.takesArguments){
 			if (passByReference){
 				for (int i = 0; i < args.length; i++){
-					Variable.setValue(constructor.argumentNames[i], args[i], newObj.objectContext);
+					newObj.objectContext.setValueInPresent(constructor.argumentNames[i], args[i]);
 				}
 			}else{
 				for (int i = 0; i < args.length; i++){
-					Variable.setValue(constructor.argumentNames[i], args[i].clone(), newObj.objectContext);
+					newObj.objectContext.setValueInPresent(constructor.argumentNames[i], args[i].clone());
 				}
 			}
 		}
