@@ -31,11 +31,10 @@ public class IfNode extends ASTNode {
 
 	@Override
 	public Value execute(Context con) {
-		Context closure = new Context(con);
-		if (condition.execute(closure).equals(TRUE_VAL)){
-			return mainBlock.execute(closure);
+		if (condition.execute(con).equals(TRUE_VAL)){
+			return mainBlock.execute(con);
 		}else{
-			return elseBlock.execute(closure);
+			return elseBlock.execute(con);
 		}
 	}
 

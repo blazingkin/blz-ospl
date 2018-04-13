@@ -1,10 +1,12 @@
 package com.blazingkin.interpreter.executor.instruction;
 
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Context;
 
 public abstract interface InstructionExecutorStringArray extends InstructionExecutor {
 	
-	public default Value run(String line){
+
+	public default Value run(String line, Context con){
 		return run(line.split(" "));
 	}
 	

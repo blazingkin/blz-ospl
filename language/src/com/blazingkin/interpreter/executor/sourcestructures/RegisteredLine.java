@@ -62,7 +62,7 @@ public class RegisteredLine implements RuntimeStackElement{
 		if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
 			return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes);
 		}
-		return instr.executor.run(args);
+		return instr.executor.run(args, con);
 	}
 	
 	public String toString(){

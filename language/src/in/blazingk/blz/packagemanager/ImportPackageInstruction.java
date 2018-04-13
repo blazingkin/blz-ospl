@@ -16,12 +16,13 @@ import java.util.Set;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Context;
 
 public class ImportPackageInstruction implements InstructionExecutor{
 	private static Path packageDirectory;
 	
 	@Override
-	public Value run(String line) {
+	public Value run(String line, Context con) {
 
 		return null;
 	}

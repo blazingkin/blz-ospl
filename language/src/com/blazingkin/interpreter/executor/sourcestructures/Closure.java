@@ -1,11 +1,6 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
-import java.util.ArrayList;
-
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
-import com.blazingkin.interpreter.parser.Either;
-import com.blazingkin.interpreter.parser.ParseBlock;
-import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
@@ -13,14 +8,19 @@ public class Closure extends MethodNode {
 
 	public Context context;
 	
-	public Closure(Context con, String header, ArrayList<Either<String, ParseBlock>> body, Process parent) throws SyntaxException{
-		super(header, body, parent);
+	public Closure(Context con, MethodNode node){
+		super(node);
 		context = con;
 	}
 
-	public Value execute(Context con, Value values[], boolean passByReference){
-		return super.execute(context, values, passByReference);
-	}
+    public Value execute(Context c, Value[] values, boolean passByReference){
+		Context methodContext = new Context(context);
+        if (takesVariables){
+            bindArguments(values, passByReference, methodContext);
+		}
+        Value result = body.execute(methodContext);
+        return result;
+    }
 	
 	
 }

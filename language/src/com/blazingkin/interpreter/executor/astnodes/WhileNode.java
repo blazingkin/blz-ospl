@@ -28,10 +28,9 @@ public class WhileNode extends ASTNode {
 
 	@Override
 	public Value execute(Context con) {
-		Context closure = new Context(con);
 		Value cache = NULL_VAL;
-		while (term.execute(closure).equals(TRUE_VAL)){
-			cache = block.execute(closure);
+		while (term.execute(con).equals(TRUE_VAL)){
+			cache = block.execute(con);
 		}
 		return cache;
 	}

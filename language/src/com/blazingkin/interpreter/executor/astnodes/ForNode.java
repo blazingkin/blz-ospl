@@ -31,7 +31,6 @@ public class ForNode extends ASTNode {
 	@Override
 	public Value execute(Context con) {
 		Value cache = NULL_VAL;
-		Context closure = new Context(con);
 		init.execute(con);
 		while (term.execute(con).equals(TRUE_VAL)){
 			cache = block.execute(con);

@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.executor.sourcestructures;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.VariableTypes;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 import in.blazingk.blz.packagemanager.FileImportManager;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
@@ -47,12 +46,12 @@ public class Process implements RuntimeStackElement {
 	public ArrayList<Constructor> constructors = new ArrayList<Constructor>();
 	public Collection<MethodNode> importedMethods = new HashSet<MethodNode>();
 	public Collection<Constructor> importedConstructors = new HashSet<Constructor>();
-	public HashMap<Integer, BlockArc> blockArcs = new HashMap<Integer, BlockArc>();	// Both the start and end of the block point to the arc
 	public static ArrayList<Process> processes = new ArrayList<Process>();
 	Set<Path> packagesToImport = new HashSet<Path>();
 	Set<Path> processesToImport = new HashSet<Path>();
-	private static ASTNode staticCode;
+	private ASTNode staticCode;
 	public Context processContext = new Context();
+	private boolean staticRan = false;
 
 
 	public Process(File runFile) throws FileNotFoundException{
@@ -123,8 +122,8 @@ public class Process implements RuntimeStackElement {
 		ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines));
 		try {
 			registerMethodsAndConstructors(parsed);
-			staticCode = new BlockNode(parsed, false);
 			findImports(parsed);
+			staticCode = new BlockNode(parsed, false);
 			if (runImports) {
 				handleImports();
 			}
@@ -224,7 +223,7 @@ public class Process implements RuntimeStackElement {
 			}
 			for (Either<String, ParseBlock> line : requireInstructions){
 				lines.remove(line);
-				String fileName = line.getLeft().get().replaceFirst("requuire", "").trim();
+				String fileName = line.getLeft().get().replaceFirst("require", "").trim();
 				processesToImport.add(calculateFileLocation(fileName));
 			}
 		}catch(Exception e){
@@ -266,54 +265,25 @@ public class Process implements RuntimeStackElement {
 		return null;
 	}
 	
-	public class BlockArc {
-		public final int start, end;
-		public BlockArc(int s, int e){
-			start = s;
-			end = e;
-		}
-		
-		public HashMap<String, Integer> labelMap;
-		
-		public void addLabel(String name, int line){
-			if (labelMap == null){
-				labelMap = new HashMap<String, Integer>();
-			}
-			labelMap.put(name, line);
-		}
-		
-		public boolean hasLabel(String name){
-			return name.equals("start") || name.equals("end") || (labelMap != null && labelMap.containsKey(name));
-		}
-		
-		public int getBlockLine(String name) throws Exception{
-			if (labelMap != null && labelMap.containsKey(name)){
-				return labelMap.get(name);
-			}else if (name.equals("start")){
-				return start;
-			}else if(name.equals("end")){
-				return end;
-			}
-			throw new Exception("Could not find label "+name+" for block starting on line "+start);
-		}
-	}
 	
-
 	@Override
 	public void onBlockStart() {
-		for (MethodNode m : importedMethods){
-			Variable.setValue(m.getStoreName(), Value.method(m), processContext);
+		if (!staticRan){
+			staticRan = true;
+			for (MethodNode m : importedMethods){
+				Variable.setValue(m.getStoreName(), Value.method(m), processContext);
+			}
+			for (Constructor c : importedConstructors) {
+				Variable.setValue(c.getName(), Value.constructor(c), processContext);
+			}
+			for (MethodNode m : methods){
+				Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), processContext);
+			}
+			for (Constructor c : constructors){
+				Variable.setValue(c.getName(), Value.constructor(c), processContext);
+			}
+			staticCode.execute(processContext);
 		}
-		for (Constructor c : importedConstructors) {
-			Variable.setValue(c.getName(), Value.constructor(c), processContext);
-		}
-		for (MethodNode m : methods){
-			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), processContext);
-		}
-		for (Constructor c : constructors){
-			Variable.setValue(c.getName(), Value.constructor(c), processContext);
-		}
-		staticCode.execute(processContext);
 	}
 
 

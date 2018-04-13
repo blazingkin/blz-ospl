@@ -118,22 +118,15 @@ public class Constructor implements RuntimeStackElement {
 		BLZObject newObj = new BLZObject();
 		boolean differentProcess = !con.parent.equals(Executor.getCurrentProcess());
 		
-
-		int startLine = Executor.getLine();
 		if (differentProcess) {
 			RuntimeStack.push(con.parent);
 		}
-			Executor.setLine(con.getLineNum());
-			setReferences(con, newObj); 
-			initializeArguments(con, newObj, args, passByReference);
-			RuntimeStack.pushContext(newObj.objectContext);
-			RuntimeStack.push(con);
-			con.blockNode.execute(newObj.objectContext);	
-			RuntimeStack.popContext();
+		setReferences(con, newObj); 
+		initializeArguments(con, newObj, args, passByReference);
+		con.blockNode.execute(newObj.objectContext);	
 		if (differentProcess) {
 			RuntimeStack.pop();
 		}
-		Executor.setLine(startLine);
 		return Value.obj(newObj);
 	}
 	
@@ -149,7 +142,7 @@ public class Constructor implements RuntimeStackElement {
 			Variable.setValue(c.getName(), Value.constructor(c), newObj.objectContext);
 		}
 		for (MethodNode m : constructor.methods){
-			newObj.objectContext.setValue(m.getStoreName(), Value.method(m));
+			newObj.objectContext.setValue(m.getStoreName(), Value.closure(new Closure(newObj.objectContext, m)));
 		}
 		for (MethodNode m : constructor.getParent().methods){
 			Variable.setValue(m.getStoreName(), Value.method(m), newObj.objectContext);

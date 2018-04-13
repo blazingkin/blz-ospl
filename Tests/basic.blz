@@ -1,20 +1,9 @@
+print("beforetest")
+[2,3,4].length()
 :main
-	arr = [2,1,4,2]
-	print(arr.concatenate([1,2,3]))
-	print(arr)
-end
 
-:s(arr)
-	i = 1
-	while i < arr.length()
-		j = i
-		while (j > 0) && (arr[j - 1] > arr[j])
-			temp = arr[j]
-			arr[j] = arr[j - 1]
-			arr[j - 1] = temp
-			j--
-		end
-		i++
-	end
-	return arr
+	print("hi")
 end
+print("test")
+print("test2")
+print("test3")

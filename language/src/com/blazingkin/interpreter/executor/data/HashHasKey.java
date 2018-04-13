@@ -5,14 +5,13 @@ import java.util.HashMap;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorCommaDelimited;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class HashHasKey implements InstructionExecutorCommaDelimited {
 
 	@Override
 	public Value run(Value[] args) {
-		if (args.length != 3){
+		if (args.length != 2){
 			Interpreter.throwError("Hash has key check did not have 2 arguments");
 		}
 		if (args[0].type != VariableTypes.Hash){

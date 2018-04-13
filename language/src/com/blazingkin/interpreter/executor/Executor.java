@@ -10,12 +10,7 @@ import java.util.Stack;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
-import com.blazingkin.interpreter.executor.sourcestructures.Closure;
-import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
-import com.blazingkin.interpreter.executor.sourcestructures.Process.BlockArc;
-import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Context;
@@ -61,11 +56,11 @@ public class Executor {
 			}
 		}
 		// puts the file passed to us as the current process
+		importCore();
 		RuntimeStack.push(FileImportManager.importFile(runFile.toPath()));	
 		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(new StandAloneEventHandler());
 		MethodNode startMethod = getMethodInCurrentProcess(startingMethod);
-		importCore();
 		if (startMethod != null){
 			Value blank[] = {};
 			startMethod.execute(new Context(), blank, false);

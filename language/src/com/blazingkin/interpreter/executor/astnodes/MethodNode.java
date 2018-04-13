@@ -22,6 +22,14 @@ public class MethodNode extends ASTNode {
     public Process parent;
     public BlockNode body;
 
+    public MethodNode(MethodNode other){
+        this.parent = other.parent;
+        this.name = other.name;
+        this.variables = other.variables;
+        this.takesVariables = other.takesVariables;
+        this.body = other.body;
+    }
+
     public MethodNode(String header, ArrayList<Either<String, ParseBlock>> body, Process parent) throws SyntaxException {
         this.parent = parent;
         String ln = header.split(":")[header.split(":").length - 1];
@@ -76,7 +84,7 @@ public class MethodNode extends ASTNode {
 		return "<Method " + name + "(" + args + ")>";
 	}
 
-    private void bindArguments(Value values[], boolean passByReference, Context methodContext){
+    protected void bindArguments(Value values[], boolean passByReference, Context methodContext){
         int variableCount = (variables.length > values.length?values.length:variables.length);
         if (passByReference){
             for (int i = 0; i < variableCount; i++){

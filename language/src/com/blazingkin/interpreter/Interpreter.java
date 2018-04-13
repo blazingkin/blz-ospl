@@ -153,7 +153,6 @@ public class Interpreter {
 					RuntimeStackElement rse = reverse.pop();
 					System.err.println((rse.getLineNum() == -1 ? "" : "Line " + rse.getLineNum()) + "\t" + rse.toString());
 				}
-				System.err.println("Error occurred on line: "+Executor.getLine());
 			}
 			System.err.println(error);
 		}

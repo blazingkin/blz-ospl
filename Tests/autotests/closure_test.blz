@@ -1,6 +1,6 @@
 :main
 	print("Hello from main")
-	new asdf Blah
+	asdf = Blah()
 	print(asdf.x)
 	print(asdf.a * asdf.b)
 	asdf.closure()
