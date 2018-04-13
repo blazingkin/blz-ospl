@@ -1,20 +1,19 @@
 package com.blazingkin.interpreter.executor.input;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
+import com.blazingkin.interpreter.variables.Context;
 
-public class NumInput implements InstructionExecutorStringArray {
+public class NumInput implements InstructionExecutor {
 	/*	NumInput
 	 * 	Gets a number as input (Only a number)
 	 * 
 	 */
-	public Value run(String[] vars){
+	public Value run(String l, Context c){
 		try{
 			String str = Executor.getEventHandler().getInput();
 			if (Variable.isInteger(str)){
@@ -24,7 +23,7 @@ public class NumInput implements InstructionExecutorStringArray {
 			}
 		}catch(Exception e){
 			System.err.println("Invalid Input, Please Input A Number");
-			return run(vars);
+			return run(l, c);
 		}
 	}
 

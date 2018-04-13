@@ -6,6 +6,12 @@ end
 
 constructor Point(x, y)
 	:distance(other)
-		return (((x - other.x) ** 2) + ((y - other.y) ** 2)) ** 0.5
+		print(other.x)
+		print(other.y)
+		print(x)
+		print(y)
+		a = (x - other.x) ** 2
+		b = (y - other.y) ** 2
+		return (a + b) ** 0.5
 	end
 end

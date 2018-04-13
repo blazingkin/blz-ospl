@@ -3,12 +3,10 @@ package com.blazingkin.interpreter.executor;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
-import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.library.BlzEventHandler;
@@ -31,6 +29,8 @@ public class Executor {
 	private static long timeStarted = 0;
 	public static boolean immediateMode = false;
 	private static boolean closeRequested = false;
+	private static boolean returnMode = false;
+	private static boolean continueMode = false;
 	private static boolean breakMode = false;
 	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
 	
@@ -188,20 +188,37 @@ public class Executor {
 		RuntimeStack.push(p);
 	}
 	
+	public static boolean isReturnMode() {
+		return returnMode;
+	}
+
 	public static boolean isBreakMode() {
 		return breakMode;
 	}
 
-	public static void setBreakMode(boolean breakMode) {
-		Executor.breakMode = breakMode;
+	public static void setReturnMode(boolean returnMode) {
+		Executor.returnMode = returnMode;
 	}
 	
 	public static void setReturnBuffer(Value v){
 		returnBuffer = v;
 	}
 
+	public static void setContinueMode(boolean continueMode){
+		Executor.continueMode = continueMode;
+	}
+
+
+	public static boolean shouldBlockBreak(){
+		return returnMode || continueMode || breakMode;
+	}
+
 	public static Value getReturnBuffer(){
 		return returnBuffer;
+	}
+
+	public static void setBreakMode(boolean bm){
+		breakMode = bm;
 	}
 	
 }

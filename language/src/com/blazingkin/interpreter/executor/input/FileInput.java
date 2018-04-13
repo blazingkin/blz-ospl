@@ -5,23 +5,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
+import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class FileInput implements InstructionExecutorStringArray {
+public class FileInput implements InstructionExecutorValue {
 
-	public Value run(String args[]){
-		String arrayVarAddress = args[0];
-		String filePath = "";
-		ArrayList<Value> lines = new ArrayList<Value>();
-		for (int i = 1; i < args.length; i++){
-			filePath= filePath+args[i];
-			if (i != args.length-1){
-				filePath = filePath + "";
-			}
+	public Value run(Value arg){
+		if (arg.type != VariableTypes.String){
+			Interpreter.throwError("FileInput was given a non-string: "+arg);
 		}
-		filePath = (String) Variable.getValue(filePath).value;
+		String filePath = (String) arg.value;
+		ArrayList<Value> lines = new ArrayList<Value>();
 		try{
 			File f = new File(filePath);
 			Scanner s = new Scanner(f);

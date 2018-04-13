@@ -17,6 +17,8 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+exitcode = 0
+
 class TestFile:
 	def __init__(self, source, output=None, inp=None):
 		self.source = source
@@ -39,11 +41,11 @@ class TestFile:
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
-				sys.exit(1)
+				exitcode = 1
 			elif err != 0:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Program returned exit code: "+str(err))
-				sys.exit(1)
+				exitcode = 1
 			else:
 				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
 		print()
@@ -59,3 +61,5 @@ for file in os.listdir("."):
     		output = file.split(".")[0] + ".out"
     	tf = TestFile(src, output, inp)
     	tf.test()
+
+sys.exit(exitcode)

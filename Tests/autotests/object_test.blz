@@ -1,7 +1,7 @@
 :main
 	three = 3
-	new obj
-	new other
+	obj = Obj()
+	other = Obj()
 	other.second = obj
 	obj.hello = say_hello
 	other.second.hello()
@@ -10,6 +10,9 @@
 	other.second.arr_func = arr
 	print([1,2,3,4])
 	print(other.second.arr_func()[2])
+end
+
+constructor Obj
 end
 
 :two

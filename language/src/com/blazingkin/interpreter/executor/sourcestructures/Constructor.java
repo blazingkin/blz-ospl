@@ -116,39 +116,31 @@ public class Constructor implements RuntimeStackElement {
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference){
 		BLZObject newObj = new BLZObject();
-		boolean differentProcess = !con.parent.equals(Executor.getCurrentProcess());
-		
-		if (differentProcess) {
-			RuntimeStack.push(con.parent);
-		}
 		setReferences(con, newObj); 
 		initializeArguments(con, newObj, args, passByReference);
 		con.blockNode.execute(newObj.objectContext);	
-		if (differentProcess) {
-			RuntimeStack.pop();
-		}
 		return Value.obj(newObj);
 	}
 	
 	/* Set all the 'this' references 
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
-		Variable.setValue("this", Value.obj(newObj), newObj.objectContext);
-		Variable.setValue("constructor", Value.constructor(constructor), newObj.objectContext);
+		newObj.objectContext.setValue("this", Value.obj(newObj));
+		newObj.objectContext.setValue("constructor", Value.constructor(constructor));
 		for (MethodNode m : constructor.getParent().importedMethods){
-			Variable.setValue(m.getStoreName(), new Value(VariableTypes.Method, m), newObj.objectContext);
+			newObj.objectContext.setValue(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}
 		for (Constructor c : constructor.getParent().importedConstructors) {
-			Variable.setValue(c.getName(), Value.constructor(c), newObj.objectContext);
+			newObj.objectContext.setValue(c.getName(), Value.constructor(c));
 		}
 		for (MethodNode m : constructor.methods){
 			newObj.objectContext.setValue(m.getStoreName(), Value.closure(new Closure(newObj.objectContext, m)));
 		}
 		for (MethodNode m : constructor.getParent().methods){
-			Variable.setValue(m.getStoreName(), Value.method(m), newObj.objectContext);
+			newObj.objectContext.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : constructor.getParent().constructors){
-			Variable.setValue(c.getName(), Value.constructor(c), newObj.objectContext);
+			newObj.objectContext.setValue(c.getName(), Value.constructor(c));
 		}
 	}
 	

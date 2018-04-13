@@ -3,7 +3,7 @@
 end
 
 :number_input
-	nin a
+	nin
 end
 
 :string_input

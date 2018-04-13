@@ -1,5 +1,8 @@
+constructor Obj
+end
+
 :main
-	new obj
+	obj = Obj()
 	obj.a = "test"
 	obj.b = "output"
 	mangle!(obj)

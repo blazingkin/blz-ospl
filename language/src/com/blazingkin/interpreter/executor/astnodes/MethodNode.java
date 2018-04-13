@@ -13,6 +13,7 @@ import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.executor.Executor;
 
 public class MethodNode extends ASTNode {
 
@@ -70,6 +71,7 @@ public class MethodNode extends ASTNode {
         if(pushedParent){
             RuntimeStack.pop();
         }
+        Executor.setReturnMode(false);
         return result;
     }
 

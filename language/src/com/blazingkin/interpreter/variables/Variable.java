@@ -541,6 +541,9 @@ public class Variable {
 	}
 	
 	public static BigDecimal powerBig(BigDecimal base, BigDecimal exponent) {
+		if (base.equals(BigDecimal.ZERO)){
+			return BigDecimal.ZERO;
+		}
 		base = base.setScale(12);
 		exponent = exponent.setScale(12);
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base))).stripTrailingZeros();

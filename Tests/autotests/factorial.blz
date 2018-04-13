@@ -1,7 +1,7 @@
 :main
-	nin n
+	n = number_input()
 	fact = factorial(n)
-	echo fact
+	print(fact)
 end
 
 

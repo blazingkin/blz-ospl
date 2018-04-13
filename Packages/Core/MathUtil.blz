@@ -41,6 +41,10 @@ end
 	return y
 end
 
-:random(range)
-	RAND x range
+:random(range, max)
+	if max == {blz.nil}
+		RAND range
+	else
+		RAND range, max
+	end
 end

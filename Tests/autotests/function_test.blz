@@ -1,8 +1,7 @@
-echo "shouldn't run"
 
 :main
 	a = two() + three()
-	echo a
+	print(a)
 end
 
 :two

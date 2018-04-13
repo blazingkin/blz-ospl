@@ -8,7 +8,7 @@ public class BLZObject implements Cloneable {
 	}
 	
 	public BLZObject(){
-		objectContext = new Context(Variable.getGlobalContext());
+		objectContext = new Context();
 	}
 	
 	@Override

@@ -30,7 +30,7 @@ public class LessThanNode extends BinaryNode {
 				String s2 = (String) v2.value;
 				return Value.bool(s1.compareTo(s2) < 0);
 			}
-			Interpreter.throwError("One of "+v1+" or "+v2+" is not a decimal value");
+			Interpreter.throwError("When comparing for less than, one of "+v1+" or "+v2+" is not a decimal value");
 		}
 		BigDecimal d1 = Variable.getDoubleVal(v1);
 		BigDecimal d2 = Variable.getDoubleVal(v2);

@@ -27,6 +27,13 @@ public class BlockNode extends ASTNode {
 
     RegisteredLine body[];
     boolean shouldClearReturns;
+
+    public BlockNode(List<Either<String, ParseBlock>> body) throws SyntaxException {
+        this(body, false);
+    }
+
+
+
     public BlockNode(List<Either<String, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
         ArrayList<RegisteredLine> lines = new ArrayList<RegisteredLine>();
         for (Either<String, ParseBlock> line : body){
@@ -60,19 +67,11 @@ public class BlockNode extends ASTNode {
     public Value execute(Context c){
         for (int i = 0; i < body.length - 1; i++){
             body[i].run(c);
-            if (Executor.isBreakMode()){
-                if (shouldClearReturns){
-                    Executor.setBreakMode(false);
-                }
+            if (Executor.shouldBlockBreak()){
                 return Executor.getReturnBuffer();
             }
         }
         Value result = body[body.length - 1].run(c);
-        if (Executor.isBreakMode()){
-            if (shouldClearReturns){
-                Executor.setBreakMode(false);
-            }
-        }
         return result;
     }
 

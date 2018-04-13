@@ -8,7 +8,7 @@ public class ReturnValue implements InstructionExecutorValue {
 
 	public Value run(Value v){
 		Executor.setReturnBuffer(v);
-		Executor.setBreakMode(true);
+		Executor.setReturnMode(true);
 		/*while (elem == null || elem.type != VariableTypes.Method){
 			elem = RuntimeStack.pop();
 		}
