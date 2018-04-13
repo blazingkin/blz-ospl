@@ -5,6 +5,7 @@ constructor Expect(value)
             print("Assertion Failed!")
             print("Expected "+value+" to be "+other)
             exit(1)
+			return false
         end
         return true
     end
@@ -13,5 +14,5 @@ constructor Expect(value)
 end
 
 :expect(value)
-    return Expect(value)
+    Expect(value)
 end

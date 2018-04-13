@@ -1,6 +1,8 @@
-x = 20
+import Test
 :main
-	other(2)
+	print(expect)
+	print(expect(2))
+	expect(2).to_be(3)
 end
 
 :other(y)

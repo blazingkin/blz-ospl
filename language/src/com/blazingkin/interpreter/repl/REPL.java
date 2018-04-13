@@ -65,7 +65,7 @@ public class REPL {
 						importFile(fileName);
 						continue;
 					}
-					Executor.getEventHandler().print(ExpressionExecutor.parseExpression(in).toString());
+					Executor.getEventHandler().print(ExpressionExecutor.parseExpression(in, replContext).toString());
 					Executor.getEventHandler().print("\n");
 				}catch(Exception e){
 					e.printStackTrace();
