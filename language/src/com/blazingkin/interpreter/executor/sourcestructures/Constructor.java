@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
+import com.blazingkin.interpreter.executor.astnodes.Closure;
+import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
@@ -15,13 +15,11 @@ import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class Constructor implements RuntimeStackElement {
+public class Constructor {
 
 	private Process parent;
-	private int lineNum;
 	public String name;
 	private boolean takesArguments;
 	private String[] argumentNames = {};
@@ -69,23 +67,6 @@ public class Constructor implements RuntimeStackElement {
 			}
 		}
 	}
-
-	public Constructor(Process parent, int lineNum, String line){
-		if (line.equals("")){
-			Interpreter.throwError("Empty constructor name!");
-		}
-		String[] parsed = ExpressionParser.parseBindingWithArguments(line);
-		this.name = parsed[0];
-		if (parsed.length > 1){
-			takesArguments = true;
-			argumentNames = new String[parsed.length - 1];
-			for (int i = 0; i < argumentNames.length; i++){
-				argumentNames[i] = parsed[i + 1];
-			}
-		}
-		this.parent = parent;
-		this.lineNum = lineNum;
-	}
 	
 	public String getName(){
 		return name;
@@ -93,23 +74,6 @@ public class Constructor implements RuntimeStackElement {
 	
 	public Process getParent(){
 		return parent;
-	}
-	
-	@Override
-	public void onBlockStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onBlockEnd() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getLineNum() {
-		return lineNum;
 	}
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference){

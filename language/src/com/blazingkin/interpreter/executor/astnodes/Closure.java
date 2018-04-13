@@ -1,4 +1,4 @@
-package com.blazingkin.interpreter.executor.sourcestructures;
+package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.variables.Context;

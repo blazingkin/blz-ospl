@@ -13,6 +13,10 @@ public class SplitStream<T>{
         source = Either.right(arr);
     }
 
+    public boolean isStart(){
+        return index == 0;
+    }
+
     public boolean hasNext(){
         if (source.isLeft()){
             T[] left = source.getLeft().get();

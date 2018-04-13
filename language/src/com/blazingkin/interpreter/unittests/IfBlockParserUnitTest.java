@@ -38,62 +38,63 @@ public class IfBlockParserUnitTest {
 
     @Test
     public void shouldGiveIfNodesThatWork(){
-        IfBlockParser parser = new IfBlockParser();
-        String input[] = {"if true", "3", "1"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        ParseBlock ifBlock = block.get(0).getRight().get();
         try {
+            IfBlockParser parser = new IfBlockParser();
+            String input[] = {"if true", "3", "1", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(1));
         }catch (SyntaxException e){
             /* There are no syntax exceptions */
-            UnitTestUtil.assertEqual(true, false);
+            UnitTestUtil.fail();
         }
     }
 
     @Test
     public void shouldReturnNilOnFalseIfNodeWithNoElse(){
-        IfBlockParser parser = new IfBlockParser();
-        String input[] = {"if 2 == 3", "3", "1"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        ParseBlock ifBlock = block.get(0).getRight().get();
         try {
+            IfBlockParser parser = new IfBlockParser();
+            String input[] = {"if 2 == 3", "3", "1", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
             UnitTestUtil.assertEqual(result, Value.nil());
         }catch (SyntaxException e){
             /* There are no syntax exceptions */
-            UnitTestUtil.assertEqual(true, false);
+            UnitTestUtil.fail();
         }
     }
 
     @Test
     public void shouldExecuteElseStatement(){
-        IfBlockParser parser = new IfBlockParser();
-        String input[] = {"if 2 == 3", "3", "1", "else", "2"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        ParseBlock ifBlock = block.get(0).getRight().get();
         try {
+            IfBlockParser parser = new IfBlockParser();
+            String input[] = {"if 2 == 3", "3", "1", "else", "2", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(2));
         }catch (SyntaxException e){
             /* There are no syntax exceptions */
-            UnitTestUtil.assertEqual(true, false);
+            UnitTestUtil.fail();
         }
     }
 
     @Test
     public void shouldComplainAboutElseWithNothing(){
-        IfBlockParser parser = new IfBlockParser();
-        String input[] = {"if 2 == 3", "3", "1", "else"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        ParseBlock ifBlock = block.get(0).getRight().get();
+
         try {
+            IfBlockParser parser = new IfBlockParser();
+            String input[] = {"if 2 == 3", "3", "1", "else", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ParseBlock ifBlock = block.get(0).getRight().get();
             parser.parseBlock(ifBlock);
             /* An error should have been thrown */
-            UnitTestUtil.assertEqual(false, true);
+            UnitTestUtil.fail();
         }catch (SyntaxException e){
             UnitTestUtil.assertEqual(e.getMessage(), "Else was the last line of an if statement!");
         }

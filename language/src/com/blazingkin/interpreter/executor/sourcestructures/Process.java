@@ -119,8 +119,8 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	private void setup(){
-		ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines));
 		try {
+			ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines));
 			registerMethodsAndConstructors(parsed);
 			findImports(parsed);
 			staticCode = new BlockNode(parsed, false);

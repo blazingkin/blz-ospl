@@ -86,6 +86,13 @@ public class UnitTestUtil {
 		assert a.equals(b);
 	}
 
+	public static void fail(){
+		new Exception().printStackTrace();
+		org.junit.Assert.fail();
+		assert false;
+	}
+	
+
 	public static final double EPSILON = 1E-10;
 	public static void assertAlmostEqual(Value a, Value b){
 

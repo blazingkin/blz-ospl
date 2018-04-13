@@ -3,17 +3,20 @@ package com.blazingkin.interpreter.parser;
 import java.util.ArrayList;
 
 import com.blazingkin.interpreter.executor.executionorder.End;
-import com.blazingkin.interpreter.executor.instruction.BlockInstruction;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionType;
 
 public class BlockParser {
 
-    public static ArrayList<Either<String, ParseBlock>> parseBody(SplitStream<String> input){
+    public static ArrayList<Either<String, ParseBlock>> parseBody(SplitStream<String> input) throws SyntaxException{
+		boolean isStart = input.isStart();
         ArrayList<Either<String, ParseBlock>> result = new ArrayList<Either<String, ParseBlock>>();
         while (input.hasNext()){
             String line = input.next();
             if (isEnd(line)){
+				if (isStart){
+					throw new SyntaxException("Unexpected end of block");
+				}
                 return result;
             }else if (isBlockHeader(line)){
                 ArrayList<Either<String, ParseBlock>> childBlock = parseBody(input);
@@ -22,7 +25,10 @@ public class BlockParser {
             }else{
                 result.add(Either.left(line.split("(?<!\\\\)#")[0].trim()));
             }
-        }
+		}
+		if (!isStart){
+			throw new SyntaxException("Some blocks not closed!");
+		}
         return result;        
     }
 

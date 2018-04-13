@@ -3,8 +3,8 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
-import com.blazingkin.interpreter.executor.sourcestructures.Closure;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 
 public class Value implements Cloneable {

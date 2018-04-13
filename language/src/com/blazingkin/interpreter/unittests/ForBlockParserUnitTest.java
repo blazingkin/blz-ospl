@@ -38,34 +38,34 @@ public class ForBlockParserUnitTest {
 
     @Test
     public void shouldParseProperly(){
-        ForBlockParser parser = new ForBlockParser();
-        String input[] = {"for i = 0; i < 10; i++", "20", "i", "end"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        ParseBlock forBlock = block.get(0).getRight().get();
         try{
+            ForBlockParser parser = new ForBlockParser();
+            String input[] = {"for i = 0; i < 10; i++", "20", "i", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ParseBlock forBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(forBlock);
             Value result = node.execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(9));
         }catch(SyntaxException err){
             /* Should not have a syntax error */
-            UnitTestUtil.assertEqual(true, false);
+            UnitTestUtil.fail();
         }
     }
 
     @Test
     public void shouldReturnProperly(){
-        ForBlockParser parser = new ForBlockParser();
-        String input[] = {"for i = 0; i < 10; i++", "20", "i ** 2", "end"};
-        ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
-        UnitTestUtil.assertEqual(block.get(0).isRight(), true);
-        ParseBlock forBlock = block.get(0).getRight().get();
         try{
+            ForBlockParser parser = new ForBlockParser();
+            String input[] = {"for i = 0; i < 10; i++", "20", "i ** 2", "end"};
+            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            UnitTestUtil.assertEqual(block.get(0).isRight(), true);
+            ParseBlock forBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(forBlock);
             Value result = node.execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(81));
         }catch(SyntaxException err){
             /* Should not have a syntax error */
-            UnitTestUtil.assertEqual(true, false);
+            UnitTestUtil.fail();
         }
     }
 
