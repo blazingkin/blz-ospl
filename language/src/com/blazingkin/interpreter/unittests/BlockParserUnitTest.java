@@ -63,7 +63,7 @@ public class BlockParserUnitTest {
     public void shouldYellAboutNonClosedBlocks(){
         try {
             String input[] = {"if"};
-            ArrayList<Either<String, ParseBlock>> result = BlockParser.parseBody(new SplitStream<String>(input));
+            BlockParser.parseBody(new SplitStream<String>(input));
             UnitTestUtil.fail();
         }catch (SyntaxException e){
 

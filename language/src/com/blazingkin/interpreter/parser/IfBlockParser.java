@@ -3,14 +3,11 @@ package com.blazingkin.interpreter.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.synth.SynthEditorPaneUI;
-
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.IfNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.parser.ExpressionParser;
  
 public class IfBlockParser implements BlockParseProtocol {
 

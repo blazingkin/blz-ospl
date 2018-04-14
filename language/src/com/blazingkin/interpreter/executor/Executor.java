@@ -64,7 +64,8 @@ public class Executor {
 		if (startMethod != null){
 			Value blank[] = {};
 			startMethod.execute(new Context(), blank, false);
-		}	
+		}
+		eventHandler.exitProgram("");
 	}
 	
 	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws Exception{
@@ -83,6 +84,7 @@ public class Executor {
 			Value blank[] = {};
 			startMethod.execute(getCurrentContext(), blank, false);
 		}
+		eventHandler.exitProgram("");
 	}
 	
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program

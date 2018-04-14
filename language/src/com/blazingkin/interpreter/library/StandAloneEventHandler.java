@@ -35,16 +35,16 @@ public class StandAloneEventHandler implements BlzEventHandler {
 	
 	@Override
 	public void print(String contents) {
-		System.out.print(contents);
-		/*try{
+		//System.out.print(contents);
+		try{
 			writer.write(contents);
 			if (!flushScheduled){
 				
 			}
 			flushScheduled = true;
 		}catch(Exception e){
-			System.out.println(contents);
-		}*/
+			System.out.print(contents);
+		}
 	}
 	
 	@Override
@@ -61,6 +61,7 @@ public class StandAloneEventHandler implements BlzEventHandler {
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		if (Interpreter.logging){
 			System.out.println("Exiting: "+exitMessage);

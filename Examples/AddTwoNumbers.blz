@@ -9,6 +9,5 @@
 end
 
 :sum(a, b)
-	result = a + b
-	return result
+	a + b
 end

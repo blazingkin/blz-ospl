@@ -68,7 +68,7 @@ public class ProcessUnitTest {
 	@Test
 	public void TestCompleteBlockThree(){
 		String[] completeBlock = {":main", "if true", "a = 3", "end", "end"};
-		Process p = new Process(completeBlock);
+		new Process(completeBlock);
 		UnitTestUtil.assertNoErrors();
 	}
 	
