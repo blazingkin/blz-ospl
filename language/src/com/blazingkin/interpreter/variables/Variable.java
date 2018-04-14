@@ -542,8 +542,8 @@ public class Variable {
 		if (base.equals(BigDecimal.ZERO)){
 			return BigDecimal.ZERO;
 		}
-		base = base.setScale(12);
-		exponent = exponent.setScale(12);
+		base = base.setScale(12, RoundingMode.HALF_EVEN);
+		exponent = exponent.setScale(12, RoundingMode.HALF_EVEN);
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base))).stripTrailingZeros();
 	}
 
