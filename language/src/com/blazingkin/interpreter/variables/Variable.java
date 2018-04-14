@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.variables;
 
+import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -334,9 +335,17 @@ public class Variable {
 		case osVersion:
 			return new Value(VariableTypes.String, System.getProperty("os.version"));
 		case cursorPosX:
-			return Value.integer(MouseInfo.getPointerInfo().getLocation().x);
+			try {
+				return Value.integer(MouseInfo.getPointerInfo().getLocation().x);
+			}catch( HeadlessException e){
+				return Value.integer(0);
+			}
 		case cursorPosY:
-			return Value.integer(MouseInfo.getPointerInfo().getLocation().y);
+			try {
+				return Value.integer(MouseInfo.getPointerInfo().getLocation().y);
+			}catch (HeadlessException e){
+				return Value.integer(0);
+			}
 		case processUUID:
 			if (Executor.getCurrentProcess() == null){
 				return Value.integer(-1);
@@ -346,11 +355,6 @@ public class Variable {
 			return Value.integer(Executor.getRunningProcesses().size());
 		case runtimeStack:
 			return Value.string(RuntimeStack.runtimeStack.toString());
-		case lineReturns:
-			if (Executor.getCurrentProcess() == null){
-				return Value.integer(-1);
-			}
-			return Value.integer(Executor.getCurrentProcess().lineReturns.size());
 		case version:
 			//TODO update this every time
 			return new Value(VariableTypes.String, "2.6");
@@ -525,7 +529,7 @@ public class Variable {
 	public static BigInteger getIntValue(Value v){
 		try{
 			if (isValDouble(v) || v.value instanceof Double){
-				return BigInteger.valueOf((long)((double) v.value));
+				return BigInteger.valueOf((long)(v.value));
 			}
 			if (v.type == VariableTypes.Rational){
 				BLZRational rat = (BLZRational) v.value;
