@@ -1,10 +1,10 @@
 :main
-	len = 0
-	numon = 2
+	len = 2
+	numon = 5
 	print("How many primes do you want?")
 	count = number_input()
 	start_time = {system.time.currenttimemillis}
-	primes = []	
+	primes = [2,3]	
 	while len < count
 		flag = true
 		for i = 0; i < len; i = i + 1
@@ -17,7 +17,7 @@
 			primes[len] = numon
 			len = len + 1
 		end
-		numon = numon + 1
+		numon = numon + 2
 	end
 	end_time = {system.time.currenttimemillis}
 	
