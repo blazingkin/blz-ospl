@@ -68,6 +68,14 @@ public class UnitTestUtil {
 	}
 
 	public static void assertEqual(Object a, Object b){
+		if (a instanceof Value){
+			Value aVal = (Value) a;
+			assertEqual((aVal).type.dataType, aVal.value.getClass());
+		}
+		if (b instanceof Value){
+			Value bVal = (Value) b;
+			assertEqual((bVal).type.dataType, bVal.value.getClass());
+		}
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println("An assertion was false!");
