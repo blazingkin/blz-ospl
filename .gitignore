@@ -15,3 +15,4 @@ CHANGELOG
 language/.settings/*
 launcher/.settings/*
 language/.vscode/*
+Tests/tmp/*
