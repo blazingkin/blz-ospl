@@ -75,7 +75,16 @@ end
 
 #does not work with !
 :remove(arr, index)
-	BLZINTERNALARRAYREMOVE arr,index
+	newarr = []
+	len = arr.length() - 1
+	for i = 0; i < len; i++
+		if i >= index
+			newarr[i] = arr[i + 1]
+		else
+			newarr[i] = arr[i]
+		end
+	end
+	BLZINTERNALARRAYREBIND arr,newarr
 end
 
 :reverse(arr)
@@ -105,7 +114,7 @@ end
 	for i = start; i < end; i++
 		arr_new[i - start] = arr[i]
 	end
-	return arr_new
+	BLZINTERNALARRAYREBIND arr,arr_new
 end
 
 # Uses insertion sort algorithm from wikipedia
@@ -140,7 +149,7 @@ end
 			j++
 		end
 	end
-	return arr_new
+	BLZINTERNALARRAYREBIND arr, arr_new
 end
 
 :nil?
@@ -157,5 +166,5 @@ end
 			result_size++
 		end
 	end
-	return result
+	BLZINTERNALARRAYREBIND arr, result
 end
