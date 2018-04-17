@@ -29,12 +29,12 @@
 		<dependency>
 		    <groupId>com.oracle.truffle</groupId>
 		    <artifactId>truffle-api</artifactId>
-		    <version>0.30</version> <!-- or any later version -->
+		    <version>0.33</version> <!-- or any later version -->
 		</dependency>
 		<dependency>
 		    <groupId>com.oracle.truffle</groupId>
 		    <artifactId>truffle-dsl-processor</artifactId>
-		    <version>0.30</version>
+		    <version>0.33</version>
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>

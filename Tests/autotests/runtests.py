@@ -66,6 +66,10 @@ def run_tests():
 	    	tf = TestFile(src, output, inp)
 	    	if tf.test() == 1:
 	    		result = 1
+	if (result == 0):
+		print("All tests passed!")
+	else:
+		print("Some tests failed")
 	sys.exit(result)
 
 if __name__ == '__main__':

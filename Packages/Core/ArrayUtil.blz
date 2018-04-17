@@ -75,15 +75,7 @@ end
 
 #does not work with !
 :remove(arr, index)
-	len = arr.length()
-	if index >= len			# Check for out of bounds
-		return arr
-	end
-	temp_arr = arr.copy()
-	for i = index; i < len - 1; i++
-		arr[i] = temp_arr[i + 1]
-	end
-	return arr.slice(0, len - 1)
+	BLZINTERNALARRAYREMOVE arr,index
 end
 
 :reverse(arr)

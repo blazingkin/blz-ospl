@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.executionstack;
 
 import java.util.ArrayDeque;
-import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;

@@ -1,0 +1,5 @@
+:main
+    arr = [1,2,3]
+    arr.remove!(0)
+    print(arr)
+end

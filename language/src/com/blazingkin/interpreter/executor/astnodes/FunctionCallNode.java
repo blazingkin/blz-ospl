@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.Interpreter;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;

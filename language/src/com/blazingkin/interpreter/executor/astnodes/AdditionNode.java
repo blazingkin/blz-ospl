@@ -10,6 +10,10 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class AdditionNode extends BinaryNode {
 
+	protected long add(long left, long right){
+		return left + right;
+	}
+
 	public AdditionNode(ASTNode[] args) {
 		super(Operator.Addition, args);
 		if (args.length != 2){
