@@ -25,7 +25,7 @@ public class IncrementNode extends UnaryNode {
 		}
 		Value add = Variable.addValues(con.getValue(storeName), Value.integer(1));
 		con.setValue(storeName, add);
-		return con.getValue(storeName);
+		return add;
 	}
 
 }

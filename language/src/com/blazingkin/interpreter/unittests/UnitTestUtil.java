@@ -31,6 +31,9 @@ public class UnitTestUtil {
 	}
 	
 	public static void clearEnv(){
+		Executor.setBreakMode(false);
+		Executor.setContinueMode(false);
+		Executor.setReturnMode(false);
 		Variable.clearVariables();
 		RuntimeStack.cleanup();
 		inputBuffer = new LinkedList<String>();

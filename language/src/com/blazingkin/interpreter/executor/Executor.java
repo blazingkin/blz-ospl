@@ -97,6 +97,10 @@ public class Executor {
 		setTimeStarted(0);
 		Variable.clearVariables();
 		setCloseRequested(false);
+		setBreakMode(false);
+		setContinueMode(false);
+		setReturnBuffer(Value.nil());
+		setReturnMode(false);
 		startingMethod = "";
 	}
 	
