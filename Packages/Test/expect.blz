@@ -1,18 +1,66 @@
-constructor Expect(value)
-
+constructor Expect(value, exit_on_failure)
     :to_be(other)
         if value != other
             print("Assertion Failed!")
-            print("Expected "+value+" to be "+other)
-            exit(1)
-			return false
+            if other == {blz.nil}
+                print("Expected "+value+" to be nil")
+            else
+                print("Expected "+value+" to be "+other)
+            end
+            if exit_on_failure
+                exit(1)
+            end
+			false
+        else
+            true
         end
-        return true
     end
 
+    :to_not_be(other)
+        if value == other
+            print("Assertion Failed!")
+            if other == {blz.nil}
+                print("Expected "+value+" to not be nil")
+            else
+                print("Expected "+value+" to not be "+other)
+            end
+            if exit_on_failure
+                exit(1)
+            end
+        else
+            true
+        end
+    end
+
+    :is(other)
+        to_be(other)
+    end
+
+    :is_not(other)
+        to_not_be(other)
+    end
+
+    :is_not_nil
+        is_not({blz.nil})
+    end
+
+    :is_nil
+        to_be({blz.nil})
+    end
+
+    :is_false
+        to_be(false)
+    end
+
+    :is_true
+        to_be(true)
+    end
 
 end
 
-:expect(value)
-    Expect(value)
+:expect(value, exit_on_failure)
+    if exit_on_failure == {blz.nil}
+        exit_on_failure = true
+    end
+    Expect(value, exit_on_failure)
 end

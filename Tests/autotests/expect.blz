@@ -1,0 +1,13 @@
+import Test
+
+:main
+    expect(2).is(2)
+    expect(2).is_not(3)
+    expect("hi").is("hi")
+    expect("hello").is_not("hi")
+    expect([2,3,4]).is([2,3,4])
+    expect([4,5,6]).is_not([1,2,3])
+    expect(2 == 2).is_true()
+    expect(4 == 5).is_false()
+    expect({blz.nil}).is_nil()
+end
