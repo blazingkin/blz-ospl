@@ -10,4 +10,6 @@ import Test
     expect(2 == 2).is_true()
     expect(4 == 5).is_false()
     expect({blz.nil}).is_nil()
+    # False as the second argument stops it from exiting with a failure code
+    expect(2, false).is(3)
 end

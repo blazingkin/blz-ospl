@@ -22,8 +22,7 @@ public enum VariableTypes {
 	Object(BLZObject.class),
 	PrimitiveMethod(BLZPrimitiveMethod.class),
 	Rational(BLZRational.class),
-	String(java.lang.String.class),
-	Tensor(BLZTensor.class);
+	String(java.lang.String.class);
 	
 	VariableTypes(Class n){
 		dataType = n;
