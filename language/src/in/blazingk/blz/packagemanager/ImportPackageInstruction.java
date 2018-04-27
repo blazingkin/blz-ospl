@@ -2,7 +2,6 @@ package in.blazingk.blz.packagemanager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -15,8 +14,8 @@ import java.util.Set;
 
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutor;
-import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Context;
+import com.blazingkin.interpreter.variables.Value;
 
 public class ImportPackageInstruction implements InstructionExecutor{
 	private static Path packageDirectory;
