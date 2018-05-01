@@ -1,0 +1,12 @@
+:main
+	obj = Thing()
+	print(obj)
+end
+
+constructor Thing
+
+	:show
+		"A thing"
+	end
+
+end
