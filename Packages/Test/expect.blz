@@ -72,7 +72,7 @@ constructor Expect(value, exit_on_failure)
 	:is_less_than(other)
 		if value >= other
 			print("Assertion Failed!")
-			print("Expected "+value+" to be greater than "+other)
+			print("Expected "+value+" to be less than "+other)
 			if exit_on_failure
 				exit(1)
 			end
