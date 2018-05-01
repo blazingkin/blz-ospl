@@ -1,0 +1,31 @@
+import Test
+
+:main
+	expect(2 == 2).is(true)
+	expect(2 <= 2).is(true)
+	expect(2 >= 2).is(true)
+	expect("a" <= "a").is(true)
+	expect(2 < 2).is(false)
+	expect(2 > 2).is(false)
+	expect(2 < 3).is(true)
+	expect(3 > 2).is(true)
+	box_one = Box(1)
+	box_two = Box(2)
+	box_tres = Box(1)
+	expect(box_one).is(box_tres)
+	expect(box_one).is_not(box_two)
+	expect(box_one).is_less_than(box_two)
+	expect(box_two).is_greater_than(box_one)
+end
+
+constructor Box(a)
+
+	:<(other)
+		a < other.a
+	end
+	
+	:==(other)
+		a == other.a
+	end
+
+end

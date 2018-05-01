@@ -25,6 +25,10 @@ public class LessThanNode extends BinaryNode {
 	public Value execute(Context con){
 		Value v1 = args[0].execute(con);
 		Value v2 = args[1].execute(con);
+		return LessThanNode.lessThan(v1, v2);
+	}
+
+	public static Value lessThan(Value v1, Value v2){
 		if (!Variable.isDecimalValue(v1) || !Variable.isDecimalValue(v2)){
 			if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
 				String s1 = (String) v1.value;

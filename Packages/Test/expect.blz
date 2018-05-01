@@ -55,6 +55,32 @@ constructor Expect(value, exit_on_failure)
     :is_true
         to_be(true)
     end
+	
+	:is_greater_than(other)
+		if value <= other
+			print("Assertion Failed!")
+			print("Expected "+value+" to be greater than "+other)
+			if exit_on_failure
+				exit(1)
+			end
+			false
+		else
+			true
+		end
+	end
+	
+	:is_less_than(other)
+		if value >= other
+			print("Assertion Failed!")
+			print("Expected "+value+" to be greater than "+other)
+			if exit_on_failure
+				exit(1)
+			end
+			false
+		else
+			true
+		end
+	end
 
 end
 

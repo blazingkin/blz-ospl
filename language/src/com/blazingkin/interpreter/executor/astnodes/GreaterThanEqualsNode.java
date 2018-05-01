@@ -24,17 +24,10 @@ public class GreaterThanEqualsNode extends BinaryNode {
 	public Value execute(Context con){
 		Value v1 = args[0].execute(con);
 		Value v2 = args[1].execute(con);
-		if (!Variable.isDecimalValue(v1) || !Variable.isDecimalValue(v2)){
-			if (v1.type == VariableTypes.String && v2.type == VariableTypes.String){
-				String s1 = (String) v1.value;
-				String s2 = (String) v2.value;
-				return Value.bool(s1.compareTo(s2) >= 0);
-			}
-			Interpreter.throwError("When comparing for greater than or equal, one of "+v1+" or "+v2+" is not a decimal value");
+		if (v1.equals(v2)){
+			return Value.bool(true);
 		}
-		BigDecimal d1 = Variable.getDoubleVal(v1);
-		BigDecimal d2 = Variable.getDoubleVal(v2);
-		return Value.bool(d1.compareTo(d2) >= 0);
+		return LessThanNode.lessThan(v2, v1);
 	}
 
 }
