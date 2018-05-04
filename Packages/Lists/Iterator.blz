@@ -13,4 +13,9 @@ constructor Iterator(list)
 	:remaining
 		return this.list.slice(i, size)
 	end
+
+	:each(function)
+		remaining().each(function)
+	end
+
 end
