@@ -1,8 +1,8 @@
 package com.blazingkin.interpreter.executor.instruction;
 
-import com.blazingkin.interpreter.executor.data.ArrayRebind;
 import com.blazingkin.interpreter.executor.data.HashHasKey;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
+import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.End;
@@ -42,7 +42,7 @@ public enum Instruction {
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
 	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
 	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey()),
-	ARRAYREBIND("BLZINTERNALARRAYREBIND", "Array Rebind", new ArrayRebind());
+	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

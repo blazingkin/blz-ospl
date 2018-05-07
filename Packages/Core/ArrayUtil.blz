@@ -84,7 +84,7 @@ end
 			newarr[i] = arr[i]
 		end
 	end
-	BLZINTERNALARRAYREBIND arr,newarr
+	BLZINTERNALREBIND arr,newarr
 end
 
 :reverse(arr)
@@ -114,7 +114,7 @@ end
 	for i = start; i < end; i++
 		arr_new[i - start] = arr[i]
 	end
-	BLZINTERNALARRAYREBIND arr,arr_new
+	BLZINTERNALREBIND arr,arr_new
 end
 
 # Uses insertion sort algorithm from wikipedia
@@ -149,7 +149,7 @@ end
 			j++
 		end
 	end
-	BLZINTERNALARRAYREBIND arr, arr_new
+	BLZINTERNALREBIND arr, arr_new
 end
 
 :nil?
@@ -166,5 +166,5 @@ end
 			result_size++
 		end
 	end
-	BLZINTERNALARRAYREBIND arr, result
+	BLZINTERNALREBIND arr, result
 end
