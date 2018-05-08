@@ -15,6 +15,8 @@ end
 # Calculate the sine of a number
 # Optional parameter series_terms, for the number of terms in the Taylor Series to use
 :sin(x, series_terms)
+    # The approximation is only good around the origin
+    x = x % (2 * {pi})
     if series_terms == {blz.nil}
         series_terms = 10
     end
