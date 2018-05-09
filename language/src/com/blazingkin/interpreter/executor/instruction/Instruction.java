@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
+import com.blazingkin.interpreter.executor.filesystem.CreateResource;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
@@ -42,7 +43,8 @@ public enum Instruction {
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
 	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
 	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey()),
-	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind());
+	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind()),
+	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create Resource", new CreateResource());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
