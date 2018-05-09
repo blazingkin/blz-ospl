@@ -31,3 +31,6 @@ end
 	return hash + ""
 end
 
+:show(hash)
+	hash
+end
