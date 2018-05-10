@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionType;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
@@ -24,7 +23,7 @@ public class ExpressionParser {
 				return Optional.empty();
 			}
 			try{
-				Instruction instr = InstructionType.getInstructionType(splits[0]);
+				Instruction instr = Instruction.getInstructionType(splits[0]);
 				if (instr == null || instr == Instruction.INVALID){
 					if (line.trim().isEmpty() || line.trim().charAt(0) == ':'){
 						return Optional.empty();
