@@ -121,7 +121,7 @@ end
 	for i = 0; i < str_len; i++
 		if string[i] == token
 			if building_string != ""
-				result = result.add(building_string)
+				result.add!(building_string)
 				building_string = ""
 			end
 		else
@@ -129,7 +129,7 @@ end
 		end
 	end
 	if building_string != ""
-		result = result.add(building_string)
+		result.add!(building_string)
 	end
 	result
 end
