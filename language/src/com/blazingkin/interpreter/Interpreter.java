@@ -138,8 +138,9 @@ public class Interpreter {
 	public static void throwError(String error){
 		thrownErrors.add(new Exception(error));
 		if (Executor.isImmediateMode()){
+			Executor.getEventHandler().err(error + "\n");
 			Executor.getEventHandler().err("There was an issue running your last command\n");
-			Executor.getEventHandler().err("Type 'err' to see the error");
+			Executor.getEventHandler().err("Type 'err' to see the error\n");
 			return;
 		}
 		if (logging){

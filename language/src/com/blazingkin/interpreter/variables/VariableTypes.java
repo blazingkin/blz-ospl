@@ -3,7 +3,7 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
-
+import java.net.URL;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -22,14 +22,14 @@ public enum VariableTypes {
 	Object(BLZObject.class),
 	PrimitiveMethod(BLZPrimitiveMethod.class),
 	Rational(BLZRational.class),
-	String(java.lang.String.class),
-	Tensor(BLZTensor.class);
+	Resource(URL.class),
+	String(java.lang.String.class);
 	
+	public final Class dataType;
 	VariableTypes(Class n){
 		dataType = n;
 	}
 
-	public final Class dataType;
 	public static HashMap<VariableTypes, Context> primitiveContexts = new HashMap<VariableTypes, Context>();
 	public static void initialize() {
 		for (VariableTypes vt : VariableTypes.values()) {

@@ -2,11 +2,13 @@ package com.blazingkin.interpreter.executor.instruction;
 
 import com.blazingkin.interpreter.executor.data.HashHasKey;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
+import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
+import com.blazingkin.interpreter.executor.filesystem.CreateResource;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
@@ -18,6 +20,7 @@ import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
+import java.util.HashMap;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 public enum Instruction {
@@ -40,7 +43,9 @@ public enum Instruction {
 	RETURN("RETURN", "Return value", new ReturnValue()),
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
 	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
-	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey());
+	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey()),
+	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind()),
+	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create Resource", new CreateResource());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
@@ -52,5 +57,26 @@ public enum Instruction {
 	public final InstructionExecutor executor;
 	public final String instruction;
 	public final String name;
+
+
+	public static Instruction getInstructionType(String s){		//gets the instruction based on the function call name
+		try{
+			return instructions.get(s.toUpperCase());
+		}catch(Exception e){
+		}
+		try{
+			return instructions.get(s.toUpperCase());
+		}catch(Exception e){}
+		return Instruction.INVALID;
+	}
+	
+	// This hashmap is statically loaded with all instructions from the Instruction enum
+	public static HashMap<String, Instruction> instructions;
+	static {
+		instructions = new HashMap<String, Instruction>();
+		for (Instruction i: Instruction.values()){
+			instructions.put(i.instruction, i);
+		}
+	}
 
 }

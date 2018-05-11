@@ -80,15 +80,16 @@ end
 
 #does not work with !
 :remove(arr, index)
-	len = arr.length()
-	if index >= len			# Check for out of bounds
-		return arr
+	newarr = []
+	len = arr.length() - 1
+	for i = 0; i < len; i++
+		if i >= index
+			newarr[i] = arr[i + 1]
+		else
+			newarr[i] = arr[i]
+		end
 	end
-	temp_arr = arr.copy()
-	for i = index; i < len - 1; i++
-		arr[i] = temp_arr[i + 1]
-	end
-	return arr.slice(0, len - 1)
+	BLZINTERNALREBIND arr,newarr
 end
 
 :reverse(arr)
@@ -118,7 +119,7 @@ end
 	for i = start; i < end; i++
 		arr_new[i - start] = arr[i]
 	end
-	return arr_new
+	BLZINTERNALREBIND arr,arr_new
 end
 
 # Uses insertion sort algorithm from wikipedia
@@ -153,7 +154,7 @@ end
 			j++
 		end
 	end
-	return arr_new
+	BLZINTERNALREBIND arr, arr_new
 end
 
 :nil?
@@ -170,5 +171,9 @@ end
 			result_size++
 		end
 	end
-	return result
+	BLZINTERNALREBIND arr, result
+end
+
+:show(arr)
+	arr
 end

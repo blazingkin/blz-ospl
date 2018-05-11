@@ -19,3 +19,7 @@ end
 :to_string(value)
 	return value + ""
 end
+
+:show(value)
+	value
+end

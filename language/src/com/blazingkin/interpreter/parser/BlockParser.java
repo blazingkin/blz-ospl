@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
-import com.blazingkin.interpreter.executor.instruction.InstructionType;
 
 public class BlockParser {
 
@@ -73,7 +72,7 @@ public class BlockParser {
 		}else {
 			instructionString = line.substring(0, firstSpace);
 		}
-		return InstructionType.getInstructionType(instructionString);
+		return Instruction.getInstructionType(instructionString);
 	}
 
 

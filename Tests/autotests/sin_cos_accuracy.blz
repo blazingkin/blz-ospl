@@ -1,0 +1,12 @@
+import Math
+import Test
+
+:main
+    # Standard trig identities in the first quadrant
+    expect(sin(0) ~= 0).is(true)
+    expect(sin({pi} / 2) ~= 1).is(true)
+    expect(cos(0) ~= 1).is(true)
+    expect(cos({pi} / 2) ~= 0).is(true)
+    # Sin of pi / 4 should be ~ root 2 / 2
+    expect(sin({pi} / 4) ~= (1 / (2 ** 0.5))).is(true)
+end

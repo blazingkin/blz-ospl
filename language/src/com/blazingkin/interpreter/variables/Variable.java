@@ -102,7 +102,7 @@ public class Variable {
 			String s2 = v2.toString();
 			return new Value(VariableTypes.String, s1+s2);
 		}
-		Interpreter.throwError("Failed Adding Values "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Adding Values "+v1+" and "+v2);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -122,7 +122,7 @@ public class Variable {
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
-		Interpreter.throwError("Failed Subtracting Values "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Subtracting Values "+v1+" and "+v2);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -140,7 +140,7 @@ public class Variable {
 		if ((isValRational(v1) || isValDouble(v1)) && (isValRational(v2) || isValDouble(v2))){
 			return new Value(VariableTypes.Double, getDoubleVal(v1).multiply(getDoubleVal(v2)));
 		}
-		Interpreter.throwError("Failed Multiplying Values "+v1.value+" and "+v2.value);
+		Interpreter.throwError("Failed Multiplying Values "+v1+" and "+v2);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -193,7 +193,7 @@ public class Variable {
 			BigDecimal d2 = getDoubleVal(v2);
 			return Value.doub(powerBig(d1, d2));
 		}
-		Interpreter.throwError("Failed Taking an Exponent with "+v1.value + " and "+v2.value);
+		Interpreter.throwError("Failed Taking an Exponent with "+v1 + " and "+v2);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -206,7 +206,7 @@ public class Variable {
 		if (isDecimalValue(v1) && (v2.type == VariableTypes.String && ((String) v2.value).toLowerCase().equals("e"))){
 			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
-		Interpreter.throwError("Failed Taking a Logarithm with "+v1.value + " and "+v2.value);
+		Interpreter.throwError("Failed Taking a Logarithm with "+v1 + " and "+v2);
 		return new Value(VariableTypes.Nil, null);
 	}
 	
@@ -522,7 +522,7 @@ public class Variable {
 			}
 			return (BigDecimal)v.value;
 		}catch(Exception e){
-			Interpreter.throwError("Attempted to cast "+v.value+" to a double and failed!");
+			Interpreter.throwError("Attempted to cast "+v+" to a double and failed!");
 			return BigDecimal.ZERO;
 		}
 	}
@@ -537,7 +537,7 @@ public class Variable {
 			}
 			return (BigInteger) v.value;
 		}catch(Exception e){
-			Interpreter.throwError("Attempted to cast "+v.value+" to an int and failed!");
+			Interpreter.throwError("Attempted to cast "+v+" to an int and failed!");
 			return BigInteger.ZERO;
 		}
 	}

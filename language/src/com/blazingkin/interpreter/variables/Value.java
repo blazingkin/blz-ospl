@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.variables;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
+import java.net.URL;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -10,48 +10,19 @@ import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 public class Value implements Cloneable {
 	public VariableTypes type;
 	public Object value = null;
-	public boolean isGlobal = false;
-	public MethodNode parent = null;
 	
 	public Value(VariableTypes t, Object val){	//This stores the value and the type of value that it is
 		type = t;
 		value = val;
 	}
 	
-	public Value(VariableTypes t, Object val, MethodNode par, boolean global){
-		if (val == null){
-			type = VariableTypes.Nil;
-			value = null;
-			isGlobal = global;
-			parent = par;
-			return;
-		}
-		type = t;
-		value = val;
-		isGlobal = global;
-		parent = par;
-
-	}
-
-	public Value(VariableTypes t, Object val, MethodNode par){
-		if (val == null){
-			type = VariableTypes.Nil;
-			value = null;
-			parent = par;
-			return;
-		}
-		type = t;
-		value = val;
-		parent = par;
-	}
-	
 	@Override
 	public Value clone() {
 		switch(type){
 			case Array:
-				return new Value(type, ((Value[]) value).clone(), parent, isGlobal);
+				return new Value(type, ((Value[]) value).clone());
 			case Object:
-				return new Value(type, ((BLZObject)value).clone(), parent, isGlobal);
+				return new Value(type, ((BLZObject)value).clone());
 			default:
 				return this;
 		}
@@ -97,10 +68,6 @@ public class Value implements Cloneable {
 					}
 				}
 				return true;
-			}else if (type == VariableTypes.Object && v2.type == VariableTypes.Object){
-				BLZObject me = (BLZObject) this.value;
-				BLZObject you = (BLZObject) v2.value;
-				return me.objectContext.contextID == you.objectContext.contextID;
 			}
 			return (this.value == v2.value || this.value.equals(v2.value)) && this.type.equals(v2.type);
 		}
@@ -168,6 +135,10 @@ public class Value implements Cloneable {
 	
 	public static Value nil() {
 		return new Value(VariableTypes.Nil, null);
+	}
+
+	public static Value resource(URL url){
+		return new Value(VariableTypes.Resource, url);
 	}
 	
 	@Override

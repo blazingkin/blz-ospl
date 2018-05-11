@@ -1,0 +1,18 @@
+:file_resource(name)
+    name = "file://" + name
+    BLZINTERNALCREATERESOURCE name
+end
+
+:http_resource(name)
+    name = "http://" + name
+    BLZINTERNALCREATERESOURCE name
+end
+
+:https_resource(name)
+    name = "https://" + name
+    BLZINTERNALCREATERESOURCE name
+end
+
+:resource_from_url(name)
+    BLZINTERNALCREATERESOURCE name
+end

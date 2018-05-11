@@ -1,0 +1,14 @@
+:main
+	first_box = Box(3)
+	second_box = Box(5)
+	print(first_box < second_box)
+	print(second_box < first_box)
+	print(second_box > first_box)
+	print(first_box > second_box)
+end
+
+constructor Box(a)
+	:<(other)
+		a < other.a
+	end
+end
