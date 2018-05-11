@@ -5,6 +5,11 @@
  #
  #
 
+:add(arr, element)
+	arr[arr.length()] = element
+	arr
+end
+
 :length(arr)
 	ALEN arr # Call the internal function
 end
