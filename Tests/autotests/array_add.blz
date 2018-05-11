@@ -1,0 +1,11 @@
+import Test
+
+:main
+    expect([1,2].add(3)).is([1,2,3])
+    expect([].add("hi")).is(["hi"])
+    arr = []
+    expect(arr.add!(5)).is([5])
+    # Mutation should work
+    expect(arr).is([5])
+    print(arr)
+end
