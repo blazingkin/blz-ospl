@@ -14,6 +14,10 @@ end
 	ALEN arr # Call the internal function
 end
 
+:size(arr)
+	ALEN arr
+end
+
 :concatenate(arr_A, arr_B)
 	len1 = arr_A.length()
 	len2 = arr_B.length()
@@ -176,4 +180,8 @@ end
 
 :show(arr)
 	arr
+end
+
+:sample(arr)
+	arr[random(arr.length())]
 end
