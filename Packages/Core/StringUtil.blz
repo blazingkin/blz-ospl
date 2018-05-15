@@ -114,6 +114,26 @@ end
 	return false
 end
 
+:split_on_token(string, token)
+	building_string = ""
+	result = []
+	str_len = string.length()
+	for i = 0; i < str_len; i++
+		if string[i] == token
+			if building_string != ""
+				result.add!(building_string)
+				building_string = ""
+			end
+		else
+			building_string = building_string + string[i]
+		end
+	end
+	if building_string != ""
+		result.add!(building_string)
+	end
+	result
+end
+
 :show(str)
 	str
 end

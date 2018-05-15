@@ -444,7 +444,7 @@ public class Variable {
 			}
 			
 			NArr[index.intValue()] = value;
-			setValue(arrayName, new Value(VariableTypes.Array, NArr), con);
+			arr.value = NArr;
 		}else{
 			VArr[index.intValue()] = value;
 		}

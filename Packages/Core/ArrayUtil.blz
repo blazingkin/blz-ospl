@@ -5,8 +5,17 @@
  #
  #
 
+:add(arr, element)
+	arr[arr.length()] = element
+	arr
+end
+
 :length(arr)
 	ALEN arr # Call the internal function
+end
+
+:size(arr)
+	ALEN arr
 end
 
 :concatenate(arr_A, arr_B)
@@ -183,4 +192,8 @@ end
 		result = result + arr[arr_len - 1].to_json()
 	end
 	result + "]"
+end
+
+:sample(arr)
+	arr[random(arr.length())]
 end
