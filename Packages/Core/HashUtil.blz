@@ -1,5 +1,15 @@
 :has_key?(hash, key)
-	BLZINTERNALHASHHASKEY hash, key
+	hash.keys().contains?(key)
+end
+
+:keys(hash)
+	BLZINTERNALHASHGETKEYS hash
+end
+
+:values(hash)
+	# Abuses partial function application of primitives
+	# Could break if the internal implementation changes
+	hash.keys().map(hash.get)
 end
 
 :set(hash, key, value)
@@ -33,4 +43,19 @@ end
 
 :show(hash)
 	hash
+end
+
+:to_json(hash)
+	result = "{" + {text.newline}
+	key_set = hash.keys()
+	key_size = key_set.length()
+	for i = 0; i < (key_size - 1); i++
+		key = key_set[i]
+		result = result + key.to_json() + ": " + hash[key].to_json() + "," + {text.newline}
+	end
+	if key_size != 0
+		key = key_set[key_size - 1]
+		result = result + key.to_json() + ": " + hash[key].to_json()
+	end
+	result + {text.newline} + "}"
 end

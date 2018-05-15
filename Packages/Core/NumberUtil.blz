@@ -29,3 +29,7 @@ end
 :show(a)
 	a
 end
+
+:to_json(num)
+	num
+end

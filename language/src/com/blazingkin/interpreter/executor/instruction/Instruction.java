@@ -1,6 +1,8 @@
 package com.blazingkin.interpreter.executor.instruction;
 
-import com.blazingkin.interpreter.executor.data.HashHasKey;
+import java.util.HashMap;
+
+import com.blazingkin.interpreter.executor.data.HashGetKeys;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
@@ -20,7 +22,6 @@ import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.timing.Wait;
 
-import java.util.HashMap;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 public enum Instruction {
@@ -43,7 +44,7 @@ public enum Instruction {
 	RETURN("RETURN", "Return value", new ReturnValue()),
 	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
 	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
-	HASHHASKEY("BLZINTERNALHASHHASKEY", "Hash has key", new HashHasKey()),
+	HASHGETKEYS("BLZINTERNALHASHGETKEYS", "Hash get key", new HashGetKeys()),
 	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind()),
 	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create Resource", new CreateResource());
 	

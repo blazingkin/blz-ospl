@@ -1,0 +1,11 @@
+:main
+    print((2).to_json())
+    print("asdf".to_json())
+    print([1,2,3].to_json())
+    print(false.to_json())
+    hsh = {}
+    hsh["val1"] = "key1"
+    hsh[1] = 2
+    hsh["arr"] = [2, {e}, "asdf"]
+    print(hsh.to_json())
+end

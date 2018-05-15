@@ -34,6 +34,7 @@ public enum SystemEnv {
 	
 	
 	//text special characters
+	doublequote("text.doublequote", false),
 	newline("text.newline", false),
 	shift("text.shift", false),
 	control("text.control", false),

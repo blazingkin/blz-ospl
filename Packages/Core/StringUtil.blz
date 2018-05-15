@@ -117,3 +117,7 @@ end
 :show(str)
 	str
 end
+
+:to_json(str)
+	{text.doublequote} + str + {text.doublequote}
+end

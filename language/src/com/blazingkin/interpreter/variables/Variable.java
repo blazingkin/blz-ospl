@@ -399,6 +399,8 @@ public class Variable {
 			return Value.integer(Executor.getCurrentContext().getID());
 		case nil:
 			return new Value(VariableTypes.Nil, null);
+		case doublequote:
+			return Value.string("\"");
 		default:
 			return new Value(VariableTypes.Nil, null);
 		}
@@ -452,7 +454,7 @@ public class Variable {
 		if (!con.variables.containsKey(hashName)){
 			HashMap<Value, Value> newHash = new HashMap<Value, Value>();
 			newHash.put(key, newVal);
-			setValue(hashName, new Value(VariableTypes.Hash, newHash), con);
+			con.setValue(hashName, new Value(VariableTypes.Hash, newHash));
 			return;
 		}
 		Value hash = getValue(hashName, con);

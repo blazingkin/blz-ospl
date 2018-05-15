@@ -172,3 +172,15 @@ end
 :show(arr)
 	arr
 end
+
+:to_json(arr)
+	result = "["
+	arr_len = arr.length()
+	for i = 0; i < (arr_len - 1); i++
+		result = result + arr[i].to_json() + ", "
+	end
+	if arr_len != 0
+		result = result + arr[arr_len - 1].to_json()
+	end
+	result + "]"
+end
