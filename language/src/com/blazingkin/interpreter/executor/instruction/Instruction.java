@@ -7,10 +7,13 @@ import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
-import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
+import com.blazingkin.interpreter.executor.filesystem.CloseResource;
 import com.blazingkin.interpreter.executor.filesystem.CreateResource;
+import com.blazingkin.interpreter.executor.filesystem.OpenResource;
+import com.blazingkin.interpreter.executor.filesystem.ScannerHasNext;
+import com.blazingkin.interpreter.executor.filesystem.ScannerReadNext;
 import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
@@ -26,27 +29,30 @@ import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 public enum Instruction {
 	INVALID("","INVALID", null),													// INVALID - Not for use
-	ECHO("ECHO", "ECHO", new Echo()),												// Echo - prints a replacing string
-	SAMELINEECHO("SECHO", "SAME LINE ECHO", new SameLineEcho()),
-	RAWECHO("BLZINTERNALRAWECHO", "RAWECHO", new RawEcho()),
-	NUMINPUT("NIN", "NUM INPUT", new NumInput()),									// Number input - inputs a string and parses to an int stores to a variable
-	RANDOM("RAND", "RANDOM", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
-	STRINGINPUT("STRIN", "STRINGIN", new StringInput()),								// Input String - gets a string through input
-	END("END", "END STATEMENT", new End()),											// End - Ends a return jump statement
-	WAIT("WAIT", "WAIT", new Wait()),												//Wait - Waits a given time on this instruction
-	FILEINPUT("FILEIN", "File In", new FileInput()),
-	FILEOUTPUT("FILEOUT", "File Out", new FileOutput()),
-	STRINGLENGTH("SLEN", "String Length", new Length(true)),
-	ARRAYLENGTH("ALEN", "Array Length", new Length(false)),
-	TOGGLELOGGING("BLZLOG", "TOGGLE LOGGING", new BLZLogging()),
+	ECHO("ECHO", "Echo", new Echo()),												// Echo - prints a replacing string
+	SAMELINEECHO("SECHO", "Echo no newline", new SameLineEcho()),
+	RAWECHO("BLZINTERNALRAWECHO", "Raw echo", new RawEcho()),
+	NUMINPUT("NIN", "Number input from stdin", new NumInput()),									// Number input - inputs a string and parses to an int stores to a variable
+	RANDOM("RAND", "Random", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
+	STRINGINPUT("STRIN", "Read stdin", new StringInput()),								// Input String - gets a string through input
+	WAIT("WAIT", "Wait", new Wait()),												//Wait - Waits a given time on this instruction
+	FILEINPUT("FILEIN", "File in", new FileInput()),
+	FILEOUTPUT("FILEOUT", "File out", new FileOutput()),
+	STRINGLENGTH("SLEN", "String length", new Length(true)),
+	ARRAYLENGTH("ALEN", "Array length", new Length(false)),
+	TOGGLELOGGING("BLZLOG", "Toggle logging", new BLZLogging()),
 	BREAK("BREAK", "Break from loop", new Break()),
 	CONTINUE("CONTINUE", "Continue in loop", new Continue()),
 	RETURN("RETURN", "Return value", new ReturnValue()),
-	IMPORTPACKAGE("IMPORT", "IMPORT PACKAGE", new ImportPackageInstruction()),
+	IMPORTPACKAGE("IMPORT", "Import package", new ImportPackageInstruction()),
 	EXIT("BLZINTERNALEXIT", "Exit with code", new Exit()),
 	HASHGETKEYS("BLZINTERNALHASHGETKEYS", "Hash get key", new HashGetKeys()),
-	ARRAYREBIND("BLZINTERNALREBIND", "Array Rebind", new Rebind()),
-	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create Resource", new CreateResource());
+	ARRAYREBIND("BLZINTERNALREBIND", "Array rebind", new Rebind()),
+	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create resource", new CreateResource()),
+	OPENRESOURCE("BLZINTERNALOPENRESOURCE", "Open resource", new OpenResource()),
+	CLOSERESOURCE("BLZINTERNALCLOSERESOURCE", "Close resource", new CloseResource()),
+	SCANNERHASNEXT("BLZINTERNALSCANNERHASNEXT", "Scanner has next byte", new ScannerHasNext()),
+	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
@@ -65,9 +71,6 @@ public enum Instruction {
 			return instructions.get(s.toUpperCase());
 		}catch(Exception e){
 		}
-		try{
-			return instructions.get(s.toUpperCase());
-		}catch(Exception e){}
 		return Instruction.INVALID;
 	}
 	

@@ -2,8 +2,9 @@ package com.blazingkin.interpreter.variables;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.net.URL;
+import java.util.HashMap;
+
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -23,6 +24,7 @@ public enum VariableTypes {
 	PrimitiveMethod(BLZPrimitiveMethod.class),
 	Rational(BLZRational.class),
 	Resource(URL.class),
+	Scanner(java.util.Scanner.class),
 	String(java.lang.String.class);
 	
 	public final Class dataType;

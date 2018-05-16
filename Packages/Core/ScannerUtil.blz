@@ -1,0 +1,24 @@
+:read_all(scanner)
+    result = ""
+    while scanner.has_next?()
+        result = result + scanner.next()
+    end
+    result
+end
+
+:has_next?(scanner)
+    BLZINTERNALSCANNERHASNEXT scanner
+end
+
+:next(scanner)
+    BLZINTERNALSCANNERREADNEXT scanner
+end
+
+:read_lines(scanner)
+    scanner.read_all().split_on_token({text.newline})
+end
+
+:close(scanner)
+    BLZINTERNALCLOSERESOURCE scanner
+    BLZINTERNALREBIND scanner, {blz.nil}
+end

@@ -2,7 +2,6 @@ package com.blazingkin.interpreter.parser;
 
 import java.util.ArrayList;
 
-import com.blazingkin.interpreter.executor.executionorder.End;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 
 public class BlockParser {
@@ -32,8 +31,9 @@ public class BlockParser {
     }
 
     private static boolean isEnd(String line){
-		Instruction instruction = getInstructionFromString(line);
-		return instruction != null && instruction.executor instanceof End;		
+		return line.length() >= 3 && (line.charAt(0) == 'e' || line.charAt(0) == 'E') &&
+									(line.charAt(1) == 'n' || line.charAt(1) == 'N') && 
+									(line.charAt(2) == 'd' || line.charAt(2) == 'D');	
 	}
 
     private static boolean isBlockHeader(String line){

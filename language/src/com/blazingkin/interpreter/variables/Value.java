@@ -3,6 +3,8 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.Scanner;
+
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
@@ -139,6 +141,10 @@ public class Value implements Cloneable {
 
 	public static Value resource(URL url){
 		return new Value(VariableTypes.Resource, url);
+	}
+
+	public static Value scanner(Scanner scanner){
+		return new Value(VariableTypes.Scanner, scanner);
 	}
 	
 	@Override

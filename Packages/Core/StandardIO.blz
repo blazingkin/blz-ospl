@@ -2,6 +2,10 @@
 	echo x
 end
 
+:print_no_newline(x)
+	secho x
+end
+
 :number_input
 	nin
 end

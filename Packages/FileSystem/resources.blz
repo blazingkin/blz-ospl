@@ -16,3 +16,15 @@ end
 :resource_from_url(name)
     BLZINTERNALCREATERESOURCE name
 end
+
+:open_resource(resource)
+    BLZINTERNALOPENRESOURCE resource
+end
+
+:open(filename)
+    open_resource(file_resource(filename))
+end
+
+:close(scanner)
+    close_scanner(scanner)
+end
