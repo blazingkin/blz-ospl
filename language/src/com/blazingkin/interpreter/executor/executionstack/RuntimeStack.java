@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.executor.executionstack;
 import java.util.ArrayDeque;
 
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.executionorder.LoopWrapper;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -14,7 +13,6 @@ public class RuntimeStack {
 	public static ArrayDeque<RuntimeStackElement> runtimeStack = new ArrayDeque<RuntimeStackElement>();
 	public static ArrayDeque<Process> processStack = new ArrayDeque<Process>();
 	public static ArrayDeque<Context> contextStack = new ArrayDeque<Context>();
-	public static ArrayDeque<LoopWrapper> loopStack = new ArrayDeque<LoopWrapper>();
 	public static ArrayDeque<Integer> processLineStack = new ArrayDeque<Integer>();
 	public static ArrayDeque<Context> processContextStack = new ArrayDeque<Context>();
 	
@@ -62,6 +60,5 @@ public class RuntimeStack {
 		runtimeStack.clear();
 		processStack.clear();
 		contextStack.clear();
-		loopStack.clear();
 	}
 }
