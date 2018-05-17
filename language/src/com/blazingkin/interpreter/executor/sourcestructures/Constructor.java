@@ -75,6 +75,18 @@ public class Constructor {
 	public Process getParent(){
 		return parent;
 	}
+
+	public String toString(){
+		String argNames = "";
+		for (int i = 0; i < argumentNames.length; i++){
+			argNames += argumentNames[i];
+			if ( i != argumentNames.length - 1){
+				argNames += ", ";
+			}
+		}
+
+		return "<Contructor "+getName() + "(" +argNames+")>";
+	}
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference) throws BLZRuntimeException{
 		BLZObject newObj = new BLZObject();

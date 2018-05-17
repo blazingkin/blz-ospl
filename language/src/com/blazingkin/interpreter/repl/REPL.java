@@ -5,15 +5,16 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ParseBlock;
@@ -23,7 +24,6 @@ import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.executor.astnodes.*;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
@@ -84,12 +84,17 @@ public class REPL {
 						Executor.getEventHandler().print("\n");
 						inputBuffer.clear();
 					}catch(SyntaxException e){
-
+						/* Block was incomplete */
 					}
 				}catch(BLZRuntimeException e){
+					/* Runtime exception in their code */
 					Interpreter.throwError(e.getMessage());
 					inputBuffer.clear();
+				}catch(NoSuchElementException e){
+					/* Input closed */
+					in = "exit";
 				}catch(Exception e){
+					/* IO or other exception */
 					e.printStackTrace();
 					Interpreter.throwError(e.getMessage());
 					inputBuffer.clear();
