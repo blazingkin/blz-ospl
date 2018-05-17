@@ -61,19 +61,5 @@ public class BlockParser {
 		return false;
     }
 
-    private static Instruction getInstructionFromString(String line) {
-		/* We need to check the `instruction` type */
-		int firstSpace = line.indexOf(" ");
-		
-		/* Just get the part before the space */
-		String instructionString;
-		if (firstSpace == -1) {
-			instructionString = line;
-		}else {
-			instructionString = line.substring(0, firstSpace);
-		}
-		return Instruction.getInstructionType(instructionString);
-	}
-
 
 }

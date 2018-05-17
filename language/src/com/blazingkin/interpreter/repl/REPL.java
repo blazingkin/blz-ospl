@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
@@ -13,10 +14,16 @@ import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
+import com.blazingkin.interpreter.parser.BlockParser;
+import com.blazingkin.interpreter.parser.Either;
+import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SplitStream;
+import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.Context;
+import com.blazingkin.interpreter.executor.astnodes.*;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
@@ -26,6 +33,7 @@ public class REPL {
 	public static void immediateModeLoop(InputStream is){
 		Executor.getEventHandler().print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
 		Executor.getEventHandler().print("Type 'exit' to exit\n");
+		ArrayList<String> inputBuffer = new ArrayList<String>();
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
@@ -66,13 +74,25 @@ public class REPL {
 						importFile(fileName);
 						continue;
 					}
-					Executor.getEventHandler().print(ExpressionExecutor.parseExpression(in, replContext).toString());
-					Executor.getEventHandler().print("\n");
+					inputBuffer.add(in);
+					try {
+						SplitStream<String> stream = new SplitStream<String>(inputBuffer);
+						ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(stream);
+						Executor.getEventHandler().print(
+							new BlockNode(parsed, true).execute(replContext).toString()
+						);
+						Executor.getEventHandler().print("\n");
+						inputBuffer.clear();
+					}catch(SyntaxException e){
+
+					}
 				}catch(BLZRuntimeException e){
 					Interpreter.throwError(e.getMessage());
+					inputBuffer.clear();
 				}catch(Exception e){
 					e.printStackTrace();
 					Interpreter.throwError(e.getMessage());
+					inputBuffer.clear();
 				}
 			}while (in.toLowerCase() != "exit");
 		}finally{
