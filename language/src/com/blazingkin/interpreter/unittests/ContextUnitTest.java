@@ -9,6 +9,8 @@ import com.blazingkin.interpreter.variables.Value;
 
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
+
 public class ContextUnitTest {
 
 	@BeforeClass
@@ -50,7 +52,7 @@ public class ContextUnitTest {
 	}
 	
 	@Test
-	public void shouldBeAbleToRetrieveValueFromContext(){
+	public void shouldBeAbleToRetrieveValueFromContext() throws BLZRuntimeException {
 		Context testCon = new Context();
 		testCon.variables.put("asdf", Value.integer(3));
 		assertEqual(testCon.getValue("asdf"), Value.integer(3));
@@ -69,7 +71,7 @@ public class ContextUnitTest {
 	}
 	
 	@Test
-	public void childContextShouldBeAbleToSeeParentVariables(){
+	public void childContextShouldBeAbleToSeeParentVariables() throws BLZRuntimeException {
 		Context pCon = new Context();
 		Context cCon = new Context(pCon);
 		pCon.setValue("random", Value.string("asdf"));
@@ -80,7 +82,7 @@ public class ContextUnitTest {
 	}
 	
 	@Test
-	public void childContextShouldBeAbleToModifyParentVariables(){
+	public void childContextShouldBeAbleToModifyParentVariables() throws BLZRuntimeException {
 		Context pCon = new Context();
 		Context cCon = new Context(pCon);
 		pCon.setValue("random", Value.integer(3));
@@ -90,7 +92,7 @@ public class ContextUnitTest {
 	}
 	
 	@Test
-	public void childShouldOnlyModifyLocalVariableIfDuplicate(){
+	public void childShouldOnlyModifyLocalVariableIfDuplicate() throws BLZRuntimeException {
 		Context pCon = new Context();
 		Context cCon = new Context(pCon);
 		cCon.setValue("a", Value.integer(3));

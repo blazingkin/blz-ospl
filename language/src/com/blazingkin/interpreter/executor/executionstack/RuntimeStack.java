@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.executionstack;
 
 import java.util.ArrayDeque;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Context;
@@ -16,7 +17,7 @@ public class RuntimeStack {
 	public static ArrayDeque<Integer> processLineStack = new ArrayDeque<Integer>();
 	public static ArrayDeque<Context> processContextStack = new ArrayDeque<Context>();
 	
-	public static void push(RuntimeStackElement se){
+	public static void push(RuntimeStackElement se) throws BLZRuntimeException{
 		runtimeStack.push(se);
 	    if (se instanceof Process){
 			processStack.push((Process) se);

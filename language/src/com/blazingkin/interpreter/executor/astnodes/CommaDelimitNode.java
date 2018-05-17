@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -18,7 +19,7 @@ public class CommaDelimitNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		Value[] v1, v2;
 		
 		// This is not the cleanest way to do this

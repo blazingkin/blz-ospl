@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
@@ -44,11 +45,7 @@ public class RegisteredLine implements RuntimeStackElement{
 		return args;
 	}
 	
-	public Value run(){
-		return run(Executor.getCurrentContext());
-	}
-	
-	public Value run(Context con){
+	public Value run(Context con) throws BLZRuntimeException{
 		if (root != null){
 			if (instr != null && instr != Instruction.INVALID){
 				return ((InstructionExecutorValue)instr.executor).run(root.execute(con));

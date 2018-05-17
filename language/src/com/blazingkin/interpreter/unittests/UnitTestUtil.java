@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
@@ -127,7 +128,7 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 	}
 	
-	public static void assertValEqual(String name, Value b, Context con){
+	public static void assertValEqual(String name, Value b, Context con) throws BLZRuntimeException {
 		Value a = ExpressionExecutor.parseExpression(name);
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){

@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
@@ -32,7 +33,7 @@ public class DotOperatorNodeUnitTest {
     }
 
     @Test
-    public void shouldFindPropertyOfObject(){
+    public void shouldFindPropertyOfObject() throws BLZRuntimeException{
         BLZObject x = new BLZObject(new Context());
         x.objectContext.setValue("val", Value.integer(3));
         ASTNode args[] = {new ValueASTNode(Value.obj(x)), new ValueASTNode("val")};
@@ -42,7 +43,12 @@ public class DotOperatorNodeUnitTest {
     }
 
     @Test
-    public void shouldFindPropertyOfPrimitive(){
+    public void shouldFindPropertyOfPrimitive() throws BLZRuntimeException {
+        try {
+            in.blazingk.blz.packagemanager.Package.importCore();
+        }catch(Exception e){
+            UnitTestUtil.fail();
+        }
         ASTNode args[] = {new ValueASTNode("20"), new ValueASTNode("nil?")};
         Value result = new DotOperatorNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result.type, VariableTypes.PrimitiveMethod);

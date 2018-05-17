@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -24,7 +25,7 @@ public class AssignmentNode extends BinaryNode {
 	
 	// TODO handle multiple assignment (e.g a,b = 2,3)
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		String storeName = args[0].getStoreName();
 		if (storeName == null){
 			if (args[0].getOperator() == Operator.arrayLookup){
@@ -39,19 +40,16 @@ public class AssignmentNode extends BinaryNode {
 				}else if (type == VariableTypes.String){
 					Value newVal = args[1].execute(con);
 					if (newVal.type != VariableTypes.String){
-						Interpreter.throwError("Expected "+ newVal +" to be a string");
-						return Value.nil();
+						throw new BLZRuntimeException(this, "Expected "+ newVal +" to be a string");
 					}
 					String newString = (String) newVal.value;
 					if (newString.length() != 1){
-						Interpreter.throwError("Expected "+newVal+" to be a string of length 1");
-						return Value.nil();
+						throw new BLZRuntimeException(this, "Expected "+newVal+" to be a string of length 1");
 					}
 					String oldString = (String) con.getValue(arrayName).value;
 					int index = Variable.getIntValue(lookupNode.args[1].execute(con)).intValue();
 					if (oldString.length() < index){
-						Interpreter.throwError("Out of bounds! Tried to set index: "+index+" of string: "+oldString);
-						return Value.nil();
+						throw new BLZRuntimeException(this, "Out of bounds! Tried to set index: "+index+" of string: "+oldString);
 					}
 					char[] chars = oldString.toCharArray();
 					chars[index] = newString.charAt(0);
@@ -68,14 +66,14 @@ public class AssignmentNode extends BinaryNode {
 				OperatorASTNode dotNode = (OperatorASTNode) args[0];
 				Value object = dotNode.args[0].execute(con);
 				if (object.type != VariableTypes.Object){
-					Interpreter.throwError("Tried accessing "+object.typedToString()+" as an object");
+					throw new BLZRuntimeException(this, "Tried accessing "+object.typedToString()+" as an object");
 				}
 				BLZObject obj = (BLZObject) object.value;
 				Value newVal = args[1].execute(con);
 				obj.objectContext.setValue(dotNode.args[1].getStoreName(), newVal);
 				return newVal;
 			}
-			Interpreter.throwError("Did not know how to handle assignment of: "+args[0]);
+			throw new BLZRuntimeException(this, "Did not know how to handle assignment of: "+args[0]);
 		}
 		con.setValue(storeName, args[1].execute(con));
 		return con.getValue(storeName);

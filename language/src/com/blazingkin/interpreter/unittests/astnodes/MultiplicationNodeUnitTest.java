@@ -1,10 +1,12 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.MultiplicationNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
-import com.blazingkin.interpreter.variables.*;
+import com.blazingkin.interpreter.variables.Context;
+import com.blazingkin.interpreter.variables.Value;
 
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -29,21 +31,21 @@ public class MultiplicationNodeUnitTest {
     }
 
     @Test
-    public void shouldMultiplyIntegers(){
+    public void shouldMultiplyIntegers() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("3"), new ValueASTNode("2")};
         Value result = new MultiplicationNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.integer(6));
     }
 
     @Test
-    public void shouldMultiplyRationals(){
+    public void shouldMultiplyRationals() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("3"), new ValueASTNode(Value.rational(2, 4))};
         Value result = new MultiplicationNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.rational(3, 2));
     }
 
     @Test
-    public void shouldFailToMultiplyStrings(){
+    public void shouldFailToMultiplyStrings() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("\"asdf\""), new ValueASTNode("3")};
         new MultiplicationNode(args).execute(new Context());
         UnitTestUtil.assertLastError("Failed Multiplying Values asdf and 3");

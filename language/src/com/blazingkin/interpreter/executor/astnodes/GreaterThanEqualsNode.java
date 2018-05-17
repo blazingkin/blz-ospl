@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.math.BigDecimal;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -21,7 +22,7 @@ public class GreaterThanEqualsNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		Value v1 = args[0].execute(con);
 		Value v2 = args[1].execute(con);
 		if (v1.equals(v2)){

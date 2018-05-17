@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -22,7 +23,7 @@ public class BlockNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute(Context con) {
+	public Value execute(Context con) throws BLZRuntimeException {
 		for (int i = 0; i < instructions.length - 1; i++){
 			instructions[i].run(con);
 		}

@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
@@ -266,7 +267,7 @@ public class Process implements RuntimeStackElement {
 	
 	
 	@Override
-	public void onBlockStart() {
+	public void onBlockStart() throws BLZRuntimeException {
 		if (!staticRan){
 			staticRan = true;
 			for (MethodNode m : importedMethods){

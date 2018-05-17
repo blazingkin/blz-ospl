@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.unittests;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
@@ -49,6 +50,8 @@ public class ForBlockParserUnitTest {
         }catch(SyntaxException err){
             /* Should not have a syntax error */
             UnitTestUtil.fail();
+        }catch (BLZRuntimeException e){
+            UnitTestUtil.fail();
         }
     }
 
@@ -65,6 +68,8 @@ public class ForBlockParserUnitTest {
             UnitTestUtil.assertEqual(result, Value.integer(81));
         }catch(SyntaxException err){
             /* Should not have a syntax error */
+            UnitTestUtil.fail();
+        }catch(BLZRuntimeException e){
             UnitTestUtil.fail();
         }
     }

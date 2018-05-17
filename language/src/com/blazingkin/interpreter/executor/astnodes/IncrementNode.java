@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
@@ -18,7 +19,7 @@ public class IncrementNode extends UnaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException{
 		String storeName = args[0].getStoreName();
 		if (storeName == null){
 			Interpreter.throwError("Did not know how to increment: "+args[0]);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
@@ -48,7 +49,7 @@ public class Executor {
 	}
 	
 	//Run Executor when running from file
-	public static void run(File runFile, List<String> args) throws Exception{			// runs the executor
+	public static void run(File runFile, List<String> args) throws BLZRuntimeException {			// runs the executor
 		for (int i = 0; i < args.size(); i+=2){
 			String s = args.get(i);
 			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
@@ -68,7 +69,7 @@ public class Executor {
 		eventHandler.exitProgram("");
 	}
 	
-	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws Exception{
+	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws BLZRuntimeException {
 		for (int i = 0; i < args.size(); i+=2){
 			String s = args.get(i);
 			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
@@ -189,7 +190,7 @@ public class Executor {
 		return null;
 	}
 	
-	public static void addProcess(Process p){
+	public static void addProcess(Process p) throws BLZRuntimeException {
 		processLineStack.push(getLine());
 		RuntimeStack.push(p);
 	}

@@ -1,15 +1,16 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.ApproximateComparisonNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ApproximateComparisonNodeUnitTest {
 
@@ -39,13 +40,18 @@ public class ApproximateComparisonNodeUnitTest {
 	
 	@Test
 	public void shouldNotAllowStringArgs() {
+		try {
 		ASTNode[] args = {new ValueASTNode("3"), new ValueASTNode("\"asdf\"")};
 		new ApproximateComparisonNode(args).execute(new Context());
-		UnitTestUtil.assertLastError("Attempted to cast asdf to a double and failed!");
+		}catch (BLZRuntimeException e){
+			UnitTestUtil.assertEqual(e.getMessage(), "When comparing approximately, one of 3 or asdf is not a decimal value.");
+			return;
+		}
+		UnitTestUtil.fail();
 	}
 	
 	@Test
-	public void sameValuesShouldBeApproximatelyEqual() {
+	public void sameValuesShouldBeApproximatelyEqual() throws BLZRuntimeException {
 		for (int i = 0; i < 100; i++) {
 			ASTNode[] args = {new ValueASTNode(Value.integer(i)), new ValueASTNode(Value.integer(i))};
 			ApproximateComparisonNode n = new ApproximateComparisonNode(args);
@@ -54,14 +60,14 @@ public class ApproximateComparisonNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldDeclareSimilarValuesApproximatelyEqual() {
+	public void shouldDeclareSimilarValuesApproximatelyEqual() throws BLZRuntimeException {
 		ASTNode[] args = {new ValueASTNode("3.14159265358"), new ValueASTNode("3.14159265357")};
 		ApproximateComparisonNode n = new ApproximateComparisonNode(args);
 		UnitTestUtil.assertEqual(Value.bool(true), n.execute(new Context()));
 	}
 	
 	@Test
-	public void shouldDeclareDissimilarValuesNotApproximatelyEqual() {
+	public void shouldDeclareDissimilarValuesNotApproximatelyEqual() throws BLZRuntimeException {
 		ASTNode[] args = {new ValueASTNode("3.1"), new ValueASTNode("3.2")};
 		ApproximateComparisonNode n = new ApproximateComparisonNode(args);
 		UnitTestUtil.assertEqual(Value.bool(false), n.execute(new Context()));

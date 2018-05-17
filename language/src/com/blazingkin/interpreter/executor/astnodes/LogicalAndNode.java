@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -18,7 +19,7 @@ public class LogicalAndNode extends BinaryNode {
 	}
 
 	@Override
-	public Value execute(Context c) {
+	public Value execute(Context c) throws BLZRuntimeException {
 		Value left = args[0].execute(c);
 		if (left.type != VariableTypes.Boolean){
 			Interpreter.throwError("Logical And given non-boolean: "+left);

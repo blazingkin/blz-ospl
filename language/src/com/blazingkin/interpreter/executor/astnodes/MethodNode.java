@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
@@ -46,13 +47,13 @@ public class MethodNode extends ASTNode {
         this.body = new BlockNode(body, true);
     }
 
-    public Value execute(Context c){
+    public Value execute(Context c) throws BLZRuntimeException {
         Interpreter.throwError("Method node was executed without arguments");
         Value empty[] = {};
         return execute(c, empty, false);
     }
 
-    public Value execute(Context c, Value[] values, boolean passByReference){
+    public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
         boolean pushedParent = false;
         if (parent != null && (RuntimeStack.processStack.isEmpty() || RuntimeStack.processStack.peek().UUID != parent.UUID)){
             pushedParent = true;

@@ -3,7 +3,7 @@ package com.blazingkin.interpreter.variables;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 
 public class Context {
@@ -46,7 +46,7 @@ public class Context {
 	}
 	
 
-	public Value getValue(String s){
+	public Value getValue(String s) throws BLZRuntimeException{
 		if (hasValue(s)){
 			return variables.get(s);
 		}
@@ -54,8 +54,7 @@ public class Context {
 		if (parent != null){
 			return parent.getValue(s);
 		}else{
-			Interpreter.throwError("Could not find a value for "+s);
-			return Value.nil();
+			throw new BLZRuntimeException(null,"Could not find a value for "+s );
 		}
 	}
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
@@ -64,7 +65,7 @@ public class BlockNode extends ASTNode {
         }
     }
 
-    public Value execute(Context c){
+    public Value execute(Context c) throws BLZRuntimeException{
         for (int i = 0; i < body.length - 1; i++){
             body[i].run(c);
             if (Executor.shouldBlockBreak()){

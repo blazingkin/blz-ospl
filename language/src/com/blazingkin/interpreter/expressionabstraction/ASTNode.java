@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 
@@ -18,7 +19,7 @@ public abstract class ASTNode {
 	
 	public abstract ASTNode collapse();
 	
-	public abstract Value execute(Context c);
+	public abstract Value execute(Context c) throws BLZRuntimeException;
 	
 	// This is similar to the lvalue in c
 	public abstract String getStoreName();

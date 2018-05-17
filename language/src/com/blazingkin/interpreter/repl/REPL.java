@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
@@ -67,6 +68,8 @@ public class REPL {
 					}
 					Executor.getEventHandler().print(ExpressionExecutor.parseExpression(in, replContext).toString());
 					Executor.getEventHandler().print("\n");
+				}catch(BLZRuntimeException e){
+					Interpreter.throwError(e.getMessage());
 				}catch(Exception e){
 					e.printStackTrace();
 					Interpreter.throwError(e.getMessage());

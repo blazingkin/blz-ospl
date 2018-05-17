@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -10,10 +11,14 @@ public class ValueASTNode extends ASTNode {
 	String strVal;
 	boolean isValSet = false;
 	public ValueASTNode(String val){
-		if (Variable.canGetValue(val)){
-			this.val = Variable.getValue(val);
-			isValSet = true;
-		}else{
+		try {
+			if (Variable.canGetValue(val)){
+				this.val = Variable.getValue(val);
+				isValSet = true;
+			}else{
+				this.strVal = val;
+			}
+		}catch(BLZRuntimeException e){
 			this.strVal = val;
 		}
 	}
@@ -56,7 +61,7 @@ public class ValueASTNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute(Context con) {
+	public Value execute(Context con) throws BLZRuntimeException {
 		if (isValSet){
 			return val;
 		}

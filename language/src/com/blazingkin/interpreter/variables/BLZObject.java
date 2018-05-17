@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.variables;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 
 public class BLZObject implements Cloneable {
@@ -23,6 +24,7 @@ public class BLZObject implements Cloneable {
 	}
 
 	public boolean equals(Object other){
+		try {
 		if (other instanceof BLZObject){
 			if (objectContext.hasValue("==")){
 				Value eqValue = objectContext.getValue("==");
@@ -41,19 +43,26 @@ public class BLZObject implements Cloneable {
 			}
 		}
 		return this == other;
+		}catch(BLZRuntimeException e){
+			return this == other;
+		}
 	}
 	
 	public String toString(){
-		if (objectContext.hasValue("show")){
-			Value showAs = objectContext.getValue("show");
-			if (showAs.value instanceof Closure){
-				Closure showMethod = (Closure) showAs.value;
-				Value[] args = {};
-				Value result = showMethod.execute(showMethod.context, args, false);
-				if (result.value != this){
-					return result.toString();
+		try{
+			if (objectContext.hasValue("show")){
+				Value showAs = objectContext.getValue("show");
+				if (showAs.value instanceof Closure){
+					Closure showMethod = (Closure) showAs.value;
+					Value[] args = {};
+					Value result = showMethod.execute(showMethod.context, args, false);
+					if (result.value != this){
+						return result.toString();
+					}
 				}
 			}
+		}catch(BLZRuntimeException e){
+			
 		}
 		return "<Object "+hashCode()+">";
 	}

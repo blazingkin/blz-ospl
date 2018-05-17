@@ -1,9 +1,9 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
-import com.blazingkin.interpreter.executor.astnodes.MethodNode;
+import com.blazingkin.interpreter.BLZRuntimeException;
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.executor.Executor;
 
 public class Closure extends MethodNode {
 
@@ -14,7 +14,7 @@ public class Closure extends MethodNode {
 		context = con;
 	}
 
-    public Value execute(Context c, Value[] values, boolean passByReference){
+    public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
 		Context methodContext = new Context(context);
 		if (takesVariables){
             bindArguments(values, passByReference, methodContext);

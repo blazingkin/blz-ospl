@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -22,7 +23,7 @@ public class AdditionNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){ 
+	public Value execute(Context con) throws BLZRuntimeException { 
 		return Variable.addValues(args[0].execute(con), args[1].execute(con));
 	}
 

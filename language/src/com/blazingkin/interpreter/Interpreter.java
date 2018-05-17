@@ -5,15 +5,17 @@ import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import in.blazingk.blz.packagemanager.FileImportManager;
 
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.library.BlzEventHandler;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.repl.REPL;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Variable;
+
+import in.blazingk.blz.packagemanager.FileImportManager;
 
 public class Interpreter {
 	public static boolean logging = true;
@@ -102,13 +104,14 @@ public class Interpreter {
 			}
 			runExecutor(pths, programArgs);
 		}catch(Exception e){
-			e.printStackTrace();
-			if (!Executor.getCurrentProcess().runningFromFile){
-				throwError("Error, Executor was on line "+Executor.getLine()+" in a software environment");
+			if (e instanceof BLZRuntimeException) {
+				throwError(e.getMessage());
+			}else if (e instanceof SyntaxException) {
+				throwError(e.getMessage());	
 			}else{
-				throwError("Error, Executor was on line "+Executor.getLine()+ " in file: "+Executor.getRunningProcesses().peek().readingFrom.getAbsolutePath());
-				}		
+				e.printStackTrace();
 			}
+		}
 	}
 	
 	

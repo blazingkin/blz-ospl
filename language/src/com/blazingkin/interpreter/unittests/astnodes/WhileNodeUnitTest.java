@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.unittests.astnodes;
 
 import static com.blazingkin.interpreter.unittests.UnitTestUtil.assertEqual;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.WhileNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
@@ -26,13 +27,13 @@ public class WhileNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldNotRunWithFalseValue() {
+	public void shouldNotRunWithFalseValue() throws BLZRuntimeException {
 		WhileNode wn = new WhileNode(new ValueASTNode(Value.bool(false)), new ValueASTNode(Value.integer(3)));
 		UnitTestUtil.assertNil(wn.execute(new Context()));
 	}
 	
 	@Test
-	public void shouldReturnLastStatementExecuted() {
+	public void shouldReturnLastStatementExecuted() throws BLZRuntimeException {
 		Context testCon = new Context();
 		testCon.setValue("a", Value.integer(0));
 		WhileNode wn = new WhileNode(ExpressionParser.parseExpression("a < 3"), ExpressionParser.parseExpression("a++"));

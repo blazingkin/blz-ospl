@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -21,7 +22,7 @@ public class ArrayLookupNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		if (args[0].getStoreName() == null){
 			Value arr = args[0].execute(con);
 			if (arr.type == VariableTypes.String){ 
@@ -30,7 +31,7 @@ public class ArrayLookupNode extends BinaryNode {
 				return new Value(VariableTypes.String, s.substring(index, index+1));
 			}
 			if (arr.type != VariableTypes.Array){
-				Interpreter.throwError("Did not know how to access "+args[0]+" as an array.");
+				throw new BLZRuntimeException(this, "Did not know how to access "+args[0]+" as an array.");
 			}
 			BigInteger index = Variable.getIntValue(args[1].execute(con));
 			return Variable.getValueOfArray(arr, index);

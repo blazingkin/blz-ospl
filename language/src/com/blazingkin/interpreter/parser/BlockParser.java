@@ -31,7 +31,7 @@ public class BlockParser {
     }
 
     private static boolean isEnd(String line){
-		return line.length() >= 3 && (line.charAt(0) == 'e' || line.charAt(0) == 'E') &&
+		return line.length() == 3 && (line.charAt(0) == 'e' || line.charAt(0) == 'E') &&
 									(line.charAt(1) == 'n' || line.charAt(1) == 'N') && 
 									(line.charAt(2) == 'd' || line.charAt(2) == 'D');	
 	}

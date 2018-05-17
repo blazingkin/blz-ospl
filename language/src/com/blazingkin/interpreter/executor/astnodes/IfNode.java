@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.variables.Context;
@@ -22,15 +23,19 @@ public class IfNode extends ASTNode {
 
 	@Override
 	public ASTNode collapse() {
-		if (condition.execute(new Context()).equals(TRUE_VAL)){
-			return mainBlock;
-		}else{
-			return elseBlock;
+		try {
+			if (condition.execute(new Context()).equals(TRUE_VAL)){
+				return mainBlock;
+			}else{
+				return elseBlock;
+			}
+		}catch (BLZRuntimeException e){
+			return this;
 		}
 	}
 
 	@Override
-	public Value execute(Context con) {
+	public Value execute(Context con) throws BLZRuntimeException {
 		if (condition.execute(con).equals(TRUE_VAL)){
 			return mainBlock.execute(con);
 		}else{

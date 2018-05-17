@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.SubtractionNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
@@ -37,28 +38,28 @@ public class SubtractionNodeUnitTest {
     }
     
     @Test
-    public void shouldProperlySubtractIntegers(){
+    public void shouldProperlySubtractIntegers() throws BLZRuntimeException {
         ASTNode args[] = {new ValueASTNode("3"), new ValueASTNode("1")};
         Value result = new SubtractionNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.integer(2));
     }
     
     @Test
-    public void shouldProperlySubtractDoubles(){
+    public void shouldProperlySubtractDoubles() throws BLZRuntimeException {
         ASTNode args[] = {new ValueASTNode("2.4"), new ValueASTNode("0.9")};
         Value result = new SubtractionNode(args).execute(new Context());
         UnitTestUtil.assertAlmostEqual(result, Value.doub(1.5d));
     }
 
     @Test
-    public void shouldFailToSubtractStrings(){
+    public void shouldFailToSubtractStrings() throws BLZRuntimeException {
         ASTNode args[] = {new ValueASTNode("\"asdf\""), new ValueASTNode("\"asd\"")};
         new SubtractionNode(args).execute(new Context());
         UnitTestUtil.assertLastError("Failed Subtracting Values asdf and asd");
     }
 
     @Test
-    public void shouldSubtractRationals(){
+    public void shouldSubtractRationals() throws BLZRuntimeException {
         Value half = Value.rational(1, 2);
         ASTNode args[] = {new ValueASTNode("1"), new ValueASTNode(half)};
         Value result = new SubtractionNode(args).execute(new Context());

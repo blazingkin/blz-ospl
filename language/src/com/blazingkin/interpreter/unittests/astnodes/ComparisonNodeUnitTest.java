@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.ComparisonNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
@@ -31,35 +32,35 @@ public class ComparisonNodeUnitTest {
     }
 
     @Test
-    public void shouldSayTrueIsTrue(){
+    public void shouldSayTrueIsTrue() throws BLZRuntimeException{
         ASTNode[] args = {new ValueASTNode("true"), new ValueASTNode("true")};
         Value result = new ComparisonNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.bool(true));
     }
 
     @Test
-    public void shouldSayFalseIsFalse(){
+    public void shouldSayFalseIsFalse() throws BLZRuntimeException{
         ASTNode[] args = {new ValueASTNode("false"), new ValueASTNode("false")};
         Value result = new ComparisonNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.bool(true));
     }
 
     @Test
-    public void shouldSayFalseIsNotTrue(){
+    public void shouldSayFalseIsNotTrue() throws BLZRuntimeException{
         ASTNode[] args = {new ValueASTNode("false"), new ValueASTNode("true")};
         Value result = new ComparisonNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.bool(false));
     }
 
     @Test
-    public void shouldSayStringsAreTheSame(){
+    public void shouldSayStringsAreTheSame() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("\"asdf\""), new ValueASTNode("\"asdf\"")};
         Value result = new ComparisonNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.bool(true));
     }
 
     @Test
-    public void shouldSayDifferentStringsAreDifferent(){
+    public void shouldSayDifferentStringsAreDifferent() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("\"asdf\""), new ValueASTNode("\"asd\"")};
         Value result = new ComparisonNode(args).execute(new Context());
         UnitTestUtil.assertEqual(result, Value.bool(false));

@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.LessThanEqualsNode;
 import com.blazingkin.interpreter.executor.astnodes.LessThanNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
@@ -24,35 +25,35 @@ public class LessThanOrEqualNodeUnitTest {
     }
     
     @Test
-    public void equalValuesShouldBeLessThanOrEqual(){
+    public void equalValuesShouldBeLessThanOrEqual() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("2"), new ValueASTNode("2")};
         LessThanEqualsNode node = new LessThanEqualsNode(args);
         UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context()));
     }
 
     @Test
-    public void lessThanValuesShouldBeLessThanOrEqual(){
+    public void lessThanValuesShouldBeLessThanOrEqual() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("2"), new ValueASTNode("3")};
         LessThanEqualsNode node = new LessThanEqualsNode(args);
         UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context()));
     }
 
     @Test
-    public void greaterThanValuesShouldNotBeLessThanOrEqual(){
+    public void greaterThanValuesShouldNotBeLessThanOrEqual() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("3"), new ValueASTNode("2")};
         LessThanEqualsNode node = new LessThanEqualsNode(args);
         UnitTestUtil.assertEqual(Value.bool(false), node.execute(new Context()));
     }
 
     @Test
-    public void shouldCompareStrings(){
+    public void shouldCompareStrings() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("\"a\""), new ValueASTNode("\"b\"")};
         LessThanNode node = new LessThanNode(args);
         UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context()));
     }
 
     @Test
-    public void shouldCompareStringsTwo(){
+    public void shouldCompareStringsTwo() throws BLZRuntimeException {
         ASTNode[] args = {new ValueASTNode("\"b\""), new ValueASTNode("\"a\"")};
         LessThanEqualsNode node = new LessThanEqualsNode(args);
         UnitTestUtil.assertEqual(Value.bool(false), node.execute(new Context()));

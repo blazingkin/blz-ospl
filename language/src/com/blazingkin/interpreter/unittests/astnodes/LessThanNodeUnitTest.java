@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
@@ -22,17 +23,17 @@ public class LessThanNodeUnitTest {
 	}
 	
 	@Test 
-	public void StringsShouldBeSortable() {
+	public void StringsShouldBeSortable() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression("\"a\" < \"b\"").execute(new Context()));
 	}
 	
 	@Test
-	public void TwoShouldBeLessThanThree() {
+	public void TwoShouldBeLessThanThree() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression("2 < 3").execute(new Context()));
 	}
 	
 	@Test
-	public void TwoShouldNotBeLessThanTwo() {
+	public void TwoShouldNotBeLessThanTwo() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.bool(false), ExpressionParser.parseExpression("2 < 2").execute(new Context()));
 	}
 

@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
@@ -18,7 +19,7 @@ public class ArrayLiteralNode extends UnaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		return Value.arr(ExpressionExecutor.extractCommaDelimits(args[0], con));
 	}
 

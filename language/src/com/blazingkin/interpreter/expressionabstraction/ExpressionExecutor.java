@@ -2,31 +2,32 @@ package com.blazingkin.interpreter.expressionabstraction;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.parser.ExpressionParser;
 
 public class ExpressionExecutor {
 	
 	public static double EPSILON = 1E-8; 
 	
-	public static Value parseExpression(String line, Context con){
+	public static Value parseExpression(String line, Context con) throws BLZRuntimeException{
 		return ExpressionParser.parseExpression(line).execute(con);
 	}
 	
-	public static Value parseExpression(String line){
+	public static Value parseExpression(String line) throws BLZRuntimeException{
 		return parseExpression(line, Executor.getCurrentContext());
 	}
 	
-	public static Value[] extractCommaDelimits(ASTNode root, Context con){
+	public static Value[] extractCommaDelimits(ASTNode root, Context con) throws BLZRuntimeException{
 		ArrayList<Value> helperCall = extractCommaDelimitsHelper(root, con);
 		Value[] newVals = new Value[helperCall.size()];
 		helperCall.toArray(newVals);
 		return newVals;
 	}
 	
-	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root, Context con){
+	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root, Context con) throws BLZRuntimeException{
 		if (root == null){
 			return new ArrayList<Value>();
 		}

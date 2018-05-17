@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.astnodes;
 
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -24,7 +25,7 @@ public class DotOperatorNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		Value object = args[0].execute(con);
 		if (object.type != VariableTypes.Object){
 			boolean passByReference = false;

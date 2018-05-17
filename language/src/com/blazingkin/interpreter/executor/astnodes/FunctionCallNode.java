@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
@@ -31,13 +32,13 @@ public class FunctionCallNode extends BinaryNode {
 	}
 	
 	@Override
-	public Value execute(Context con){
+	public Value execute(Context con) throws BLZRuntimeException {
 		Value methodVal = args[0].execute(con);
 		if (methodVal.type != VariableTypes.Method &&
 			methodVal.type != VariableTypes.PrimitiveMethod &&
 			methodVal.type != VariableTypes.Closure &&
 			methodVal.type != VariableTypes.Constructor){
-			Interpreter.throwError("Tried to call a non-method "+methodVal);
+				throw new BLZRuntimeException(this, "Tried to call a non-method "+methodVal);
 		}
 		Value[] args;
 		if (this.args.length == 1){	// No Args

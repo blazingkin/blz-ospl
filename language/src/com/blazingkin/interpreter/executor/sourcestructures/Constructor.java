@@ -3,7 +3,7 @@ package com.blazingkin.interpreter.executor.sourcestructures;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
@@ -76,7 +76,7 @@ public class Constructor {
 		return parent;
 	}
 	
-	public static Value initialize(Constructor con, Value[] args, boolean passByReference){
+	public static Value initialize(Constructor con, Value[] args, boolean passByReference) throws BLZRuntimeException{
 		BLZObject newObj = new BLZObject();
 		setReferences(con, newObj); 
 		initializeArguments(con, newObj, args, passByReference);
@@ -108,9 +108,9 @@ public class Constructor {
 	}
 	
 	private static void initializeArguments(Constructor constructor, BLZObject newObj,
-											Value[] args, boolean passByReference){
+											Value[] args, boolean passByReference) throws BLZRuntimeException{
 		if (args.length > constructor.argumentNames.length){
-			Interpreter.throwError("Too many arguments passed to constructor " + constructor.name);
+			throw new BLZRuntimeException(null, "Too many arguments passed to constructor " + constructor.name);
 		}
 		if (constructor.takesArguments){
 			if (passByReference){
@@ -121,6 +121,10 @@ public class Constructor {
 				for (int i = 0; i < args.length; i++){
 					newObj.objectContext.setValueInPresent(constructor.argumentNames[i], args[i].clone());
 				}
+			}
+			/* Set all unpassed arguments to nil */
+			for (int i = args.length; i < constructor.argumentNames.length; i++){
+				newObj.objectContext.setValueInPresent(constructor.argumentNames[i], Value.nil());
 			}
 		}
 	}

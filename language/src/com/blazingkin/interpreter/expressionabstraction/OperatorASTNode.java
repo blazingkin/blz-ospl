@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.AdditionNode;
 import com.blazingkin.interpreter.executor.astnodes.ApproximateComparisonNode;
 import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
@@ -103,7 +104,11 @@ public abstract class OperatorASTNode extends ASTNode {
 	@Override
 	public ASTNode collapse() {
 		if (canCollapse()){
-			return new ValueASTNode(execute(new Context()));
+			try {
+				return new ValueASTNode(execute(new Context()));
+			}catch(BLZRuntimeException e){
+				return this;
+			}
 		}else{
 			if (args != null){
 				ASTNode[] newChildren = new ASTNode[args.length];

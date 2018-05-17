@@ -23,8 +23,8 @@ public class FileOutput implements InstructionExecutorStringArray {
 				filePath = filePath + "";
 			}
 		}
-		filePath = Variable.getValue(filePath).value.toString();	
 		try{
+			filePath = Variable.getValue(filePath).value.toString();
 			File f = new File(filePath);
 			if (!f.exists()){
 				f.createNewFile();

@@ -1,11 +1,12 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
-import com.blazingkin.interpreter.executor.Executor;
 
 public class WhileNode extends ASTNode {
 	private final static Value TRUE_VAL = Value.bool(true);
@@ -28,7 +29,7 @@ public class WhileNode extends ASTNode {
 	}
 
 	@Override
-	public Value execute(Context con) {
+	public Value execute(Context con) throws BLZRuntimeException {
 		Value cache = NULL_VAL;
 		while (!shouldStop() && term.execute(con).equals(TRUE_VAL)){
 			cache = block.execute(con);

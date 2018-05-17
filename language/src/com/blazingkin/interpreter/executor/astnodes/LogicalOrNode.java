@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
@@ -18,10 +19,10 @@ public class LogicalOrNode extends BinaryNode {
 	}
 
 	@Override
-	public Value execute(Context c) {
+	public Value execute(Context c) throws BLZRuntimeException {
 		Value left = args[0].execute(c);
 		if (left.type != VariableTypes.Boolean){
-			Interpreter.throwError("Logical Or given non-boolean: "+left);
+			throw new BLZRuntimeException(this, "Logical Or given non-boolean: "+left);
 		}
 		if (((boolean) left.value)){
 			// Short circuit if we can
@@ -29,7 +30,7 @@ public class LogicalOrNode extends BinaryNode {
 		}
 		Value right = args[1].execute(c);
 		if (right.type != VariableTypes.Boolean){
-			Interpreter.throwError("Logical Or given non-boolean: "+right);
+			throw new BLZRuntimeException(this, "Logical Or given non-boolean: "+right);
 		}
 		return right;
 	}

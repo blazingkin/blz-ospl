@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
@@ -65,7 +66,7 @@ public class Variable {
 	}
 	
 	//Gets a local value (the scope of these variables is the function they are declared in
-	public static Value getValue(String key){
+	public static Value getValue(String key) throws BLZRuntimeException {
 		return getValue(key, Executor.getCurrentContext());
 	}
 	
@@ -77,10 +78,6 @@ public class Variable {
 		return ret;
 	}
 	
-	//This gets a global value (i.e. its scope is the entire program)
-	public static Value getGlobalValue(String key){
-		return getValue(key, getGlobalContext());
-	}
 	
 	public static Value addValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
@@ -211,7 +208,7 @@ public class Variable {
 	}
 	
 	
-	public static Value getValue(String line, Context con){
+	public static Value getValue(String line, Context con) throws BLZRuntimeException {
 		if (Variable.isDouble(line)){	//If its a double, then return it
 			if (isInteger(line)){	//If its an integer, then return it
 				return new Value(VariableTypes.Integer, new BigInteger(line));
@@ -406,7 +403,7 @@ public class Variable {
 		}
 	}
 	
-	public static Value getValueOfArray(String arrayName, BigInteger index, Context con){
+	public static Value getValueOfArray(String arrayName, BigInteger index, Context con) throws BLZRuntimeException {
 		Value v = con.getValue(arrayName);
 		if (v.value instanceof Value[]){
 			Value[] arr = (Value[]) v.value;
@@ -427,7 +424,7 @@ public class Variable {
 		return (Value) arr.get(index);
 	}
 	
-	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con){
+	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con) throws BLZRuntimeException {
 		Value arr = con.getValue(arrayName);
 		if (arr.type != VariableTypes.Array){
 			Interpreter.throwError(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
@@ -450,14 +447,14 @@ public class Variable {
 		}
 	}
 	
-	public static void setValueOfHash(String hashName, Value key, Value newVal, Context con){
+	public static void setValueOfHash(String hashName, Value key, Value newVal, Context con) throws BLZRuntimeException {
 		if (!con.variables.containsKey(hashName)){
 			HashMap<Value, Value> newHash = new HashMap<Value, Value>();
 			newHash.put(key, newVal);
 			con.setValue(hashName, new Value(VariableTypes.Hash, newHash));
 			return;
 		}
-		Value hash = getValue(hashName, con);
+		Value hash = con.getValue(hashName);
 		if (hash.type != VariableTypes.Hash){
 			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
 		}
@@ -466,7 +463,7 @@ public class Variable {
 		hsh.put(key, newVal);
 	}
 	
-	public static Value getValueOfHash(String hashName, Value key, Context con){
+	public static Value getValueOfHash(String hashName, Value key, Context con) throws BLZRuntimeException {
 		Value hash = con.getValue(hashName);
 		if (hash.type != VariableTypes.Hash){
 			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
@@ -553,7 +550,7 @@ public class Variable {
 		return BigDecimalMath.exp(exponent.multiply(BigDecimalMath.log(base))).stripTrailingZeros();
 	}
 
-	public static VariableTypes typeOf(String name, Context con){
+	public static VariableTypes typeOf(String name, Context con) throws BLZRuntimeException{
 		return getValue(name, con).type;
 	}
 

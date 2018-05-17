@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.LogicalOrNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
@@ -31,7 +32,7 @@ public class LogicalOrNodeUnitTest {
 	}
 	
 	@Test
-	public void TestShouldReturnCorrectValueOne(){
+	public void TestShouldReturnCorrectValueOne() throws BLZRuntimeException {
 		ASTNode args[] = {new ValueASTNode(Value.bool(false)), new ValueASTNode(Value.bool(false))};
 		LogicalOrNode node = new LogicalOrNode(args);
 		UnitTestUtil.assertEqual(Value.bool(false), node.execute(new Context(null)));
@@ -39,21 +40,21 @@ public class LogicalOrNodeUnitTest {
 	}
 
 	@Test
-	public void TestShouldReturnCorrectValueTwo(){
+	public void TestShouldReturnCorrectValueTwo() throws BLZRuntimeException {
 		ASTNode args[] = {new ValueASTNode(Value.bool(false)), new ValueASTNode(Value.bool(true))};
 		LogicalOrNode node = new LogicalOrNode(args);
 		UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context(null)));
 		UnitTestUtil.assertNoErrors();
 	}
 	@Test
-	public void TestShouldReturnCorrectValueThree(){
+	public void TestShouldReturnCorrectValueThree() throws BLZRuntimeException {
 		ASTNode args[] = {new ValueASTNode(Value.bool(true)), new ValueASTNode(Value.bool(false))};
 		LogicalOrNode node = new LogicalOrNode(args);
 		UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context(null)));
 		UnitTestUtil.assertNoErrors();
 	}
 	@Test
-	public void TestShouldReturnCorrectValueFour(){
+	public void TestShouldReturnCorrectValueFour() throws BLZRuntimeException {
 		ASTNode args[] = {new ValueASTNode(Value.bool(true)), new ValueASTNode(Value.bool(true))};
 		LogicalOrNode node = new LogicalOrNode(args);
 		UnitTestUtil.assertEqual(Value.bool(true), node.execute(new Context(null)));
@@ -61,7 +62,7 @@ public class LogicalOrNodeUnitTest {
 	}
 	
 	@Test
-	public void TestShortCircuiting(){
+	public void TestShortCircuiting() throws BLZRuntimeException {
 		/* Variable lookup should fail if it gets there */
 		ASTNode args[] = {new ValueASTNode(Value.bool(true)), new ValueASTNode("asdf")};
 		LogicalOrNode node = new LogicalOrNode(args);
