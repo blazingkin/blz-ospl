@@ -14,6 +14,7 @@ import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.executor.Executor;
 
 public class MethodNode extends ASTNode {
@@ -69,6 +70,7 @@ public class MethodNode extends ASTNode {
             bindArguments(values, passByReference, methodContext);
         }
         Value result = body.execute(methodContext);
+        Variable.killContext(methodContext);
         if(pushedParent){
             RuntimeStack.pop();
         }
@@ -91,16 +93,16 @@ public class MethodNode extends ASTNode {
         int variableCount = (variables.length > values.length?values.length:variables.length);
         if (passByReference){
             for (int i = 0; i < variableCount; i++){
-                methodContext.setValue(variables[i], values[i]);
+                methodContext.setValueInPresent(variables[i], values[i]);
             }
         }else{
             for (int i = 0; i < variableCount; i++){
-                methodContext.setValue(variables[i], (values[i]).clone());
+                methodContext.setValueInPresent(variables[i], (values[i]).clone());
             }
         }
         /* Bind variables that weren't passed to nil */
         for (int i = variableCount; i < variables.length; i++) {
-            methodContext.setValue(variables[i], Value.nil());
+            methodContext.setValueInPresent(variables[i], Value.nil());
         }
     }
 

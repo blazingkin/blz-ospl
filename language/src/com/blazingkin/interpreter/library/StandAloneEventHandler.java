@@ -18,12 +18,10 @@ public class StandAloneEventHandler implements BlzEventHandler {
 	private static OutputStream out = new BufferedOutputStream(System.out);
 	private static BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 	
-	private static boolean flushScheduled = false;
 	final Runnable flush = new Runnable() {
 		public void run() { 
 			try{
 				writer.flush(); 
-				flushScheduled = false;
 			}catch(Exception e){
 				
 			}
@@ -38,10 +36,6 @@ public class StandAloneEventHandler implements BlzEventHandler {
 		//System.out.print(contents);
 		try{
 			writer.write(contents);
-			if (!flushScheduled){
-				
-			}
-			flushScheduled = true;
 		}catch(Exception e){
 			System.out.print(contents);
 		}

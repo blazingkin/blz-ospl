@@ -14,7 +14,6 @@ public class RuntimeStack {
 	public static ArrayDeque<RuntimeStackElement> runtimeStack = new ArrayDeque<RuntimeStackElement>();
 	public static ArrayDeque<Process> processStack = new ArrayDeque<Process>();
 	public static ArrayDeque<Context> contextStack = new ArrayDeque<Context>();
-	public static ArrayDeque<Integer> processLineStack = new ArrayDeque<Integer>();
 	public static ArrayDeque<Context> processContextStack = new ArrayDeque<Context>();
 	
 	public static void push(RuntimeStackElement se) throws BLZRuntimeException{
@@ -23,7 +22,6 @@ public class RuntimeStack {
 			processStack.push((Process) se);
 			contextStack.push(new Context(Variable.getGlobalContext()));
 			processContextStack.push(contextStack.peek());
-			processLineStack.push(Executor.getLine());
 		}
 		se.onBlockStart();
 	}
@@ -34,7 +32,6 @@ public class RuntimeStack {
 			processStack.pop();
 			processContextStack.pop();
 			Variable.killContext(contextStack.pop());
-			Executor.setLine(processLineStack.pop());
 		}
 		se.onBlockEnd();
 		if (runtimeStack.size() == 0 && !Executor.immediateMode){

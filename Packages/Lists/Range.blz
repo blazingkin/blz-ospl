@@ -1,13 +1,13 @@
 :range(start_or_end, end)
     if end == {blz.nil}
         arr = []
-        for i = 0; i < start_or_end; i++
+        for i = start_or_end - 1; i >= 0; i--
             arr[i] = i
         end
         arr
     else
         arr = []
-        for i = start_or_end; i < end; i++
+        for i = end - 1; i >= start_or_end; i--
             arr[i - start_or_end] = i
         end
         arr

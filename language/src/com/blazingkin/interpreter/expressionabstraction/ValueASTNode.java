@@ -52,7 +52,7 @@ public class ValueASTNode extends ASTNode {
 
 	@Override
 	public boolean canCollapse() {
-		return isValSet || Variable.canGetValue(strVal);
+		return false;
 	}
 
 	@Override

@@ -59,7 +59,6 @@ public class Executor {
 		// puts the file passed to us as the current process
 		importCore();
 		RuntimeStack.push(FileImportManager.importFile(runFile.toPath()));	
-		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(new StandAloneEventHandler());
 		MethodNode startMethod = getMethodInCurrentProcess(startingMethod);
 		if (startMethod != null){
@@ -77,7 +76,6 @@ public class Executor {
 			}
 		}
 		RuntimeStack.push(new Process(code));
-		RuntimeStack.processLineStack.push(-1);
 		setEventHandler(handler);
 		MethodNode startMethod = getMethodInCurrentProcess(startingMethod);
 		importCore();

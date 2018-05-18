@@ -12,3 +12,9 @@
 	end
 	return arr
 end
+
+:array(count)
+	arr = []
+	arr[count - 1] = {blz.nil}
+	arr
+end

@@ -83,6 +83,7 @@ public class REPL {
 						);
 						Executor.getEventHandler().print("\n");
 						inputBuffer.clear();
+						System.gc();
 					}catch(SyntaxException e){
 						/* Block was incomplete */
 					}
