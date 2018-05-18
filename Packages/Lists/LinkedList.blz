@@ -1,0 +1,32 @@
+constructor LinkedList(value, next)
+
+    :add_at_beginning(value)
+        LinkedList(value, this)
+    end
+
+    :add(value)
+        if next.nil?()
+            next = LinkedList(value)
+        else
+            next.add(value)
+        end
+    end
+
+    :length
+        if next.nil?()
+            1
+        else
+            1 + next.length()
+        end
+    end
+
+    :show
+        if next.nil?()
+            value
+        else
+            value + ", " + next
+        end
+    end
+
+
+end
