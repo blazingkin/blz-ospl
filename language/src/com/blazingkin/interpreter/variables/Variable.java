@@ -82,7 +82,7 @@ public class Variable {
 	
 	public static Value addValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, getIntValue(v1).add(getIntValue(v2)));
+			return new Value(VariableTypes.Integer, ((BigInteger) v1.value).add((BigInteger)v2.value));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
 				(v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double)){
@@ -106,7 +106,7 @@ public class Variable {
 	
 	public static Value subValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, getIntValue(v1).subtract(getIntValue(v2)));
+			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).subtract((BigInteger)v2.value));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
 				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
