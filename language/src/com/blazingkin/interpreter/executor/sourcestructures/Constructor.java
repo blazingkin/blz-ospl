@@ -96,11 +96,32 @@ public class Constructor {
 		return Value.obj(newObj);
 	}
 	
+	/* Create a nil? node to add to all objects */
+	private static MethodNode nilHuhNode() {
+		try {
+			if (nilHuh != null){
+				return nilHuh;
+			}
+			ArrayList<Either<String, ParseBlock>> body = new ArrayList<Either<String, ParseBlock>>();
+			body.add(Either.left("false"));
+			nilHuh = new MethodNode(":nil?", body, null);
+			return nilHuh;
+		}catch(Exception e){
+			return null;
+		}
+	}
+
+
+	private static MethodNode nilHuh;
+
 	/* Set all the 'this' references 
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
 		newObj.objectContext.setValueInPresent("this", Value.obj(newObj));
 		newObj.objectContext.setValueInPresent("constructor", Value.constructor(constructor));
+		/* Normally this would be part of the standard library, but */
+		/* This must be added programatically since objects won't look at primitive contexts */
+		newObj.objectContext.setValue("nil?", Value.method(nilHuhNode()));
 		for (MethodNode m : constructor.getParent().importedMethods){
 			newObj.objectContext.setValueInPresent(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}

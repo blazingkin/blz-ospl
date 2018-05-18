@@ -49,6 +49,8 @@ public class ConstructorUnitTest {
 			UnitTestUtil.assertEqual(result.type, VariableTypes.Object);
 			BLZObject obj = (BLZObject) result.value;
 			UnitTestUtil.assertEqual(result, obj.objectContext.getValue("this"));
+			UnitTestUtil.assertEqual(true, obj.objectContext.hasValue("nil?"));
+			UnitTestUtil.assertEqual(VariableTypes.Method, obj.objectContext.getValue("nil?").type);
 			UnitTestUtil.assertEqual(Value.integer(5), obj.objectContext.getValue("radius"));
 			UnitTestUtil.assertEqual(Value.string("blue"), obj.objectContext.getValue("color"));
 		}catch(BLZRuntimeException e){
