@@ -28,5 +28,13 @@ constructor LinkedList(value, next)
         end
     end
 
+    :==(other)
+        if other.nil?()
+            false
+        else
+            this.value == other.value && this.next == other.next
+        end
+    end
+
 
 end

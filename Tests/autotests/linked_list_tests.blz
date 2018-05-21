@@ -1,0 +1,10 @@
+import Lists
+import Test
+:main
+    list = LinkedList(2)
+    expect(list).is(LinkedList(2))
+    list.add(3)
+    expect(list).is(LinkedList(2, LinkedList(3)))
+    expect(list.length()).is(2)
+    expect(list).is_not(LinkedList(2))
+end
