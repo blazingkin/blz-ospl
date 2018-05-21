@@ -11,10 +11,10 @@ import com.blazingkin.interpreter.executor.executionorder.Exit;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
 import com.blazingkin.interpreter.executor.filesystem.CloseResource;
 import com.blazingkin.interpreter.executor.filesystem.CreateResource;
+import com.blazingkin.interpreter.executor.filesystem.CreateResourceFromFilePath;
 import com.blazingkin.interpreter.executor.filesystem.OpenResource;
 import com.blazingkin.interpreter.executor.filesystem.ScannerHasNext;
 import com.blazingkin.interpreter.executor.filesystem.ScannerReadNext;
-import com.blazingkin.interpreter.executor.input.FileInput;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.output.BLZLogging;
@@ -36,7 +36,6 @@ public enum Instruction {
 	RANDOM("RAND", "Random", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
 	STRINGINPUT("STRIN", "Read stdin", new StringInput()),								// Input String - gets a string through input
 	WAIT("WAIT", "Wait", new Wait()),												//Wait - Waits a given time on this instruction
-	FILEINPUT("FILEIN", "File in", new FileInput()),
 	FILEOUTPUT("FILEOUT", "File out", new FileOutput()),
 	STRINGLENGTH("SLEN", "String length", new Length(true)),
 	ARRAYLENGTH("ALEN", "Array length", new Length(false)),
@@ -50,6 +49,7 @@ public enum Instruction {
 	ARRAYREBIND("BLZINTERNALREBIND", "Array rebind", new Rebind()),
 	CREATERESOURCE("BLZINTERNALCREATERESOURCE", "Create resource", new CreateResource()),
 	OPENRESOURCE("BLZINTERNALOPENRESOURCE", "Open resource", new OpenResource()),
+	GETRESOURCEFROMFILEPATH("BLZINTERNALBLZGETFILEATPATH", "Get resource at path", new CreateResourceFromFilePath()),
 	CLOSERESOURCE("BLZINTERNALCLOSERESOURCE", "Close resource", new CloseResource()),
 	SCANNERHASNEXT("BLZINTERNALSCANNERHASNEXT", "Scanner has next byte", new ScannerHasNext()),
 	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext());

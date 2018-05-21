@@ -10,6 +10,6 @@ public abstract interface InstructionExecutorValue extends InstructionExecutor {
 		return run(ExpressionExecutor.parseExpression(line, con));
 	}
 	
-	public abstract Value run(Value val);		//All of the Executors Implement this interface so that they can be referenced from an enum
+	public abstract Value run(Value val) throws BLZRuntimeException;		//All of the Executors Implement this interface so that they can be referenced from an enum
 
 }

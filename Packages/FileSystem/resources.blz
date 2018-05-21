@@ -1,6 +1,5 @@
 :file_resource(name)
-    name = "file://" + name
-    BLZINTERNALCREATERESOURCE name
+    BLZINTERNALBLZGETFILEATPATH name
 end
 
 :http_resource(name)

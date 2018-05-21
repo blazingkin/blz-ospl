@@ -14,10 +14,6 @@ end
 	strin a
 end
 
-:read_file(path)
-	filein x path
-end
-
 :write_file_lines(path, contents)
 	print(contents)
 end
