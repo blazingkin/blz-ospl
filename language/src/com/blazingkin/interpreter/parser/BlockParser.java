@@ -58,6 +58,9 @@ public class BlockParser {
 		if (line.startsWith("while")){
 			return true;
 		}
+		if (line.startsWith("try")){
+			return true;
+		}
 		return false;
     }
 

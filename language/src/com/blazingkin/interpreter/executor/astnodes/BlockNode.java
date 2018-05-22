@@ -16,6 +16,7 @@ import com.blazingkin.interpreter.parser.ForBlockParser;
 import com.blazingkin.interpreter.parser.IfBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.parser.TryCatchBlockParser;
 import com.blazingkin.interpreter.parser.WhileBlockParser;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -25,6 +26,7 @@ public class BlockNode extends ASTNode {
     private static IfBlockParser ifParser = new IfBlockParser();
     private static ForBlockParser forParser = new ForBlockParser();
     private static WhileBlockParser whileParser = new WhileBlockParser();
+    private static TryCatchBlockParser tryCatchParser = new TryCatchBlockParser();
 
     RegisteredLine body[];
     boolean shouldClearReturns;
@@ -53,6 +55,8 @@ public class BlockNode extends ASTNode {
                     lines.add(new RegisteredLine(forParser.parseBlock(block)));
                 }else if (whileParser.shouldParse(block.getHeader())){
                     lines.add(new RegisteredLine(whileParser.parseBlock(block)));
+                }else if (tryCatchParser.shouldParse(block.getHeader())){
+                    lines.add(new RegisteredLine(tryCatchParser.parseBlock(block)));
                 }
             }
         }

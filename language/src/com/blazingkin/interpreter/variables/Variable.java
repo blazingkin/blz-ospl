@@ -153,25 +153,29 @@ public class Variable {
 		return new Value(VariableTypes.Nil, null);
 	}
 	
-	public static Value divVals(Value top, Value bottom){
-		if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
-			return Value.rational((BigInteger)top.value, (BigInteger)bottom.value);
-		}
-		if (Variable.isValRational(top) && Variable.isValRational(bottom)){
-			BLZRational toprat = Variable.getRationalVal(top);
-			BLZRational botrat = Variable.getRationalVal(bottom);
-			BLZRational botratopp = getRationalVal(Value.rational(botrat.den, botrat.num));
-			BLZRational prod = toprat.multiply(botratopp);
-			if (prod.den.equals(BigInteger.ONE)){
-				return new Value(VariableTypes.Integer, prod.num);
+	public static Value divVals(Value top, Value bottom) throws BLZRuntimeException {
+		try {
+			if (top.type == VariableTypes.Integer && bottom.type == VariableTypes.Integer){
+				return Value.rational((BigInteger)top.value, (BigInteger)bottom.value);
 			}
-			return new Value(VariableTypes.Rational, prod);
-		}
-		if ((Variable.isValDouble(top) || Variable.isValRational(top))
-				&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
-			BigDecimal dtop = Variable.getDoubleVal(top);
-			BigDecimal dbot = Variable.getDoubleVal(bottom);
-			return new Value(VariableTypes.Double, dtop.divide(dbot, MathContext.DECIMAL128));
+			if (Variable.isValRational(top) && Variable.isValRational(bottom)){
+				BLZRational toprat = Variable.getRationalVal(top);
+				BLZRational botrat = Variable.getRationalVal(bottom);
+				BLZRational botratopp = getRationalVal(Value.rational(botrat.den, botrat.num));
+				BLZRational prod = toprat.multiply(botratopp);
+				if (prod.den.equals(BigInteger.ONE)){
+					return new Value(VariableTypes.Integer, prod.num);
+				}
+				return new Value(VariableTypes.Rational, prod);
+			}
+			if ((Variable.isValDouble(top) || Variable.isValRational(top))
+					&& (Variable.isValDouble(bottom) || Variable.isValRational(bottom))){
+				BigDecimal dtop = Variable.getDoubleVal(top);
+				BigDecimal dbot = Variable.getDoubleVal(bottom);
+				return new Value(VariableTypes.Double, dtop.divide(dbot, MathContext.DECIMAL128));
+			}
+		}catch(ArithmeticException e){
+			throw new BLZRuntimeException(null, "Attempted to divide by 0!");
 		}
 		Interpreter.throwError("Could not convert one of "+top+" or "+bottom+" to a dividable type");
 		return new Value(VariableTypes.Nil, null);

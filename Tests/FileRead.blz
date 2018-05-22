@@ -1,4 +1,6 @@
+import FileSystem
+
 :main
-	file = read_file("FileRead.dat")
+	file = open("FileRead.dat").read_lines()
 	print(file)
 end
