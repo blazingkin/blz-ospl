@@ -1,0 +1,9 @@
+:main
+	try
+		1 / 0
+		print("unreachable!")
+	catch
+		print("fell into catch block")
+	end
+	print("finished catch block")
+end
