@@ -1,12 +1,13 @@
 package com.blazingkin.interpreter.executor.filesystem;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class CreateResource implements InstructionExecutorValue {
 
@@ -17,9 +18,9 @@ public class CreateResource implements InstructionExecutorValue {
         }
         String resourceString = (String) in.value;
         try {
-            URL resource = new URL(resourceString);
+            URI resource = new URI(resourceString);
             return Value.resource(resource);
-        }catch(MalformedURLException exception){
+        }catch(URISyntaxException exception){
             Interpreter.throwError("Malformed resource pointer " + exception.getMessage());
             return Value.nil();
         }

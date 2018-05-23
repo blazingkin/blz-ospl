@@ -16,12 +16,9 @@ public class CreateResourceFromFilePath implements InstructionExecutorValue {
             throw new BLZRuntimeException(null, "Tried to find file at non-string path: "+v.value);
         }
         String path = (String) v.value;
-        try {
-            File f = new File(path);
-            return Value.resource(f.toURL());
-        }catch(IOException e){
-            throw new BLZRuntimeException(null, e.getMessage());
-        }
+        File f = new File(path);
+        return Value.resource(f.toURI());
+        
     }
 
 }

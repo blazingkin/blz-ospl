@@ -105,8 +105,8 @@ public class Package {
 					VariableTypes.primitiveContexts.get(VariableTypes.Boolean).setValue(m.getStoreName(), Value.method(m));
 				}else if (fileName.equals("HashUtil.blz")){
 					VariableTypes.primitiveContexts.get(VariableTypes.Hash).setValue(m.getStoreName(), Value.method(m));
-				}else if (fileName.equals("ScannerUtil.blz")){
-					VariableTypes.primitiveContexts.get(VariableTypes.Scanner).setValue(m.getStoreName(), Value.method(m));
+				}else if (fileName.equals("ResourceUtil.blz")){
+					VariableTypes.primitiveContexts.get(VariableTypes.Resource).setValue(m.getStoreName(), Value.method(m));
 				}
 				else{
 					Variable.getGlobalContext().setValue(m.getStoreName(), Value.method(m));

@@ -61,7 +61,6 @@ public class Variable {
 	
 	public static void killContext(Context con){
 		if (!con.equals(getGlobalContext())){
-			con.variables.clear();
 			Context.contexts.remove(con);
 		}
 	}

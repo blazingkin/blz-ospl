@@ -2,7 +2,7 @@ package com.blazingkin.interpreter.variables;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
+import java.net.URI;
 import java.util.Scanner;
 
 import com.blazingkin.interpreter.executor.astnodes.Closure;
@@ -71,7 +71,7 @@ public class Value implements Cloneable {
 				}
 				return true;
 			}
-			return (this.value == v2.value || this.value.equals(v2.value)) && this.type.equals(v2.type);
+			return other != null && (this.value == v2.value || this.value.equals(v2.value)) && this.type.equals(v2.type);
 		}
 		return false;
 	}
@@ -139,8 +139,8 @@ public class Value implements Cloneable {
 		return new Value(VariableTypes.Nil, null);
 	}
 
-	public static Value resource(URL url){
-		return new Value(VariableTypes.Resource, url);
+	public static Value resource(URI url){
+		return new Value(VariableTypes.Resource, new BLZResource(url));
 	}
 
 	public static Value scanner(Scanner scanner){
