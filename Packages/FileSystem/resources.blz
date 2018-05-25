@@ -49,5 +49,5 @@ end
 end
 
 :close(scanner)
-    close_scanner(scanner)
+    scanner.close()
 end

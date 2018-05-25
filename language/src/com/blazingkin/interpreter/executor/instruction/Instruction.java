@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.filesystem.CreateResourceFromFilePath
 import com.blazingkin.interpreter.executor.filesystem.OpenResource;
 import com.blazingkin.interpreter.executor.filesystem.ScannerHasNext;
 import com.blazingkin.interpreter.executor.filesystem.ScannerReadNext;
+import com.blazingkin.interpreter.executor.filesystem.WriteToResource;
 import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.output.BLZLogging;
@@ -52,7 +53,8 @@ public enum Instruction {
 	GETRESOURCEFROMFILEPATH("BLZINTERNALBLZGETFILEATPATH", "Get resource at path", new CreateResourceFromFilePath()),
 	CLOSERESOURCE("BLZINTERNALCLOSERESOURCE", "Close resource", new CloseResource()),
 	SCANNERHASNEXT("BLZINTERNALSCANNERHASNEXT", "Scanner has next byte", new ScannerHasNext()),
-	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext());
+	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext()),
+	WRITETORESOURCE("BLZINTERNALWRITETORESOURCE", "Write to resource", new WriteToResource());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

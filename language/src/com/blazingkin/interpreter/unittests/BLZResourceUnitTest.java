@@ -12,14 +12,14 @@ public class BLZResourceUnitTest {
 
     @Test
     public void testResource() throws IOException {
-        BLZResource resource = new BLZResource(new File("/tmp/testfile2").toURI());
+        BLZResource resource = new BLZResource(new File("blah.outran").toURI());
         resource.open(BLZResource.FileMode.Create);
         resource.open(BLZResource.FileMode.Write);
         resource.write("TEST!\nAnotherThing\n");
         resource.close();
         resource.open(BLZResource.FileMode.Read);
-        System.out.println(resource.read());
-        System.out.println(resource.read());
+        UnitTestUtil.assertEqual(resource.read(), "T");
+        UnitTestUtil.assertEqual(resource.read(), "E");
         resource.close();
     }
 

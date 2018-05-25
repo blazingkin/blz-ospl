@@ -53,6 +53,7 @@ public class BLZResource {
 
     public void write(String s) throws IOException {
         writer.write(s);
+        writer.flush();
     }
 
     public String read() throws IOException {

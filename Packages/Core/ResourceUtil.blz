@@ -1,24 +1,28 @@
-:read_all(scanner)
+:read_all(resource)
     result = ""
-    while scanner.has_next?()
-        result = result + scanner.next()
+    while resource.has_next?()
+        result = result + resource.next()
     end
     result
 end
 
-:has_next?(scanner)
-    BLZINTERNALSCANNERHASNEXT scanner
+:has_next?(resource)
+    BLZINTERNALSCANNERHASNEXT resource
 end
 
-:next(scanner)
-    BLZINTERNALSCANNERREADNEXT scanner
+:next(resource)
+    BLZINTERNALSCANNERREADNEXT resource
 end
 
-:read_lines(scanner)
-    scanner.read_all().split_on_token({text.newline})
+:write(resource, message)
+    BLZINTERNALWRITETORESOURCE resource, message
 end
 
-:close(scanner)
-    BLZINTERNALCLOSERESOURCE scanner
-    BLZINTERNALREBIND scanner, {blz.nil}
+:read_lines(resource)
+    resource.read_all().split_on_token({text.newline})
+end
+
+:close(resource)
+    BLZINTERNALCLOSERESOURCE resource
+    BLZINTERNALREBIND resource, {blz.nil}
 end
