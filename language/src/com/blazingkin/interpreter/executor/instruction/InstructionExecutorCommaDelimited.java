@@ -12,6 +12,6 @@ public interface InstructionExecutorCommaDelimited extends InstructionExecutor {
 		return run(ExpressionExecutor.extractCommaDelimits(ExpressionParser.parseExpression(line), con));
 	}
 	
-	public abstract Value run(Value[] args);
+	public abstract Value run(Value[] args) throws BLZRuntimeException;
 	
 }

@@ -16,24 +16,36 @@ end
     BLZINTERNALCREATERESOURCE name
 end
 
-:open_resource(resource)
-    BLZINTERNALOPENRESOURCE resource
+:open_resource(resource, mode)
+    BLZINTERNALOPENRESOURCE resource, mode
 end
 
-:open(filename)
-    open_resource(file_resource(filename))
+:open(filename, mode)
+    if mode == {blz.nil}
+        mode = "r"
+    end
+    open_resource(file_resource(filename), mode)
 end
 
-:open_http(path)
-    open_resource(http_resource(path))
+:open_http(path, mode)
+    if mode == {blz.nil}
+        mode = "r"
+    end
+    open_resource(http_resource(path), mode)
 end
 
-:open_https(path)
-    open_resource(https_resource(path))
+:open_https(path, mode)
+    if mode == {blz.nil}
+        mode = "r"
+    end
+    open_resource(https_resource(path), mode)
 end
 
-:open_url(url)
-    open_resource(resource_from_url(url))
+:open_url(url, mode)
+    if mode == {blz.nil}
+        mode = "r"
+    end
+    open_resource(resource_from_url(url), mode)
 end
 
 :close(scanner)
