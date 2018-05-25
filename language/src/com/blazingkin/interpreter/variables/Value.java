@@ -142,10 +142,6 @@ public class Value implements Cloneable {
 	public static Value resource(URI url){
 		return new Value(VariableTypes.Resource, new BLZResource(url));
 	}
-
-	public static Value scanner(Scanner scanner){
-		return new Value(VariableTypes.Scanner, scanner);
-	}
 	
 	@Override
 	public int hashCode(){

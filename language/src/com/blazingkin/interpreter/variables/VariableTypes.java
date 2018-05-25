@@ -24,7 +24,6 @@ public enum VariableTypes {
 	PrimitiveMethod(BLZPrimitiveMethod.class),
 	Rational(BLZRational.class),
 	Resource(URL.class),
-	Scanner(java.util.Scanner.class),
 	String(java.lang.String.class);
 	
 	public final Class dataType;
