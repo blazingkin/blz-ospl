@@ -374,6 +374,8 @@ public class Variable {
 				return new Value(VariableTypes.String, "SOFTWARE");
 			}
 			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getAbsolutePath());
+		case programArguments:
+			return Executor.getProgramArguments();
 		case newline:
 			return new Value(VariableTypes.String, "\n");
 		case alt:

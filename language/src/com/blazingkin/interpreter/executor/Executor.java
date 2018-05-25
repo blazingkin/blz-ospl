@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor;
 
+import java.awt.PrintGraphics;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class Executor {
 
 	// Instance objects
 	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
-	private static String startingMethod = "main";
+	public static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 
 	//State Variables
@@ -34,8 +35,18 @@ public class Executor {
 	private static boolean continueMode = false;
 	private static boolean breakMode = false;
 	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
-	
+	private static String[] programArguments = {};
+
 	private static Stack<Integer> processLineStack = new Stack<Integer>();
+
+
+	public static Value getProgramArguments(){
+		Value[] args = new Value[programArguments.length];
+		for (int i = 0; i < programArguments.length; i++){
+			args[i] = Value.string(programArguments[i]);
+		}
+		return Value.arr(args);
+	}
 
 	public static Stack<Integer> getProcessLineStack(){
 		return processLineStack;
@@ -50,12 +61,7 @@ public class Executor {
 	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws BLZRuntimeException {			// runs the executor
-		for (int i = 0; i < args.size(); i+=2){
-			String s = args.get(i);
-			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
-				startingMethod = args.get(i+1);
-			}
-		}
+		handleArgs(args);
 		// puts the file passed to us as the current process
 		importCore();
 		RuntimeStack.push(FileImportManager.importFile(runFile.toPath()));	
@@ -69,12 +75,7 @@ public class Executor {
 	}
 	
 	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws BLZRuntimeException {
-		for (int i = 0; i < args.size(); i+=2){
-			String s = args.get(i);
-			if (s.substring(0,2).equals("-m")){			// denotation for indicating a starting method
-				startingMethod = args.get(i+1);
-			}
-		}
+		handleArgs(args);
 		RuntimeStack.push(new Process(code));
 		setEventHandler(handler);
 		MethodNode startMethod = getMethodInCurrentProcess(startingMethod);
@@ -85,13 +86,27 @@ public class Executor {
 		}
 		eventHandler.exitProgram("");
 	}
+
+	public static void handleArgs(List<String> args){
+		ArrayList<String> programArgs = new ArrayList<String>();
+		for (int i = 0; i < args.size(); i++){
+			String s = args.get(i);
+			if (s.substring(0,2).equals("-m") && i != args.size() - 1){			// denotation for indicating a starting method
+				i++;
+				startingMethod = args.get(i);
+				continue;
+			}
+			programArgs.add(s);
+		}
+		programArguments = new String[programArgs.size()];
+		programArgs.toArray(programArguments);
+	}
 	
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program
 	public static void cleanup(){
 		RuntimeStack.cleanup();
 		in.blazingk.blz.packagemanager.FileImportManager.importedFiles.clear();
 		VariableTypes.clear();
-		setEventHandler(null);
 		UUIDsUsed = new ArrayList<Integer>();
 		setTimeStarted(0);
 		Variable.clearVariables();
@@ -100,7 +115,8 @@ public class Executor {
 		setContinueMode(false);
 		setReturnBuffer(Value.nil());
 		setReturnMode(false);
-		startingMethod = "";
+		startingMethod = "main";
+		programArguments = new String[0];
 	}
 	
 

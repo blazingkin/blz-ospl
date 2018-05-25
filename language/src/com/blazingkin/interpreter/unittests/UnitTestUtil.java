@@ -1,5 +1,7 @@
 package com.blazingkin.interpreter.unittests;
 
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
@@ -26,15 +28,18 @@ public class UnitTestUtil {
 	public static ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 	
 	public static void setup(){
+		try{
+			in.blazingk.blz.packagemanager.Package.importCore();
+		}catch(Exception e){
+			fail("Failed to import core");
+		}
 		Executor.setEventHandler(new TestEventHandler());
 		System.setErr(new PrintStream(outStream));
 		clearEnv();
 	}
 	
 	public static void clearEnv(){
-		Executor.setBreakMode(false);
-		Executor.setContinueMode(false);
-		Executor.setReturnMode(false);
+		Executor.cleanup();
 		Variable.clearVariables();
 		RuntimeStack.cleanup();
 		inputBuffer = new LinkedList<String>();
@@ -80,7 +85,7 @@ public class UnitTestUtil {
 			Value bVal = (Value) b;
 			assertEqual((bVal).type.dataType, bVal.value.getClass());
 		}
-		org.junit.Assert.assertEquals(a, b);
+		org.junit.Assert.assertEquals(b, a);
 		if (!a.equals(b)){
 			System.err.println("An assertion was false!");
 			System.err.println(a + "!=" + b);
@@ -89,7 +94,7 @@ public class UnitTestUtil {
 	}
 	
 	public static void assertEqual(Value a, Value b){
-		org.junit.Assert.assertEquals(a, b);
+		org.junit.Assert.assertEquals(b, a);
 		if (!a.equals(b)){
 			System.err.println(a.value + " != "+ b.value);
 			new Exception().printStackTrace();
@@ -102,6 +107,11 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 		org.junit.Assert.fail();
 		assert false;
+	}
+
+	public static void fail(String message){
+		System.err.println(message);
+		fail();
 	}
 	
 

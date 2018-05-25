@@ -24,6 +24,18 @@ end
     open_resource(file_resource(filename))
 end
 
+:open_http(path)
+    open_resource(http_resource(path))
+end
+
+:open_https(path)
+    open_resource(https_resource(path))
+end
+
+:open_url(url)
+    open_resource(resource_from_url(url))
+end
+
 :close(scanner)
     close_scanner(scanner)
 end

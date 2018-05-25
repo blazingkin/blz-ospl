@@ -2,11 +2,24 @@ package com.blazingkin.interpreter.unittests;
 
 import java.util.ArrayList;
 
+import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.variables.Value;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.blazingkin.interpreter.executor.Executor;
 public class ExecutorUnitTest {
 
+	@BeforeClass
+	public static void setup(){
+		UnitTestUtil.setup();
+	}
+	
+	@AfterClass
+	public static void clear(){
+		UnitTestUtil.clearEnv();
+	}
 
 	
 	@Test
@@ -17,6 +30,25 @@ public class ExecutorUnitTest {
 			org.junit.Assert.assertFalse(uuids.contains(u));
 			uuids.add(u);
 		}
+	}
+
+	@Test
+	public void testArgumentParsing(){
+		ArrayList<String> args = new ArrayList<String>();
+		args.add("-m");
+		args.add("main_func");
+		args.add("arg1");
+		args.add("arg2");
+		Executor.handleArgs(args);
+		UnitTestUtil.assertEqual(Executor.startingMethod, "main_func");
+		Value[] vargs = {Value.string("arg1"), Value.string("arg2")};
+		UnitTestUtil.assertEqual(Executor.getProgramArguments(), Value.arr(vargs));
+	}
+
+	@Test
+	public void defaultMainShouldBeMain(){
+		Executor.cleanup();
+		UnitTestUtil.assertEqual(Executor.startingMethod, "main");
 	}
 	
 

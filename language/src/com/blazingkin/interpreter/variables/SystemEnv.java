@@ -19,7 +19,7 @@ public enum SystemEnv {
 	//env variables
 	processUUID("process.current.uuid", true),
 	processesRunning("process.all", true),
-	
+	programArguments("arguments", true),
 	
 	//constants
 	pi("pi", false),
