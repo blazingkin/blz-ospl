@@ -30,6 +30,7 @@ public enum Operator{
 	LogicalOr("||", 9, OperatorType.Binary),
 	Assignment("=", 10, OperatorType.Binary),
 	ExpressionDelimit(";", 20, OperatorType.Binary),
+	Lambda("->", 25, OperatorType.Binary),
 	functionCall("", 10000, OperatorType.Binary),
 	parensOpen("", 10000, OperatorType.None),
 	arrayLookup("", 10000, OperatorType.Binary),

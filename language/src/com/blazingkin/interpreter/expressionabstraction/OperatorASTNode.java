@@ -18,6 +18,7 @@ import com.blazingkin.interpreter.executor.astnodes.FunctionCallNode;
 import com.blazingkin.interpreter.executor.astnodes.GreaterThanEqualsNode;
 import com.blazingkin.interpreter.executor.astnodes.GreaterThanNode;
 import com.blazingkin.interpreter.executor.astnodes.IncrementNode;
+import com.blazingkin.interpreter.executor.astnodes.LambdaNode;
 import com.blazingkin.interpreter.executor.astnodes.LessThanEqualsNode;
 import com.blazingkin.interpreter.executor.astnodes.LessThanNode;
 import com.blazingkin.interpreter.executor.astnodes.LogarithmNode;
@@ -166,6 +167,8 @@ public abstract class OperatorASTNode extends ASTNode {
 			return new GreaterThanEqualsNode(args);
 		case Increment:
 			return new IncrementNode(args);
+		case Lambda:
+			return new LambdaNode(args);
 		case LessThan:
 			return new LessThanNode(args);
 		case LessThanEqual:

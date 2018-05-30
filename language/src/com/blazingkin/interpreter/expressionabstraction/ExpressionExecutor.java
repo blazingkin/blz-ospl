@@ -27,7 +27,7 @@ public class ExpressionExecutor {
 		return newVals;
 	}
 	
-	public static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root, Context con) throws BLZRuntimeException{
+	private static ArrayList<Value> extractCommaDelimitsHelper(ASTNode root, Context con) throws BLZRuntimeException{
 		if (root == null){
 			return new ArrayList<Value>();
 		}
@@ -43,6 +43,27 @@ public class ExpressionExecutor {
 			return ret;
 		}
 	}
+
+	public static ASTNode[] extractCommaDelimitedNodes(ASTNode root) {
+		ArrayList<ASTNode> helperCall = extractCommaDelimitedNodesHelper(root);
+		ASTNode[] newVals = new ASTNode[helperCall.size()];
+		helperCall.toArray(newVals);
+		return newVals;
+	}
+
+	private static ArrayList<ASTNode> extractCommaDelimitedNodesHelper(ASTNode root){
+		if (root.getOperator() == Operator.CommaDelimit) {
+			OperatorASTNode oroot = (OperatorASTNode) root;
+			ArrayList<ASTNode> first = extractCommaDelimitedNodesHelper(oroot.args[0]);
+			ArrayList<ASTNode> second = extractCommaDelimitedNodesHelper(oroot.args[1]);
+			first.addAll(second);
+			return first;
+		} else {
+			ArrayList<ASTNode> ret = new ArrayList<ASTNode>();
+			ret.add(root);
+			return ret;
+		}
+	}
 	
 	public static ASTNode[] extractSemicolonDelimitedNodes(ASTNode root){
 		ArrayList<ASTNode> helperCall = extractSemicolonDelimitedNodesHelper(root);
@@ -51,7 +72,7 @@ public class ExpressionExecutor {
 		return newVals;
 	}
 	
-	public static ArrayList<ASTNode> extractSemicolonDelimitedNodesHelper(ASTNode root){
+	private static ArrayList<ASTNode> extractSemicolonDelimitedNodesHelper(ASTNode root){
 		if (root.getOperator() == Operator.ExpressionDelimit){
 			OperatorASTNode oroot = (OperatorASTNode) root;
 			ArrayList<ASTNode> first = extractSemicolonDelimitedNodesHelper(oroot.args[0]);

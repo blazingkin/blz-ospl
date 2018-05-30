@@ -35,6 +35,10 @@ public class BlockNode extends ASTNode {
         this(body, false);
     }
 
+    public BlockNode(boolean shouldClearReturns, RegisteredLine... body){
+        this.body = body;
+        this.shouldClearReturns = shouldClearReturns;
+    }
 
 
     public BlockNode(List<Either<String, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
+import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.parser.Either;
@@ -15,7 +17,6 @@ import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.executor.Executor;
 
 public class MethodNode extends ASTNode {
 
@@ -46,6 +47,16 @@ public class MethodNode extends ASTNode {
 			}
         }
         this.body = new BlockNode(body, true);
+    }
+
+    /* For initializing anonymous functions */
+    public MethodNode(String[] argNames, ASTNode body){
+        if (argNames.length != 0) {
+            takesVariables = true;
+            variables = argNames;
+        }
+        name = "λ";
+        this.body = new BlockNode(true, new RegisteredLine(body));
     }
 
     public Value execute(Context c) throws BLZRuntimeException {

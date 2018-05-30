@@ -6,6 +6,8 @@ import com.blazingkin.interpreter.executor.instruction.Instruction;
 
 public class BlockParser {
 
+	public static String blocksUnclosedErrorMessage = "Some blocks not closed!";
+
     public static ArrayList<Either<String, ParseBlock>> parseBody(SplitStream<String> input) throws SyntaxException{
 		boolean isStart = input.isStart();
         ArrayList<Either<String, ParseBlock>> result = new ArrayList<Either<String, ParseBlock>>();
@@ -25,7 +27,7 @@ public class BlockParser {
             }
 		}
 		if (!isStart){
-			throw new SyntaxException("Some blocks not closed!");
+			throw new SyntaxException(blocksUnclosedErrorMessage);
 		}
         return result;        
     }

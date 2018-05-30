@@ -85,6 +85,10 @@ public class REPL {
 						inputBuffer.clear();
 						System.gc();
 					}catch(SyntaxException e){
+						if (!e.getMessage().equals(BlockParser.blocksUnclosedErrorMessage)){
+							Executor.getEventHandler().err(e.getMessage() + "\n");
+							inputBuffer.clear();
+						}
 						/* Block was incomplete */
 					}
 				}catch(BLZRuntimeException e){
