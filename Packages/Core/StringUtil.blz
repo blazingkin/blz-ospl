@@ -24,6 +24,9 @@ end
 # Note, does not currently work with !
 :slice(string, start, end)
 	# Later: add check for start/end that are out of bounds
+	if end == {blz.nil}
+		end = string.length()
+	end
 	string_new = ""
 	for i = start; i < end; i++
 		string_new = string_new + string[i]
@@ -87,6 +90,10 @@ end
 		string = string.slice!(0, string.length() - 1)
 	end
 	return string
+end
+
+:empty?(string)
+	string.length() == 0
 end
 
 # Contains? - Does a string contain a substring

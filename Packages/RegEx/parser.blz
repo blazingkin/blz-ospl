@@ -1,0 +1,39 @@
+
+# Matches a single token
+:match_one(pattern, text)
+    if pattern.empty?()
+        return true
+    end
+    if text.empty?()
+        return false
+    end
+    if pattern == "."
+        return true
+    else
+        pattern == text
+    end
+end
+
+:match_here(pattern, text)
+    if pattern == ""
+        return true
+    end
+    if pattern == "$" && text == ""
+        return true
+    end
+    match_one(pattern[0], text[0]) && match_here!(pattern.slice!(1), text.slice!(1))
+end
+
+:match(pattern, text)
+    if pattern[0] == "^"
+        match_here(pattern.slice!(1), text)
+    else
+        for i = 0; i < text.length(); i++
+            if match_here(pattern, text.slice!(i))
+                return true
+            end
+        end
+    end
+    false
+end
+
