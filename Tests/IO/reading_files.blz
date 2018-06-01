@@ -2,5 +2,5 @@ import FileSystem
 
 :main
 	# This is kinda cheating, don't you think
-	open("reading_files.out").read_lines().each(print)
+	open("IO/reading_files.out").read_lines().each(print)
 end

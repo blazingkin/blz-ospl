@@ -195,6 +195,10 @@ public class Process implements RuntimeStackElement {
 			importedConstructors.addAll(p.getAllConstructorsInPackage());
 		}
 		for (Path f: processesToImport) {
+			if (!f.isAbsolute() && runningFromFile){
+				/* Resolve local requires from the location of the file, not blz's cwd */
+				f = Paths.get(readingFrom.getParentFile().getPath(), f.toString());
+			}
 			Process p = FileImportManager.importFile(f);
 			importedMethods.addAll(p.methods);
 			importedConstructors.addAll(p.constructors);

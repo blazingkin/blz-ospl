@@ -1,6 +1,0 @@
-import FileSystem
-
-:main
-	file = open("FileRead.dat").read_lines()
-	print(file)
-end
