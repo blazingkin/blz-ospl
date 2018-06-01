@@ -6,5 +6,5 @@ install:
  
 script:
 - mvn package
-- cd Tests/autotests/
+- cd Tests/
 - python3 runtests.py

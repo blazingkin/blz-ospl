@@ -30,9 +30,9 @@ class TestFile:
 		start = time.time()
 		err = 0
 		if (self.input != None):
-			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
+			err = call("java -jar ../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
 		else:
-			err = call("java -jar ../../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
+			err = call("java -jar ../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
 		end = time.time()
 		print("Test took: " + str(round((end-start) * 1000) / 1000) + " seconds")
 		if (self.output != None):
@@ -54,18 +54,20 @@ class TestFile:
 
 def run_tests():
 	result = 0
-	for file in os.listdir("."):
-	    if file.endswith(".blz"):
-	    	src = file
-	    	inp = None
-	    	output = None
-	    	if os.access(file.split(".")[0] + ".in", os.R_OK):
-	    		inp = file.split(".")[0] + ".in"
-	    	if os.access(file.split(".")[0] + ".out", os.R_OK):
-	    		output = file.split(".")[0] + ".out"
-	    	tf = TestFile(src, output, inp)
-	    	if tf.test() == 1:
-	    		result = 1
+	for folder in os.listdir("."):
+		if os.path.isdir(folder):
+			for file in os.listdir(folder):
+				if file.endswith(".blz") and folder != "tmp":
+					src = os.path.join(folder, file)
+					inp = None
+					output = None
+					if os.access(src.split(".")[0] + ".in", os.R_OK):
+						inp = src.split(".")[0] + ".in"
+					if os.access(src.split(".")[0] + ".out", os.R_OK):
+						output = src.split(".")[0] + ".out"
+					tf = TestFile(src, output, inp)
+					if tf.test() == 1:
+						result = 1
 	if (result == 0):
 		print("All tests passed!")
 	else:
