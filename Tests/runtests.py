@@ -54,11 +54,11 @@ class TestFile:
 
 def run_tests():
 	result = 0
-	for folder in os.scandir("."):
-		if folder.is_dir():
-			for file in os.listdir(folder.name):
-				if file.endswith(".blz") and folder.name != "tmp":
-					src = os.path.join(folder.name, file)
+	for folder in os.listdir("."):
+		if os.path.isdir(folder):
+			for file in os.listdir(folder):
+				if file.endswith(".blz") and folder != "tmp":
+					src = os.path.join(folder, file)
 					inp = None
 					output = None
 					if os.access(src.split(".")[0] + ".in", os.R_OK):
