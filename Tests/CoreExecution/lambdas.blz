@@ -1,0 +1,8 @@
+:main
+    add_two = (x -> x + 2)
+    print(add_two(5))
+
+    arr = [1,2,3]
+    print(arr.map(( elem -> elem ** 2 )))
+
+end

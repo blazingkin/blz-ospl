@@ -1,0 +1,7 @@
+:main
+    curried_func = (x -> (y -> x + y))
+    add_three = curried_func(3)
+    print(add_three(5))
+    add_pi = curried_func({pi})
+    print(add_pi(20))
+end
