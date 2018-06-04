@@ -138,6 +138,18 @@ end
 	str
 end
 
+:replace(str, replacing, replace_with)
+	new_str = ""
+	for i = 0; i < str.length(); i++
+		if str[i] == replacing
+			new_str = new_str + replace_with
+		else
+			new_str = new_str + str[i]
+		end
+	end
+	BLZINTERNALREBIND str,new_str
+end
+
 :to_json(str)
-	"\"" + str + "\""
+	"\"" + str.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 end
