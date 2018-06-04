@@ -1,7 +1,5 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
-import java.beans.Expression;
-
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.AdditionNode;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
