@@ -139,5 +139,5 @@ end
 end
 
 :to_json(str)
-	{text.doublequote} + str + {text.doublequote}
+	"\"" + str + "\""
 end
