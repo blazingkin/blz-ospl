@@ -1,0 +1,30 @@
+:main
+	numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # Some numbers (could use range from the Lists package)
+	
+	# Map numbers by squaring each entry
+	numbers.map!((x -> x ** 2))
+	print(numbers)
+	# => [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+	# A lambda that adds two numbers via currying
+	curry_add = (x -> (y -> x + y))
+	
+	add_five = curry_add(5)
+	print(add_five(2))
+	# => 7
+	print(add_five(5))
+	# => 10
+
+	add_hi = curry_add("Hi ")
+	print(add_hi("Carl"))
+	# => Hi Carl
+	print(add_hi("Jessica"))
+	# => Hi Jessica
+
+
+	# Lambdas can capture variables in the local scope
+	my_string = "\#"
+	numbers.map!((x -> my_string + x))
+	print(numbers)	
+	# => [#0, #1, #4, #9, #16, #25, #36, #49, #64, #81]
+end
