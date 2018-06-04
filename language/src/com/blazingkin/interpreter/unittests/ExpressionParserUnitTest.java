@@ -233,6 +233,17 @@ public class ExpressionParserUnitTest {
 	public void testOperandCharactersInStrings(){
 		assertEquals(parseExpression("\"Test-\""), new ValueASTNode("\"Test-\""));
 	}
+
+	@Test
+	public void testParseLambda(){
+		assertEquals(parseExpression("a -> b"), OperatorASTNode.newNode(Operator.Lambda, new ValueASTNode("a"), new ValueASTNode("b")));
+	}
+
+	@Test
+	public void shouldGroupCommasAsOneNodeInLambda(){
+		ASTNode commaSeperated = OperatorASTNode.newNode(Operator.CommaDelimit, new ValueASTNode("a"), new ValueASTNode("b"));
+		assertEquals(parseExpression("a,b->c"), OperatorASTNode.newNode(Operator.Lambda, commaSeperated, new ValueASTNode("c")));
+	}
 	
 	@Test
 	public void testBindingParsingWithNoParenthesis(){
