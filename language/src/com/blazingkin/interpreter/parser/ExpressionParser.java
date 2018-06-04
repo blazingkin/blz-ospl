@@ -88,7 +88,11 @@ public class ExpressionParser {
 		boolean inQuotes = false;
 		for (int i = 0; i < lne.length; i++){
 			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
-				building += lne[i];
+				if (inQuotes && lne[i] == '\\'){
+					building += lne[++i]; // Don't try to parse the next character, simply add it and ignore the \
+				}else{
+					building += lne[i];
+				}
 			}else if (Operator.symbols.contains(""+lne[i]) && !(lne[i] == '.' && Variable.isInteger(building))){
 				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
 					String subBuilding = ""+lne[i];
@@ -206,13 +210,10 @@ public class ExpressionParser {
 					break;
 				case '"':
 					building += '"';
-					if (inQuotes){
-						if (lne[i-1] == '\\'){
-							building = building.substring(0,building.length() - 2) + '"';
-							break;
-						}
-					}
 					inQuotes = !inQuotes;
+					break;
+				case '\\':
+					building += lne[++i]; // Add the next character, don't try to parse it
 					break;
 				default:
 					if (!inQuotes && Character.isWhitespace(lne[i])){

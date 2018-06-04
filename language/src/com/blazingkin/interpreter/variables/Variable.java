@@ -227,7 +227,7 @@ public class Variable {
 		}
 		if (line.length() >= 2){
 			if (line.charAt(0) == '"' && line.charAt(line.length() - 1) == '"'){
-				return new Value(VariableTypes.String, line.replace("\"",""));
+				return new Value(VariableTypes.String, line.substring(1, line.length() - 1));
 			}
 			if (line.startsWith("{") && line.endsWith("}")) {
 				String gp = line.substring(1, line.length() - 1);

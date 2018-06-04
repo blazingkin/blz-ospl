@@ -246,6 +246,13 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
+	public void shouldEscapeCharacters(){
+		/* The first expression reads "\\" when it doesnt need to be double escaped */
+		assertEquals(parseExpression("\"\\\\\""), new ValueASTNode("\"\\\""));
+		assertEquals(parseExpression("\"#\""), new ValueASTNode("\"#\""));
+	}
+
+	@Test
 	public void testBindingParsingWithNoParenthesis(){
 		String[] expected = {"func"};
 		String[] result = ExpressionParser.parseBindingWithArguments("func");
