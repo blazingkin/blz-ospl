@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.parser.ForBlockParser;
 import com.blazingkin.interpreter.parser.IfBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.parser.TryCatchBlockParser;
 import com.blazingkin.interpreter.parser.WhileBlockParser;
@@ -31,7 +32,7 @@ public class BlockNode extends ASTNode {
     RegisteredLine body[];
     boolean shouldClearReturns;
 
-    public BlockNode(List<Either<String, ParseBlock>> body) throws SyntaxException {
+    public BlockNode(List<Either<SourceLine, ParseBlock>> body) throws SyntaxException {
         this(body, false);
     }
 
@@ -41,12 +42,12 @@ public class BlockNode extends ASTNode {
     }
 
 
-    public BlockNode(List<Either<String, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
+    public BlockNode(List<Either<SourceLine, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
         ArrayList<RegisteredLine> lines = new ArrayList<RegisteredLine>();
-        for (Either<String, ParseBlock> line : body){
+        for (Either<SourceLine, ParseBlock> line : body){
             if (line.isLeft()){
                 /* It is some string, parse it to a RegisteredLine */
-                Optional<RegisteredLine> parsed = ExpressionParser.parseLine(line.getLeft().get());
+                Optional<RegisteredLine> parsed = ExpressionParser.parseLine(line.getLeft().get().line);
                 if (parsed.isPresent()){
                     lines.add(parsed.get());
                 }

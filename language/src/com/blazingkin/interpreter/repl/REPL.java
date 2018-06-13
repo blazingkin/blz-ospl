@@ -18,6 +18,7 @@ import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
@@ -77,7 +78,7 @@ public class REPL {
 					inputBuffer.add(in);
 					try {
 						SplitStream<String> stream = new SplitStream<String>(inputBuffer);
-						ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(stream);
+						ArrayList<Either<SourceLine, ParseBlock>> parsed = BlockParser.parseBody(stream, 1);
 						Executor.getEventHandler().print(
 							new BlockNode(parsed, true).execute(replContext).toString()
 						);

@@ -2,15 +2,13 @@ package com.blazingkin.interpreter.parser;
 
 import java.util.ArrayList;
 
-import com.blazingkin.interpreter.executor.instruction.Instruction;
-
 public class BlockParser {
 
 	public static String blocksUnclosedErrorMessage = "Some blocks not closed!";
 
-    public static ArrayList<Either<String, ParseBlock>> parseBody(SplitStream<String> input) throws SyntaxException{
-		boolean isStart = input.isStart();
-        ArrayList<Either<String, ParseBlock>> result = new ArrayList<Either<String, ParseBlock>>();
+    public static ArrayList<Either<SourceLine, ParseBlock>> parseBody(SplitStream<String> input, int lineOffset) throws SyntaxException{
+		boolean isStart = input.isStart(); // Base case for recursion. This should be true only in the initial call
+        ArrayList<Either<SourceLine, ParseBlock>> result = new ArrayList<Either<SourceLine, ParseBlock>>();
         while (input.hasNext()){
             String line = input.next();
             if (isEnd(line)){
@@ -19,11 +17,14 @@ public class BlockParser {
 				}
                 return result;
             }else if (isBlockHeader(line)){
-                ArrayList<Either<String, ParseBlock>> childBlock = parseBody(input);
+                ArrayList<Either<SourceLine, ParseBlock>> childBlock = parseBody(input, lineOffset);
                 ParseBlock newBlock = new ParseBlock(line, childBlock);
                 result.add(Either.right(newBlock));
             }else{
-                result.add(Either.left(line.split("(?<!\\\\)#")[0].trim()));
+				// We have already used next, so the index is one past the one we looked at
+				int index = input.getIndex() - 1 + lineOffset;
+				SourceLine sourceLine = new SourceLine(line.split("(?<!\\\\)#")[0].trim(), index);
+                result.add(Either.left(sourceLine));
             }
 		}
 		if (!isStart){

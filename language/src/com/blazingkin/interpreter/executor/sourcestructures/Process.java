@@ -24,6 +24,7 @@ import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.MethodBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
@@ -120,7 +121,8 @@ public class Process implements RuntimeStackElement {
 	
 	private void setup(){
 		try {
-			ArrayList<Either<String, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines));
+			// For BlockParser.parseBody, the initial offset is 1 because file lines are 1-indexed
+			ArrayList<Either<SourceLine, ParseBlock>> parsed = BlockParser.parseBody(new SplitStream<String>(lines), 1);
 			registerMethodsAndConstructors(parsed);
 			findImports(parsed);
 			staticCode = new BlockNode(parsed, false);
@@ -135,11 +137,11 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 
-	private void registerMethodsAndConstructors(ArrayList<Either<String, ParseBlock>> code) throws SyntaxException {
+	private void registerMethodsAndConstructors(ArrayList<Either<SourceLine, ParseBlock>> code) throws SyntaxException {
 		MethodBlockParser parser = new MethodBlockParser(this);
-		ArrayList<Either<String, ParseBlock>> methods = new ArrayList<Either<String, ParseBlock>>();
-		ArrayList<Either<String, ParseBlock>> constructors = new ArrayList<Either<String, ParseBlock>>();
-		for (Either<String, ParseBlock> line : code){
+		ArrayList<Either<SourceLine, ParseBlock>> methods = new ArrayList<Either<SourceLine, ParseBlock>>();
+		ArrayList<Either<SourceLine, ParseBlock>> constructors = new ArrayList<Either<SourceLine, ParseBlock>>();
+		for (Either<SourceLine, ParseBlock> line : code){
 			if (line.isRight()){
 				ParseBlock block = line.getRight().get();
 				if (parser.shouldParse(block.getHeader())){
@@ -149,7 +151,7 @@ public class Process implements RuntimeStackElement {
 				}
 			}
 		}
-		for (Either<String, ParseBlock> line : methods) {
+		for (Either<SourceLine, ParseBlock> line : methods) {
 			code.remove(line);
 			ParseBlock method = line.getRight().get();
 			try{
@@ -160,7 +162,7 @@ public class Process implements RuntimeStackElement {
 				throw new SyntaxException(message);
 			}
 		}
-		for (Either<String, ParseBlock> line : constructors){
+		for (Either<SourceLine, ParseBlock> line : constructors){
 			code.remove(line);
 			ParseBlock constructor = line.getRight().get();
 			try{
@@ -205,29 +207,29 @@ public class Process implements RuntimeStackElement {
 		}
 	}
 
-	public void findImports(ArrayList<Either<String, ParseBlock>> lines){
+	public void findImports(ArrayList<Either<SourceLine, ParseBlock>> lines){
 		//Always import core
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
-			ArrayList<Either<String, ParseBlock>> importInstructions = new ArrayList<Either<String, ParseBlock>>();
-			ArrayList<Either<String, ParseBlock>> requireInstructions = new ArrayList<Either<String, ParseBlock>>();;
-			for (Either<String, ParseBlock> line : lines){
+			ArrayList<Either<SourceLine, ParseBlock>> importInstructions = new ArrayList<Either<SourceLine, ParseBlock>>();
+			ArrayList<Either<SourceLine, ParseBlock>> requireInstructions = new ArrayList<Either<SourceLine, ParseBlock>>();;
+			for (Either<SourceLine, ParseBlock> line : lines){
 				if (line.isLeft()){
-					if (line.getLeft().get().startsWith("import")){
+					if (line.getLeft().get().line.startsWith("import")){
 						importInstructions.add(line);
-					}else if (line.getLeft().get().startsWith("require")){
+					}else if (line.getLeft().get().line.startsWith("require")){
 						requireInstructions.add(line);
 					}
 				}
 			}
-			for (Either<String, ParseBlock> line : importInstructions){
+			for (Either<SourceLine, ParseBlock> line : importInstructions){
 				lines.remove(line);
-				String packageName = line.getLeft().get().replaceFirst("import", "").trim();
+				String packageName = line.getLeft().get().line.replaceFirst("import", "").trim();
 				packagesToImport.add(importer.findPackage(packageName));
 			}
-			for (Either<String, ParseBlock> line : requireInstructions){
+			for (Either<SourceLine, ParseBlock> line : requireInstructions){
 				lines.remove(line);
-				String fileName = line.getLeft().get().replaceFirst("require", "").trim();
+				String fileName = line.getLeft().get().line.replaceFirst("require", "").trim();
 				processesToImport.add(calculateFileLocation(fileName));
 			}
 		}catch(Exception e){

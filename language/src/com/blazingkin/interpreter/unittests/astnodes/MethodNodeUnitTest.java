@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -27,7 +28,7 @@ public class MethodNodeUnitTest {
     @Test
     public void shouldParseMethodHeader(){
         try {
-            ArrayList<Either<String, ParseBlock>> empty = new ArrayList<Either<String, ParseBlock>>();
+            ArrayList<Either<SourceLine, ParseBlock>> empty = new ArrayList<Either<SourceLine, ParseBlock>>();
             MethodNode node = new MethodNode(":blah", empty, null);
             UnitTestUtil.assertEqual(node.getStoreName(), "blah");
             UnitTestUtil.assertEqual(node.takesVariables, false);
@@ -39,7 +40,7 @@ public class MethodNodeUnitTest {
     @Test
     public void shouldParseMethodHeaderWithVariables(){
         try {
-            ArrayList<Either<String, ParseBlock>> empty = new ArrayList<Either<String, ParseBlock>>();
+            ArrayList<Either<SourceLine, ParseBlock>> empty = new ArrayList<Either<SourceLine, ParseBlock>>();
             MethodNode node = new MethodNode(":blah(a,b,c)", empty, null);
             UnitTestUtil.assertEqual(node.getStoreName(), "blah");
             UnitTestUtil.assertEqual(node.takesVariables, true);
@@ -55,8 +56,8 @@ public class MethodNodeUnitTest {
     @Test
     public void shouldRunSimpleMethod(){
         try {
-            ArrayList<Either<String, ParseBlock>> code = new ArrayList<Either<String, ParseBlock>>();
-            code.add(Either.left("3"));
+            ArrayList<Either<SourceLine, ParseBlock>> code = new ArrayList<Either<SourceLine, ParseBlock>>();
+            code.add(Either.left(new SourceLine("3", 2)));
             MethodNode node = new MethodNode(":blah", code, null);
             Value[] args = {};
             Value result = node.execute(new Context(), args, false);

@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ForBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
@@ -42,7 +43,7 @@ public class ForBlockParserUnitTest {
         try{
             ForBlockParser parser = new ForBlockParser();
             String input[] = {"for i = 0; i < 10; i++", "20", "i", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             ParseBlock forBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(forBlock);
             Value result = node.execute(new Context());
@@ -60,7 +61,7 @@ public class ForBlockParserUnitTest {
         try{
             ForBlockParser parser = new ForBlockParser();
             String input[] = {"for i = 0; i < 10; i++", "20", "i ** 2", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             UnitTestUtil.assertEqual(block.get(0).isRight(), true);
             ParseBlock forBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(forBlock);

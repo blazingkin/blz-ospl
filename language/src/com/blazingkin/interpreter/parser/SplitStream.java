@@ -17,6 +17,10 @@ public class SplitStream<T>{
         return index == 0;
     }
 
+    public int getIndex(){
+        return index;
+    }
+
     public boolean hasNext(){
         if (source.isLeft()){
             T[] left = source.getLeft().get();

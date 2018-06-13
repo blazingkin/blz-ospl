@@ -20,11 +20,11 @@ public class IfBlockParser implements BlockParseProtocol {
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {
         String initLine = block.getHeader().replaceFirst("if", "").replaceFirst("IF", "").trim();
         ASTNode initCondition = ExpressionParser.parseExpression(initLine);
-        ArrayList<Either<String, ParseBlock>> lines = block.getLines();
+        ArrayList<Either<SourceLine, ParseBlock>> lines = block.getLines();
         int elseIndex = lines.size();
         boolean elseFound =  false;
         for (int i = 0; i < lines.size(); i++){
-            if (lines.get(i).isLeft() && isElse(lines.get(i).getLeft().get())){
+            if (lines.get(i).isLeft() && isElse(lines.get(i).getLeft().get().line)){
                 /* If it is an else marker */
                 elseFound = true;
                 elseIndex = i;
@@ -37,9 +37,9 @@ public class IfBlockParser implements BlockParseProtocol {
 
         
         ASTNode elseNode;
-        List<Either<String, ParseBlock>> mainLines;
+        List<Either<SourceLine, ParseBlock>> mainLines;
         if (elseFound){
-            List<Either<String, ParseBlock>> elseBlock = lines.subList(elseIndex + 1, lines.size());
+            List<Either<SourceLine, ParseBlock>> elseBlock = lines.subList(elseIndex + 1, lines.size());
             elseNode = new BlockNode(elseBlock, false);
             mainLines = lines.subList(0, elseIndex);
         }else {

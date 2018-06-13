@@ -12,6 +12,7 @@ import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.parser.MethodBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Value;
@@ -46,9 +47,9 @@ public class Constructor {
 		blockNode = new BlockNode(block.getLines(), true);
 	}
 
-	private void findMethods(List<Either<String, ParseBlock>> lines, MethodBlockParser parser) throws SyntaxException {
-		List<Either<String,ParseBlock>> methods = new ArrayList<Either<String, ParseBlock>>();
-		for (Either<String, ParseBlock> line : lines){
+	private void findMethods(List<Either<SourceLine, ParseBlock>> lines, MethodBlockParser parser) throws SyntaxException {
+		List<Either<SourceLine,ParseBlock>> methods = new ArrayList<Either<SourceLine, ParseBlock>>();
+		for (Either<SourceLine, ParseBlock> line : lines){
 			if (line.isRight()){
 				if (parser.shouldParse(line.getRight().get().getHeader())){
 					/* Do we have a method? */
@@ -56,7 +57,7 @@ public class Constructor {
 				}
 			}
 		}
-		for (Either<String, ParseBlock> method : methods){
+		for (Either<SourceLine, ParseBlock> method : methods){
 			lines.remove(method);
 			try {
 				this.methods.add((MethodNode) parser.parseBlock(method.getRight().get()));
@@ -102,8 +103,8 @@ public class Constructor {
 			if (nilHuh != null){
 				return nilHuh;
 			}
-			ArrayList<Either<String, ParseBlock>> body = new ArrayList<Either<String, ParseBlock>>();
-			body.add(Either.left("false"));
+			ArrayList<Either<SourceLine, ParseBlock>> body = new ArrayList<Either<SourceLine, ParseBlock>>();
+			body.add(Either.left(new SourceLine("false", -1))); // The source file doesn't exist so it is at line -1
 			nilHuh = new MethodNode(":nil?", body, null);
 			return nilHuh;
 		}catch(Exception e){

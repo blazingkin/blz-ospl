@@ -13,6 +13,7 @@ import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -34,7 +35,7 @@ public class MethodNode extends ASTNode {
         this.body = other.body;
     }
 
-    public MethodNode(String header, ArrayList<Either<String, ParseBlock>> body, Process parent) throws SyntaxException {
+    public MethodNode(String header, ArrayList<Either<SourceLine, ParseBlock>> body, Process parent) throws SyntaxException {
         this.parent = parent;
         String ln = header.split(":")[header.split(":").length - 1];
 		String[] nameAndArgs = ExpressionParser.parseBindingWithArguments(ln);

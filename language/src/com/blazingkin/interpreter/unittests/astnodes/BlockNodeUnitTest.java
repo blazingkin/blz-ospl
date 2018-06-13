@@ -6,6 +6,7 @@ import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
@@ -30,9 +31,9 @@ public class BlockNodeUnitTest {
     @Test
     public void shouldProperlyConstruct(){
         try {
-            ArrayList<Either<String, ParseBlock>> input = new ArrayList<Either<String, ParseBlock>>();
-            input.add(Either.left("3"));
-            input.add(Either.left("20"));
+            ArrayList<Either<SourceLine, ParseBlock>> input = new ArrayList<Either<SourceLine, ParseBlock>>();
+            input.add(Either.left(new SourceLine("3", 1)));
+            input.add(Either.left(new SourceLine("20", 2)));
             new BlockNode(input, true).execute(new Context());
         } catch (Exception e){
             e.printStackTrace();
@@ -45,9 +46,9 @@ public class BlockNodeUnitTest {
     @Test
     public void shouldReturnLastValue(){
         try {
-            ArrayList<Either<String, ParseBlock>> input = new ArrayList<Either<String, ParseBlock>>();
-            input.add(Either.left("3"));
-            input.add(Either.left("20"));
+            ArrayList<Either<SourceLine, ParseBlock>> input = new ArrayList<Either<SourceLine, ParseBlock>>();
+            input.add(Either.left(new SourceLine("3", 1)));
+            input.add(Either.left(new SourceLine("20", 2)));
             Value result = new BlockNode(input, true).execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(20));
         } catch (Exception e){
@@ -61,9 +62,9 @@ public class BlockNodeUnitTest {
     @Test
     public void shouldHandleComplexExpressions(){
         try {
-            ArrayList<Either<String, ParseBlock>> input = new ArrayList<Either<String, ParseBlock>>();
-            input.add(Either.left("a = 3"));
-            input.add(Either.left("a - 2"));
+            ArrayList<Either<SourceLine, ParseBlock>> input = new ArrayList<Either<SourceLine, ParseBlock>>();
+            input.add(Either.left(new SourceLine("a = 3", 1)));
+            input.add(Either.left(new SourceLine("a - 2", 2)));
             Value result = new BlockNode(input, true).execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(1));
         } catch (Exception e){
@@ -77,10 +78,10 @@ public class BlockNodeUnitTest {
     @Test
     public void shouldHandleReturnStatements(){
         try {
-            ArrayList<Either<String, ParseBlock>> input = new ArrayList<Either<String, ParseBlock>>();
-            input.add(Either.left("a = 3"));
-            input.add(Either.left("return 20"));
-            input.add(Either.left("a - 2"));
+            ArrayList<Either<SourceLine, ParseBlock>> input = new ArrayList<Either<SourceLine, ParseBlock>>();
+            input.add(Either.left(new SourceLine("a = 3", 1)));
+            input.add(Either.left(new SourceLine("return 20", 2)));
+            input.add(Either.left(new SourceLine("a - 2", 3)));
             Value result = new BlockNode(input, true).execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(20));
         } catch (Exception e){
@@ -96,7 +97,7 @@ public class BlockNodeUnitTest {
     public void shouldHandleBlocks(){
         try {
             String code[] = {"a = 20", "for i = 0; i < 5; i++", "if i % 2 == 0", "a++", "end", "end", "a"};
-            ArrayList<Either<String, ParseBlock>> input = BlockParser.parseBody(new SplitStream<String>(code));
+            ArrayList<Either<SourceLine, ParseBlock>> input = BlockParser.parseBody(new SplitStream<String>(code), 1);
             Value result = new BlockNode(input, true).execute(new Context());
             UnitTestUtil.assertEqual(result, Value.integer(23));
         } catch (Exception e){

@@ -6,19 +6,19 @@ import java.util.stream.Stream;
 public class ParseBlock {
 
     private String header;
-    private ArrayList<Either<String, ParseBlock>> lines;
+    private ArrayList<Either<SourceLine, ParseBlock>> lines;
 
     public ParseBlock(String header){
         this.header = header;
-        lines = new ArrayList<Either<String, ParseBlock>>();
+        lines = new ArrayList<Either<SourceLine, ParseBlock>>();
     }
 
-    public ParseBlock(String header, ArrayList<Either<String, ParseBlock>> lines) {
+    public ParseBlock(String header, ArrayList<Either<SourceLine, ParseBlock>> lines) {
         this.header = header;
         this.lines = lines;
     }
 
-    public void addLine(Either<String, ParseBlock> line){
+    public void addLine(Either<SourceLine, ParseBlock> line){
         lines.add(line);
     }
 
@@ -26,11 +26,11 @@ public class ParseBlock {
         return header;
     }
 
-    public ArrayList<Either<String, ParseBlock>> getLines(){
+    public ArrayList<Either<SourceLine, ParseBlock>> getLines(){
         return lines;
     }
 
-    public Stream<Either<String, ParseBlock>> streamLines(){
+    public Stream<Either<SourceLine, ParseBlock>> streamLines(){
         return lines.stream();
     }
 

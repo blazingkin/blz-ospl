@@ -18,11 +18,11 @@ public class TryCatchBlockParser implements BlockParseProtocol {
     }
 
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {
-        ArrayList<Either<String, ParseBlock>> lines = block.getLines();
+        ArrayList<Either<SourceLine, ParseBlock>> lines = block.getLines();
         int catchIndex = lines.size();
         boolean catchFound =  false;
         for (int i = 0; i < lines.size(); i++){
-            if (lines.get(i).isLeft() && isCatch(lines.get(i).getLeft().get())){
+            if (lines.get(i).isLeft() && isCatch(lines.get(i).getLeft().get().line)){
                 /* If it is an else marker */
                 catchFound = true;
                 catchIndex = i;
@@ -35,9 +35,9 @@ public class TryCatchBlockParser implements BlockParseProtocol {
 
         
         ASTNode exceptionNode;
-        List<Either<String, ParseBlock>> mainLines;
+        List<Either<SourceLine, ParseBlock>> mainLines;
         if (catchFound){
-            List<Either<String, ParseBlock>> catchBlock = lines.subList(catchIndex + 1, lines.size());
+            List<Either<SourceLine, ParseBlock>> catchBlock = lines.subList(catchIndex + 1, lines.size());
             exceptionNode = new BlockNode(catchBlock, false);
             mainLines = lines.subList(0, catchIndex);
         }else {

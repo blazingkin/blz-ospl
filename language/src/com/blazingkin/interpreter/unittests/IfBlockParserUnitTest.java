@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.IfBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
+import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
@@ -43,7 +44,7 @@ public class IfBlockParserUnitTest {
         try {
             IfBlockParser parser = new IfBlockParser();
             String input[] = {"if true", "3", "1", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
@@ -61,7 +62,7 @@ public class IfBlockParserUnitTest {
         try {
             IfBlockParser parser = new IfBlockParser();
             String input[] = {"if 2 == 3", "3", "1", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
@@ -79,7 +80,7 @@ public class IfBlockParserUnitTest {
         try {
             IfBlockParser parser = new IfBlockParser();
             String input[] = {"if 2 == 3", "3", "1", "else", "2", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             ParseBlock ifBlock = block.get(0).getRight().get();
             ASTNode node = parser.parseBlock(ifBlock);
             Value result = node.execute(new Context());
@@ -98,7 +99,7 @@ public class IfBlockParserUnitTest {
         try {
             IfBlockParser parser = new IfBlockParser();
             String input[] = {"if 2 == 3", "3", "1", "else", "end"};
-            ArrayList<Either<String, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input));
+            ArrayList<Either<SourceLine, ParseBlock>> block = BlockParser.parseBody(new SplitStream<String>(input), 1);
             ParseBlock ifBlock = block.get(0).getRight().get();
             parser.parseBlock(ifBlock);
             /* An error should have been thrown */
