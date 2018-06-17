@@ -52,8 +52,8 @@ class TestFile:
 				print("")
 				return 1
 		if self.error != None:
-			testerr = open(self.error + "ran", "r").read().replace("\r", "")
-			expectederr = open(self.error, "r").read().replace("\r", "")
+			testerr = open(self.error + "ran", "r").read().replace("\r", "").replace("\n", "")
+			expectederr = open(self.error, "r").read().replace("\r", "").replace("\n", "")
 			if testerr != expectederr:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Error output differs from test: " + self.error + " vs " + self.error+"ran")
