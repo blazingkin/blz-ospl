@@ -52,13 +52,11 @@ class TestFile:
 				print("")
 				return 1
 		if self.error != None:
-			testerr = open(self.error + "ran", "r").read().replace("\r", "").replace("\n", "")
-			expectederr = open(self.error, "r").read().replace("\r", "").replace("\n", "")
+			testerr = open(self.error + "ran", "r").read().replace("\r", "")
+			expectederr = open(self.error, "r").read().replace("\r", "")
 			if testerr != expectederr:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Error output differs from test: " + self.error + " vs " + self.error+"ran")
-				print(testerr)
-				print(expectederr)
 				print("")
 				return 1
 		if (err != 0 and self.error == None) or (err == 0 and self.error != None):
