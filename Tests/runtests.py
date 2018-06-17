@@ -24,15 +24,23 @@ class TestFile:
 		self.source = source
 		self.output = output
 		self.input = inp
+		self.error = None
+
+	def set_error(self, err):
+		self.error = err
 
 	def test(self):
 		print("Running " + self.source)
-		start = time.time()
 		err = 0
+		command = "java -jar ../bin/blz-ospl.jar "+self.source
 		if (self.input != None):
-			err = call("java -jar ../bin/blz-ospl.jar "+ self.source +" < "+ self.input + " > " + self.output + "ran", shell=True)
-		else:
-			err = call("java -jar ../bin/blz-ospl.jar "+ self.source + " > "+self.output+"ran", shell=True)
+			command = command + " < " + self.input
+		if self.output != None:
+			command = command + " > " + self.output + "ran"
+		if (self.error != None):
+			command = command + " 2> "+self.error+"ran"
+		start = time.time()
+		err = call(command, shell=True)
 		end = time.time()
 		print("Test took: " + str(round((end-start) * 1000) / 1000) + " seconds")
 		if (self.output != None):
@@ -41,16 +49,24 @@ class TestFile:
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Output differs from test: " + self.output + " vs " + self.output+"ran")
-				print()
+				print("")
 				return 1
-			elif err != 0:
+		if self.error != None:
+			testerr = open(self.error + "ran", "r").read().replace("\r", "")
+			expectederr = open(self.error, "r").read().replace("\r", "")
+			if testerr != expectederr:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
-				print("Program returned exit code: "+str(err))
-				print()
+				print("Error output differs from test: " + self.error + " vs " + self.error+"ran")
+				print("")
 				return 1
-			else:
-				print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
-		print()
+		if (err != 0 and self.error == None) or (err == 0 and self.error != None):
+			print(bcolors.FAIL + "Failed" + bcolors.ENDC)
+			print("Program returned exit code: "+str(err))
+			print("")
+			return 1
+		print(bcolors.OKGREEN + "Passed" + bcolors.ENDC)
+		print("")
+		return 0
 
 def run_tests():
 	result = 0
@@ -59,6 +75,8 @@ def run_tests():
 			for file in os.listdir(folder):
 				if file.endswith(".blz") and folder != "tmp":
 					src = os.path.join(folder, file)
+					
+					# Set input and output files if they exist
 					inp = None
 					output = None
 					if os.access(src.split(".")[0] + ".in", os.R_OK):
@@ -66,6 +84,11 @@ def run_tests():
 					if os.access(src.split(".")[0] + ".out", os.R_OK):
 						output = src.split(".")[0] + ".out"
 					tf = TestFile(src, output, inp)
+
+					# Set an error file if it exists
+					if os.access(src.split(".")[0]+".err", os.R_OK):
+						tf.set_error(src.split(".")[0]+".err")
+					# Run the test, set the error flag if it failed
 					if tf.test() == 1:
 						result = 1
 	if (result == 0):

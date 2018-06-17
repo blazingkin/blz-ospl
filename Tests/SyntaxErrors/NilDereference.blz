@@ -1,0 +1,5 @@
+:main
+	print("test")
+	a = {blz.nil}
+	print(a.thing)	
+end

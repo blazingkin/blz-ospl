@@ -8,6 +8,7 @@
 *.class
 *.classpath
 *.outran
+*.errran
 target/*
 language/target/*
 launcher/target/*
