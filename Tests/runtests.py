@@ -57,6 +57,8 @@ class TestFile:
 			if testerr != expectederr:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
 				print("Error output differs from test: " + self.error + " vs " + self.error+"ran")
+				print(testerr)
+				print(expectederr)
 				print("")
 				return 1
 		if (err != 0 and self.error == None) or (err == 0 and self.error != None):
