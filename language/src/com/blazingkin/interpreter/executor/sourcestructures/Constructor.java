@@ -144,7 +144,7 @@ public class Constructor {
 	private static void initializeArguments(Constructor constructor, BLZObject newObj,
 											Value[] args, boolean passByReference) throws BLZRuntimeException{
 		if (args.length > constructor.argumentNames.length){
-			throw new BLZRuntimeException(null, "Too many arguments passed to constructor " + constructor.name);
+			throw new BLZRuntimeException("Too many arguments passed to constructor " + constructor.name);
 		}
 		if (constructor.takesArguments){
 			if (passByReference){

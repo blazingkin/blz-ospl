@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorSemicolonDelimitedNode;
@@ -20,7 +19,8 @@ public class RegisteredLine implements RuntimeStackElement{
 	public final String args;
 	private String[] argsArr;
 	private ASTNode[] nodes;
-	public RegisteredLine(Instruction instr, String line){
+	private int lineNum;
+	public RegisteredLine(Instruction instr, String line, int lineNum){
 		this.instr = instr;
 		if (instr.executor instanceof InstructionExecutorStringArray){
 			argsArr = line.split(" ");
@@ -30,12 +30,14 @@ public class RegisteredLine implements RuntimeStackElement{
 			nodes = ExpressionExecutor.extractSemicolonDelimitedNodes(ExpressionParser.parseAndCollapse(line));
 		}
 		this.args = line;
+		this.lineNum = lineNum;
 	}
 	
-	public RegisteredLine(ASTNode root){
+	public RegisteredLine(ASTNode root, int lineNum){
 		this.root = root;
 		this.instr = Instruction.INVALID;
 		this.args = null;
+		this.lineNum = lineNum;
 	}
 	
 	public Instruction getInstr(){
@@ -46,20 +48,24 @@ public class RegisteredLine implements RuntimeStackElement{
 	}
 	
 	public Value run(Context con) throws BLZRuntimeException{
-		if (root != null){
-			if (instr != null && instr != Instruction.INVALID){
-				return ((InstructionExecutorValue)instr.executor).run(root.execute(con));
+		try {
+			if (root != null){
+				if (instr != null && instr != Instruction.INVALID){
+					return ((InstructionExecutorValue)instr.executor).run(root.execute(con));
+				}
+				return root.execute(con);
 			}
-			return root.execute(con);
+			if (instr.executor instanceof InstructionExecutorStringArray){
+				((InstructionExecutorStringArray) instr.executor).run(argsArr);
+				return new Value(VariableTypes.Nil,null);
+			}
+			if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
+				return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes);
+			}
+			return instr.executor.run(args, con);
+		}catch(BLZRuntimeException exception){
+			throw new BLZRuntimeException("Error occurred on line "+lineNum+"\n"+exception.getMessage());
 		}
-		if (instr.executor instanceof InstructionExecutorStringArray){
-			((InstructionExecutorStringArray) instr.executor).run(argsArr);
-			return new Value(VariableTypes.Nil,null);
-		}
-		if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
-			return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes);
-		}
-		return instr.executor.run(args, con);
 	}
 	
 	public String toString(){

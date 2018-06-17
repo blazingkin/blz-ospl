@@ -174,10 +174,10 @@ public class Variable {
 				return new Value(VariableTypes.Double, dtop.divide(dbot, MathContext.DECIMAL128));
 			}
 		}catch(ArithmeticException e){
-			throw new BLZRuntimeException(null, "Attempted to divide by 0!");
+			throw new BLZRuntimeException("Attempted to divide by 0!");
 		}
 		Interpreter.throwError("Could not convert one of "+top+" or "+bottom+" to a dividable type");
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value expValues(Value v1, Value v2){
@@ -195,7 +195,7 @@ public class Variable {
 			return Value.doub(powerBig(d1, d2));
 		}
 		Interpreter.throwError("Failed Taking an Exponent with "+v1 + " and "+v2);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value logValues(Value v1, Value v2){
@@ -208,7 +208,7 @@ public class Variable {
 			return new Value(VariableTypes.Double, BigDecimalMath.log(getDoubleVal(v1).setScale(12, RoundingMode.HALF_UP)));
 		}
 		Interpreter.throwError("Failed Taking a Logarithm with "+v1 + " and "+v2);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	

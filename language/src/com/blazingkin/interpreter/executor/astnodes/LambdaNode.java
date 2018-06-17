@@ -37,7 +37,8 @@ public class LambdaNode extends BinaryNode {
     }
 
     public Value execute(Context con){
-        MethodNode node = new MethodNode(parameterNames, this.args[1]);
+        // TODO Fix lambdas always registering line number as -1
+        MethodNode node = new MethodNode(parameterNames, this.args[1], -1);
         return Value.closure(new Closure(con, node));
     }
 

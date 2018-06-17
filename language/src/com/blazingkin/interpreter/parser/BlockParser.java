@@ -10,6 +10,7 @@ public class BlockParser {
 		boolean isStart = input.isStart(); // Base case for recursion. This should be true only in the initial call
         ArrayList<Either<SourceLine, ParseBlock>> result = new ArrayList<Either<SourceLine, ParseBlock>>();
         while (input.hasNext()){
+			int index = input.getIndex() + lineOffset;
             String line = input.next();
             if (isEnd(line)){
 				if (isStart){
@@ -18,11 +19,10 @@ public class BlockParser {
                 return result;
             }else if (isBlockHeader(line)){
                 ArrayList<Either<SourceLine, ParseBlock>> childBlock = parseBody(input, lineOffset);
-                ParseBlock newBlock = new ParseBlock(line, childBlock);
+                ParseBlock newBlock = new ParseBlock(line, childBlock, index);
                 result.add(Either.right(newBlock));
             }else{
-				// We have already used next, so the index is one past the one we looked at
-				int index = input.getIndex() - 1 + lineOffset;
+
 				SourceLine sourceLine = new SourceLine(line.split("(?<!\\\\)#")[0].trim(), index);
                 result.add(Either.left(sourceLine));
             }

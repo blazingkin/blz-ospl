@@ -13,13 +13,13 @@ public class CloseResource implements InstructionExecutorValue {
 
     public Value run(Value v) throws BLZRuntimeException {
         if (v.type != VariableTypes.Resource) {
-            throw new BLZRuntimeException(null, "Tried to close non-resource "+v);
+            throw new BLZRuntimeException("Tried to close non-resource "+v);
         }
         BLZResource resource = (BLZResource) v.value;
         try {
             resource.close();
         }catch(IOException e){
-            throw new BLZRuntimeException(null, "Error when closing resource: "+e.getMessage());
+            throw new BLZRuntimeException("Error when closing resource: "+e.getMessage());
         }
         return Value.bool(true);
     }

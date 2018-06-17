@@ -47,7 +47,7 @@ public class BlockNode extends ASTNode {
         for (Either<SourceLine, ParseBlock> line : body){
             if (line.isLeft()){
                 /* It is some string, parse it to a RegisteredLine */
-                Optional<RegisteredLine> parsed = ExpressionParser.parseLine(line.getLeft().get().line);
+                Optional<RegisteredLine> parsed = ExpressionParser.parseLine(line.getLeft().get());
                 if (parsed.isPresent()){
                     lines.add(parsed.get());
                 }
@@ -55,13 +55,13 @@ public class BlockNode extends ASTNode {
                 /* It is some block, parse it to a blocknode */
                 ParseBlock block = line.getRight().get();
                 if (ifParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(ifParser.parseBlock(block)));
+                    lines.add(new RegisteredLine(ifParser.parseBlock(block), block.lineNumber));
                 }else if (forParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(forParser.parseBlock(block)));
+                    lines.add(new RegisteredLine(forParser.parseBlock(block), block.lineNumber));
                 }else if (whileParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(whileParser.parseBlock(block)));
+                    lines.add(new RegisteredLine(whileParser.parseBlock(block), block.lineNumber));
                 }else if (tryCatchParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(tryCatchParser.parseBlock(block)));
+                    lines.add(new RegisteredLine(tryCatchParser.parseBlock(block), block.lineNumber));
                 }
             }
         }
@@ -70,7 +70,7 @@ public class BlockNode extends ASTNode {
         lines.toArray(this.body);
         if (lines.isEmpty()){
             this.body = new RegisteredLine[1];
-            this.body[0] = new RegisteredLine(new ValueASTNode(Value.nil()));
+            this.body[0] = new RegisteredLine(new ValueASTNode(Value.nil()), -1);
         }
     }
 

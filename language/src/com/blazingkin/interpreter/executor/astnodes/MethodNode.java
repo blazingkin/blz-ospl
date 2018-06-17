@@ -51,13 +51,13 @@ public class MethodNode extends ASTNode {
     }
 
     /* For initializing anonymous functions */
-    public MethodNode(String[] argNames, ASTNode body){
+    public MethodNode(String[] argNames, ASTNode body, int lineNum){
         if (argNames.length != 0) {
             takesVariables = true;
             variables = argNames;
         }
         name = "λ";
-        this.body = new BlockNode(true, new RegisteredLine(body));
+        this.body = new BlockNode(true, new RegisteredLine(body, lineNum));
     }
 
     public Value execute(Context c) throws BLZRuntimeException {

@@ -54,7 +54,7 @@ public class Context {
 		if (parent != null){
 			return parent.getValue(s);
 		}else{
-			throw new BLZRuntimeException(null,"Could not find a value for "+s );
+			throw new BLZRuntimeException("Could not find a value for "+s );
 		}
 	}
 	

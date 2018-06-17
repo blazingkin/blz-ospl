@@ -46,7 +46,7 @@ public class LessThanNode extends BinaryNode {
 					}
 				}
 			}
-			throw new BLZRuntimeException(null, "Did not know how to compare less than for values "+v1+" and "+v2);
+			throw new BLZRuntimeException("Did not know how to compare less than for values "+v1+" and "+v2);
 		}
 		BigDecimal d1 = Variable.getDoubleVal(v1);
 		BigDecimal d2 = Variable.getDoubleVal(v2);

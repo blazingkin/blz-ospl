@@ -20,7 +20,7 @@ public class ScannerReadNext implements InstructionExecutorValue {
         try {
             return Value.string(s.read());
         }catch(IOException e){
-            throw new BLZRuntimeException(null, e.getMessage());
+            throw new BLZRuntimeException(e.getMessage());
         }
     }
 

@@ -17,23 +17,23 @@ public class ExpressionParser {
 	private static Stack<ASTNode> operandStack = new Stack<ASTNode>();
 	private static Stack<ASTNode> functionNames = new Stack<ASTNode>();
 	
-	public static Optional<RegisteredLine> parseLine(String line) throws SyntaxException {
-		String splits[] = line.split(" ");
+	public static Optional<RegisteredLine> parseLine(SourceLine source) throws SyntaxException {
+		String splits[] = source.line.split(" ");
 			if (splits.length == 0){
 				return Optional.empty();
 			}
 			try{
 				Instruction instr = Instruction.getInstructionType(splits[0]);
 				if (instr == null || instr == Instruction.INVALID){
-					if (line.trim().isEmpty() || line.trim().charAt(0) == ':'){
+					if (source.line.trim().isEmpty() || source.line.trim().charAt(0) == ':'){
 						return Optional.empty();
 					}
-					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(line)));
+					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(source.line), source.lineNumber));
 				}
-				String newStr = line.replaceFirst(splits[0], "").trim();
-				return Optional.of(new RegisteredLine(instr, newStr));
+				String newStr = source.line.replaceFirst(splits[0], "").trim();
+				return Optional.of(new RegisteredLine(instr, newStr, source.lineNumber));
 			}catch(Exception e){
-				throw new SyntaxException("Did not know how to parse line: "+line);
+				throw new SyntaxException("Did not know how to parse line: "+source.line+" on line "+source.lineNumber);
 			}
 	}
 

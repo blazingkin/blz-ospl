@@ -13,7 +13,7 @@ public class CreateResourceFromFilePath implements InstructionExecutorValue {
 
     public Value run(Value v) throws BLZRuntimeException{
         if (v.type != VariableTypes.String){
-            throw new BLZRuntimeException(null, "Tried to find file at non-string path: "+v.value);
+            throw new BLZRuntimeException("Tried to find file at non-string path: "+v.value);
         }
         String path = (String) v.value;
         File f = new File(path);
