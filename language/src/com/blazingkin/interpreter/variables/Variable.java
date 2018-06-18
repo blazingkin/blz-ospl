@@ -363,7 +363,7 @@ public class Variable {
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
 			}
-			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getParentFile().getAbsolutePath());
+			return new Value(VariableTypes.String, Executor.getCurrentProcess().readingFrom.getAbsoluteFile().getParentFile().getAbsolutePath());
 		case runningFileName:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
