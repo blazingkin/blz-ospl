@@ -415,7 +415,7 @@ public class Variable {
 			Value[] arr = (Value[]) v.value;
 			return arr[index.intValue()];
 		}
-		return new Value(VariableTypes.Nil, null);
+		throw new BLZRuntimeException("Expected "+v.value+" to be an array of values, but it is not.");
 	}
 	
 	public static Value getValueOfArray(Value value, BigInteger index) {
@@ -433,7 +433,7 @@ public class Variable {
 	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con) throws BLZRuntimeException {
 		Value arr = con.getValue(arrayName);
 		if (arr.type != VariableTypes.Array){
-			Interpreter.throwError(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
+			throw new BLZRuntimeException(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
 		}
 		Value[] VArr = (Value[]) arr.value;
 		if (VArr.length <= index.intValue()){
@@ -462,7 +462,7 @@ public class Variable {
 		}
 		Value hash = con.getValue(hashName);
 		if (hash.type != VariableTypes.Hash){
-			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+			throw new BLZRuntimeException(hashName+" was not a hash ("+hash.typedToString()+" instead)");
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
