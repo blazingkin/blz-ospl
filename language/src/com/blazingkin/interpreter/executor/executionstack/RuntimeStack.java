@@ -34,11 +34,6 @@ public class RuntimeStack {
 			Variable.killContext(contextStack.pop());
 		}
 		se.onBlockEnd();
-		if (runtimeStack.size() == 0 && !Executor.immediateMode){
-			Executor.setCloseRequested(true);
-			Executor.getEventHandler().exitProgram("Reached end of program");
-			return null;
-		}
 		return null;
 	}
 	

@@ -20,6 +20,7 @@ import com.blazingkin.interpreter.executor.input.NumInput;
 import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.output.BLZLogging;
 import com.blazingkin.interpreter.executor.output.Echo;
+import com.blazingkin.interpreter.executor.output.FailTest;
 import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.RawEcho;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
@@ -54,7 +55,8 @@ public enum Instruction {
 	CLOSERESOURCE("BLZINTERNALCLOSERESOURCE", "Close resource", new CloseResource()),
 	SCANNERHASNEXT("BLZINTERNALSCANNERHASNEXT", "Scanner has next byte", new ScannerHasNext()),
 	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext()),
-	WRITETORESOURCE("BLZINTERNALWRITETORESOURCE", "Write to resource", new WriteToResource());
+	WRITETORESOURCE("BLZINTERNALWRITETORESOURCE", "Write to resource", new WriteToResource()),
+	FAILTEST("FAILTEST", "Fail test", new FailTest());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.executor.UserTestRunner;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.library.BlzEventHandler;
@@ -68,6 +69,8 @@ public class Interpreter {
 			System.out.println("blz-ospl v"+Variable.getEnvVariable(SystemEnv.version).value);
 		}else if (option.equals("p") || option.equals("package")){
 			FileImportManager.handlePackageInstruction(fullArgs);
+		}else if (option.equals("t") || option.equals("test")){
+			UserTestRunner.runTests(fullArgs);
 		}else{
 			Interpreter.printHelp();
 			System.err.println("Unrecognized option: "+option);

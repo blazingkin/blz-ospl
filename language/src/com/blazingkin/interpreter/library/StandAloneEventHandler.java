@@ -30,7 +30,7 @@ public class StandAloneEventHandler implements BlzEventHandler {
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	final ScheduledFuture<?> beeperHandle =
 		       scheduler.scheduleAtFixedRate(flush, 50, 50, TimeUnit.MILLISECONDS);
-	
+
 	@Override
 	public void print(String contents) {
 		//System.out.print(contents);

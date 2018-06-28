@@ -1,6 +1,7 @@
 constructor Expect(value, exit_on_failure)
     :to_be(other)
         if value != other
+            FAILTEST
             print("Assertion Failed!")
             if other == {blz.nil}
                 print("Expected "+value+" to be nil")
@@ -18,6 +19,7 @@ constructor Expect(value, exit_on_failure)
 
     :to_not_be(other)
         if value == other
+            FAILTEST
             print("Assertion Failed!")
             if other == {blz.nil}
                 print("Expected "+value+" to not be nil")
@@ -58,6 +60,7 @@ constructor Expect(value, exit_on_failure)
 	
 	:is_greater_than(other)
 		if value <= other
+            FAILTEST
 			print("Assertion Failed!")
 			print("Expected "+value+" to be greater than "+other)
 			if exit_on_failure
@@ -71,6 +74,7 @@ constructor Expect(value, exit_on_failure)
 	
 	:is_less_than(other)
 		if value >= other
+            FAILTEST
 			print("Assertion Failed!")
 			print("Expected "+value+" to be less than "+other)
 			if exit_on_failure
