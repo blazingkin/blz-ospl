@@ -53,6 +53,9 @@ public class Interpreter {
 		System.out.println("Manage Packages");
 		System.out.println("blz -p[ackage] [help | list]");
 		System.out.println();
+		System.out.println("Run Test Files");
+		System.out.println("blz -t[est] FILES...");
+		System.out.println();
 		System.out.println("Print version number");
 		System.out.println("blz -v[ersion]");
 		System.out.println();
