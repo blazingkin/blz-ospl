@@ -1,0 +1,7 @@
+:main
+    func:other()
+end
+
+:func:other()
+    print("test")
+end

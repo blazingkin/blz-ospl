@@ -37,7 +37,7 @@ public class MethodNode extends ASTNode {
 
     public MethodNode(String header, ArrayList<Either<SourceLine, ParseBlock>> body, Process parent) throws SyntaxException {
         this.parent = parent;
-        String ln = header.split(":")[header.split(":").length - 1];
+        String ln = header.replaceFirst(":", "");
 		String[] nameAndArgs = ExpressionParser.parseBindingWithArguments(ln);
 		name = nameAndArgs[0];
 		if (nameAndArgs.length > 1){
