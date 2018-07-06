@@ -28,7 +28,7 @@ end
 	for i = start; i < end; i++
 		string_new = string_new + string[i]
 	end
-	return string_new
+	BLZINTERNALREBIND string, string_new
 end
 
 :is_number?(string)
@@ -77,7 +77,6 @@ end
 end
 
 # Trims whitespace
-# Note, does not currently work with !
 :trim(string)
 	whitespace_chars = [{text.space}, {text.newline}, {text.tab}]
 	while (string.length() != 0 && whitespace_chars.contains?(string[0]))

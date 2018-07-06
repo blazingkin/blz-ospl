@@ -1,0 +1,7 @@
+:main
+    str = "    test"
+    str.trim()
+    print(str)
+    str.trim!()
+    print(str)
+end

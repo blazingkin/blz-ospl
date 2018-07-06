@@ -1,0 +1,5 @@
+:main
+    str = "test"
+    str.slice!(0, 2)
+    print(str)
+end
