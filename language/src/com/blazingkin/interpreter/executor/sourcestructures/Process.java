@@ -73,9 +73,9 @@ public class Process implements RuntimeStackElement {
 	
 	public String toString() {
 		if (readingFrom != null) {
-			return "<Process "+readingFrom.getName()+">";
+			return "<Source File "+readingFrom.getName()+">";
 		}
-		return "<Process "+hashCode()+">";
+		return "<Source File "+hashCode()+">";
 	}
 	
 	private void setupFileProcess(File runFile) throws FileNotFoundException{

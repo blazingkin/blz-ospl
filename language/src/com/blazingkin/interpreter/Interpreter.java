@@ -42,7 +42,7 @@ public class Interpreter {
 	
 	public static void printHelp(){
 		System.out.println("How to use BLZ-OSPL:");
-		System.out.println("The language home page is at http://blazingk.in/blz-ospl");
+		System.out.println("The language home page is at https://blazingk.in/blz-ospl");
 		System.out.println();
 		System.out.println("Execute a blz file (typically .blz extension)");
 		System.out.println("blz PATH [-m MAIN]");
@@ -152,20 +152,7 @@ public class Interpreter {
 			Executor.getEventHandler().err("Type 'err' to see the error\n");
 			return;
 		}
-		if (logging){
-			if (!Executor.getRunningProcesses().isEmpty()){
-				Stack<RuntimeStackElement> reverse = new Stack<RuntimeStackElement>();
-				while (!RuntimeStack.runtimeStack.isEmpty()) {
-					reverse.push(RuntimeStack.runtimeStack.pop());
-				}
-				System.err.println("Stack:");
-				while (!reverse.isEmpty()) {
-					RuntimeStackElement rse = reverse.pop();
-					System.err.println((rse.getLineNum() == -1 ? "" : "Line " + rse.getLineNum()) + "\t" + rse.toString());
-				}
-			}
-			System.err.println(error);
-		}
+		System.err.println(error);
 		Executor.getEventHandler().exitProgram("An Error Occured");
 	}
 

@@ -81,13 +81,23 @@ public class MethodNode extends ASTNode {
         if (takesVariables){
             bindArguments(values, passByReference, methodContext);
         }
-        Value result = body.execute(methodContext);
-        Variable.killContext(methodContext);
-        if(pushedParent){
-            RuntimeStack.pop();
+        try {
+            Value result = body.execute(methodContext);
+            Variable.killContext(methodContext);
+            if(pushedParent){
+                RuntimeStack.pop();
+            }
+            Executor.setReturnMode(false);
+            return result;
+        }catch(BLZRuntimeException exception) {
+            String message = "In "+toString()+"\n"+exception.getMessage();
+            if (pushedParent){
+                String fileName = RuntimeStack.processStack.peek().toString();
+                message = "In " + fileName + "\n"+message;
+                RuntimeStack.pop();
+            }
+            throw new BLZRuntimeException(message, exception.alreadyCaught);
         }
-        Executor.setReturnMode(false);
-        return result;
     }
 
 	public String toString(){
