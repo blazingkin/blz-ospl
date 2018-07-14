@@ -1,0 +1,11 @@
+:main
+    for i = 0; i < 100; i++
+        async work()
+    end
+    sleep(200)
+    print("done")
+end
+
+:work
+    sleep(20)
+end
