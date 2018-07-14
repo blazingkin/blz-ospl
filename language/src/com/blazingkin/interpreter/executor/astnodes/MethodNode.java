@@ -68,7 +68,7 @@ public class MethodNode extends ASTNode {
 
     public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
         boolean pushedParent = false;
-        if (parent != null && (RuntimeStack.processStack.isEmpty() || RuntimeStack.processStack.peek().UUID != parent.UUID)){
+        if (parent != null && (RuntimeStack.isEmpty() || RuntimeStack.getProcessStack().peek().UUID != parent.UUID)){
             pushedParent = true;
             RuntimeStack.push(parent);
         }
@@ -92,7 +92,7 @@ public class MethodNode extends ASTNode {
         }catch(BLZRuntimeException exception) {
             String message = "In "+toString()+"\n"+exception.getMessage();
             if (pushedParent){
-                String fileName = RuntimeStack.processStack.peek().toString();
+                String fileName = RuntimeStack.getProcessStack().peek().toString();
                 message = "In " + fileName + "\n"+message;
                 RuntimeStack.pop();
             }

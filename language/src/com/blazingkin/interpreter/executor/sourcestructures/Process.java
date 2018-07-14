@@ -17,7 +17,6 @@ import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.BlockParser;
@@ -36,7 +35,7 @@ import in.blazingk.blz.packagemanager.FileImportManager;
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 import in.blazingk.blz.packagemanager.Package;
 
-public class Process implements RuntimeStackElement {
+public class Process {
 	public boolean runningFromFile = false;
 	public boolean runImports = true;
 	public File readingFrom;
@@ -272,7 +271,6 @@ public class Process implements RuntimeStackElement {
 	}
 	
 	
-	@Override
 	public void onBlockStart() throws BLZRuntimeException {
 		if (!staticRan){
 			staticRan = true;
@@ -290,17 +288,6 @@ public class Process implements RuntimeStackElement {
 			}
 			staticCode.execute(processContext);
 		}
-	}
-
-
-	@Override
-	public void onBlockEnd() {
-
-	}
-
-	@Override
-	public int getLineNum() {
-		return -1;
 	}
 	
 }

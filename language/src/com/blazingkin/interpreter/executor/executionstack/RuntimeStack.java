@@ -1,57 +1,57 @@
 package com.blazingkin.interpreter.executor.executionstack;
 
 import java.util.ArrayDeque;
+import java.util.HashMap;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
 
 public class RuntimeStack {
+
+	public static HashMap<Long, ArrayDeque<Process>> threadProcessStack = new HashMap<Long, ArrayDeque<Process>>();
+
+
 	
-	public static ArrayDeque<RuntimeStackElement> runtimeStack = new ArrayDeque<RuntimeStackElement>();
-	public static ArrayDeque<Process> processStack = new ArrayDeque<Process>();
-	public static ArrayDeque<Context> contextStack = new ArrayDeque<Context>();
-	public static ArrayDeque<Context> processContextStack = new ArrayDeque<Context>();
-	
-	public static void push(RuntimeStackElement se) throws BLZRuntimeException{
-		runtimeStack.push(se);
-	    if (se instanceof Process){
-			processStack.push((Process) se);
-			contextStack.push(new Context(Variable.getGlobalContext()));
-			processContextStack.push(contextStack.peek());
+	public static void push(Process process) throws BLZRuntimeException{
+		ArrayDeque<Process> pStack = threadProcessStack.get(Thread.currentThread().getId());
+		if (pStack == null) {
+			threadProcessStack.put(Thread.currentThread().getId(), new ArrayDeque<Process>());
+			pStack = threadProcessStack.get(Thread.currentThread().getId());
 		}
-		se.onBlockStart();
+		pStack.push(process);
+		process.onBlockStart();
 	}
 	
-	public static Value pop(){
-		RuntimeStackElement se = runtimeStack.pop();
-		if (se instanceof Process){
-			processStack.pop();
-			processContextStack.pop();
-			Variable.killContext(contextStack.pop());
+	public static void pop(){
+		ArrayDeque<Process> pStack = threadProcessStack.get(Thread.currentThread().getId());
+		if (pStack == null) {
+			threadProcessStack.put(Thread.currentThread().getId(), new ArrayDeque<Process>());
+			return;
 		}
-		se.onBlockEnd();
-		return null;
-	}
-	
-	public static void pushContext(Context con){
-		contextStack.push(con);
-	}
-	
-	public static Context popContext(){
-		return contextStack.pop();
+		pStack.pop();
 	}
 
 	public static boolean isEmpty() {
-		return runtimeStack.isEmpty();
+		ArrayDeque<Process> pStack = threadProcessStack.get(Thread.currentThread().getId());
+		if (pStack == null) {
+			threadProcessStack.put(Thread.currentThread().getId(), new ArrayDeque<Process>());
+			return true;
+		}
+		return pStack.isEmpty();
+	}
+
+	public static ArrayDeque<Process> getProcessStack() {
+		ArrayDeque<Process> pStack = threadProcessStack.get(Thread.currentThread().getId());
+		if (pStack == null) {
+			threadProcessStack.put(Thread.currentThread().getId(), new ArrayDeque<Process>());
+			pStack = threadProcessStack.get(Thread.currentThread().getId());
+		}
+		return pStack;
 	}
 	
 	public static void cleanup(){
-		runtimeStack.clear();
-		processStack.clear();
-		contextStack.clear();
+		threadProcessStack.clear();
 	}
 }

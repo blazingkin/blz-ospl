@@ -3,10 +3,10 @@ package com.blazingkin.interpreter.expressionabstraction;
 import java.util.ArrayList;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.parser.ExpressionParser;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionExecutor {
 	
@@ -17,7 +17,7 @@ public class ExpressionExecutor {
 	}
 	
 	public static Value parseExpression(String line) throws BLZRuntimeException{
-		return parseExpression(line, Executor.getCurrentContext());
+		return parseExpression(line, Variable.getGlobalContext());
 	}
 	
 	public static Value[] extractCommaDelimits(ASTNode root, Context con) throws BLZRuntimeException{

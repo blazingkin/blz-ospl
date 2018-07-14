@@ -25,3 +25,7 @@ end
 :raw_print(char)
 	BLZINTERNALRAWECHO char
 end
+
+:sleep(milliseconds)
+	WAIT milliseconds
+end
