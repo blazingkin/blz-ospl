@@ -1,0 +1,15 @@
+:main
+    try
+        asdf()
+        print("No error")
+    catch
+        print(error)
+    end
+
+    try
+        throw "An error message"
+    catch
+        print(error)
+    end
+
+end

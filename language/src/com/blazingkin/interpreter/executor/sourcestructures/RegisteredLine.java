@@ -64,7 +64,7 @@ public class RegisteredLine implements RuntimeStackElement{
 			}
 			return instr.executor.run(args, con);
 		}catch(BLZRuntimeException exception){
-			if (!exception.alreadyCaught){
+			if (!exception.alreadyCaught && exception.exceptionValue == null){
 				throw new BLZRuntimeException("Error occurred on line "+lineNum+"\n"+exception.getMessage(), true);
 			}else{
 				throw exception;

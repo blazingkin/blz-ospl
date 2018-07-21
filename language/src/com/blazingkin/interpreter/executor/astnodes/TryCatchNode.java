@@ -39,6 +39,11 @@ public class TryCatchNode extends ASTNode {
         try {
             return mainBlock.execute(con);
         }catch(BLZRuntimeException exception){
+            Value errorObject = exception.exceptionValue;
+            if (errorObject == null) {
+                errorObject = Value.string(exception.getMessage());
+            }
+            con.setValue("error", errorObject);
             return errorBlock.execute(con);
         }
     }

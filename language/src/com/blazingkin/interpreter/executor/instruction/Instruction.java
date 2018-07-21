@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
+import com.blazingkin.interpreter.executor.executionorder.Throw;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
 import com.blazingkin.interpreter.executor.filesystem.CloseResource;
 import com.blazingkin.interpreter.executor.filesystem.CreateResource;
@@ -56,7 +57,8 @@ public enum Instruction {
 	SCANNERHASNEXT("BLZINTERNALSCANNERHASNEXT", "Scanner has next byte", new ScannerHasNext()),
 	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext()),
 	WRITETORESOURCE("BLZINTERNALWRITETORESOURCE", "Write to resource", new WriteToResource()),
-	FAILTEST("FAILTEST", "Fail test", new FailTest());
+	FAILTEST("FAILTEST", "Fail test", new FailTest()),
+	THROW("THROW", "throw", new Throw());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
