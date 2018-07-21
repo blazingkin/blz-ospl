@@ -29,7 +29,7 @@ public class BLZRuntimeException extends Exception {
     }
 
     public BLZRuntimeException(Value exceptionValue){
-        super("User thrown error");
+        super(exceptionValue.value.toString());
         this.exceptionValue = exceptionValue;
     }
 

@@ -7,9 +7,13 @@
     end
 
     try
-        throw "An error message"
+        this_throws_an_error()
     catch
         print(error)
     end
 
+end
+
+:this_throws_an_error
+    throw "An error message"
 end

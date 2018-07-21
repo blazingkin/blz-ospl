@@ -90,6 +90,9 @@ public class MethodNode extends ASTNode {
             Executor.setReturnMode(false);
             return result;
         }catch(BLZRuntimeException exception) {
+            if (exception.exceptionValue != null){
+                throw exception;
+            }
             String message = "In "+toString()+"\n"+exception.getMessage();
             if (pushedParent){
                 String fileName = RuntimeStack.processStack.peek().toString();
