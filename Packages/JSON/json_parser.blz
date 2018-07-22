@@ -1,0 +1,90 @@
+:parse_json(json)
+    tokens = JSONState(json).tokens
+
+end
+
+constructor JSONState(json)
+    tokens = []
+    lexing_position = 0
+    tokenize()
+
+    :tokenize
+        num_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        for lexing_position = 0; lexing_position < json.length(); lexing_position++
+            char = json[lexing_position]
+            if char == {text.space}
+
+            else if char == {text.newline}
+
+            else if char == {text.tab}
+
+            else if char == "{"
+                # Open object
+                tokens.add!(JSONToken("OO"))
+            else if char == "}"
+                # Close object
+                tokens.add!(JSONToken("CO"))
+            else if char == ":"
+                # Key value seperator
+                tokens.add!(JSONToken("OS"))
+            else if char == ","
+                tokens.add!(JSONToken("C"))
+            else if char == "["
+                # Open array
+                tokens.add!(JSONToken("OA"))
+            else if char == "]"
+                # Close array
+                tokens.add!(JSONToken("CA"))
+            else if char == "\""
+                lexing_position++
+                result = ""
+                # Need to handle unclosed string gracefully
+                while json[lexing_position] != "\""
+                    if json[lexing_position] == "\\"
+                        lexing_position++
+                        # Need to handle \n, \t, \r etc
+                        result = result + json[lexing_position]                        
+                    else
+                        result = result + json[lexing_position]
+                    end
+                    lexing_position++
+                end
+                # Add string token
+                tokens.add!(JSONToken("S", result))
+            else if char == "n" # Handle null
+                if json.length() < lexing_position + 4 || json[lexing_position + 1] != "u" || json[lexing_position + 2] != "l" || json[lexing_position + 3] != "l"
+                    throw JSONError("Unexpected character n")
+                end
+                lexing_position = lexing_position + 3
+                tokens.add!("NULL")
+            else if char == "t" # Handle true
+                if json.length() < lexing_position + 4 || json[lexing_position + 1] != "r" || json[lexing_position + 2] != "u" || json[lexing_position + 3] != "e"
+                    throw JSONError("Unexpected character t")
+                end
+                lexing_position = lexing_position + 3
+                tokens.add!("TRUE")
+            else if char == "f" # Handle false
+                if json.length() < lexing_position + 5 || json[lexing_position + 1] != "a" || json[lexing_position + 2] != "l" || json[lexing_position + 3] != "s" || json[lexing_position + 4] != "e"
+                    throw JSONError("Unexpected character f")
+                end
+                lexing_position = lexing_position + 4
+                tokens.add!("FALSE")
+            end
+        end
+    end
+
+end
+
+constructor JSONToken(type, token)
+    :show
+        "Token " + type + token
+    end
+end
+
+# All errors thrown will be JSONErrors
+constructor JSONError(message)
+    type = "JSON"
+    :show
+        "JSON Error: " + message
+    end
+end
