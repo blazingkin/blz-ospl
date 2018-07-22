@@ -1,0 +1,56 @@
+:main
+    # Should run first clause and skip others
+    if true
+        print("correct")
+    else if true
+        print("wrong")
+    else
+        print("wrong")
+    end
+
+    # Should skip first clause, run second and then skip else
+    if false
+        print("wrong")
+    else if true
+        print("correct")
+    else
+        print("wrong")
+    end
+
+    # Should be able to skip any number of else if clauses
+    if false
+        print("wrong")
+    else if false
+        print("wrong")
+    else if true
+        print("correct")
+    else
+        print("wrong")
+    end
+
+
+
+    # Should be able to skip any number of else if clauses
+    if false
+        print("wrong")
+    else if false
+        print("wrong")
+    else if false
+        print("wrong")
+    else if false
+        print("wrong")
+    else if true
+        print("correct")
+    else
+        print("wrong")
+    end
+
+    if false
+        print("wrong")
+    else if false
+        print("wrong")
+    else
+        print("correct")
+    end
+
+end

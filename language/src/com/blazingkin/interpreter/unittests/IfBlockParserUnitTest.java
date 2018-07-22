@@ -34,7 +34,7 @@ public class IfBlockParserUnitTest {
     public void shouldKnowWhatToParse(){
         IfBlockParser parser = new IfBlockParser();
         UnitTestUtil.assertEqual(parser.shouldParse("if blah"), true);
-        UnitTestUtil.assertEqual(parser.shouldParse("IF blah"), true);
+        UnitTestUtil.assertEqual(parser.shouldParse("IF blah"), false);
         UnitTestUtil.assertEqual(parser.shouldParse("blah"), false);
         UnitTestUtil.assertEqual(parser.shouldParse("if\tblah"), true);
     }

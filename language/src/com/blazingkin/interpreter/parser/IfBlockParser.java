@@ -12,8 +12,8 @@ import com.blazingkin.interpreter.variables.Value;
 public class IfBlockParser implements BlockParseProtocol {
 
     public boolean shouldParse(String header){
-        return header.length() > 2 && (header.charAt(0) == 'i' || header.charAt(0) == 'I') &&
-                                        (header.charAt(1) == 'f' || header.charAt(1) == 'F') &&
+        return header.length() > 2 && (header.charAt(0) == 'i') &&
+                                        (header.charAt(1) == 'f') &&
                                         (header.charAt(2) == ' ' || header.charAt(2) == '\t');
     }
 
@@ -23,11 +23,17 @@ public class IfBlockParser implements BlockParseProtocol {
         ArrayList<Either<SourceLine, ParseBlock>> lines = block.getLines();
         int elseIndex = lines.size();
         boolean elseFound =  false;
+        boolean elseIfFound = false;
+        String elseIfLine = "";
         for (int i = 0; i < lines.size(); i++){
             if (lines.get(i).isLeft() && isElse(lines.get(i).getLeft().get().line)){
                 /* If it is an else marker */
                 elseFound = true;
                 elseIndex = i;
+                if (isElseIf(lines.get(i).getLeft().get().line)) {
+                    elseIfFound = true;
+                    elseIfLine = lines.get(i).getLeft().get().line.replaceFirst("else if", "").trim();
+                }
                 if (i == lines.size() - 1){
                     throw new SyntaxException("Else was the last line of an if statement!");
                 }
@@ -38,7 +44,12 @@ public class IfBlockParser implements BlockParseProtocol {
         
         ASTNode elseNode;
         List<Either<SourceLine, ParseBlock>> mainLines;
-        if (elseFound){
+        if (elseIfFound){
+            ArrayList<Either<SourceLine, ParseBlock>> elseIfBody = new ArrayList<Either<SourceLine, ParseBlock>>(lines.subList(elseIndex + 1, lines.size()));
+            ParseBlock elseIfBlock = new ParseBlock(elseIfLine, elseIfBody, block.lineNumber + elseIndex);
+            elseNode = parseBlock(elseIfBlock);
+            mainLines = lines.subList(0, elseIndex);
+        }else if (elseFound){
             List<Either<SourceLine, ParseBlock>> elseBlock = lines.subList(elseIndex + 1, lines.size());
             elseNode = new BlockNode(elseBlock, false);
             mainLines = lines.subList(0, elseIndex);
@@ -52,7 +63,11 @@ public class IfBlockParser implements BlockParseProtocol {
     }
 
     private boolean isElse(String line){
-        return line.toLowerCase().equals("else");
+        return line.toLowerCase().startsWith("else");
+    }
+
+    private boolean isElseIf(String line){
+        return line.toLowerCase().startsWith("else if");
     }
 
 }
