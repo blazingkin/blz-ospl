@@ -1,12 +1,13 @@
 :parse_json(json)
-    tokens = JSONState(json).tokens
-
+    JSONState(json).value
 end
 
 constructor JSONState(json)
     tokens = []
     lexing_position = 0
+    on_token = 0
     tokenize()
+    value = parse()
 
     :tokenize
         num_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -50,27 +51,86 @@ constructor JSONState(json)
                     lexing_position++
                 end
                 # Add string token
-                tokens.add!(JSONToken("S", result))
+                tokens.add!(JSONToken("L", result))
             else if char == "n" # Handle null
                 if json.length() < lexing_position + 4 || json[lexing_position + 1] != "u" || json[lexing_position + 2] != "l" || json[lexing_position + 3] != "l"
                     throw JSONError("Unexpected character n")
                 end
                 lexing_position = lexing_position + 3
-                tokens.add!("NULL")
+                tokens.add!(JSONToken("L", {blz.nil}))
             else if char == "t" # Handle true
                 if json.length() < lexing_position + 4 || json[lexing_position + 1] != "r" || json[lexing_position + 2] != "u" || json[lexing_position + 3] != "e"
                     throw JSONError("Unexpected character t")
                 end
                 lexing_position = lexing_position + 3
-                tokens.add!("TRUE")
+                tokens.add!(JSONToken("L", true))
             else if char == "f" # Handle false
                 if json.length() < lexing_position + 5 || json[lexing_position + 1] != "a" || json[lexing_position + 2] != "l" || json[lexing_position + 3] != "s" || json[lexing_position + 4] != "e"
                     throw JSONError("Unexpected character f")
                 end
                 lexing_position = lexing_position + 4
-                tokens.add!("FALSE")
+                tokens.add!(JSONToken("L", false))
             end
         end
+    end
+    
+    # Recursive parse function
+    :parse
+        type = peek_type()
+        value = consume(type)
+        if type == "L"
+            return value
+        else if type == "OA" # Handle arrays
+            arr = []
+            comma_found = true
+            while comma_found && peek_type() != "CA"
+                comma_found = false
+                arr.add!(parse())
+                if peek_type() == "C"
+                    comma_found = true
+                    consume("C")
+                end
+            end
+            consume("CA")
+            return arr
+        else if type == "OO"
+            obj = {}
+            comma_found = true
+            while comma_found && peek_type != "CO"
+                comma_found = false
+                key = parse()
+                consume("OS")
+                value = parse()
+                obj[key] = value
+                if peek_type() == "C"
+                    comma_found = true
+                    consume("C")
+                end
+            end
+            consume("CO")
+            return obj
+        else
+            throw JSONError("Unexpected token "+type+" ("+value+")")
+        end
+    end
+    
+    :peek_type
+        if on_token > tokens.size()
+            throw JSONError("Expected some JSON token, but reached end of string instead")
+        else
+            (tokens[on_token]).type
+        end
+    end
+
+    :consume(type)
+        if on_token >= tokens.size()
+            throw JSONError("Expected token "+type+" but reached end of JSON instead")
+        end
+        if tokens[on_token].type != type
+            throw JSONError("Expected token of type "+type+" but got "+tokens[on_token].type + "instead")
+        end
+        on_token++
+        tokens[on_token - 1].token
     end
 
 end
