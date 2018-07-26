@@ -1,10 +1,11 @@
 package com.blazingkin.interpreter.variables;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.executor.Executor;
 
 public class Context {
 	private Context parent;
@@ -13,7 +14,7 @@ public class Context {
 	public HashMap<String, Value> variables = new HashMap<String, Value>();
 	
 	public Context(){
-		parent = Executor.getCurrentContext();
+		parent = Variable.getGlobalContext();
 		Context p = parent;
 		int depth = 0;
 		while (! (p == Variable.getGlobalContext()) && depth < maxDepth){
@@ -91,5 +92,5 @@ public class Context {
 		return contextID;
 	}
 	
-	public static ArrayList<Context> contexts = new ArrayList<Context>();
+	public static List<Context> contexts = Collections.synchronizedList(new ArrayList<Context>());
 }

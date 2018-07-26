@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.sourcestructures;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStackElement;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorSemicolonDelimitedNode;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorStringArray;
@@ -13,7 +12,7 @@ import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class RegisteredLine implements RuntimeStackElement{
+public class RegisteredLine{
 	private ASTNode root;
 	public final Instruction instr;
 	public final String args;
@@ -60,7 +59,7 @@ public class RegisteredLine implements RuntimeStackElement{
 				return new Value(VariableTypes.Nil,null);
 			}
 			if (instr.executor instanceof InstructionExecutorSemicolonDelimitedNode){
-				return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes);
+				return ((InstructionExecutorSemicolonDelimitedNode) instr.executor).run(nodes, con);
 			}
 			return instr.executor.run(args, con);
 		}catch(BLZRuntimeException exception){
@@ -79,19 +78,5 @@ public class RegisteredLine implements RuntimeStackElement{
 		return instr.toString() + " " + args;
 	}
 
-	@Override
-	public void onBlockStart() {
-		
-	}
-
-	@Override
-	public void onBlockEnd() {
-		
-	}
-
-	@Override
-	public int getLineNum() {
-		return -1;
-	}
 	
 }

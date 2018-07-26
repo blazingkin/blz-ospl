@@ -2,6 +2,7 @@ package com.blazingkin.interpreter.executor.instruction;
 
 import java.util.HashMap;
 
+import com.blazingkin.interpreter.executor.async.Async;
 import com.blazingkin.interpreter.executor.data.HashGetKeys;
 import com.blazingkin.interpreter.executor.data.RandomImplementor;
 import com.blazingkin.interpreter.executor.data.Rebind;
@@ -58,7 +59,8 @@ public enum Instruction {
 	SCANNERREADNEXT("BLZINTERNALSCANNERREADNEXT", "Scanner read next byte", new ScannerReadNext()),
 	WRITETORESOURCE("BLZINTERNALWRITETORESOURCE", "Write to resource", new WriteToResource()),
 	FAILTEST("FAILTEST", "Fail test", new FailTest()),
-	THROW("THROW", "throw", new Throw());
+	THROW("THROW", "throw", new Throw()),
+	ASYNC("ASYNC", "Spawn async", new Async());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){

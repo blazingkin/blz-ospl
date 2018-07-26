@@ -23,7 +23,7 @@ public class Variable {
 		return globalContext;
 	}	
 	public static HashMap<BigInteger, Value> getArray(String arrayName){
-		return getArray(arrayName, Executor.getCurrentContext());
+		return getArray(arrayName, Variable.getGlobalContext());
 	}
 	public static HashMap<BigInteger, Value> getGlobalArray(String arrayName){
 		return getArray(arrayName, getGlobalContext());
@@ -67,7 +67,7 @@ public class Variable {
 	
 	//Gets a local value (the scope of these variables is the function they are declared in
 	public static Value getValue(String key) throws BLZRuntimeException {
-		return getValue(key, Executor.getCurrentContext());
+		return getValue(key, Variable.getGlobalContext());
 	}
 	
 	public static Value[] getValueAsArray(Value v){
@@ -243,7 +243,7 @@ public class Variable {
 	}
 	
 	public static Value getVariableValue(String line){
-		return getVariableValue(line, Executor.getCurrentContext());
+		return getVariableValue(line, Variable.getGlobalContext());
 	}
 	
 	public static Value getVariableValue(String line, Context con){
@@ -355,7 +355,7 @@ public class Variable {
 		case processesRunning:
 			return Value.integer(Executor.getRunningProcesses().size());
 		case runtimeStack:
-			return Value.string(RuntimeStack.runtimeStack.toString());
+			return Value.string("Not Implemented");
 		case version:
 			//TODO update this every time
 			return new Value(VariableTypes.String, "2.6");
@@ -399,7 +399,7 @@ public class Variable {
 		case pi:
 			return Value.doub(Math.PI);
 		case context:
-			return Value.integer(Executor.getCurrentContext().getID());
+			return Value.integer(-1);
 		case nil:
 			return new Value(VariableTypes.Nil, null);
 		case doublequote:

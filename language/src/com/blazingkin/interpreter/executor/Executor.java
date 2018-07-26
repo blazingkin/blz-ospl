@@ -51,12 +51,6 @@ public class Executor {
 		return processLineStack;
 	}
 	
-	public static Context getCurrentContext(){
-		if (RuntimeStack.contextStack.isEmpty()){
-			return Variable.getGlobalContext();
-		}
-		return RuntimeStack.contextStack.peek();
-	}
 	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws BLZRuntimeException {			// runs the executor
@@ -81,7 +75,7 @@ public class Executor {
 		importCore();
 		if (startMethod != null){
 			Value blank[] = {};
-			startMethod.execute(getCurrentContext(), blank, false);
+			startMethod.execute(Variable.getGlobalContext(), blank, false);
 		}
 		eventHandler.exitProgram("");
 	}
@@ -182,12 +176,12 @@ public class Executor {
 	}
 	
 	public static ArrayDeque<Process> getRunningProcesses(){
-		return RuntimeStack.processStack;
+		return RuntimeStack.getProcessStack();
 	}
 	
 	public static Process getCurrentProcess(){
 		try{
-		return RuntimeStack.processStack.peek();
+		return RuntimeStack.getProcessStack().peek();
 		}catch(Exception e){
 			return null;
 		}
@@ -204,7 +198,6 @@ public class Executor {
 	}
 	
 	public static void addProcess(Process p) throws BLZRuntimeException {
-		processLineStack.push(getLine());
 		RuntimeStack.push(p);
 	}
 	

@@ -1,6 +1,6 @@
 :main
 	for i = 0; i < 10; i++
-		test = random(20000000) / random(20000)
+		test = random(20000000)
 		print(test == test.to_string().to_number())
 	end
 end
