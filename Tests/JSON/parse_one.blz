@@ -1,0 +1,7 @@
+import JSON
+import FileSystem
+:main
+    file_contents = open("one.json").read_all()
+    parsed = parse_json(file_contents)
+    print(parsed)
+end

@@ -10,7 +10,7 @@ constructor JSONState(json)
     value = parse()
 
     :tokenize
-        num_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        num_chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]
         for lexing_position = 0; lexing_position < json.length(); lexing_position++
             char = json[lexing_position]
             if char == {text.space}
@@ -70,6 +70,18 @@ constructor JSONState(json)
                 end
                 lexing_position = lexing_position + 4
                 tokens.add!(JSONToken("L", false))
+            else if num_chars.contains?(char)
+                building_string = ""
+                # While there are more numbers to get, read them
+                while (json.length() > lexing_position) && num_chars.contains?(json[lexing_position])
+                    building_string = building_string + json[lexing_position]
+                    lexing_position++
+                end
+                lexing_position-- # We went one too far, so we have to backtrace
+                if building_string.is_number?() == false
+                    throw JSONError("Invalid numerical sequence in JSON "+building_string)
+                end
+                tokens.add!(JSONToken("L", building_string.to_number()))
             end
         end
     end
@@ -127,7 +139,7 @@ constructor JSONState(json)
             throw JSONError("Expected token "+type+" but reached end of JSON instead")
         end
         if tokens[on_token].type != type
-            throw JSONError("Expected token of type "+type+" but got "+tokens[on_token].type + "instead")
+            throw JSONError("Expected token of type "+type+" but got "+tokens[on_token] + "instead")
         end
         on_token++
         tokens[on_token - 1].token

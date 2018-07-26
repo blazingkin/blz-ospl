@@ -3,12 +3,16 @@
 end
 
 :multiply(a, b)
-	return a * b
+	a * b
 end
 
 # Forces a number to be a double
 :to_double(a)
-	return a * 1.0
+	a * 1.0
+end
+
+:to_decimal(a)
+	a * 1.0
 end
 
 :floor(a)
@@ -23,7 +27,7 @@ end
 end
 
 :to_string(a)
-	return a + ""
+	a + ""
 end
 
 :show(a)
