@@ -3,7 +3,7 @@ import FileSystem
 import Test
 
 :main
-    parsed = parse_json(open("three.json").read_all())
+    parsed = parse_json(open({file.location} + "/three.json").read_all())
     expect(parsed.length()).is(6)
     expect(parsed[0]).is(1)
     expect(parsed[1]).is("two")

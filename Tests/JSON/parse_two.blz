@@ -3,7 +3,7 @@ import FileSystem
 import Test
 
 :main
-    file_contents = open("two.json").read_all()
+    file_contents = open({file.location} + "/two.json").read_all()
     parsed = parse_json(file_contents)
     widget = parsed["widget"]
     debug = widget["debug"]
