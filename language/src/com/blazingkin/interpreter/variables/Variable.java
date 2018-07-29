@@ -474,6 +474,9 @@ public class Variable {
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		if (!hsh.containsKey(key)){
+			throw new BLZRuntimeException("Hash did not contain key "+key);
+		}
 		return hsh.get(key);
 	}
 	
@@ -484,6 +487,9 @@ public class Variable {
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		if (!hsh.containsKey(key)){
+			throw new BLZRuntimeException("Hash did not contain key "+key);
+		}
 		return hsh.get(key);
 	}
 	
