@@ -1,0 +1,18 @@
+import JSON
+import FileSystem
+import Test
+
+:main
+    parsed = parse_json(open("three.json").read_all())
+    expect(parsed.length()).is(6)
+    expect(parsed[0]).is(1)
+    expect(parsed[1]).is("two")
+    expect(parsed[2]).is(false)
+    expect(parsed[3]).is(true)
+    expect(parsed[4]).is({blz.nil})
+    hash = parsed[5]
+    expect(hash["key"]).is("value")
+    expect(hash["number"]).is(2)
+    expect(hash["keyword"]).is(true)
+    expect(hash["array"].length()).is(3)
+end

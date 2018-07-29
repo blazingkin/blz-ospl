@@ -1,9 +1,0 @@
-import JSON
-import FileSystem
-import Test
-
-:main
-    file_contents = open("two.json").read_all()
-    expect(parse_json(file_contents)["widget"]["debug"]).is("on")
-    expect(parse_json(file_contents)["widget"]["window"]["width"]).is(500)
-end

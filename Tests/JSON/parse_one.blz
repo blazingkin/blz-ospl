@@ -1,7 +1,10 @@
 import JSON
 import FileSystem
+import Test
 :main
     file_contents = open("one.json").read_all()
     parsed = parse_json(file_contents)
-    print(parsed)
+    glossary = parsed["glossary"]
+    title = glossary["title"]
+    expect(title).is("example glossary")
 end

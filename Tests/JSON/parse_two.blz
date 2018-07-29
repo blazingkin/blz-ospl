@@ -1,0 +1,14 @@
+import JSON
+import FileSystem
+import Test
+
+:main
+    file_contents = open("two.json").read_all()
+    parsed = parse_json(file_contents)
+    widget = parsed["widget"]
+    debug = widget["debug"]
+    expect(debug).is("on")
+    window = widget["window"]
+    width = window["width"]
+    expect(width).is(500)
+end
