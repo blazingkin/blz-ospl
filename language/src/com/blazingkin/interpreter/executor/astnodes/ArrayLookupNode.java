@@ -30,6 +30,9 @@ public class ArrayLookupNode extends BinaryNode {
 				String s = (String) arr.value;
 				return new Value(VariableTypes.String, s.substring(index, index+1));
 			}
+			if (arr.type == VariableTypes.Hash) {
+				return Variable.getValueOfHash(arr, args[1].execute(con));
+			}
 			if (arr.type != VariableTypes.Array){
 				throw new BLZRuntimeException(this, "Did not know how to access "+args[0]+" as an array.");
 			}

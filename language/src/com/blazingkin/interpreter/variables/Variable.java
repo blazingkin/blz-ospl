@@ -12,7 +12,6 @@ import java.util.HashMap;
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
-import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 
 import org.nevec.rjm.BigDecimalMath;
 
@@ -467,6 +466,15 @@ public class Variable {
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
 		hsh.put(key, newVal);
+	}
+
+	public static Value getValueOfHash(Value hash, Value key) throws BLZRuntimeException {
+		if (hash.type != VariableTypes.Hash){
+			Interpreter.throwError(hash+" was not a hash ("+hash.typedToString()+" instead)");
+		}
+		@SuppressWarnings("unchecked")
+		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
+		return hsh.get(key);
 	}
 	
 	public static Value getValueOfHash(String hashName, Value key, Context con) throws BLZRuntimeException {

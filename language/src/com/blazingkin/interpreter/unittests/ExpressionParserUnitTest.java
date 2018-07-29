@@ -208,6 +208,17 @@ public class ExpressionParserUnitTest {
 		assertEquals(parseExpression("a(2)[3]"), OperatorASTNode.newNode(Operator.arrayLookup, callFunc, new ValueASTNode("3")));
 	}
 	
+/*	@Test
+	public void testAssignFromMultidimensionalArray() {
+		assertEquals(parseExpression("a = arr[2][3]"),
+			OperatorASTNode.newNode(Operator.Assignment, new ValueASTNode("a"),
+				OperatorASTNode.newNode(Operator.arrayLookup, 
+					OperatorASTNode.newNode(Operator.arrayLookup,
+						new ValueASTNode("arr"),
+						new ValueASTNode("2")),
+					new ValueASTNode("3"))));
+	}*/
+
 	@Test
 	public void testArrayAccessorOnDotOperatorAndFunctionCall(){
 		ASTNode dotAndCall = parseExpression("a.b(2)");
