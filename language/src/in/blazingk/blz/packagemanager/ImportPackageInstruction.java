@@ -31,7 +31,6 @@ public class ImportPackageInstruction implements InstructionExecutor{
 			URL cwd = ImportPackageInstruction.class.getProtectionDomain().getCodeSource().getLocation();
 			return Paths.get(cwd.toURI()).getParent().getParent();
 		} catch (URISyntaxException e) {
-			// If you can tell me a system that doesn't define . I'll buy you a drink
 			e.printStackTrace();
 		} catch (Exception e){
 			System.err.println("Failed importing packages");
@@ -41,6 +40,11 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	}
 	
 	public Path findPackageDirectory() throws IOException {
+		try {
+			return getBPMPackageDirectory();
+		}catch(IOException e){
+
+		}
 		try {
 			return getEnvironmentPackageDirectory();
 		}catch(Exception e) {
@@ -62,6 +66,18 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	private Path getEnvironmentPackageDirectory() {
 		String PackageDirectory = System.getenv("BLZPACKAGES");
 		return Paths.get(PackageDirectory);
+	}
+
+	public Path getBPMPackageDirectory() throws IOException {
+		Path cwd = Paths.get(""); // Get CWD
+		if (cwd.endsWith("Source")) { // If we are in the source directory
+			return Paths.get(cwd.getParent().toString(), "Packages");
+		}
+		Path hb = Paths.get(cwd.toString(), "Heartbeat");
+		if (hb.toFile().exists()) {
+			return Paths.get(cwd.toString(), "Packages");
+		}
+		throw new IOException();
 	}
 
 	public Path findPackage(String packageName) throws IOException {
