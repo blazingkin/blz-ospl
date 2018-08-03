@@ -30,6 +30,30 @@ end
     return result
 end
 
+:sine(x, series_terms)
+    sin(x, series_terms)
+end
+
 :cos(x, series_terms)
     sin(x + ({pi} / 2), series_terms)
+end
+
+:cosine(x, series_terms)
+    cos(x, series_terms)
+end
+
+:tan(x, series_terms)
+    sin(x, series_terms) / cos(x, series_terms)
+end
+
+:tangent(x, series_terms)
+    tan(x, series_terms)
+end
+
+:cot(x, series_terms)
+    1 / tan(x, series_terms)
+end
+
+:cotangent(x, series_terms)
+    cot(x, series_terms)
 end
