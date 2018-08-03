@@ -127,7 +127,7 @@ constructor JSONState(json)
     end
     
     :peek_type
-        if on_token > tokens.size()
+        if on_token >= tokens.size()
             throw JSONError("Expected some JSON token, but reached end of string instead")
         else
             (tokens[on_token]).type
