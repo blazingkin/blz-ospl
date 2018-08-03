@@ -84,7 +84,7 @@ public class Executor {
 		ArrayList<String> programArgs = new ArrayList<String>();
 		for (int i = 0; i < args.size(); i++){
 			String s = args.get(i);
-			if (s.substring(0,2).equals("-m") && i != args.size() - 1){			// denotation for indicating a starting method
+			if (s.length() >= 2 && s.substring(0,2).equals("-m") && i != args.size() - 1){			// denotation for indicating a starting method
 				i++;
 				startingMethod = args.get(i);
 				continue;
