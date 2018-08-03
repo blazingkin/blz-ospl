@@ -412,7 +412,11 @@ public class Variable {
 		Value v = con.getValue(arrayName);
 		if (v.value instanceof Value[]){
 			Value[] arr = (Value[]) v.value;
-			return arr[index.intValue()];
+			try {
+				return arr[index.intValue()];
+			}catch(ArrayIndexOutOfBoundsException e){
+				throw new BLZRuntimeException("Array Out of bounds exception! Invalid index: "+index.intValue());
+			}
 		}
 		throw new BLZRuntimeException("Expected "+v.value+" to be an array of values, but it is not.");
 	}
