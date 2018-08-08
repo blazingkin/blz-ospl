@@ -30,6 +30,6 @@
 	end
 	
 	time = (end_time - start_time) / 1000
-	print("Took " + time + " seconds")
+	print("Took " + time.to_decimal() + " seconds")
 		
 end
