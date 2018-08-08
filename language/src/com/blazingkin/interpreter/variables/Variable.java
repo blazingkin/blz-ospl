@@ -104,7 +104,7 @@ public class Variable {
 	
 	public static Value subValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).subtract((BigInteger)v2.value));
+			return new Value(VariableTypes.Integer, (getIntValue(v1)).subtract(getIntValue(v2)));
 		}
 		if ((v1.type == VariableTypes.Integer || v1.type == VariableTypes.Double) &&
 				v2.type == VariableTypes.Integer || v2.type == VariableTypes.Double){
@@ -124,7 +124,7 @@ public class Variable {
 	
 	public static Value mulValues(Value v1, Value v2){
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).multiply((BigInteger)v2.value));
+			return new Value(VariableTypes.Integer, (getIntValue(v1)).multiply(getIntValue(v2)));
 		}
 		if (isValRational(v1) && isValRational(v2)){
 			BLZRational rat = getRationalVal(v1).multiply(getRationalVal(v2));
@@ -142,7 +142,7 @@ public class Variable {
 	
 	public static Value modVals(Value val, Value quo) {
 		if (val.type == VariableTypes.Integer && quo.type == VariableTypes.Integer){
-			return new Value(VariableTypes.Integer, ((BigInteger)val.value).mod((BigInteger)quo.value));
+			return new Value(VariableTypes.Integer, getIntValue(val).mod(getIntValue(quo)));
 		}
 		if (isDecimalValue(val) && isDecimalValue(quo)){
 			return new Value(VariableTypes.Double, getDoubleVal(val).remainder(getDoubleVal(quo)));
@@ -181,7 +181,7 @@ public class Variable {
 	
 	public static Value expValues(Value v1, Value v2){
 		if (isValInt(v1) && isValInt(v2)){
-			return new Value(VariableTypes.Integer, ((BigInteger)v1.value).pow(((BigInteger)v2.value).intValue()));
+			return new Value(VariableTypes.Integer, getIntValue(v1).pow(getIntValue(v2).intValue()));
 		}else if (isValRational(v1) && isValInt(v2)){
 			BLZRational base = getRationalVal(v1);
 			BigInteger num = base.num;
@@ -547,7 +547,7 @@ public class Variable {
 	public static BigDecimal getDoubleVal(Value v){
 		try{
 			if (isValInt(v) || v.value instanceof Integer){
-				return new BigDecimal(((BigInteger) v.value));
+				return new BigDecimal(getIntValue(v));
 			}
 			if (v.type == VariableTypes.Rational){
 				BLZRational rat = (BLZRational) v.value;
