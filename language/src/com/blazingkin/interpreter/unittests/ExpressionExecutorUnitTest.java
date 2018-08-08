@@ -58,8 +58,8 @@ public class ExpressionExecutorUnitTest {
 			assertEqual(parseExpression("3 + 3 + 2"), Value.integer(8));
 			assertEqual(parseExpression("1+1"), Value.integer(2));
 			assertEqual(parseExpression("1+1+1+1+1"), Value.integer(5));
-			assertEqual(parseExpression("2.0 + 2.0"), Value.doub(4));
-			assertEqual(parseExpression("2.0 + 2"), Value.doub(4));
+			assertEqual(parseExpression("2.0 + 2.0"), Value.integer(4));
+			assertEqual(parseExpression("2.0 + 2"), Value.integer(4));
 		}catch(BLZRuntimeException e){
 			UnitTestUtil.fail();
 		}
