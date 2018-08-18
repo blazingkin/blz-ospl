@@ -15,8 +15,10 @@ import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
+import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
+import com.blazingkin.interpreter.parser.MethodBlockParser;
 import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
@@ -43,6 +45,7 @@ public class REPL {
 		}
 		String in = "";
 		Scanner sc = new Scanner(is);
+		MethodBlockParser methodParser = new MethodBlockParser();
 		Executor.immediateMode = true;
 		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
 		try{
@@ -79,6 +82,21 @@ public class REPL {
 					try {
 						SplitStream<String> stream = new SplitStream<String>(inputBuffer);
 						ArrayList<Either<SourceLine, ParseBlock>> parsed = BlockParser.parseBody(stream, 1);
+
+						// If there is a single block, then it could be a method or a constructor. We need special cases to handle those
+						if (parsed.size() == 1 && parsed.get(0).isRight()) {
+							ParseBlock bl = parsed.get(0).getRight().get();
+							// Check for method
+							if (methodParser.shouldParse(bl.getHeader())) {
+								MethodNode method = (MethodNode) methodParser.parseBlock(bl);
+								replContext.setValueInPresent(method.getStoreName(), Value.method(method));							
+								continue;
+							}
+							// Check for constructor
+							// Currently difficult to do since the REPL doesn't have a process
+						}
+
+						// Execute the block if it wasn't a method or constructor
 						Executor.getEventHandler().print(
 							new BlockNode(parsed, true).execute(replContext).toString()
 						);
