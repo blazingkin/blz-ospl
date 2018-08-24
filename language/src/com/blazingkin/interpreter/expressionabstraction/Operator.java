@@ -7,7 +7,10 @@ public enum Operator{
 	
 	// The enum values that start with lowercase do not follow
 	// normal operator notation
-	
+
+	String("", 1, OperatorType.Unary),
+	Ident("", 1, OperatorType.Unary),
+	Number("", 1, OperatorType.Unary),	
 	Increment("++", 1, OperatorType.Unary),	
 	Decrement("--", 1, OperatorType.Unary),
 	DotOperator(".", 2, OperatorType.Binary),
@@ -26,6 +29,7 @@ public enum Operator{
 	ApproximateComparison("~=", 7, OperatorType.Binary),
 	LessThanEqual("<=", 8, OperatorType.Binary),
 	GreaterThanEqual(">=", 8, OperatorType.Binary),
+	Exclam("", 8, OperatorType.Unary),
 	LogicalAnd("&&", 9, OperatorType.Binary),
 	LogicalOr("||", 9, OperatorType.Binary),
 	Assignment("=", 10, OperatorType.Binary),
@@ -33,9 +37,14 @@ public enum Operator{
 	Lambda("->", 25, OperatorType.Binary),
 	functionCall("", 10000, OperatorType.Binary),
 	parensOpen("", 10000, OperatorType.None),
+	parensClose("", 10000, OperatorType.None),
 	arrayLookup("", 10000, OperatorType.Binary),
+	sqBracketOpen("", 10000, OperatorType.Binary),
+	sqBracketClose("", 10000, OperatorType.Binary),
 	arrayLiteral("", 10000, OperatorType.Unary),
-	environmentVariableLookup("",10000, OperatorType.Unary);
+	environmentVariableLookup("",10000, OperatorType.Unary),
+	environmentVariableOpen("",10000, OperatorType.Unary),
+	environmentVariableClose("",10000, OperatorType.Unary);
 	
 	public final String syntax;
 	public final int precedence;
