@@ -1,0 +1,9 @@
+import Lists
+list = LinkedList(1)
+list.add(2)
+list.add(3)
+list = list.add_at_beginning("hi")
+while list != {blz.nil}
+    print(list.value)
+    list = list.next
+end
