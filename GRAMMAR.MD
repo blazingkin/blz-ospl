@@ -96,7 +96,8 @@ BinaryOp := + |
 UnaryOp := ++ |
            -- |
            !  |
-           ( ValueList )
+           ( ValueList ) |
+           [ Expression ]
 ```
 
 `UnaryExpression := Expression UnaryOp`
