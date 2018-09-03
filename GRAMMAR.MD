@@ -4,7 +4,7 @@ Formal Grammar Specification For BLZ
 ### Special identifiers
 
 |Name|Meaning|
---------------
+|-----|---------|
 |NEWLINE|The newline character|
 |IDENT|A variable identifier|
 |NUM|A string of numerical characters|
