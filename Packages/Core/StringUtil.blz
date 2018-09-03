@@ -31,6 +31,10 @@ end
 	BLZINTERNALREBIND string, string_new
 end
 
+:size(string)
+	SLEN string
+end
+
 :index_of(string, char)
 	for i = 0; i < string.length(); i++
 		if string[i] == char
