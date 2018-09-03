@@ -117,8 +117,11 @@ public class REPL {
 				}catch(NoSuchElementException e){
 					/* Input closed */
 					in = "exit";
+				}catch(IOException e){
+					Interpreter.throwError(e.getMessage());
+					inputBuffer.clear();
 				}catch(Exception e){
-					/* IO or other exception */
+					/* Some error in my code, might want to get a stacktrace */
 					e.printStackTrace();
 					Interpreter.throwError(e.getMessage());
 					inputBuffer.clear();
