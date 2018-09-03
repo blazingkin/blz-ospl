@@ -30,7 +30,15 @@ Value := IDENT |
          [ ValueList ]
 ```        
 
-`Line := Expression NEWLINE`
+```
+Line := Expression NEWLINE |
+        If NEWLINE |
+        While NEWLINE |
+        For NEWLINE |
+        Constructor NEWLINE |
+        FunctionDecl NEWLINE |
+        Import NEWLINE
+```
 
 ```
 Import := import IDENT |
@@ -96,9 +104,7 @@ UnaryOp := ++ |
 `LambdaExpression := ( ParamList ) -> Expression`
 
 ```
-Expression := Import |
-              FunctionDecl |
-              BinaryExpression | 
+Expression := BinaryExpression | 
               UnaryExpression |
               ( LambdaExpression ) |
               Value
