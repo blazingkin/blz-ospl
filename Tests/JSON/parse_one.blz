@@ -7,4 +7,5 @@ import Test
     glossary = parsed["glossary"]
     title = glossary["title"]
     expect(title).is("example glossary")
+    expect(parse_json("{}")).is({})
 end

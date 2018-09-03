@@ -108,7 +108,7 @@ constructor JSONState(json)
         else if type == "OO"
             obj = {}
             comma_found = true
-            while comma_found && peek_type != "CO"
+            while comma_found && peek_type() != "CO"
                 comma_found = false
                 key = parse()
                 consume("OS")
