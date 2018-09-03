@@ -37,7 +37,8 @@ Line := Expression NEWLINE |
         For NEWLINE |
         Constructor NEWLINE |
         FunctionDecl NEWLINE |
-        Import NEWLINE
+        Import NEWLINE |
+        End NEWLNE
 ```
 
 ```
