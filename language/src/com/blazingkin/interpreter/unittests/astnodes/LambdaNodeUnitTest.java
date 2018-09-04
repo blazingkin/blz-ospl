@@ -49,7 +49,7 @@ public class LambdaNodeUnitTest {
     }
 
     @Test
-    public void lambdaShouldProduceCorrectFunctionWithMultipleParams() throws BLZRuntimeException{
+    public void lambdaShouldProduceCorrectFunctionWithMultipleParams() throws Exception{
         ASTNode cArgs[] = {new ValueASTNode("a"), new ValueASTNode("b")};
         ASTNode commaSeperated = new CommaDelimitNode(cArgs);
         ASTNode args[] = {commaSeperated, ExpressionParser.parseAndCollapse("b ** a")};

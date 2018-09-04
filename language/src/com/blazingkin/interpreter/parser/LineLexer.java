@@ -79,7 +79,7 @@ public class LineLexer {
                     }
                 break;
                 case ';':
-                    tokens.add(new Token(Operator.CommaDelimit));
+                    tokens.add(new Token(Operator.ExpressionDelimit));
                 break;
                 case '|':
                     // Ensure that it is ||

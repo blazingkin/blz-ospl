@@ -138,8 +138,8 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 	}
 	
-	public static void assertValEqual(String name, Value b, Context con) throws BLZRuntimeException {
-		Value a = ExpressionExecutor.parseExpression(name);
+	public static void assertValEqual(String name, Value b, Context con) throws Exception {
+		Value a = ExpressionExecutor.runExpression(name);
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println(name + " != "+ b.value);

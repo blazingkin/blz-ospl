@@ -1,7 +1,7 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
-import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -23,18 +23,18 @@ public class LessThanNodeUnitTest {
 	}
 	
 	@Test 
-	public void StringsShouldBeSortable() throws BLZRuntimeException {
-		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression("\"a\" < \"b\"").execute(new Context()));
+	public void StringsShouldBeSortable() throws Exception {
+		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression(LineLexer.lexLine("\"a\" < \"b\"")).execute(new Context()));
 	}
 	
 	@Test
-	public void TwoShouldBeLessThanThree() throws BLZRuntimeException {
-		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression("2 < 3").execute(new Context()));
+	public void TwoShouldBeLessThanThree() throws Exception {
+		UnitTestUtil.assertEqual(Value.bool(true), ExpressionParser.parseExpression(LineLexer.lexLine("2 < 3")).execute(new Context()));
 	}
 	
 	@Test
-	public void TwoShouldNotBeLessThanTwo() throws BLZRuntimeException {
-		UnitTestUtil.assertEqual(Value.bool(false), ExpressionParser.parseExpression("2 < 2").execute(new Context()));
+	public void TwoShouldNotBeLessThanTwo() throws Exception {
+		UnitTestUtil.assertEqual(Value.bool(false), ExpressionParser.parseExpression(LineLexer.lexLine("2 < 2")).execute(new Context()));
 	}
 
 }

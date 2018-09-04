@@ -101,12 +101,12 @@ public class AdditionNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldAddSeveralThings() throws BLZRuntimeException {
-		ExpressionExecutor.parseExpression("x = 1");
-		ExpressionExecutor.parseExpression("y = {e}");
-		ExpressionExecutor.parseExpression("z = {pi}");
+	public void shouldAddSeveralThings() throws Exception {
+		ExpressionExecutor.runExpression("x = 1");
+		ExpressionExecutor.runExpression("y = {e}");
+		ExpressionExecutor.runExpression("z = {pi}");
 		UnitTestUtil.assertEqual(Value.string("x = 1, y = 2.718281828459045, z = 3.141592653589793"), 
-				ExpressionExecutor.parseExpression("\"x = \" + x + \", y = \" + y + \", z = \" + z"));
+				ExpressionExecutor.runExpression("\"x = \" + x + \", y = \" + y + \", z = \" + z"));
 	}
 	
 }

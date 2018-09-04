@@ -67,17 +67,17 @@ public class ArrayLookupNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldLookupCharacterInString() throws BLZRuntimeException {
-		UnitTestUtil.assertEqual(Value.string("b"), ExpressionExecutor.parseExpression("\"abc\"[1]"));
+	public void shouldLookupCharacterInString() throws Exception {
+		UnitTestUtil.assertEqual(Value.string("b"), ExpressionExecutor.runExpression("\"abc\"[1]"));
 	}
 	
 	@Test
-	public void shouldLookupCharacterInStringSetInVariable() throws BLZRuntimeException{
-		ExpressionExecutor.parseExpression("a = \"lmno\"");
-		UnitTestUtil.assertEqual(Value.string("l"), ExpressionExecutor.parseExpression("a[0]"));
-		UnitTestUtil.assertEqual(Value.string("m"), ExpressionExecutor.parseExpression("a[1]"));
-		UnitTestUtil.assertEqual(Value.string("n"), ExpressionExecutor.parseExpression("a[2]"));
-		UnitTestUtil.assertEqual(Value.string("o"), ExpressionExecutor.parseExpression("a[3]"));
+	public void shouldLookupCharacterInStringSetInVariable() throws Exception{
+		ExpressionExecutor.runExpression("a = \"lmno\"");
+		UnitTestUtil.assertEqual(Value.string("l"), ExpressionExecutor.runExpression("a[0]"));
+		UnitTestUtil.assertEqual(Value.string("m"), ExpressionExecutor.runExpression("a[1]"));
+		UnitTestUtil.assertEqual(Value.string("n"), ExpressionExecutor.runExpression("a[2]"));
+		UnitTestUtil.assertEqual(Value.string("o"), ExpressionExecutor.runExpression("a[3]"));
 	}
 
 }

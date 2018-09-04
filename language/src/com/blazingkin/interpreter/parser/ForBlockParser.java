@@ -14,7 +14,7 @@ public class ForBlockParser implements BlockParseProtocol {
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {
         BlockNode forBlock = new BlockNode(block.getLines(), false);
         String initLine = block.getHeader().replaceFirst("for", "").trim();
-        ASTNode initNode = ExpressionParser.parseExpression(initLine);
+        ASTNode initNode = ExpressionParser.parseExpression(LineLexer.lexLine(initLine));
         ASTNode initNodes[] = ExpressionExecutor.extractSemicolonDelimitedNodes(initNode);
         if (initNodes.length != 3){
             throw new SyntaxException("For did not have an initiating, looping and terminating expression");
