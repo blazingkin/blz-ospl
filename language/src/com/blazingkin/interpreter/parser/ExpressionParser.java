@@ -1,36 +1,20 @@
 package com.blazingkin.interpreter.parser;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
+import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
-import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class ExpressionParser {
-	
-	private static ThreadLocal<Stack<Operator>> operatorStack = new ThreadLocal<Stack<Operator>>(){
-		@Override
-		protected Stack<Operator> initialValue(){
-			return new Stack<Operator>();
-		}
-	};
-	private static ThreadLocal<Stack<ASTNode>> operandStack = new ThreadLocal<Stack<ASTNode>>() {
-		@Override
-		protected Stack<ASTNode> initialValue(){
-			return new Stack<ASTNode>();
-		}
-	};
-	private static ThreadLocal<Stack<ASTNode>> functionNames = new ThreadLocal<Stack<ASTNode>>(){
-		@Override
-		protected Stack<ASTNode> initialValue(){
-			return new Stack<ASTNode>();
-		}
-	};
 	
 	public static Optional<RegisteredLine> parseLine(SourceLine source) throws SyntaxException {
 		String splits[] = source.line.split(" ");
@@ -47,7 +31,10 @@ public class ExpressionParser {
 				}
 				String newStr = source.line.replaceFirst(splits[0], "").trim();
 				return Optional.of(new RegisteredLine(instr, newStr, source.lineNumber));
-			}catch(Exception e){
+			}catch(SyntaxException e){
+				throw new SyntaxException(e.getMessage()+"\nDid not know how to parse line: "+source.line+" on line "+source.lineNumber);
+			}
+			catch(Exception e){
 				throw new SyntaxException("Did not know how to parse line: "+source.line+" on line "+source.lineNumber);
 			}
 	}
@@ -88,174 +75,219 @@ public class ExpressionParser {
 		}
 	}
 	
-	public static ASTNode parseAndCollapse(String line){
+	public static ASTNode parseAndCollapse(String line) throws SyntaxException{
 		return parseExpression(line).collapse();
 	}
-	
-	// Use the shunting yard algorithm to parse a line
-	public static ASTNode parseExpression(String line){
-		Stack<Operator> opStack = operatorStack.get();
-		Stack<ASTNode> opandStack = operandStack.get();
-		Stack<ASTNode> funcNames = functionNames.get();
-		opStack.clear();
-		opandStack.clear();
-		funcNames.clear();
-		char[] lne = line.toCharArray();
-		boolean ignoreMode = false;
-		String building = "";
-		boolean inQuotes = false;
-		for (int i = 0; i < lne.length; i++){
-			if (Operator.symbols.contains(building + lne[i]) || (ignoreMode && lne[i] != '}') || (inQuotes && lne[i] != '\"')){
-				if (inQuotes && lne[i] == '\\'){
-					building += lne[++i]; // Don't try to parse the next character, simply add it and ignore the \
-				}else{
-					building += lne[i];
-				}
-			}else if (Operator.symbols.contains(""+lne[i]) && !(lne[i] == '.' && Variable.isInteger(building))){
-				if (!Operator.symbolLookup.keySet().contains(""+lne[i])){	// lookahead to check for multicharacter expressoins
-					String subBuilding = ""+lne[i];
-					boolean found = false;
-					for (int y = i + 1; y < lne.length; y++){
-						subBuilding += lne[y];
-						if (Operator.symbolLookup.keySet().contains(subBuilding)){	// It is an operator
-							found = true;
-							break;
-						}
+
+	public static ASTNode parseExpression(String line) throws SyntaxException {
+		return parseExpression(LineLexer.lexLine(line));
+	}
+
+	public static ASTNode parseExpression(List<Token> tokens) throws SyntaxException {
+		Stack<Operator> opStack = new Stack<Operator>();
+		Stack<ASTNode> opandStack = new Stack<ASTNode>();
+		boolean lastPushedIdent = false;
+		for (int i = 0; i < tokens.size(); i++){
+			Token current = tokens.get(i);
+			switch (current.op){
+				// Binary Operations
+				case Addition:
+				case Multiplication:
+				case Division:
+				case Exponentiation:
+				case Logarithm:
+				case Modulus:
+				case Comparison:
+				case LessThan:
+				case GreaterThan:
+				case NotEqual:
+				case ApproximateComparison:
+				case LessThanEqual:
+				case GreaterThanEqual:
+				case LogicalAnd:
+				case LogicalOr:
+				case Assignment:
+				case CommaDelimit:
+				case ExpressionDelimit:
+				case DotOperator:
+				case Lambda:
+					if (opandStack.empty()) {
+						throw new SyntaxException("Binary operator "+current.op+" was the first part of the expression (It needs something before it)");
 					}
-					if (!found){
-						building += lne[i];
-						continue;
-					}
-				}
-				opandStack.push(new ValueASTNode(building));
-				building = ""+lne[i];
-			}else{
-				if (Operator.symbols.contains(building)){
-					boolean isNegativeNumber = building.equals("-") && Character.isDigit(lne[i]); // make sure it fits the format for being a negative number
-					isNegativeNumber = isNegativeNumber && ((opandStack.empty() && opStack.empty()) || (!opStack.empty() && !opandStack.empty()));
-					if (!isNegativeNumber){
-						pushNewOperator(opStack, opandStack, Operator.symbolLookup.get(building));
-						building = "";
-					}
-				}
-				switch(lne[i]){	// Switch is faster than else-ifs
-				case '(':
-					if (building.isEmpty()){
-						opStack.push(Operator.parensOpen);
+					pushNewOperator(opStack, opandStack, current.op);
+					lastPushedIdent = false;
+				break;
+
+				case Increment:
+				case Decrement:
+					pushNewOperator(opStack, opandStack, current.op);
+					lastPushedIdent = false;	
+				break;
+
+				// Values
+				case Ident:
+					opandStack.push(new ValueASTNode(current.meta));
+					lastPushedIdent = true;
+				break;
+				case String:
+					opandStack.push(new ValueASTNode(Value.string(current.meta)));
+					lastPushedIdent = true;
+				break;
+				case Number:
+					// There are 2 more tokens and they are . and a number
+					if (i + 2 < tokens.size() && tokens.get(i + 1).op == Operator.DotOperator && tokens.get(i + 2).op == Operator.Number){
+						Value val = Value.doub(Double.parseDouble(current.meta + "." + tokens.get(i + 2).meta));
+						opandStack.push(new ValueASTNode(val));
+						i += 2; // Consume the next 2 tokens
 					}else{
-						if (!opStack.empty() && opStack.peek() == Operator.DotOperator){
-							opandStack.push(new ValueASTNode(building));
-							building = "";
-							combineBinaryExpression(opStack, opandStack);
-							funcNames.push(opandStack.peek());
-							opStack.push(Operator.functionCall);
+						opandStack.push(new ValueASTNode(current.meta));
+					}
+					lastPushedIdent = true;
+				break;
+				case environmentVariableLookup:
+					ASTNode envName[] = {new ValueASTNode(current.meta)};
+					opandStack.push(new EnvironmentVariableLookupNode(envName));
+					lastPushedIdent = true;
+				break;
+
+				// Special Case
+				case Subtraction:
+					if (lastPushedIdent) {
+						// Binary Subtraction
+						if (opandStack.empty()) {
+							throw new SyntaxException("Binary operator "+current.op+" was the first part of the expression (It needs something before it)");
+						}
+						pushNewOperator(opStack, opandStack, current.op);
+						lastPushedIdent = false;
+					} else {
+						if (i + 1 < tokens.size() && tokens.get(i + 1).op == Operator.Number) {
+							tokens.get(i + 1).meta = "-" + tokens.get(i + 1).meta;
 						}else{
-							opStack.push(Operator.functionCall);
-							ASTNode functionName = new ValueASTNode(building);
-							opandStack.push(functionName);
-							funcNames.push(functionName);
-							building = "";
+							throw new SyntaxException("Unexpected - in line");
 						}
 					}
-					break;
-				case ')':
-					if (!building.isEmpty()){
-						opandStack.push(new ValueASTNode(building));
-						building = "";
+				break;
+				case Exclam:
+					if (!opandStack.empty() && opandStack.peek() instanceof ValueASTNode) {
+						ValueASTNode top = (ValueASTNode) opandStack.peek();
+						if (top.val == null || top.val.type != VariableTypes.String) {
+							throw new SyntaxException("Expected ! to follow an identifier name");
+						}
+						top.val = Value.string(top.val + "!");
+					} else {
+						throw new SyntaxException("Unexpected !, it should only follow a function name");
 					}
-					while (opStack.peek() != Operator.parensOpen && opStack.peek() != Operator.functionCall){
-						pushNewExpression(opStack, opandStack);
+				break;
+				case parensOpen:
+				{
+					boolean foundEndParen = false;
+					int depth = 0;
+					Optional<ASTNode> inner = Optional.empty();
+					for (int j = i + 1; j < tokens.size() && !foundEndParen; j++){
+						if (tokens.get(j).op == Operator.parensClose){
+							if (depth == 0){
+								// Make the recursive call
+								if (i + 1 != j){
+									// If there is anything inside the parenthesis
+									// subList is [i + 1, j)
+									inner = Optional.of(parseExpression(tokens.subList(i + 1, j)));
+								}
+								i = j;
+								foundEndParen = true;
+							}else{
+								depth--;
+							}
+						}else if (tokens.get(j).op == Operator.parensOpen) {
+							depth++;
+						}
 					}
-					if (opStack.peek() == Operator.parensOpen){
-						opStack.pop(); // We don't care about the open parens
-					}else{	// If it is a function call
-						if (opandStack.size() > 0 && funcNames.peek().equals(opandStack.peek())){
+					if (!foundEndParen) {
+						throw new SyntaxException("Opening parenthesis not closed!");
+					}
+
+					if (lastPushedIdent) {
+						// Function call
+						if (!opStack.empty() && opStack.peek() == Operator.DotOperator) {
+							combineBinaryExpression(opStack, opandStack);
+						}
+						opStack.push(Operator.functionCall);
+						if (inner.isPresent()) {
+							// Arguments
+							opandStack.push(inner.get());
+							combineBinaryExpression(opStack, opandStack); // Add the function call to the stack
+						} else {
+							// No arguments
+							pushUnaryExpression(opStack, opandStack);
+						}
+					} else {
+						if (inner.isPresent()) {
+							opandStack.push(inner.get());
+						}else {
+							throw new SyntaxException("Unexpected empty parenthesis ()");
+						}
+					}
+					lastPushedIdent = true;
+				}
+				break;
+				case sqBracketOpen:
+					boolean foundEndParen = false;
+					int depth = 0;
+					Optional<ASTNode> inner = Optional.empty();
+					for (int j = i + 1; j < tokens.size() && !foundEndParen; j++){
+						if (tokens.get(j).op == Operator.sqBracketClose){
+							if (depth == 0){
+								// Make the recursive call
+								// subList is [i + 1, j)
+								if (i + 1 != j){
+									inner = Optional.of(parseExpression(tokens.subList(i + 1, j)));
+								}
+								i = j;
+								foundEndParen = true;
+							}else{
+								depth--;
+							}
+						}else if (tokens.get(j).op == Operator.sqBracketOpen) {
+							depth++;
+						}
+					}
+
+					if (lastPushedIdent) {
+						// Array indexing
+						if (inner.isPresent()){
+							opandStack.push(inner.get());
+						}else{
+							throw new SyntaxException("No index present in array lookup");
+						}
+						opStack.push(Operator.arrayLookup);						
+						combineBinaryExpression(opStack, opandStack);
+					}else{
+						// Array Literal
+						opStack.push(Operator.arrayLiteral);
+						if (inner.isPresent()){
+							opandStack.push(inner.get());
 							pushUnaryExpression(opStack, opandStack);
 						}else{
-							combineBinaryExpression(opStack, opandStack); // Add the function call to the stack
-						}
-						funcNames.pop();
-					}
-					break;
-				case '[':
-					if (opStack.empty() && opandStack.size() > 0 && checkTopExpressionOperator(opandStack) == Operator.arrayLookup){ // Multidimensional arrays
-						// TODO handle if the building string is not empty, there is a test that shows why this is broken
-						opStack.push(Operator.arrayLookup);
-					}else if (building.isEmpty() && !(i != 0 && lne[i-1] == ')')){
-						opStack.push(Operator.arrayLiteral);
-					}else{
-						if (!building.isEmpty()){
-							opandStack.push(new ValueASTNode(building));
-							building = "";
-						}
-						opStack.push(Operator.arrayLookup);
-					}
-					break;
-				case ']':
-					if (!building.isEmpty()){
-						opandStack.push(new ValueASTNode(building));
-						building = "";
-					}else{
-						if (opStack.peek() == Operator.arrayLiteral){
-							// For empty arrays
-							// i.e. a = []
 							opandStack.push(OperatorASTNode.newNode(opStack.pop(), (ASTNode)null));
-							break;
 						}
+
 					}
-					while (opStack.peek() != Operator.arrayLookup && opStack.peek() != Operator.arrayLiteral){
-						combineBinaryExpression(opStack, opandStack);
-					}
-					if (opStack.peek() == Operator.arrayLiteral){
-						pushUnaryExpression(opStack, opandStack);
-					}else{
-						combineBinaryExpression(opStack, opandStack);
-					}
-					break;
-				case '{':
-					if (!building.isEmpty()){
-						opandStack.push(new ValueASTNode(building));
-						building = "";
-					}
-					opStack.push(Operator.environmentVariableLookup);
-					ignoreMode = true;
-					break;
-				case '}':
-					opandStack.push(new ValueASTNode(building));
-					building = "";
-					ignoreMode = false;
-					pushUnaryExpression(opStack, opandStack);
-					break;
-				case '"':
-					building += '"';
-					inQuotes = !inQuotes;
-					break;
-				case '\\':
-					building += lne[++i]; // Add the next character, don't try to parse it
-					break;
+
+				break;
 				default:
-					if (!inQuotes && Character.isWhitespace(lne[i])){
-						if (building.length() > 0){
-							opandStack.push(new ValueASTNode(building));
-							building = "";
-						}
-					}else{
-						building += lne[i];
-					}
-				}
+					throw new SyntaxException("Unknown token type: "+current);
 			}
 		}
-		if (Operator.symbols.contains(building)){	// It probably shouldn't end on an operator, but let's just handle it anyways
-			pushNewOperator(opStack, opandStack, Operator.symbolLookup.get(building));
-			building = "";
-		}
-		if (!building.isEmpty()){
-			opandStack.push(new ValueASTNode(building));
-		}
-		while (!opStack.isEmpty()){
+		while (!opStack.empty()){
 			pushNewExpression(opStack, opandStack);
 		}
-		return opandStack.pop();
+		if (opandStack.size() != 1){
+			if (opandStack.size() == 0){
+				throw new SyntaxException("Line contains no expressions");
+			}else{
+				throw new SyntaxException("Line contained multiple statements");
+			}
+		}
+		return opandStack.get(0);
 	}
 	
 	public static void pushNewOperator(Stack<Operator> operatorStack, Stack<ASTNode> operandStack, Operator opToPush){
@@ -296,18 +328,6 @@ public class ExpressionParser {
 		Operator op = operatorStack.pop();
 		ASTNode arg = operandStack.pop();
 		operandStack.push(OperatorASTNode.newNode(op, arg));
-	}
-	
-	private static Operator checkTopExpressionOperator(Stack<ASTNode> stack){
-		if (stack.size() != 0){
-			ASTNode top = stack.peek();
-			if (top instanceof OperatorASTNode){
-				OperatorASTNode otop = (OperatorASTNode) top;
-				return otop.op;
-			}
-			return null;
-		}
-		return null;
 	}
 	
 	

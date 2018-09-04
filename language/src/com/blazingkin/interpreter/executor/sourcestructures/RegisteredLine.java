@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -19,7 +20,7 @@ public class RegisteredLine{
 	private String[] argsArr;
 	private ASTNode[] nodes;
 	private int lineNum;
-	public RegisteredLine(Instruction instr, String line, int lineNum){
+	public RegisteredLine(Instruction instr, String line, int lineNum) throws SyntaxException{
 		this.instr = instr;
 		if (instr.executor instanceof InstructionExecutorStringArray){
 			argsArr = line.split(" ");

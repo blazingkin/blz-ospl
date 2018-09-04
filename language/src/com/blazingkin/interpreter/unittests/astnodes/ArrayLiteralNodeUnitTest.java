@@ -1,9 +1,9 @@
 package com.blazingkin.interpreter.unittests.astnodes;
 
-import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -31,7 +31,7 @@ public class ArrayLiteralNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldParseToCorrectList() throws BLZRuntimeException {
+	public void shouldParseToCorrectList() throws Exception {
 		ASTNode[] args = {ExpressionParser.parseExpression("2, 3, 4")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.integer(2), Value.integer(3), Value.integer(4)};
@@ -39,7 +39,7 @@ public class ArrayLiteralNodeUnitTest {
 	}
 	
 	@Test
-	public void shouldParseListWithMultipleTypes() throws BLZRuntimeException {
+	public void shouldParseListWithMultipleTypes() throws Exception {
 		ASTNode[] args = {ExpressionParser.parseExpression("\"asdf\", 234, 123.02")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.string("asdf"), Value.integer(234), Value.doub(123.02)};

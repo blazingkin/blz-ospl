@@ -138,8 +138,8 @@ public class UnitTestUtil {
 		new Exception().printStackTrace();
 	}
 	
-	public static void assertValEqual(String name, Value b, Context con) throws BLZRuntimeException {
-		Value a = ExpressionExecutor.parseExpression(name);
+	public static void assertValEqual(String name, Value b, Context con) throws Exception {
+		Value a = ExpressionExecutor.runExpression(name);
 		org.junit.Assert.assertEquals(a, b);
 		if (!a.equals(b)){
 			System.err.println(name + " != "+ b.value);
@@ -156,6 +156,17 @@ public class UnitTestUtil {
 		for (int i = 0; i < a.length; i++){
 			org.junit.Assert.assertEquals(a[i], b[i]);
 			assert a[i].equals(b[i]);
+		}
+	}
+
+	public static void assertEqualArrays(ArrayList<?> a, ArrayList<?> b){
+		if (a.size() != b.size()){
+			System.err.println("Two 'equal' arrays were not the same length");
+			System.err.println("len of: "+a+" != len of: "+b);
+		}
+		for (int i = 0; i < a.size(); i++){
+			org.junit.Assert.assertEquals(a.get(i), b.get(i));
+			assert a.get(i).equals(b.get(i));
 		}
 	}
 	

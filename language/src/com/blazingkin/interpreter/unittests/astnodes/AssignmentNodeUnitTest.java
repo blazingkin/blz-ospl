@@ -22,9 +22,9 @@ public class AssignmentNodeUnitTest {
 	}
 	
 	@Test
-	public void emptyBracketsShouldBeEmptyArray() throws BLZRuntimeException {
+	public void emptyBracketsShouldBeEmptyArray() throws Exception {
 		Value[] arr = {};
-		UnitTestUtil.assertEqual(Value.arr(arr), ExpressionExecutor.parseExpression("a = []"));
+		UnitTestUtil.assertEqual(Value.arr(arr), ExpressionExecutor.runExpression("a = []"));
 	}
 
 }

@@ -11,15 +11,15 @@ import com.blazingkin.interpreter.variables.Variable;
 public class ExpressionExecutor {
 	
 	public static double EPSILON = 1E-8; 
-	
-	public static Value parseExpression(String line, Context con) throws BLZRuntimeException{
+
+	public static Value runExpression(String line) throws Exception {
+		return ExpressionParser.parseExpression(line).execute(Variable.getGlobalContext());
+	}
+
+	public static Value runExpression(String line, Context con) throws Exception {
 		return ExpressionParser.parseExpression(line).execute(con);
 	}
-	
-	public static Value parseExpression(String line) throws BLZRuntimeException{
-		return parseExpression(line, Variable.getGlobalContext());
-	}
-	
+
 	public static Value[] extractCommaDelimits(ASTNode root, Context con) throws BLZRuntimeException{
 		ArrayList<Value> helperCall = extractCommaDelimitsHelper(root, con);
 		Value[] newVals = new Value[helperCall.size()];
