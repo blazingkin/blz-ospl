@@ -3,24 +3,42 @@ package com.blazingkin.interpreter.unittests;
 import static com.blazingkin.interpreter.parser.ExpressionParser.parseExpression;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.LineLexer;
+import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.parser.Token;
+import com.blazingkin.interpreter.variables.Value;
 
 import org.junit.Test;
 
 public class ExpressionParserUnitTest {
 
 	@Test
-	public void testTwoPlusTwo(){
-		assertEquals(parseExpression("2 + 2"), OperatorASTNode.newNode(Operator.Addition, new ValueASTNode("2"), new ValueASTNode("2")));
+	public void testTwo() throws SyntaxException {
+		ArrayList<Token> tokens = new ArrayList<Token>();
+		tokens.add(new Token(Operator.Number, "2"));
+		assertEquals(parseExpression(tokens), new ValueASTNode(Value.integer(2)));
+	}
+
+	@Test
+	public void testTwoPlusTwo() throws SyntaxException {
+		ArrayList<Token> tokens = new ArrayList<Token>();
+		tokens.add(new Token(Operator.Number, "2"));
+		tokens.add(new Token(Operator.Addition));
+		tokens.add(new Token(Operator.Number, "2"));
+		assertEquals(parseExpression(tokens), OperatorASTNode.newNode(Operator.Addition, new ValueASTNode("2"), new ValueASTNode("2")));
 	}
 	
 	@Test
-	public void testExponentiation(){
-		assertEquals(parseExpression("2 ** 2"), OperatorASTNode.newNode(Operator.Exponentiation, new ValueASTNode("2"), new ValueASTNode("2")));
+	public void testExponentiation() throws SyntaxException {
+		ArrayList<Token> tokens = LineLexer.lexLine("2 ** 2");
+		assertEquals(parseExpression(tokens), OperatorASTNode.newNode(Operator.Exponentiation, new ValueASTNode("2"), new ValueASTNode("2")));
 	}
 	
 	@Test
@@ -37,30 +55,46 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
-	public void testParens(){
-		ASTNode twoplustwo = parseExpression("2 + 2");
-		assertEquals(parseExpression("3 * (2 + 2)"), OperatorASTNode.newNode(Operator.Multiplication, new ValueASTNode("3"), twoplustwo));
+	public void testParens() throws SyntaxException {
+		ArrayList<Token> full = LineLexer.lexLine("3 * (2 + 2)");
+		ArrayList<Token> inner = LineLexer.lexLine("2 + 2");
+		ASTNode twoplustwo = parseExpression(inner);
+		assertEquals(parseExpression(full), OperatorASTNode.newNode(Operator.Multiplication, new ValueASTNode("3"), twoplustwo));
+	}
+
+	@Test
+	public void testNestedParens() throws SyntaxException {
+		ArrayList<Token> full = LineLexer.lexLine("3 * (2 + (2 + 2))");
+		ArrayList<Token> inner = LineLexer.lexLine("2 + 2");
+		ASTNode twoplustwo = parseExpression(inner);
+		ASTNode parenNode = OperatorASTNode.newNode(Operator.Addition, new ValueASTNode("2"), twoplustwo);
+		assertEquals(parseExpression(full), OperatorASTNode.newNode(Operator.Multiplication, new ValueASTNode("3"), parenNode));
+
 	}
 	
 	@Test
-	public void testOrderOfOperation(){
-		ASTNode threetimestwo = parseExpression("3 * 2");
-		assertEquals(parseExpression("3 * 2 + 3 * 2"), OperatorASTNode.newNode(Operator.Addition, threetimestwo, threetimestwo));
+	public void testOrderOfOperation() throws SyntaxException{
+		ArrayList<Token> half = LineLexer.lexLine("3 * 2");
+		ArrayList<Token> full = LineLexer.lexLine("3 * 2 + 3 * 2");
+		ASTNode threetimestwo = parseExpression(half);
+		assertEquals(parseExpression(full), OperatorASTNode.newNode(Operator.Addition, threetimestwo, threetimestwo));
 	}
 	
 	@Test
-	public void testFunctionCall(){
-		assertEquals(parseExpression("blah(3)"), OperatorASTNode.newNode(Operator.functionCall, new ValueASTNode("blah"), new ValueASTNode("3")));
+	public void testFunctionCall() throws SyntaxException{
+		ArrayList<Token> tokens = LineLexer.lexLine("blah(3)");
+		assertEquals(parseExpression(tokens), OperatorASTNode.newNode(Operator.functionCall, new ValueASTNode("blah"), new ValueASTNode("3")));
 	}
 	
 	@Test
-	public void testFunctionCallWithNoArgs(){
+	public void testFunctionCallWithNoArgs() throws SyntaxException{
+		ArrayList<Token> tokens = LineLexer.lexLine("blah()");
 		ASTNode[] arg = {new ValueASTNode("blah")};
-		assertEquals(parseExpression("blah()"), OperatorASTNode.newNode(Operator.functionCall, arg));
+		assertEquals(parseExpression(tokens), OperatorASTNode.newNode(Operator.functionCall, arg));
 	}
 	
 	@Test
-	public void testEmbeddedFunctionCalls(){
+	public void testEmbeddedFunctionCalls() throws SyntaxException{
 		ASTNode[] arg = {new ValueASTNode("fasd")};
 		assertEquals(parseExpression("blah(asdf(fasd()))"), OperatorASTNode.newNode(Operator.functionCall, new ValueASTNode("blah"), 
 				OperatorASTNode.newNode(Operator.functionCall, new ValueASTNode("asdf"), OperatorASTNode.newNode(Operator.functionCall, arg))));

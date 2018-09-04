@@ -7,7 +7,7 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class ValueASTNode extends ASTNode {
 
-	Value val;
+	public Value val;
 	String strVal;
 	boolean isValSet = false;
 	public ValueASTNode(String val){

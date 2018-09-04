@@ -41,10 +41,20 @@ public class LineLexer {
                     tokens.add(new Token(Operator.sqBracketClose));
                 break;
                 case '{':
-                    tokens.add(new Token(Operator.environmentVariableOpen));
-                break;
-                case '}':
-                    tokens.add(new Token(Operator.environmentVariableClose));
+                    i++;
+                    boolean foundEndBracket = false;
+                    for (; i < line.length(); i++){
+                        if (line.charAt(i) == '}'){
+                            foundEndBracket = true;
+                            break;
+                        }
+                        buildingMeta.append(line.charAt(i));
+                    }
+                    if (!foundEndBracket) {
+                        throw new SyntaxException("Closing } not found");
+                    }
+                    tokens.add(new Token(Operator.environmentVariableLookup, buildingMeta.toString()));
+                    buildingMeta = new StringBuilder();
                 break;
                 case '<':
                     // Check for <=

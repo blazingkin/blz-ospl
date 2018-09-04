@@ -2,14 +2,18 @@ package com.blazingkin.interpreter.parser;
 
 import java.util.Optional;
 import java.util.Stack;
+import java.util.List;
 
+import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
+import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class ExpressionParser {
 	
@@ -90,6 +94,181 @@ public class ExpressionParser {
 	
 	public static ASTNode parseAndCollapse(String line){
 		return parseExpression(line).collapse();
+	}
+
+	public static ASTNode parseExpression(List<Token> tokens) throws SyntaxException {
+		Stack<Operator> opStack = new Stack<Operator>();
+		Stack<ASTNode> opandStack = new Stack<ASTNode>();
+		Stack<ASTNode> funcNames = new Stack<ASTNode>();
+		boolean lastPushedIdent = false;
+		for (int i = 0; i < tokens.size(); i++){
+			Token current = tokens.get(i);
+			switch (current.op){
+				// Binary Operations
+				case Addition:
+				case Subtraction:
+				case Multiplication:
+				case Division:
+				case Exponentiation:
+				case Logarithm:
+				case Modulus:
+				case Comparison:
+				case LessThan:
+				case GreaterThan:
+				case NotEqual:
+				case ApproximateComparison:
+				case LessThanEqual:
+				case GreaterThanEqual:
+				case LogicalAnd:
+				case LogicalOr:
+				case Assignment:
+				case CommaDelimit:
+				case ExpressionDelimit:
+				case DotOperator:
+				case Lambda:
+					if (opandStack.empty()) {
+						throw new SyntaxException("Binary operator "+current.op+" was the first part of the expression (It needs something before it)");
+					}
+					pushNewOperator(opStack, opandStack, current.op);
+					lastPushedIdent = false;
+				break;
+
+				case Increment:
+				case Decrement:
+					pushNewOperator(opStack, opandStack, current.op);
+					lastPushedIdent = false;	
+				break;
+
+				// Values
+				case Ident:
+					opandStack.push(new ValueASTNode(current.meta));
+					lastPushedIdent = true;
+				break;
+				case String:
+					opandStack.push(new ValueASTNode(Value.string(current.meta)));
+					lastPushedIdent = true;
+				break;
+				case Number:
+					// There are 2 more tokens and they are . and a number
+					if (i + 2 < tokens.size() && tokens.get(i + 1).op == Operator.DotOperator && tokens.get(i + 2).op == Operator.Number){
+						Value val = Value.doub(Double.parseDouble(current.meta + "." + tokens.get(i + 2).meta));
+						opandStack.push(new ValueASTNode(val));
+						i += 2; // Consume the next 2 tokens
+					}else{
+						opandStack.push(new ValueASTNode(current.meta));
+					}
+					lastPushedIdent = true;
+				break;
+				case environmentVariableLookup:
+					ASTNode envName[] = {new ValueASTNode(Value.string(current.meta))};
+					opandStack.push(new EnvironmentVariableLookupNode(envName));
+					lastPushedIdent = true;
+				break;
+
+				// Special Case
+				case Exclam:
+					if (!opandStack.empty() && opandStack.peek() instanceof ValueASTNode) {
+						ValueASTNode top = (ValueASTNode) opandStack.peek();
+						if (top.val.type != VariableTypes.String) {
+							throw new SyntaxException("Expected ! to follow an identifier name");
+						}
+						top.val = Value.string(top.val + "!");
+					} else {
+						throw new SyntaxException("Unexpected !, it should only follow a function name");
+					}
+				break;
+				case parensOpen:
+				{
+					boolean foundEndParen = false;
+					int depth = 0;
+					Optional<ASTNode> inner = Optional.empty();
+					for (int j = i + 1; j < tokens.size() && !foundEndParen; j++){
+						if (tokens.get(j).op == Operator.parensClose){
+							if (depth == 0){
+								// Make the recursive call
+								if (i + 1 != j){
+									// If there is anything inside the parenthesis
+									// subList is [i + 1, j)
+									inner = Optional.of(parseExpression(tokens.subList(i + 1, j)));
+								}
+								i = j;
+								foundEndParen = true;
+							}else{
+								depth--;
+							}
+						}else if (tokens.get(j).op == Operator.parensOpen) {
+							depth++;
+						}
+					}
+					if (!foundEndParen) {
+						throw new SyntaxException("Opening parenthesis not closed!");
+					}
+
+					if (lastPushedIdent) {
+						// Function call
+						if (inner.isPresent()) {
+							// Arguments
+							opandStack.push(inner.get());
+							pushNewOperator(opStack, opandStack, Operator.functionCall);
+						} else {
+							// No arguments
+							opStack.push(Operator.functionCall);
+							pushUnaryExpression(opStack, opandStack);
+						}
+					} else {
+						if (inner.isPresent()) {
+							opandStack.push(inner.get());
+						}else {
+							throw new SyntaxException("Unexpected empty parenthesis ()");
+						}
+					}
+					lastPushedIdent = true;
+				}
+				break;
+				case sqBracketOpen:
+					boolean foundEndParen = false;
+					int depth = 0;
+					ASTNode inner = null;
+					for (int j = i + 1; j < tokens.size() && !foundEndParen; j++){
+						if (tokens.get(j).op == Operator.parensClose){
+							if (depth == 0){
+								// Make the recursive call
+								// subList is [i + 1, j)
+								inner = parseExpression(tokens.subList(i + 1, j));
+								i = j;
+								foundEndParen = true;
+							}else{
+								depth--;
+							}
+						}else if (tokens.get(j).op == Operator.parensOpen) {
+							depth++;
+						}
+					}
+					opandStack.push(inner);
+					if (lastPushedIdent) {
+						// Array indexing
+						pushNewOperator(opStack, opandStack, Operator.arrayLookup);
+					}else{
+						// Array Literal
+						pushNewOperator(opStack, opandStack, Operator.arrayLiteral);
+					}
+
+				break;
+				default:
+					throw new SyntaxException("Unknown token type: "+current);
+			}
+		}
+		while (!opStack.empty()){
+			pushNewExpression(opStack, opandStack);
+		}
+		if (opandStack.size() != 1){
+			if (opandStack.size() == 0){
+				throw new SyntaxException("Line contains no expressions");
+			}else{
+				throw new SyntaxException("Line contained multiple statements");
+			}
+		}
+		return opandStack.get(0);
 	}
 	
 	// Use the shunting yard algorithm to parse a line

@@ -21,6 +21,26 @@ public class LexerUnitTest {
     }
 
     @Test
+    public void shouldExpectEndingCurlyBracket() throws SyntaxException{
+        try {
+            LineLexer.lexLine("{");
+        }catch(SyntaxException e){
+            UnitTestUtil.assertEqual(e.getMessage(), "Closing } not found");
+            return;
+        }
+        UnitTestUtil.fail("Should have thrown syntax exception");
+    }
+
+    @Test
+    public void shouldFindOneTokenEnvVariable() throws SyntaxException{
+        ArrayList<Token> expectedResult = new ArrayList<Token>();
+        expectedResult.add(new Token(Operator.environmentVariableLookup, "test"));
+
+        ArrayList<Token> result = LineLexer.lexLine("{test}");
+        UnitTestUtil.assertEqualArrays(expectedResult, result);
+    }
+
+    @Test
     public void shouldFindOneTokenMinus() throws SyntaxException{
         ArrayList<Token> expectedResult = new ArrayList<Token>();
         expectedResult.add(new Token(Operator.Subtraction));
