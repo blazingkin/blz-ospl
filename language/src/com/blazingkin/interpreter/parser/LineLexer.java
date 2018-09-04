@@ -19,8 +19,12 @@ public class LineLexer {
         }
     }
 
-    public static boolean isIdent(char c){
+    public static boolean isIdentStart(char c){
         return Character.isAlphabetic(c) || c == '-' || c == '_' || c == ':';
+    }
+
+    public static boolean isIdentNonStart(char c){
+        return Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == ':' || c == '!' || c == '?';
     }
 
     public static ArrayList<Token> lexLine(String line) throws SyntaxException{
@@ -176,12 +180,22 @@ public class LineLexer {
                     }else if (i + 1 < line.length() && line.charAt(i + 1) == '>'){
                         i++;
                         tokens.add(new Token(Operator.Lambda));
+                    }else if (i + 1 < line.length() && Character.isDigit(line.charAt(i + 1))){
+                        buildingMeta.append('-');
+                        while (i + 1 < line.length() && Character.isDigit(line.charAt(i + 1))){
+                            buildingMeta.append(line.charAt(++i));
+                        }
+                        tokens.add(new Token(Operator.Number, buildingMeta.toString()));
+                        buildingMeta = new StringBuilder();
                     }else{
                         tokens.add(new Token(Operator.Subtraction));
                     }
                 break;
                 case '.':
                     tokens.add(new Token(Operator.DotOperator));
+                break;
+                case ',':
+                    tokens.add(new Token(Operator.CommaDelimit));
                 break;
                 case '"':
                     boolean done = false;
@@ -221,9 +235,9 @@ public class LineLexer {
                         }
                         tokens.add(new Token(Operator.Number, buildingMeta.toString()));
                         buildingMeta = new StringBuilder();
-                    }else if (isIdent(lookingAt)) {
+                    }else if (isIdentStart(lookingAt)) {
                         buildingMeta.append(lookingAt);
-                        while (i + 1 < line.length() && isIdent(line.charAt(i + 1))) {
+                        while (i + 1 < line.length() && isIdentNonStart(line.charAt(i + 1))) {
                             buildingMeta.append(line.charAt(++i));
                         }
                         tokens.add(new Token(Operator.Ident, buildingMeta.toString()));

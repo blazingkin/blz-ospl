@@ -48,6 +48,9 @@ public abstract class OperatorASTNode extends ASTNode {
 			building += node.toString() + ", ";
 		}
 		building += op.syntax;
+		if (op.syntax.length() == 0){
+			building += op.toString();
+		}
 		return "("+building+")"; 
 	}
 	

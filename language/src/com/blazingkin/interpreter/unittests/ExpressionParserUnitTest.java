@@ -101,9 +101,11 @@ public class ExpressionParserUnitTest {
 	}
 	
 	@Test
-	public void testFunctionWithOtherOps(){
-		ASTNode twoplustwo = parseExpression("2 + 2");
-		assertEquals(parseExpression("2 + 2 + blah(2 + 2)"), OperatorASTNode.newNode(Operator.Addition, twoplustwo,
+	public void testFunctionWithOtherOps() throws SyntaxException{
+		ArrayList<Token> sht = LineLexer.lexLine("2 + 2");
+		ArrayList<Token> lng = LineLexer.lexLine("2 + 2 + blah(2 + 2)");
+		ASTNode twoplustwo = parseExpression(sht);
+		assertEquals(parseExpression(lng), OperatorASTNode.newNode(Operator.Addition, twoplustwo,
 				OperatorASTNode.newNode(Operator.functionCall, new ValueASTNode("blah"), twoplustwo)));
 	}
 	

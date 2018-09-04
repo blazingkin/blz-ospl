@@ -1,15 +1,18 @@
 package com.blazingkin.interpreter.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.List;
 
+import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
 import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
+import com.blazingkin.interpreter.expressionabstraction.OperatorType;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -47,11 +50,14 @@ public class ExpressionParser {
 					if (source.line.trim().isEmpty() || source.line.trim().charAt(0) == ':'){
 						return Optional.empty();
 					}
-					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(source.line), source.lineNumber));
+					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(LineLexer.lexLine(source.line)), source.lineNumber));
 				}
 				String newStr = source.line.replaceFirst(splits[0], "").trim();
 				return Optional.of(new RegisteredLine(instr, newStr, source.lineNumber));
-			}catch(Exception e){
+			}catch(SyntaxException e){
+				throw new SyntaxException(e.getMessage()+"\nDid not know how to parse line: "+source.line+" on line "+source.lineNumber);
+			}
+			catch(Exception e){
 				throw new SyntaxException("Did not know how to parse line: "+source.line+" on line "+source.lineNumber);
 			}
 	}
@@ -99,7 +105,6 @@ public class ExpressionParser {
 	public static ASTNode parseExpression(List<Token> tokens) throws SyntaxException {
 		Stack<Operator> opStack = new Stack<Operator>();
 		Stack<ASTNode> opandStack = new Stack<ASTNode>();
-		Stack<ASTNode> funcNames = new Stack<ASTNode>();
 		boolean lastPushedIdent = false;
 		for (int i = 0; i < tokens.size(); i++){
 			Token current = tokens.get(i);
@@ -160,7 +165,7 @@ public class ExpressionParser {
 					lastPushedIdent = true;
 				break;
 				case environmentVariableLookup:
-					ASTNode envName[] = {new ValueASTNode(Value.string(current.meta))};
+					ASTNode envName[] = {new ValueASTNode(current.meta)};
 					opandStack.push(new EnvironmentVariableLookupNode(envName));
 					lastPushedIdent = true;
 				break;
@@ -169,7 +174,7 @@ public class ExpressionParser {
 				case Exclam:
 					if (!opandStack.empty() && opandStack.peek() instanceof ValueASTNode) {
 						ValueASTNode top = (ValueASTNode) opandStack.peek();
-						if (top.val.type != VariableTypes.String) {
+						if (top.val == null || top.val.type != VariableTypes.String) {
 							throw new SyntaxException("Expected ! to follow an identifier name");
 						}
 						top.val = Value.string(top.val + "!");
@@ -206,13 +211,16 @@ public class ExpressionParser {
 
 					if (lastPushedIdent) {
 						// Function call
+						if (!opStack.empty() && opStack.peek() == Operator.DotOperator) {
+							combineBinaryExpression(opStack, opandStack);
+						}
+						opStack.push(Operator.functionCall);
 						if (inner.isPresent()) {
 							// Arguments
 							opandStack.push(inner.get());
-							pushNewOperator(opStack, opandStack, Operator.functionCall);
+							combineBinaryExpression(opStack, opandStack); // Add the function call to the stack
 						} else {
 							// No arguments
-							opStack.push(Operator.functionCall);
 							pushUnaryExpression(opStack, opandStack);
 						}
 					} else {
@@ -228,29 +236,44 @@ public class ExpressionParser {
 				case sqBracketOpen:
 					boolean foundEndParen = false;
 					int depth = 0;
-					ASTNode inner = null;
+					Optional<ASTNode> inner = Optional.empty();
 					for (int j = i + 1; j < tokens.size() && !foundEndParen; j++){
-						if (tokens.get(j).op == Operator.parensClose){
+						if (tokens.get(j).op == Operator.sqBracketClose){
 							if (depth == 0){
 								// Make the recursive call
 								// subList is [i + 1, j)
-								inner = parseExpression(tokens.subList(i + 1, j));
+								if (i + 1 != j){
+									inner = Optional.of(parseExpression(tokens.subList(i + 1, j)));
+								}
 								i = j;
 								foundEndParen = true;
 							}else{
 								depth--;
 							}
-						}else if (tokens.get(j).op == Operator.parensOpen) {
+						}else if (tokens.get(j).op == Operator.sqBracketOpen) {
 							depth++;
 						}
 					}
-					opandStack.push(inner);
+
 					if (lastPushedIdent) {
 						// Array indexing
-						pushNewOperator(opStack, opandStack, Operator.arrayLookup);
+						if (inner.isPresent()){
+							opandStack.push(inner.get());
+						}else{
+							throw new SyntaxException("No index present in array lookup");
+						}
+						opStack.push(Operator.arrayLookup);						
+						combineBinaryExpression(opStack, opandStack);
 					}else{
 						// Array Literal
-						pushNewOperator(opStack, opandStack, Operator.arrayLiteral);
+						opStack.push(Operator.arrayLiteral);
+						if (inner.isPresent()){
+							opandStack.push(inner.get());
+							pushUnaryExpression(opStack, opandStack);
+						}else{
+							opandStack.push(OperatorASTNode.newNode(opStack.pop(), (ASTNode)null));
+						}
+
 					}
 
 				break;

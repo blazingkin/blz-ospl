@@ -4,6 +4,7 @@ import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class ValueASTNode extends ASTNode {
 
@@ -26,6 +27,9 @@ public class ValueASTNode extends ASTNode {
 	public ValueASTNode(Value val){
 		this.val = val;
 		isValSet = true;
+		if (val.type == VariableTypes.String) {
+			strVal = (String) val.value;
+		}
 	}
 	
 	public String toString(){
