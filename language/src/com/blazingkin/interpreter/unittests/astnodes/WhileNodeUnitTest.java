@@ -37,7 +37,7 @@ public class WhileNodeUnitTest {
 	public void shouldReturnLastStatementExecuted() throws Exception {
 		Context testCon = new Context();
 		testCon.setValue("a", Value.integer(0));
-		WhileNode wn = new WhileNode(ExpressionParser.parseExpression(LineLexer.lexLine("a < 3")), ExpressionParser.parseExpression(LineLexer.lexLine("a++")));
+		WhileNode wn = new WhileNode(ExpressionParser.parseExpression("a < 3"), ExpressionParser.parseExpression("a++"));
 		UnitTestUtil.assertEqual(Value.integer(3), wn.execute(testCon));
 		assertEqual(testCon.getValue("a"), Value.integer(3));
 	}

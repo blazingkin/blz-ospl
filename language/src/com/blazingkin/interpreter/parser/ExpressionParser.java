@@ -27,7 +27,7 @@ public class ExpressionParser {
 					if (source.line.trim().isEmpty() || source.line.trim().charAt(0) == ':'){
 						return Optional.empty();
 					}
-					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(LineLexer.lexLine(source.line)), source.lineNumber));
+					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(source.line), source.lineNumber));
 				}
 				String newStr = source.line.replaceFirst(splits[0], "").trim();
 				return Optional.of(new RegisteredLine(instr, newStr, source.lineNumber));
@@ -76,7 +76,11 @@ public class ExpressionParser {
 	}
 	
 	public static ASTNode parseAndCollapse(String line) throws SyntaxException{
-		return parseExpression(LineLexer.lexLine(line)).collapse();
+		return parseExpression(line).collapse();
+	}
+
+	public static ASTNode parseExpression(String line) throws SyntaxException {
+		return parseExpression(LineLexer.lexLine(line));
 	}
 
 	public static ASTNode parseExpression(List<Token> tokens) throws SyntaxException {

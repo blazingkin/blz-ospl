@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.parser.ExpressionParser;
-import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -14,11 +13,11 @@ public class ExpressionExecutor {
 	public static double EPSILON = 1E-8; 
 
 	public static Value runExpression(String line) throws Exception {
-		return ExpressionParser.parseExpression(LineLexer.lexLine(line)).execute(Variable.getGlobalContext());
+		return ExpressionParser.parseExpression(line).execute(Variable.getGlobalContext());
 	}
 
 	public static Value runExpression(String line, Context con) throws Exception {
-		return ExpressionParser.parseExpression(LineLexer.lexLine(line)).execute(con);
+		return ExpressionParser.parseExpression(line).execute(con);
 	}
 
 	public static Value[] extractCommaDelimits(ASTNode root, Context con) throws BLZRuntimeException{

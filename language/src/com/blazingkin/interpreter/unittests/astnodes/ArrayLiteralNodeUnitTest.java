@@ -32,7 +32,7 @@ public class ArrayLiteralNodeUnitTest {
 	
 	@Test
 	public void shouldParseToCorrectList() throws Exception {
-		ASTNode[] args = {ExpressionParser.parseExpression(LineLexer.lexLine("2, 3, 4"))};
+		ASTNode[] args = {ExpressionParser.parseExpression("2, 3, 4")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.integer(2), Value.integer(3), Value.integer(4)};
 		UnitTestUtil.assertEqual(Value.arr(vals), n.execute(new Context()));
@@ -40,7 +40,7 @@ public class ArrayLiteralNodeUnitTest {
 	
 	@Test
 	public void shouldParseListWithMultipleTypes() throws Exception {
-		ASTNode[] args = {ExpressionParser.parseExpression(LineLexer.lexLine("\"asdf\", 234, 123.02"))};
+		ASTNode[] args = {ExpressionParser.parseExpression("\"asdf\", 234, 123.02")};
 		ArrayLiteralNode n = new ArrayLiteralNode(args);
 		Value[] vals = {Value.string("asdf"), Value.integer(234), Value.doub(123.02)};
 		UnitTestUtil.assertEqual(Value.arr(vals), n.execute(new Context()));

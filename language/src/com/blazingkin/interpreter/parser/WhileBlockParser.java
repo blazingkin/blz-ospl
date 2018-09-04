@@ -13,7 +13,7 @@ public class WhileBlockParser implements BlockParseProtocol {
 
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {
         String condition = block.getHeader().replaceFirst("while", "").trim();
-        ASTNode conditionNode = ExpressionParser.parseExpression(LineLexer.lexLine(condition));
+        ASTNode conditionNode = ExpressionParser.parseExpression(condition);
         ASTNode whileBlock = new BlockNode(block.getLines(), false);
         return new WhileNode(conditionNode, whileBlock);
     }

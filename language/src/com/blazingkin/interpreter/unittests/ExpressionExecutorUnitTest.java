@@ -353,7 +353,7 @@ public class ExpressionExecutorUnitTest {
 	@Test
 	public void testCommaDelimitExtraction() throws Exception {
 		Value[] arr = { Value.integer(3), Value.bool(false), Value.doub(3.2) };
-		ASTNode expr = ExpressionParser.parseExpression(LineLexer.lexLine("3, false, 3.2"));
+		ASTNode expr = ExpressionParser.parseExpression("3, false, 3.2");
 		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr, new Context()), arr);
 	}
 
@@ -361,7 +361,7 @@ public class ExpressionExecutorUnitTest {
 	public void testCommaDelimitExtractionTwo() throws Exception {
 		Value[] internalArr = { Value.integer(2), Value.integer(3) };
 		Value[] arr = { Value.arr(internalArr), Value.bool(false), Value.doub(3.2) };
-		ASTNode expr = ExpressionParser.parseExpression(LineLexer.lexLine("[2, 3], false, 3.2"));
+		ASTNode expr = ExpressionParser.parseExpression("[2, 3], false, 3.2");
 		UnitTestUtil.assertEqualArrays(ExpressionExecutor.extractCommaDelimits(expr, new Context()), arr);
 	}
 

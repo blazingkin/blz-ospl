@@ -19,7 +19,7 @@ public class IfBlockParser implements BlockParseProtocol {
 
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {
         String initLine = block.getHeader().replaceFirst("if", "").replaceFirst("IF", "").trim();
-        ASTNode initCondition = ExpressionParser.parseExpression(LineLexer.lexLine(initLine));
+        ASTNode initCondition = ExpressionParser.parseExpression(initLine);
         ArrayList<Either<SourceLine, ParseBlock>> lines = block.getLines();
         int elseIndex = lines.size();
         boolean elseFound =  false;
