@@ -190,13 +190,13 @@ public class ExpressionParserUnitTest {
 	
 	@Test
 	public void testSubtractionInArrayAccessors() throws SyntaxException {
-		ASTNode inner = parseExpression("a - 2");
-		assertEquals(parseExpression("arr[a - 2]"), OperatorASTNode.newNode(Operator.arrayLookup, new ValueASTNode("arr"), inner));
+		ASTNode inner = parseExpression(lexLine("a - 2"));
+		assertEquals(parseExpression(lexLine("arr[a - 2]")), OperatorASTNode.newNode(Operator.arrayLookup, new ValueASTNode("arr"), inner));
 	}
 	
 	@Test
 	public void testVariableNamesWithUnderscoresShouldWork() throws SyntaxException {
-		assertEquals(parseExpression("arr_thing + 2"), OperatorASTNode.newNode(Operator.Addition, new ValueASTNode("arr_thing"), new ValueASTNode("2")));
+		assertEquals(parseExpression(lexLine("arr_thing + 2")), OperatorASTNode.newNode(Operator.Addition, new ValueASTNode("arr_thing"), new ValueASTNode("2")));
 	}
 	
 	@Test
@@ -218,33 +218,33 @@ public class ExpressionParserUnitTest {
 	
 	@Test
 	public void testDotOperator() throws SyntaxException {
-		assertEquals(parseExpression("a.b"), OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")));
+		assertEquals(parseExpression(lexLine("a.b")), OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")));
 	}
 	
 	@Test
 	public void testDotOperatorShouldNotMixWithDoubles() throws SyntaxException {
-		assertEquals(parseExpression("123.4"), new ValueASTNode("123.4"));
+		assertEquals(parseExpression(lexLine("123.4")), new ValueASTNode("123.4"));
 	}
 	
 	@Test
 	public void testAssignmentOnDotOperator() throws SyntaxException {
-		assertEquals(parseExpression("a.b = 2"), OperatorASTNode.newNode(Operator.Assignment, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("2")));
+		assertEquals(parseExpression(lexLine("a.b = 2")), OperatorASTNode.newNode(Operator.Assignment, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("2")));
 	}
 	
 	@Test
 	public void testChainedDotOperators() throws SyntaxException {
-		assertEquals(parseExpression("a.b.c"), OperatorASTNode.newNode(Operator.DotOperator, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("c")));
+		assertEquals(parseExpression(lexLine("a.b.c")), OperatorASTNode.newNode(Operator.DotOperator, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b")), new ValueASTNode("c")));
 	}
 	
 	@Test
 	public void testFunctionCallOnDotOperator() throws SyntaxException {
-		assertEquals(parseExpression("a.b()"), OperatorASTNode.newNode(Operator.functionCall, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b"))));
+		assertEquals(parseExpression(lexLine("a.b()")), OperatorASTNode.newNode(Operator.functionCall, OperatorASTNode.newNode(Operator.DotOperator, new ValueASTNode("a"), new ValueASTNode("b"))));
 	}
 	
 	@Test
 	public void testArrayAccessorOnFunctionCall() throws SyntaxException {
-		ASTNode callFunc = parseExpression("a(2)");
-		assertEquals(parseExpression("a(2)[3]"), OperatorASTNode.newNode(Operator.arrayLookup, callFunc, new ValueASTNode("3")));
+		ASTNode callFunc = parseExpression(lexLine("a(2)"));
+		assertEquals(parseExpression(lexLine("a(2)[3]")), OperatorASTNode.newNode(Operator.arrayLookup, callFunc, new ValueASTNode("3")));
 	}
 	
 	@Test
