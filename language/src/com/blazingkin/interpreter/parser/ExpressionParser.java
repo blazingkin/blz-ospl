@@ -1,18 +1,15 @@
 package com.blazingkin.interpreter.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
-import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
 import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.RegisteredLine;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
-import com.blazingkin.interpreter.expressionabstraction.OperatorType;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -111,7 +108,6 @@ public class ExpressionParser {
 			switch (current.op){
 				// Binary Operations
 				case Addition:
-				case Subtraction:
 				case Multiplication:
 				case Division:
 				case Exponentiation:
@@ -171,6 +167,22 @@ public class ExpressionParser {
 				break;
 
 				// Special Case
+				case Subtraction:
+					if (lastPushedIdent) {
+						// Binary Subtraction
+						if (opandStack.empty()) {
+							throw new SyntaxException("Binary operator "+current.op+" was the first part of the expression (It needs something before it)");
+						}
+						pushNewOperator(opStack, opandStack, current.op);
+						lastPushedIdent = false;
+					} else {
+						if (i + 1 < tokens.size() && tokens.get(i + 1).op == Operator.Number) {
+							tokens.get(i + 1).meta = "-" + tokens.get(i + 1).meta;
+						}else{
+							throw new SyntaxException("Unexpected - in line");
+						}
+					}
+				break;
 				case Exclam:
 					if (!opandStack.empty() && opandStack.peek() instanceof ValueASTNode) {
 						ValueASTNode top = (ValueASTNode) opandStack.peek();

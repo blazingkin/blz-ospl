@@ -180,13 +180,6 @@ public class LineLexer {
                     }else if (i + 1 < line.length() && line.charAt(i + 1) == '>'){
                         i++;
                         tokens.add(new Token(Operator.Lambda));
-                    }else if (i + 1 < line.length() && Character.isDigit(line.charAt(i + 1))){
-                        buildingMeta.append('-');
-                        while (i + 1 < line.length() && Character.isDigit(line.charAt(i + 1))){
-                            buildingMeta.append(line.charAt(++i));
-                        }
-                        tokens.add(new Token(Operator.Number, buildingMeta.toString()));
-                        buildingMeta = new StringBuilder();
                     }else{
                         tokens.add(new Token(Operator.Subtraction));
                     }
