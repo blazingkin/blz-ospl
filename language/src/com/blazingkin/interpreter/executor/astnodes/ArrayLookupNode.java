@@ -28,6 +28,9 @@ public class ArrayLookupNode extends BinaryNode {
 			if (arr.type == VariableTypes.String){ 
 				int index = Variable.getIntValue(args[1].execute(con)).intValue();
 				String s = (String) arr.value;
+				if (index >= s.length()) {
+					throw new BLZRuntimeException("Out Of Bounds! Tried to access index "+index+" of string "+s);
+				}
 				return new Value(VariableTypes.String, s.substring(index, index+1));
 			}
 			if (arr.type == VariableTypes.Hash) {

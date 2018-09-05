@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
 import java.math.BigInteger;
+import java.lang.StringBuilder;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
@@ -48,12 +49,12 @@ public class AssignmentNode extends BinaryNode {
 					}
 					String oldString = (String) con.getValue(arrayName).value;
 					int index = Variable.getIntValue(lookupNode.args[1].execute(con)).intValue();
-					if (oldString.length() < index){
+					if (index < 0 || oldString.length() <= index){
 						throw new BLZRuntimeException(this, "Out of bounds! Tried to set index: "+index+" of string: "+oldString);
 					}
-					char[] chars = oldString.toCharArray();
-					chars[index] = newString.charAt(0);
-					Value newStrVal = Value.string(String.valueOf(chars));
+					StringBuilder build = new StringBuilder(oldString);
+					build.setCharAt(index, newString.charAt(0));
+					Value newStrVal = Value.string(build.toString());
 					Variable.setValue(arrayName, newStrVal, con);
 					return newStrVal;
 				}else{ // Assume it's a hash
