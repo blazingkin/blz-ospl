@@ -1,0 +1,8 @@
+import Test
+import Timer
+
+t = Timer()
+t.start()
+sleep(10)
+expect(t.milliseconds_elapsed()).is_greater_than(10)
+expect(t.seconds_elapsed()).is_greater_than(0.001)

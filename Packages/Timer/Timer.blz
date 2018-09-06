@@ -1,0 +1,20 @@
+constructor Timer
+    start_time = {system.time.currenttimemillis}
+
+    :start
+        start_time = {system.time.currenttimemillis}
+    end
+
+    :milliseconds_elapsed
+        {system.time.currenttimemillis} - start_time
+    end
+
+    :seconds_elapsed
+        this.milliseconds_elapsed() / 1000
+    end
+
+    :show
+        "Timer started at unix time "+start_time
+    end
+
+end
