@@ -35,6 +35,9 @@ public class AssignmentNode extends BinaryNode {
 				VariableTypes type = Variable.typeOf(arrayName, con);
 				if (type == VariableTypes.Array){
 					BigInteger index = Variable.getIntValue(lookupNode.args[1].execute(con));
+					if (index.intValue() < 0) {
+						throw new BLZRuntimeException("Negative array index "+index.intValue());
+					}
 					Value newVal = args[1].execute(con);
 					Variable.setValueOfArray(arrayName, index, newVal, con);
 					return newVal;					

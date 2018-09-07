@@ -1,9 +1,10 @@
+import Timer
 :main
 	len = 2
 	numon = 5
 	print("How many primes do you want?")
 	count = number_input()
-	start_time = {system.time.currenttimemillis}
+	timer = Timer()
 	primes = array(count)
 	primes[0] = 2
 	primes[1] = 3
@@ -21,15 +22,12 @@
 		end
 		numon = numon + 2
 	end
-	end_time = {system.time.currenttimemillis}
 	
 	# Loop through and print primes
 	for i = 0; i < count; i = i + 1
 		off = i + 1
 		print(off + "th prime: " + primes[i])
 	end
-	
-	time = (end_time - start_time) / 1000
-	print("Took " + time.to_decimal() + " seconds")
-		
+	print("Took " + timer.seconds_elapsed().to_decimal() + " seconds")
+
 end

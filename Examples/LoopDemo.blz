@@ -1,11 +1,12 @@
+import Timer
 :main
 	print("Enter a number")
 	a = number_input()
-	starttime = {system.time.currenttimemillis}
+	timer = Timer()
 	for i = 0; i < a; i = i + 1
 		print(i)
 	end
-	time = {system.time.currenttimemillis} - starttime
+	time = timer.milliseconds_elapsed()
 	timeperelement = time / a
 	print("Took " + time + " milliseconds (" + timeperelement + " milliseconds per iteration)")
 end
