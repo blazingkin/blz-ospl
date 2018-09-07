@@ -9,9 +9,11 @@ import com.blazingkin.interpreter.variables.Value;
 public class TryCatchNode extends ASTNode {
 
     private ASTNode mainBlock, errorBlock;
-    public TryCatchNode(ASTNode mainBlock, ASTNode errorBlock){
+    private String catchBinding;
+    public TryCatchNode(ASTNode mainBlock, ASTNode errorBlock, String catchBinding){
         this.mainBlock = mainBlock;
         this.errorBlock = errorBlock;
+        this.catchBinding = catchBinding;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class TryCatchNode extends ASTNode {
             if (errorObject == null) {
                 errorObject = Value.string(exception.getMessage());
             }
-            con.setValue("error", errorObject);
+            con.setValue(catchBinding, errorObject);
             return errorBlock.execute(con);
         }
     }

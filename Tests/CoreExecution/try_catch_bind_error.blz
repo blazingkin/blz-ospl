@@ -2,13 +2,13 @@
     try
         asdf()
         print("No error")
-    catch
+    catch error
         print(error)
     end
 
     try
         this_throws_an_error()
-    catch
+    catch error
         print(error)
     end
 

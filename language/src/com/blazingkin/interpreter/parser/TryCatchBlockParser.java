@@ -21,11 +21,13 @@ public class TryCatchBlockParser implements BlockParseProtocol {
         ArrayList<Either<SourceLine, ParseBlock>> lines = block.getLines();
         int catchIndex = lines.size();
         boolean catchFound =  false;
+        String catchBinding = "error";
         for (int i = 0; i < lines.size(); i++){
             if (lines.get(i).isLeft() && isCatch(lines.get(i).getLeft().get().line)){
                 /* If it is an else marker */
                 catchFound = true;
                 catchIndex = i;
+                catchBinding = getCatchBinding(lines.get(i).getLeft().get().line);
                 if (i == lines.size() - 1){
                     throw new SyntaxException("Catch was the last line of an try block!");
                 }
@@ -45,12 +47,20 @@ public class TryCatchBlockParser implements BlockParseProtocol {
             exceptionNode = new ValueASTNode(Value.nil());
         }
         BlockNode mainNode = new BlockNode(mainLines, false);
-        TryCatchNode node = new TryCatchNode(mainNode, exceptionNode);
+        TryCatchNode node = new TryCatchNode(mainNode, exceptionNode, catchBinding);
         return node;
     }
 
     private boolean isCatch(String line){
         return line.toLowerCase().startsWith("catch");
+    }
+
+    private String getCatchBinding(String line) throws SyntaxException{
+        String[] splits = line.split("( |\t)+");
+        if (splits.length != 2){
+            throw new SyntaxException("Expected a catch block header in the form: catch <variable name>\nInstead it was: "+line);
+        }
+        return splits[1];
     }
 
 }

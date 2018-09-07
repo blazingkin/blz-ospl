@@ -1,0 +1,2 @@
+Expected a catch block header in the form: catch <variable name>
+Instead it was: catch
