@@ -15,7 +15,6 @@ import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
-import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.MethodBlockParser;

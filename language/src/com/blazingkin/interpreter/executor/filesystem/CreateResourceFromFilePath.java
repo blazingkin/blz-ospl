@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.filesystem;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;

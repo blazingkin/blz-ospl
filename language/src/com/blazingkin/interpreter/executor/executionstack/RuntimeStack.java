@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.executionstack;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;

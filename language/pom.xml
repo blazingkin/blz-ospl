@@ -81,7 +81,7 @@
     			<artifactId>truffle-dsl-processor</artifactId>
     			<version>0.30</version>
     		</dependency>
-    		<dependency>
+			<dependency>
     			<groupId>junit</groupId>
     			<artifactId>junit</artifactId>
     			<version>4.12</version>

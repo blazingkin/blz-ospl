@@ -1,7 +1,6 @@
 package com.blazingkin.interpreter.executor.timing;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;

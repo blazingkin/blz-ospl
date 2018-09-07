@@ -1,7 +1,5 @@
 package com.blazingkin.interpreter.executor.filesystem;
 
-import java.util.Scanner;
-
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.BLZResource;

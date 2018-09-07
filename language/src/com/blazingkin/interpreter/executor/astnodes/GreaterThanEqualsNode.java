@@ -1,7 +1,5 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
-import java.math.BigDecimal;
-
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
@@ -9,8 +7,6 @@ import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.Variable;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class GreaterThanEqualsNode extends BinaryNode {
 

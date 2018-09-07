@@ -3,7 +3,6 @@ package com.blazingkin.interpreter.unittests.astnodes;
 import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
-import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;

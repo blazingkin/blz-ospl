@@ -46,7 +46,7 @@ public class UserTestRunner {
                     try {
                         Value[] emptyArgs = {};
                         testFailed = false;
-                        Value result = method.execute(p.processContext, emptyArgs, false);
+                        method.execute(p.processContext, emptyArgs, false);
                         if (testFailed) {
                             Executor.getEventHandler().print(ANSI_RED+"Failed!\n"+ANSI_RESET);
                             return false;

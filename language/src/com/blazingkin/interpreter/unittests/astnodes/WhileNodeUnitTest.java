@@ -6,7 +6,6 @@ import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.WhileNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
-import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.unittests.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
