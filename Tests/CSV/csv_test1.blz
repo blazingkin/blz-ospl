@@ -1,0 +1,14 @@
+import CSV
+import FileSystem
+import Test
+
+:main
+    contents = open({file.location} + "/test1.csv").read_all()
+    parsed = parse_csv(contents)
+    expect(parsed.length()).is(3)
+    expect(parsed[0][0]).is("1")
+    expect(parsed[1][0]).is("a")
+    expect(parsed[1][1]).is("b")
+    expect(parsed[1][2]).is("c")
+    expect(parsed[2][2]).is("g")
+end

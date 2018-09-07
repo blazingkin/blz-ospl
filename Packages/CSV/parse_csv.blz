@@ -1,0 +1,5 @@
+
+# Wow, that was easy
+:parse_csv(string)
+    string.replace!("\r", "").split_on_token("\n").map!(x -> x.split_on_token!(","))
+end

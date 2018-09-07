@@ -14,6 +14,8 @@ public class LineLexer {
             return '\t';
             case 'b':
             return '\b';
+            case 'r':
+            return '\r';
             default:
             return in; 
         }
