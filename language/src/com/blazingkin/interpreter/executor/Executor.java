@@ -193,7 +193,7 @@ public class Executor {
 		if (p == null){
 			return null;
 		}
-		for (MethodNode m : getCurrentProcess().methods){
+		for (MethodNode m : p.methods){
 			if (m.getStoreName().equals(methodName)){
 				return m;
 			}

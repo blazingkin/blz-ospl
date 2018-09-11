@@ -45,15 +45,15 @@ class RatPoly
         public RatPoly(final String L) throws NumberFormatException
         {
                 a = new Vector<Rational>() ;
-                try ( Scanner sc = new Scanner(L);){
-                        sc.useDelimiter(",");
+                try (Scanner sc = new Scanner(L)){
+                        sc.useDelimiter(",") ;
                         while ( sc.hasNext())
                         {
                                 String tok =sc.next() ;
                                 a.add(new Rational(tok)) ;
                         }
                         simplify() ;
-                }         
+                }
         } /* ctor */
 
 
@@ -778,10 +778,11 @@ class RatPoly
         * @param the number of floating point digits
         * @since 2008-10-26
         */
-        private Random rand = new Random();
+        private Random rand = new Random() ;
         public Vector<BigComplex> roots(int digits)
         {
                 RatPoly mon = monic() ;
+
 
                 MathContext mc = new MathContext(digits+3,RoundingMode.DOWN) ;
 

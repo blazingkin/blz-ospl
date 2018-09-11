@@ -507,7 +507,12 @@ public class Variable {
 		}
 		if (v.type == VariableTypes.Double) {
 			BigDecimal decimal = (BigDecimal) v.value;
-			return decimal.stripTrailingZeros().scale() <= 0;
+			try{
+				decimal.intValueExact();
+				return true;
+			}catch(ArithmeticException e){
+				return false;
+			}
 		}
 		return false;
 	}
