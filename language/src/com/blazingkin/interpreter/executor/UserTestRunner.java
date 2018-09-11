@@ -45,9 +45,9 @@ public class UserTestRunner {
                     Executor.getEventHandler().print("Running "+method.getStoreName()+"\n");
                     try {
                         Value[] emptyArgs = {};
-                        testFailed = false;
+                        UserTestRunner.testFailed = false;
                         method.execute(p.processContext, emptyArgs, false);
-                        if (testFailed) {
+                        if (UserTestRunner.testFailed) {
                             Executor.getEventHandler().print(ANSI_RED+"Failed!\n"+ANSI_RESET);
                             return false;
                         }

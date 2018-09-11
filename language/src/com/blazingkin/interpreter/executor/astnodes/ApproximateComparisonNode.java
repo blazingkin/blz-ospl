@@ -12,7 +12,7 @@ import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 
 public class ApproximateComparisonNode extends BinaryNode {
-
+	private static final double EPSILON = 1E-8; 
 	public ApproximateComparisonNode(ASTNode[] args) {
 		super(Operator.ApproximateComparison, args);
 		if (args.length != 2){

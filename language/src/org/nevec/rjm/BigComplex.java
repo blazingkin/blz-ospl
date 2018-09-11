@@ -56,8 +56,8 @@ public class BigComplex
         */
         public BigComplex( double x, double y)
         {
-                re= new BigDecimal(x) ;
-                im= new BigDecimal(y) ;
+                re = BigDecimal.valueOf(x) ;
+                im = BigDecimal.valueOf(y) ;
         }
 
         /** Multiply with another BigComplex

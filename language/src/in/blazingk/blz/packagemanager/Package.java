@@ -67,8 +67,7 @@ public class Package {
 	
 	public Collection<Path> listFileTree(Path dir) {
 	    Set<Path> fileTree = new HashSet<Path>();
-	    try {
-	    	DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+	    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 	    	for (Path entry : stream) {
 	    		fileTree.addAll(listFileTree(entry));
 	    	}

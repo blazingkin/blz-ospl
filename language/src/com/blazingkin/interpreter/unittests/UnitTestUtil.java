@@ -115,7 +115,7 @@ public class UnitTestUtil {
 	}
 	
 
-	public static final double EPSILON = 1E-10;
+	private static final double EPSILON = 1E-10;
 	public static void assertAlmostEqual(Value a, Value b){
 
 		if (a.equals(b)){

@@ -33,7 +33,7 @@ import com.blazingkin.interpreter.variables.SystemEnv;
 
 public abstract class OperatorASTNode extends ASTNode {
 
-	public static double EPSILON = 1E-8; 
+	private static double EPSILON = 1E-8; 
 	
 	public Operator op;
 	public ASTNode[] args;

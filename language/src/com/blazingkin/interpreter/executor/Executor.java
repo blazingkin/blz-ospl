@@ -189,6 +189,10 @@ public class Executor {
 	
 	
 	public static MethodNode getMethodInCurrentProcess(String methodName){
+		Process p = getCurrentProcess();
+		if (p == null){
+			return null;
+		}
 		for (MethodNode m : getCurrentProcess().methods){
 			if (m.getStoreName().equals(methodName)){
 				return m;

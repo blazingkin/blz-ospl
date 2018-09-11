@@ -59,16 +59,16 @@ public class Ifactor implements Cloneable, Comparable<Ifactor>
                                 }
                                 if ( ex > 0 )   
                                 {
-                                        primeexp.add(new Integer(p)) ;
-                                        primeexp.add(new Integer(ex)) ;
+                                        primeexp.add(p) ;
+                                        primeexp.add(ex) ;
                                 }
                                 primindx++ ;
                         }
                 }
                 else if ( number == 1)
                 {
-                        primeexp.add(new Integer(1)) ;
-                        primeexp.add(new Integer(0)) ;
+                        primeexp.add(1) ;
+                        primeexp.add(0) ;
                 }
         } /* Ifactor */
 
@@ -104,8 +104,8 @@ public class Ifactor implements Cloneable, Comparable<Ifactor>
                                 }
                                 if ( ex > 0 )
                                 {
-                                        primeexp.add(new Integer(p.intValue()) ) ;
-                                        primeexp.add(new Integer(ex) ) ;
+                                        primeexp.add(p.intValue() ) ;
+                                        primeexp.add(ex ) ;
                                 }
                                 primindx++ ;
                         }
@@ -157,6 +157,13 @@ public class Ifactor implements Cloneable, Comparable<Ifactor>
                 cl.n = new BigInteger(""+n) ;
                 return cl ;
         } /* Ifactor.clone */
+
+        public boolean equals(Object other){
+                if (other instanceof Ifactor){
+                        return this.equals((Ifactor) other);
+                }
+                return false;
+        }
 
         /** Comparison of two numbers.
         * The value of this method is in allowing the Vector<>.contains() calls that use the value,
@@ -442,7 +449,7 @@ public class Ifactor implements Cloneable, Comparable<Ifactor>
                                 if ( ex % r != 0 )
                                         throw new ArithmeticException("Cannot pull "+ r+"th root of "+ toString()) ;
 
-                                pows.multiply( new BigInteger(""+primeexp.elementAt(i)).pow(ex/r) ) ;
+                                pows = pows.multiply( new BigInteger(""+primeexp.elementAt(i)).pow(ex/r) ) ;
                         }
                         /* convert result to a Rational; unfortunately this will loose the prime factorization */
                         return new Rational(pows) ;

@@ -17,6 +17,7 @@ public class Wait implements InstructionExecutorValue {
 				Thread.sleep((long)time);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				Thread.currentThread().interrupt(); // Propogate the interrupt
 			}
 			return val;
 		}

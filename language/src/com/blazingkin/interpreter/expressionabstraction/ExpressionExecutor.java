@@ -10,8 +10,6 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class ExpressionExecutor {
 	
-	public static double EPSILON = 1E-8; 
-
 	public static Value runExpression(String line) throws Exception {
 		return ExpressionParser.parseExpression(line).execute(Variable.getGlobalContext());
 	}

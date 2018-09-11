@@ -12,11 +12,9 @@ import com.blazingkin.interpreter.variables.Value;
 public class BLZLanguage extends TruffleLanguage<BLZContext> {
 
 	public static final String MIME_TYPE = "application/x-blz";
-	public static volatile int counter = 0;
 	
 	public BLZLanguage() {
 		//no-op
-		counter++;
 	}
 	
 	@Override

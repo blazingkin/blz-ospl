@@ -23,6 +23,7 @@ Version 2.6
 - Add proper support for escape characters `\#` and `\"` in strings
 - Add string replace method to replace characters
 - Add `throw` builtin to throw custom values as errors
+- Add lexer to catch more syntax errors and correctly parse everything
 
 Test Mode
 =====
@@ -30,7 +31,7 @@ Test Mode
 
 REPL
 =====
-- Supports blocks (for, while, if) but not methods or constructors
+- Supports blocks (for, while, if, methods) but not constructors
 
 Test Package
 ====
@@ -40,6 +41,10 @@ Test Package
 JSON Package
 =====
 - Add `parse_json(json_string)` method that will parse json or throw a JSONError if the json is invalid.
+
+CSV Package
+=====
+- Add `parse_csv(string)` method that will parse csv
 
 Math Package
 =====

@@ -51,10 +51,12 @@ public class ImportPackageInstruction implements InstructionExecutor{
 		}
 		if (ImportPackageInstruction.packageDirectory == null){
 			Path dir = getRunningDirectory();
-			for (Path f : Files.newDirectoryStream(dir)){
-				if (f.getFileName().toString().toLowerCase().equals("packages")){
-					ImportPackageInstruction.packageDirectory = f;
-					return f;
+			try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+				for (Path f : stream){
+					if (f.getFileName().toString().toLowerCase().equals("packages")){
+						ImportPackageInstruction.packageDirectory = f;
+						return f;
+					}
 				}
 			}
 			throw new FileNotFoundException("Could not find Packages directory in "+dir);
@@ -82,9 +84,11 @@ public class ImportPackageInstruction implements InstructionExecutor{
 
 	public Path findPackage(String packageName) throws IOException {
 		Path dir = findPackageDirectory();
-		for (Path f : Files.newDirectoryStream(dir)){
-			if (f.getFileName().toString().equals(packageName)){
-				return f;
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+			for (Path f : stream){
+				if (f.getFileName().toString().equals(packageName)){
+					return f;
+				}
 			}
 		}
 		throw new FileNotFoundException("Could not find the package "+packageName+" in "+dir);
@@ -95,9 +99,8 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	}
 
 	public Collection<Path> listFileTree(Path dir) {
-	    Set<Path> fileTree = new HashSet<Path>();
-	    try {
-	    	DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+		Set<Path> fileTree = new HashSet<Path>();
+	    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 	    	for (Path entry : stream) {
 	    		fileTree.addAll(listFileTree(entry));
 	    	}

@@ -24,11 +24,11 @@ public class BigIntegerMath
         {
                 if ( k == 0 ) 
                         return(BigInteger.ONE) ;
-                BigInteger bin = new BigInteger(""+n) ;
+                BigInteger bin = BigInteger.valueOf(n) ;
                 BigInteger n2 = bin ;
-                for(BigInteger i= new BigInteger(""+(k-1)) ; i.compareTo(BigInteger.ONE) >= 0 ; i = i.subtract(BigInteger.ONE) )
+                for(BigInteger i= BigInteger.valueOf(k-1) ; i.compareTo(BigInteger.ONE) >= 0 ; i = i.subtract(BigInteger.ONE) )
                         bin = bin.multiply(n2.subtract(i)) ;
-                for(BigInteger i= new BigInteger(""+k) ; i.compareTo(BigInteger.ONE) == 1 ; i = i.subtract(BigInteger.ONE) )
+                for(BigInteger i= BigInteger.valueOf(k) ; i.compareTo(BigInteger.ONE) == 1 ; i = i.subtract(BigInteger.ONE) )
                         bin = bin.divide(i) ;
                 return ( bin) ;
         } /* binomial */
@@ -73,7 +73,7 @@ public class BigIntegerMath
                 * Have already initialized bin=n=C(n,1) above. Start definining the factorial
                 * in the denominator, named fden
                 */
-                BigInteger i = new BigInteger("2") ;
+                BigInteger i = BigInteger.valueOf(2l) ;
                 BigInteger num = new BigInteger(n.toString()) ;
                 /* a for-loop   (i=2;i<= truek;i++)
                 */
@@ -181,10 +181,10 @@ public class BigIntegerMath
                 else
                 {
                         final double resul= Math.sqrt(n.doubleValue()) ;
-                        x = new BigInteger(""+Math.round(resul)) ;
+                        x = BigInteger.valueOf(Math.round(resul)) ;
                 }
 
-                final BigInteger two = new BigInteger("2") ;
+                final BigInteger two = BigInteger.valueOf(2l) ;
                 while ( true)
                 {
                         /* check whether the result is accurate, x^2 =n

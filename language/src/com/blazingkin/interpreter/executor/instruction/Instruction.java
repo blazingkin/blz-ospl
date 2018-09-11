@@ -9,8 +9,8 @@ import com.blazingkin.interpreter.executor.data.Rebind;
 import com.blazingkin.interpreter.executor.executionorder.Break;
 import com.blazingkin.interpreter.executor.executionorder.Continue;
 import com.blazingkin.interpreter.executor.executionorder.Exit;
-import com.blazingkin.interpreter.executor.executionorder.Throw;
 import com.blazingkin.interpreter.executor.executionorder.ReturnValue;
+import com.blazingkin.interpreter.executor.executionorder.Throw;
 import com.blazingkin.interpreter.executor.filesystem.CloseResource;
 import com.blazingkin.interpreter.executor.filesystem.CreateResource;
 import com.blazingkin.interpreter.executor.filesystem.CreateResourceFromFilePath;
@@ -23,7 +23,6 @@ import com.blazingkin.interpreter.executor.input.StringInput;
 import com.blazingkin.interpreter.executor.output.BLZLogging;
 import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FailTest;
-import com.blazingkin.interpreter.executor.output.FileOutput;
 import com.blazingkin.interpreter.executor.output.RawEcho;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
 import com.blazingkin.interpreter.executor.string.Length;
@@ -40,7 +39,6 @@ public enum Instruction {
 	RANDOM("RAND", "Random", new RandomImplementor()),								// rand - puts a random number 0-99 into a variable
 	STRINGINPUT("STRIN", "Read stdin", new StringInput()),								// Input String - gets a string through input
 	WAIT("WAIT", "Wait", new Wait()),												//Wait - Waits a given time on this instruction
-	FILEOUTPUT("FILEOUT", "File out", new FileOutput()),
 	STRINGLENGTH("SLEN", "String length", new Length(true)),
 	ARRAYLENGTH("ALEN", "Array length", new Length(false)),
 	TOGGLELOGGING("BLZLOG", "Toggle logging", new BLZLogging()),
