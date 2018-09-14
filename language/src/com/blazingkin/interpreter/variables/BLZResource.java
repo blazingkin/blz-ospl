@@ -51,6 +51,10 @@ public class BLZResource {
         }
     }
 
+    public String toString(){
+        return "<Resource " + location.toString() + ">";
+    }
+
     public void write(String s) throws IOException {
         writer.write(s);
         writer.flush();

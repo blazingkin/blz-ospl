@@ -59,7 +59,7 @@ public class Variable {
 	}
 	
 	public static void killContext(Context con){
-		if (!con.equals(getGlobalContext())){
+		if (con.getID() != getGlobalContext().getID()){
 			Context.contexts.remove(con);
 		}
 	}
@@ -507,12 +507,7 @@ public class Variable {
 		}
 		if (v.type == VariableTypes.Double) {
 			BigDecimal decimal = (BigDecimal) v.value;
-			try{
-				decimal.intValueExact();
-				return true;
-			}catch(ArithmeticException e){
-				return false;
-			}
+			return decimal.stripTrailingZeros().scale() <= 0;
 		}
 		return false;
 	}
