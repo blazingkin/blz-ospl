@@ -1,0 +1,9 @@
+constructor Blah(asdf)
+    :show
+        asdf
+    end
+end
+
+print(Blah("2"))
+print(Blah("32"))
+print(Blah([]))
