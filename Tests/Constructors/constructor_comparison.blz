@@ -1,0 +1,24 @@
+constructor NothingSpecial(ord)
+
+    :==(other)
+        ord == other.ord
+    end
+
+    :<(other)
+        ord < other.ord
+    end
+
+end
+
+import Test
+:main
+    first = NothingSpecial(1)
+    second = NothingSpecial(2)
+    third = NothingSpecial(3)
+    same_as_first = NothingSpecial(1)
+    expect(first).is_less_than(second)
+    expect(first).is_less_than(third)
+    expect(first).is(same_as_first)
+    expect(first).is_not(second)
+    expect(third).is_greater_than(second)
+end
