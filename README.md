@@ -12,7 +12,7 @@ The goal is to provide programmers with high levels of abstraction to increase d
 Getting Started
 ====
 
-Directions for installing the language are available on the [wiki page](https://github.com/blazingkin/blz-ospl/wiki/Installation)
+Directions for installing the language are available on the [Docs Site](https://docs.blazingk.in/installation/)
 
 
 Example Code
@@ -33,9 +33,10 @@ end
 
 :fact(num)
 	if num <= 1
-		return 1
+		1	# The last line of a method is automatically returned
+	else
+		num * fact(num - 1)
 	end
-	return num * fact(num - 1)
 end
 ```
 
@@ -65,11 +66,13 @@ constructor Ball(color, radius)
 end
 ```
 
+See the [Extras folder](Extras) for more
+
 
 Reference Material
 ====
 
-Check out the [wiki on GitHub](https://github.com/blazingkin/blz-ospl/wiki) for details about the language and its standard library
+Check out the [Docs Site](https://docs.blazingk.in/) for details about the language and its standard library
 
 
 Language Hompage
@@ -77,12 +80,19 @@ Language Hompage
 
 Check out the language homepage at [blazingk.in/blz-ospl](http://blazingk.in/blz-ospl).
 
+Building the Project
+===
+
+The project comes precompiled in a .jar file, so you should be able to use it immediately after cloning. However, if you are interested in contributing you may have to rebuild the project.
+
+See this [wiki page](https://github.com/blazingkin/blz-ospl/wiki/Building-the-language) to see how to build the language.
+
 Contact and License
 ===
-For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or visit [my website](http://www.blazingk.in/)
+For more information concerning this project, please email me at blazingkin [at] gmail [dot] com or visit [my website](https://blazingk.in/blz)
 
 This work includes a [Java BigMath library by Richard Mathar](https://arxiv.org/abs/0908.3030v3). It is in the org folder.
 
-See the Extras folder for the full license
+[See here for the full license](LICENSE)
 
 Copyright © 2015-2018 Alex Gravenor under the GNU GPL V3 License
