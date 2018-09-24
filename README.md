@@ -66,7 +66,7 @@ constructor Ball(color, radius)
 end
 ```
 
-See the [Extras folder](Extras) for more
+See the [Examples folder](Examples) for more
 
 
 Reference Material
