@@ -19,6 +19,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class Package {
 	private Path packageDirectory;
+	private String versionTag = "latest";
 	private HashMap<String, Process> processes; // Key is process name
 	public PackageSettings settings;
 	
@@ -34,6 +35,11 @@ public class Package {
 				processes.put(fileName.replace(".blz", ""), fileProcess);
 			}
 		}
+	}
+
+	public Package(Path directory, String version) throws IOException{
+		this(directory);
+		this.versionTag = version;
 	}
 	
 	public Collection<MethodNode> getAllMethodsInPackage(){

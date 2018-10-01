@@ -210,41 +210,43 @@ public class Process {
 		//Always import core
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		try{
-			ArrayList<Either<SourceLine, ParseBlock>> importInstructions = new ArrayList<Either<SourceLine, ParseBlock>>();
-			ArrayList<Either<SourceLine, ParseBlock>> requireInstructions = new ArrayList<Either<SourceLine, ParseBlock>>();;
+			ArrayList<SourceLine> importInstructions = new ArrayList<>();
+			ArrayList<SourceLine> requireInstructions = new ArrayList<>();
+			ArrayList<Either<SourceLine, ParseBlock>> toRemove = new ArrayList<>();
 			for (Either<SourceLine, ParseBlock> line : lines){
 				if (line.isLeft()){
 					if (line.getLeft().get().line.startsWith("import")){
-						importInstructions.add(line);
+						importInstructions.add(line.getLeft().get());
+						toRemove.add(line);
 					}else if (line.getLeft().get().line.startsWith("require")){
-						requireInstructions.add(line);
+						requireInstructions.add(line.getLeft().get());
+						toRemove.add(line);
 					}
 				}
 			}
-			for (Either<SourceLine, ParseBlock> line : importInstructions){
-				lines.remove(line);
-				String packageName = line.getLeft().get().line.replaceFirst("import", "").trim();
-				packagesToImport.add(importer.findPackage(packageName));
+
+			// Remove all of the import instructions from the source list
+			toRemove.forEach(x -> lines.remove(x));
+
+			for (SourceLine line : importInstructions){
+				try {
+					String importLine = line.line.replaceFirst("import", "").trim();
+					ImportStatement importStatement = new ImportStatement(importLine);
+					packagesToImport.add(importer.findPackage(importStatement.packageName));
+				}catch(IOException e){
+					throw new BLZRuntimeException("On line "+line.lineNumber+" in "+this.toString()+"\n"+e.getMessage());
+				}catch(SyntaxException e){
+					throw new BLZRuntimeException("On line "+line.lineNumber+" in "+this.toString()+"\n"+e.getMessage());
+				}
 			}
-			for (Either<SourceLine, ParseBlock> line : requireInstructions){
-				lines.remove(line);
-				String fileName = line.getLeft().get().line.replaceFirst("require", "").trim();
+			for (SourceLine line : requireInstructions){
+				String fileName = line.line.replaceFirst("require", "").trim();
 				processesToImport.add(calculateFileLocation(fileName));
 			}
 		}catch(Exception e){
-			e.printStackTrace();
 			Interpreter.throwError(e.getMessage());
 		}
 		
-	}
-	
-	
-	public String getLine(int lineNumber){
-		if (lineNumber >= lines.length){
-			valid = false;
-			Interpreter.throwError("Attempted to get a line out of code range");
-		}
-		return lines[lineNumber];
 	}
 	
 	public boolean valid = true;
