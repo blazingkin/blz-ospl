@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
+import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.MethodBlockParser;
@@ -33,6 +34,7 @@ public class REPL {
 	
 	public static Context replContext = new Context();
 	public static void immediateModeLoop(InputStream is){
+		Executor.setEventHandler(new StandAloneEventHandler());
 		Executor.getEventHandler().print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
 		Executor.getEventHandler().print("Type 'exit' to exit\n");
 		ArrayList<String> inputBuffer = new ArrayList<String>();

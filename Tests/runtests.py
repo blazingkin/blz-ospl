@@ -32,7 +32,7 @@ class TestFile:
 	def test(self):
 		print("Running " + self.source)
 		err = 0
-		command = "java -jar ../bin/blz-ospl.jar "+self.source
+		command = "../bin/blz-linux-amd64-native "+self.source
 		if (self.input != None):
 			command = command + " < " + self.input
 		if self.output != None:

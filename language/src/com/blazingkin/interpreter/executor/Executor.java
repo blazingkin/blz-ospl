@@ -22,7 +22,7 @@ import in.blazingk.blz.packagemanager.FileImportManager;
 public class Executor {
 
 	// Instance objects
-	private static BlzEventHandler eventHandler = new StandAloneEventHandler();
+	private static BlzEventHandler eventHandler;
 	public static String startingMethod = "main";
 	private static ArrayList<Integer> UUIDsUsed = new ArrayList<Integer>();
 
@@ -54,6 +54,7 @@ public class Executor {
 	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws BLZRuntimeException {			// runs the executor
+		setEventHandler(new StandAloneEventHandler());
 		handleArgs(args);
 		// puts the file passed to us as the current process
 		importCore();

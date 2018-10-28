@@ -18,18 +18,23 @@ public class StandAloneEventHandler implements BlzEventHandler {
 	private static OutputStream out = new BufferedOutputStream(System.out);
 	private static BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 	
-	final Runnable flush = new Runnable() {
-		public void run() { 
-			try{
-				writer.flush(); 
-			}catch(Exception e){
-				
+	final Runnable flush;
+	private final ScheduledExecutorService scheduler;
+	final ScheduledFuture<?> beeperHandle;
+
+	public StandAloneEventHandler() {
+		flush = new Runnable() {
+			public void run() { 
+				try{
+					writer.flush(); 
+				}catch(Exception e){
+					
+				}
 			}
-		}
-	};
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	final ScheduledFuture<?> beeperHandle =
-		       scheduler.scheduleAtFixedRate(flush, 50, 50, TimeUnit.MILLISECONDS);
+		};
+		scheduler = Executors.newScheduledThreadPool(1);
+		beeperHandle = scheduler.scheduleAtFixedRate(flush, 50, 50, TimeUnit.MILLISECONDS);
+	}
 
 	@Override
 	public void print(String contents) {
