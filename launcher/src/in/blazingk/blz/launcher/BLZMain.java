@@ -53,16 +53,16 @@ public final class BLZMain {
             System.err.println(e.getMessage());
             return 1;
         }
-        out.println(context.getEngine().getLanguages());
+        //out.println(context.getEngine().getLanguages());
         try {
             Value result = context.eval(source);
-            if (context.lookup(BLZ, "main") == null) {
+          /*  if (context.getBindings(BLZ).getMember("main") == null) {
                 System.err.println("No function main defined in blz source file.");
                 return 1;
             }
             if (!result.isNull()) {
                 out.println(result.toString());
-            }
+            }*/
             return 0;
         } catch (PolyglotException ex) {
             if (ex.isInternalError()) {

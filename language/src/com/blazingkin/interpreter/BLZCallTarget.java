@@ -18,11 +18,11 @@ public class BLZCallTarget implements CallTarget {
 	public Object call(Object... arguments) {
 		LinkedList<String> noArgs = new LinkedList<String>();
 		BlzEventHandler standard = new StandAloneEventHandler();
-		String[] s = source.getCode().split("\n"); 
+		String[] s = source.getCharacters().toString().split("\n");
 		try {
 		Interpreter.executeCodeAsLibrary(s, noArgs, standard);
 		}catch(Exception e) {}
-		return null;  
+		return 2;  
 	} 
 
 }

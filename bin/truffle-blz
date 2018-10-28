@@ -1,0 +1,3 @@
+#!/bin/bash
+SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd -P)"
+$GRAAL_HOME/bin/java -Dtruffle.class.path.append="$SCRIPT_HOME/blz-ospl.jar" -cp "$SCRIPT_HOME/blz-ospl-launcher.jar" in.blazingk.blz.launcher.BLZMain $@

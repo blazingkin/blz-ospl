@@ -3,10 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 	<groupId>com.blazingkin.interpreter</groupId>
 	<artifactId>blz-ospl-parent</artifactId>
-	<version>2.6</version>
+	<version>2.7</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <graalvm.version>1.0.0-rc8</graalvm.version>
   </properties>
   <packaging>pom</packaging>
   <modules>

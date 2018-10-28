@@ -1,7 +1,9 @@
 <factorypath>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/oracle/truffle/truffle-api/0.33/truffle-api-0.33.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/graal-sdk/0.33/graal-sdk-0.33.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/oracle/truffle/truffle-dsl-processor/0.33/truffle-dsl-processor-0.33.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/truffle/truffle-api/1.0.0-rc8/truffle-api-1.0.0-rc8.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/sdk/graal-sdk/1.0.0-rc8/graal-sdk-1.0.0-rc8.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/truffle/truffle-dsl-processor/1.0.0-rc8/truffle-dsl-processor-1.0.0-rc8.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/truffle/truffle-tck/1.0.0-rc8/truffle-tck-1.0.0-rc8.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/graalvm/sdk/polyglot-tck/1.0.0-rc8/polyglot-tck-1.0.0-rc8.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/junit/junit/4.12/junit-4.12.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>
