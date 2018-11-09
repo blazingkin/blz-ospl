@@ -1,0 +1,34 @@
+constructor Stack
+    stack = []
+    i = -1
+
+    :push(item)
+        stack[i++] = item
+    end
+
+    :pop
+        i--
+        stack[i + 1]
+    end
+
+    :show
+        if i < 0
+            [].show()
+        else
+            stack.slice(0, i + 1).show()
+        end
+    end
+
+    :==(other)
+        if this.i == other.i
+            for k = 0; k < this.i; k++
+                if this.stack[i] != other.stack[i]
+                    return false
+                end
+            end
+            return true
+        end
+        return false
+    end
+
+end

@@ -1,0 +1,20 @@
+import DataStructures
+
+first = Stack()
+second = Stack()
+
+print(first == second) # Empty stacks should be equal
+
+first.push(1)
+first.push(2)
+print(first.pop()) # should be 2
+print(first.pop()) # should be 1
+
+first.push(1)
+
+print(first == second) # They are now not equal
+second.push(1)
+print(first == second) # Now equal
+second.push("a")
+first.push("a")
+print(first == second) # Still equal
