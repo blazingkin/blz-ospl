@@ -52,13 +52,13 @@ public class BlockParser {
 		if (line.startsWith("constructor")){
 			return true;
 		}
-		if (line.startsWith("if")){
+		if (line.startsWith("if ")){
 			return true;
 		}
-		if (line.startsWith("for")){
+		if (line.startsWith("for ")){
 			return true;
 		}
-		if (line.startsWith("while")){
+		if (line.startsWith("while ")){
 			return true;
 		}
 		if (line.startsWith("try")){

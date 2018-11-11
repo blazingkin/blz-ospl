@@ -188,6 +188,12 @@ public class UnitTestUtil {
 		org.junit.Assert.assertEquals(err, last);
 		assert err.equals(last);
 	}
+
+	public static void assertLastErrorContains(String err){
+		String[] splits = outStream.toString().split("\n");
+		String last = splits[splits.length-1].trim();
+		org.junit.Assert.assertTrue(last+" should contain "+err, last.contains(err));
+	}
 	
 	public static void assertNoErrors(){
 		org.junit.Assert.assertEquals("", outStream.toString());

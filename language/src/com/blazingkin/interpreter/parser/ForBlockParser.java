@@ -8,7 +8,7 @@ import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 public class ForBlockParser implements BlockParseProtocol {
 
     public boolean shouldParse(String line){
-        return line.startsWith("for");
+        return line.startsWith("for ");
     }
 
     public ASTNode parseBlock(ParseBlock block) throws SyntaxException {

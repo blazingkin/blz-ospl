@@ -37,3 +37,13 @@ end
 :to_json(num)
 	num
 end
+
+:ordinal(num)
+	if num == 1
+		"1st"
+	else if num == 2
+		"2nd"
+	else
+		num + "th"
+	end
+end

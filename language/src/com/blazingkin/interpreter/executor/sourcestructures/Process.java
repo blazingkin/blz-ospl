@@ -130,7 +130,7 @@ public class Process {
 			}
 			processes.add(this);	
 		}catch(SyntaxException exception){
-			Interpreter.throwError(exception.getMessage());
+			Interpreter.throwError(exception.getMessage() + " In "+this.toString());
 		}catch (IOException exception){
 			Interpreter.throwError(exception.getMessage());
 		}

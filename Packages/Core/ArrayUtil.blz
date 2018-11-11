@@ -44,7 +44,7 @@ end
 :each(arr, method)
 	length = arr.length()
 	for i = 0; i < length; i++
-		method(arr[i])
+		method(arr[i], i)
 	end
 	return arr
 end

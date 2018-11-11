@@ -1,2 +1,2 @@
 Expected a catch block header in the form: catch <variable name>
-Instead it was: catch
+Instead it was: catch In <Source File TryCatchWithoutErrorName.blz>

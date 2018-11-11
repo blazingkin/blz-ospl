@@ -76,7 +76,7 @@ public class BlockParserUnitTest {
     @Test
     public void shouldYellAboutNonClosedBlocks(){
         try {
-            String input[] = {"if"};
+            String input[] = {"if "};
             BlockParser.parseBody(new SplitStream<String>(input), 1);
             UnitTestUtil.fail();
         }catch (SyntaxException e){
