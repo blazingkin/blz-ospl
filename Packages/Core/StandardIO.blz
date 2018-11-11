@@ -11,7 +11,7 @@ end
 end
 
 :string_input
-	strin a
+	STRIN
 end
 
 :write_file_lines(path, contents)
