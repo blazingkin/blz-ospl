@@ -43,6 +43,8 @@ end
 		"1st"
 	else if num == 2
 		"2nd"
+	else if num == 3
+		"3rd"
 	else
 		num + "th"
 	end
