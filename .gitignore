@@ -9,6 +9,7 @@
 *.classpath
 *.outran
 *.errran
+*.factorypath
 target/*
 language/target/*
 launcher/target/*

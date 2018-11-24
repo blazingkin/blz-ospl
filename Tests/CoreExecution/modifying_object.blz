@@ -1,0 +1,13 @@
+:main
+    a = Blah()
+    print(a.get_x())
+    a.x = 21
+    print(a.get_x())
+end
+
+constructor Blah
+    x = 20
+    :get_x
+        x
+    end
+end
