@@ -10,7 +10,7 @@ install:
     sudo apt-get install python3-dev
  
 script:
-- mvn package
+- mvn install
 - docker build . -t blz:ci-$(echo $TRAVIS_BRANCH)-$(echo $TRAVIS_BUILD_NUMBER)
 - cd Tests/
 - python3 runtests.py

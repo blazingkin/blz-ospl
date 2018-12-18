@@ -1,4 +1,5 @@
 *.log
+# Ignore IDE generated files
 *.gen
 .metadata/*
 .recommenders/*
@@ -7,13 +8,23 @@
 *.project
 *.class
 *.classpath
-*.outran
-*.errran
 target/*
 language/target/*
 launcher/target/*
-CHANGELOG
 language/.settings/*
 launcher/.settings/*
 language/.vscode/*
+
+# Ignore test temporary files
+*.outran
+*.errran
 Tests/tmp/*
+
+# Changelog is a local file used to keep track of changes locally
+CHANGELOG
+
+# Ignore native binaries
+bin/blz-linux-x86_64-native
+bin/blz-darwin-x86_64-native
+bin/blz-linux-x86-native
+bin/blz-darwin-x86-native
