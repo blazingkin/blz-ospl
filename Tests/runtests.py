@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, sys
 import filecmp
 import time
@@ -19,12 +20,30 @@ class bcolors:
 
 exitcode = 0
 
+
+
 class TestFile:
 	def __init__(self, source, output=None, inp=None):
 		self.source = source
 		self.output = output
 		self.input = inp
 		self.error = None
+		self.executable = self._find_executable()
+
+
+	def _find_executable(self):
+		import os
+		uname = os.uname()
+		uname_s, arch = uname[0].lower(), uname[-1]
+		def is_exe(fpath):
+			return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+		# Try to use the native binary if it exists
+		native = "../bin/blz-{}-{}-native".format(uname_s, arch)
+		if is_exe(native):
+			return native
+		return "../bin/blz" # Fall back to blz script
+
 
 	def set_error(self, err):
 		self.error = err
@@ -32,7 +51,7 @@ class TestFile:
 	def test(self):
 		print("Running " + self.source)
 		err = 0
-		command = "../bin/blz "+self.source
+		command = self.executable+" "+self.source
 		if (self.input != None):
 			command = command + " < " + self.input
 		if self.output != None:

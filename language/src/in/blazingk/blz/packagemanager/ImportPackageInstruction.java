@@ -8,6 +8,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,13 @@ public class ImportPackageInstruction implements InstructionExecutor{
 	
 	public Path getRunningDirectory(){
 		try {
-			URL cwd = ImportPackageInstruction.class.getProtectionDomain().getCodeSource().getLocation();
+			CodeSource source = ImportPackageInstruction.class.getProtectionDomain().getCodeSource();
+			if (source == null) {
+				System.err.println("Failed importing packages");
+				System.err.println("If you are running with the native version, the BLZPACKAGES environment variable is required");
+				return null;
+			}
+			URL cwd = source.getLocation();
 			return Paths.get(cwd.toURI()).getParent().getParent();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
