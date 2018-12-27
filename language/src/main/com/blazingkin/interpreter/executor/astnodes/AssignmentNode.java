@@ -9,6 +9,7 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.expressionabstraction.OperatorASTNode;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -17,7 +18,7 @@ import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class AssignmentNode extends BinaryNode {
 
-	public AssignmentNode(ASTNode[] args) {
+	public AssignmentNode(ASTNode[] args) throws SyntaxException {
 		super(Operator.Assignment, args);
 		if (args.length != 2){
 			Interpreter.throwError("Assignment did not have 2 arguments");

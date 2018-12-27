@@ -44,5 +44,12 @@ public class Either<L, R> {
         return Optional.empty();
     }
 
+    public String toString() {
+        String sideString = isLeft ? "L" : "R";
+        Class type = isLeft ? left.getClass() : right.getClass();
+        String value = isLeft ? left.toString() : right.toString();
+        return "<Either " +  sideString + " " + type.getSimpleName()  + " " + value + ">";
+    }
+
 
 }

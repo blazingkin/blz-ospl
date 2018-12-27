@@ -28,6 +28,7 @@ import com.blazingkin.interpreter.executor.astnodes.ModulusNode;
 import com.blazingkin.interpreter.executor.astnodes.MultiplicationNode;
 import com.blazingkin.interpreter.executor.astnodes.NotEqualNode;
 import com.blazingkin.interpreter.executor.astnodes.SubtractionNode;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 
@@ -119,7 +120,11 @@ public abstract class OperatorASTNode extends ASTNode {
 				for (int i = 0; i < args.length; i++){
 					newChildren[i] = args[i].collapse();
 				}
-				return newNode(op, newChildren);
+				try {
+					return newNode(op, newChildren);
+				}catch(SyntaxException e) {
+					return this;
+				}
 			}else{
 				return this;
 			}
@@ -136,7 +141,7 @@ public abstract class OperatorASTNode extends ASTNode {
 		return null;
 	}
 	
-	public static OperatorASTNode newNode(Operator op, ASTNode... args){
+	public static OperatorASTNode newNode(Operator op, ASTNode... args) throws SyntaxException{
 		switch (op){
 		case Addition:
 			return new AdditionNode(args);

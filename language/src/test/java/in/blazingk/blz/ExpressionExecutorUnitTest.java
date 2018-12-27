@@ -8,7 +8,6 @@ import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.parser.ExpressionParser;
-import com.blazingkin.interpreter.parser.LineLexer;
 import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.BLZObject;
 import com.blazingkin.interpreter.variables.Context;

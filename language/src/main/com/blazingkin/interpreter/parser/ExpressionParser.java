@@ -290,14 +290,14 @@ public class ExpressionParser {
 		return opandStack.get(0);
 	}
 	
-	public static void pushNewOperator(Stack<Operator> operatorStack, Stack<ASTNode> operandStack, Operator opToPush){
+	public static void pushNewOperator(Stack<Operator> operatorStack, Stack<ASTNode> operandStack, Operator opToPush) throws SyntaxException{
 		while (!operatorStack.empty() && operatorStack.peek().precedence <= opToPush.precedence){
 			pushNewExpression(operatorStack, operandStack);
 		}
 		operatorStack.push(opToPush);
 	}
 	
-	public static void pushNewExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack){
+	public static void pushNewExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack) throws SyntaxException{
 		Operator op = operatorStack.peek();
 		switch(op.type){
 		case Binary:
@@ -317,14 +317,14 @@ public class ExpressionParser {
 		}
 	}
 	
-	public static void combineBinaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack){
+	public static void combineBinaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack) throws SyntaxException{
 		Operator op = operatorStack.pop();
 		ASTNode arg2 = operandStack.pop();
 		ASTNode arg1 = operandStack.pop();
 		operandStack.push(OperatorASTNode.newNode(op, arg1, arg2));
 	}
 	
-	public static void pushUnaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack){
+	public static void pushUnaryExpression(Stack<Operator> operatorStack, Stack<ASTNode> operandStack) throws SyntaxException{
 		Operator op = operatorStack.pop();
 		ASTNode arg = operandStack.pop();
 		operandStack.push(OperatorASTNode.newNode(op, arg));
