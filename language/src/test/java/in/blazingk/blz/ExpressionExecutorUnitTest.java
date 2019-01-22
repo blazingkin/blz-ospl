@@ -396,7 +396,7 @@ public class ExpressionExecutorUnitTest {
 			assertEqual(runExpression("abcd.inner", testContext), Value.integer(2));
 			runExpression("inner", testContext);
 		} catch (BLZRuntimeException e) {
-			UnitTestUtil.assertEqual(e.getMessage(), "Could not find a value for inner");
+			UnitTestUtil.assertEqual(true, e.getMessage().contains("Could not find a value for inner"));
 			return;
 		} catch (Exception e){
 			UnitTestUtil.fail("Did not expect a syntax exception");
@@ -416,7 +416,7 @@ public class ExpressionExecutorUnitTest {
 		try {
 			runExpression("x", tCon);
 		} catch (BLZRuntimeException e) {
-			UnitTestUtil.assertEqual(e.getMessage(), "Could not find a value for x");
+			UnitTestUtil.assertEqual(true, e.getMessage().contains("Could not find a value for x"));
 			return;
 		} catch (SyntaxException e){
 			UnitTestUtil.fail("Did not expect a syntax exception");
