@@ -10,7 +10,13 @@ public class BLZNoVariableFoundException extends BLZRuntimeException {
     public BLZNoVariableFoundException(String message, Collection<String> options, String original) {
         super(message + "\nDid you mean \""  +calculateDidYouMean(options, original) + "\"?");
         baseMsg = message;
-    }
+	}
+	
+	public BLZNoVariableFoundException(BLZNoVariableFoundException original, Collection<String> options, String lookingFor) {
+		super(original.baseMsg + "\nDid you mean \"" + calculateDidYouMean(options, lookingFor) + "\"?");
+		baseMsg = original.baseMsg;
+	}
+
 
 
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 
+
 import com.blazingkin.interpreter.BLZNoVariableFoundException;
 
 public class Context {
@@ -55,7 +56,11 @@ public class Context {
 		}
 		
 		if (parent != null){
-			return parent.getValue(s);
+			try {
+				return parent.getValue(s);
+			}catch(BLZNoVariableFoundException e){
+				throw new BLZNoVariableFoundException(e, variables.keySet(), s);
+			}
 		}else{
 			throw new BLZNoVariableFoundException("Could not find a value for "+s, variables.keySet(), s);
 		}
