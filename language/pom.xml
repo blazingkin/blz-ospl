@@ -53,8 +53,8 @@
 	  <directory>target</directory>
 	  <outputDirectory>target/classes</outputDirectory>
 	  <finalName>${project.artifactId}</finalName>
-	  <sourceDirectory>src</sourceDirectory>
-      <testSourceDirectory>src/com/blazingkin/interpreter/unittests</testSourceDirectory>
+	  <sourceDirectory>src/main</sourceDirectory>
+      <testSourceDirectory>src/test/java</testSourceDirectory>
 	  <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -67,6 +67,22 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<executions>
+					<execution>
+						<id>Java Ahead Of Time Compile</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${project.basedir}/generate-native.sh</executable>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

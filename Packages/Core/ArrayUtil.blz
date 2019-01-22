@@ -82,7 +82,6 @@ end
 	return false
 end
 
-#does not work with !
 :remove(arr, index)
 	newarr = []
 	len = arr.length() - 1
