@@ -12,7 +12,7 @@ public class BLZResourceUnitTest {
 
     @Test
     public void testResource() throws IOException {
-        BLZResource resource = new BLZResource(new File("blah.outran").toURI());
+        BLZResource resource = new BLZResource(File.createTempFile("blah", "outran").toURI());
         resource.open(BLZResource.FileMode.Create);
         resource.open(BLZResource.FileMode.Write);
         resource.write("TEST!\nAnotherThing\n");

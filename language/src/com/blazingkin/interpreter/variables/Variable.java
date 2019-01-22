@@ -357,7 +357,7 @@ public class Variable {
 			return Value.string("Not Implemented");
 		case version:
 			//TODO update this every time
-			return new Value(VariableTypes.String, "2.6");
+			return new Value(VariableTypes.String, "2.7");
 		case runningFileLocation:
 			if (Executor.getCurrentProcess() == null || !Executor.getCurrentProcess().runningFromFile){
 				return new Value(VariableTypes.String, "SOFTWARE");
