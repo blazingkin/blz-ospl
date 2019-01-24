@@ -3,12 +3,11 @@ package in.blazingk.blz.packagemanager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 
-import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
-import java.util.HashMap;
 
 public class FileImportManager {
 	
@@ -22,17 +21,12 @@ public class FileImportManager {
 			Process process = new Process(path, false);
 			importedFiles.put(path, process);
 			process.handleImports();
-			process.onBlockStart();
 			return process;
 		}catch(FileNotFoundException e) {
 			Interpreter.throwError("Could not find file at path: "+path);
 			return null;
 		}catch(IOException e){
 			Interpreter.throwError("IO Exception: "+e.getMessage());
-			return null;
-		}catch(BLZRuntimeException e){
-			// Todo, handle this properly
-			Interpreter.throwError("oops...");
 			return null;
 		}
 	}

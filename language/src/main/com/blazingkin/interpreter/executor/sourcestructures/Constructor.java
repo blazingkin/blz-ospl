@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.parser.Either;
 import com.blazingkin.interpreter.parser.ExpressionParser;
@@ -90,10 +91,18 @@ public class Constructor {
 	}
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference) throws BLZRuntimeException{
+		boolean pushedParent = false;
+        if (con.parent != null && (RuntimeStack.isEmpty() || RuntimeStack.getProcessStack().peek().UUID != con.parent.UUID)){
+            pushedParent = true;
+            RuntimeStack.push(con.parent);
+        }
 		BLZObject newObj = new BLZObject(con.parent.processContext);
 		setReferences(con, newObj); 
 		initializeArguments(con, newObj, args, passByReference);
-		con.blockNode.execute(newObj.objectContext);	
+		con.blockNode.execute(newObj.objectContext);
+		if(pushedParent){
+			RuntimeStack.pop();
+		}	
 		return Value.obj(newObj);
 	}
 	

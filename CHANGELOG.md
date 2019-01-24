@@ -2,7 +2,7 @@ Version 2..7
 ======
 - Add "did you mean"
 - Add "type" field to objects to get constructor name
-- Execute static code in processes the first time that they are imported
+- Fix bug that stopped process contexts from executing when a constructor is called
 - Make object contexts inherit from process context
 
 
