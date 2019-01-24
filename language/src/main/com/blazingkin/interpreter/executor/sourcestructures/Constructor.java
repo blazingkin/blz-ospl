@@ -90,7 +90,7 @@ public class Constructor {
 	}
 	
 	public static Value initialize(Constructor con, Value[] args, boolean passByReference) throws BLZRuntimeException{
-		BLZObject newObj = new BLZObject();
+		BLZObject newObj = new BLZObject(con.parent.processContext);
 		setReferences(con, newObj); 
 		initializeArguments(con, newObj, args, passByReference);
 		con.blockNode.execute(newObj.objectContext);	
@@ -123,6 +123,7 @@ public class Constructor {
 		/* Normally this would be part of the standard library, but */
 		/* This must be added programatically since objects won't look at primitive contexts */
 		newObj.objectContext.setValue("nil?", Value.method(nilHuhNode()));
+		newObj.objectContext.setValueInPresent("type", Value.string(constructor.name));
 		for (MethodNode m : constructor.getParent().importedMethods){
 			newObj.objectContext.setValueInPresent(m.getStoreName(), new Value(VariableTypes.Method, m));
 		}

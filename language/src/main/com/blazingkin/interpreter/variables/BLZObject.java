@@ -7,7 +7,7 @@ public class BLZObject implements Cloneable {
 
 	public Context objectContext;
 	public BLZObject(Context parent){
-		objectContext = new Context(null);
+		objectContext = new Context(parent);
 	}
 	
 	public BLZObject(){

@@ -1,3 +1,11 @@
+Version 2..7
+======
+- Add "did you mean"
+- Add "type" field to objects to get constructor name
+- Execute static code in processes the first time that they are imported
+- Make object contexts inherit from process context
+
+
 Version 2.6
 =====
 - Add `blz -p list` command line option to list loaded packages
@@ -73,3 +81,4 @@ Other
 =====
 - Function names can now have `:` in the middle of them (please don't use this in production)
 - Add *EXPERIMENTAL* `async` builtin (please don't use this in production)
+

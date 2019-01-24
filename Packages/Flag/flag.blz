@@ -1,0 +1,7 @@
+
+constructor Flag(name, flag_type, required, message)
+    
+end
+
+state = true
+print("test")
