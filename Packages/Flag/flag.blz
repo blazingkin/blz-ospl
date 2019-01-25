@@ -33,9 +33,9 @@ arg_length = {arguments}.length()
 # Iterate through the flags
 for i = 0; i < arg_length; i++
     arg = {arguments}[i]
-    if arg.starts_with("--")
+    if arg.starts_with?("--")
         flag_name = arg.slice(2, arg.length())
-    else if arg.starts_with("-")
+    else if arg.starts_with?("-")
         flag_name = arg.slice(1, arg.length())
     else
        continue  

@@ -4,6 +4,8 @@ Version 2..7
 - Add "type" field to objects to get constructor name
 - Fix bug that stopped process contexts from executing when a constructor is called
 - Make object contexts inherit from process context
+- string starts_with?
+- Flag package
 
 
 Version 2.6
