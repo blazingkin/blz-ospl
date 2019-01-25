@@ -177,3 +177,17 @@ end
 :to_json(str)
 	"\"" + str.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 end
+
+:starts_with(string, other)
+	other_length = other.length()
+	string_length = string.length()
+	if other_length > string_length
+		return false
+	end
+	for i = 0; i < other_length; i++
+		if string[i] != other[i]
+			return false
+		end
+	end
+	true
+end

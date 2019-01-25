@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
 import com.blazingkin.interpreter.variables.Context;
+import com.blazingkin.interpreter.variables.NilSingleton;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -212,7 +213,7 @@ public class UnitTestUtil {
 
 	public static void assertNil(Value v) {
 		org.junit.Assert.assertEquals(VariableTypes.Nil, v.type);
-		org.junit.Assert.assertNull(v.value);
+		org.junit.Assert.assertEquals(v.value, NilSingleton.SINGLETON);
 		assert v.type.equals(VariableTypes.Nil);
 	}
 	

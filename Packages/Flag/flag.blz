@@ -1,7 +1,53 @@
+constructor Flag(short_name, flag_type, required, message, long_name)
+    value = {blz.nil}
+    if detected_flags.has_key?(short_name)
+        value = format_to_type(detected_flags[short_name], flag_type)
+    else if detected_flags.has_key?(long_name)
+        value = format_to_type(detected_flags[long_name], flag_type)
+    end
 
-constructor Flag(name, flag_type, required, message)
-    
+    :format_to_type(val, type)
+        if type == "string"
+            val
+        else if type == "number"
+            val.to_number()
+        else if type == "boolean"
+            val == "true"
+        else
+            val
+        end
+    end
+
 end
 
-state = true
-print("test")
+constructor FlagException(message)
+    :show
+        message
+    end
+end
+
+# A map of flags to their (string) values
+detected_flags = {}
+arg_length = {arguments}.length()
+
+# Iterate through the flags
+for i = 0; i < arg_length; i++
+    arg = {arguments}[i]
+    if arg.starts_with("--")
+        flag_name = arg.slice(2, arg.length())
+    else if arg.starts_with("-")
+        flag_name = arg.slice(1, arg.length())
+    else
+       continue  
+    end
+    if flag_name.contains?("=")
+        split = flag_name.split_on_token("=")
+        # If the flag is --a=b then set a = b
+        detected_flags[split[0]] = split[1]
+    end
+    if i + 1 == arg_length
+        break
+    end
+    detected_flags[flag_name] = {arguments}[i + 1]
+    i++
+end

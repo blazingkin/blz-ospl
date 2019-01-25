@@ -99,7 +99,7 @@ public class Variable {
 			return new Value(VariableTypes.String, s1+s2);
 		}
 		Interpreter.throwError("Failed Adding Values "+v1+" and "+v2);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value subValues(Value v1, Value v2){
@@ -119,7 +119,7 @@ public class Variable {
 			return new Value(VariableTypes.Rational, rat);
 		}
 		Interpreter.throwError("Failed Subtracting Values "+v1+" and "+v2);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value mulValues(Value v1, Value v2){
@@ -137,7 +137,7 @@ public class Variable {
 			return new Value(VariableTypes.Double, getDoubleVal(v1).multiply(getDoubleVal(v2)));
 		}
 		Interpreter.throwError("Failed Multiplying Values "+v1+" and "+v2);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value modVals(Value val, Value quo) {
@@ -148,7 +148,7 @@ public class Variable {
 			return new Value(VariableTypes.Double, getDoubleVal(val).remainder(getDoubleVal(quo)));
 		}
 		Interpreter.throwError("Attempted to perform a modulus on non-integers, "+val+" and "+quo);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static Value divVals(Value top, Value bottom) throws BLZRuntimeException {
@@ -253,7 +253,7 @@ public class Variable {
 			return getVariableValue(line, con.getParentContext());
 		}
 		Interpreter.throwError("Could not find a value for: "+line);
-		return new Value(VariableTypes.Nil, null);
+		return Value.nil();
 	}
 	
 	public static boolean canGetValue(String line){
@@ -400,11 +400,11 @@ public class Variable {
 		case context:
 			return Value.integer(-1);
 		case nil:
-			return new Value(VariableTypes.Nil, null);
+			return Value.nil();
 		case doublequote:
 			return Value.string("\"");
 		default:
-			return new Value(VariableTypes.Nil, null);
+			return Value.nil();
 		}
 	}
 	

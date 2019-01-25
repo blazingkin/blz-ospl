@@ -1,0 +1,7 @@
+import Test
+
+expect("adsf".starts_with("")).is(true)
+expect("adsf".starts_with("ad")).is(true)
+expect("adsf".starts_with("b")).is(false)
+expect("".starts_with("")).is(true)
+expect("".starts_with("a")).is(false)

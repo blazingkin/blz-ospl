@@ -10,7 +10,7 @@ import com.blazingkin.interpreter.executor.Executor;
 
 public class ForNode extends ASTNode {
 	private final static Value TRUE_VAL = Value.bool(true);
-	private final static Value NULL_VAL = new Value(VariableTypes.Nil, null);
+	private final static Value NULL_VAL = Value.nil();
 	
 	ASTNode init, loop, term, block;
 	public ForNode(ASTNode init, ASTNode loop, ASTNode term, ASTNode block){

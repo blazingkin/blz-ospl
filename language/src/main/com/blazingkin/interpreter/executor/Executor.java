@@ -33,7 +33,7 @@ public class Executor {
 	private static boolean returnMode = false;
 	private static boolean continueMode = false;
 	private static boolean breakMode = false;
-	private static Value returnBuffer = new Value(VariableTypes.Nil, null);
+	private static Value returnBuffer = Value.nil();
 	private static String[] programArguments = {};
 
 	private static Stack<Integer> processLineStack = new Stack<Integer>();

@@ -10,7 +10,7 @@ import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 
 public class Value implements Cloneable {
 	public VariableTypes type;
-	public Object value = null;
+	public Object value;
 	
 	public Value(VariableTypes t, Object val){	//This stores the value and the type of value that it is
 		type = t;
@@ -137,7 +137,7 @@ public class Value implements Cloneable {
 	}
 	
 	public static Value nil() {
-		return new Value(VariableTypes.Nil, null);
+		return new Value(VariableTypes.Nil, NilSingleton.SINGLETON);
 	}
 
 	public static Value resource(URI url){

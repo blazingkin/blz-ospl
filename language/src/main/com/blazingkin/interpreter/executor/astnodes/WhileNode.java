@@ -6,11 +6,10 @@ import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
-import com.blazingkin.interpreter.variables.VariableTypes;
 
 public class WhileNode extends ASTNode {
 	private final static Value TRUE_VAL = Value.bool(true);
-	private final static Value NULL_VAL = new Value(VariableTypes.Nil, null);
+	private final static Value NULL_VAL = Value.nil();
 	
 	ASTNode term, block;
 	public WhileNode(ASTNode term, ASTNode block){
