@@ -1,9 +1,17 @@
-constructor Flag(short_name, flag_type, required, message, long_name)
+constructor Flag(short_name, flag_type, required, default, message, long_name)
     value = {blz.nil}
     if detected_flags.has_key?(short_name)
         value = format_to_type(detected_flags[short_name], flag_type)
     else if detected_flags.has_key?(long_name)
         value = format_to_type(detected_flags[long_name], flag_type)
+    else if required
+        name = short_name
+        if long_name != {blz.nil}
+            name = long_name
+        end
+        throw FlagException(name + " is a required flag!")
+    else if default != {blz.nil}
+        value = default
     end
 
     :format_to_type(val, type)
