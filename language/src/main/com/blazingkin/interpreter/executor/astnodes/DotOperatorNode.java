@@ -32,8 +32,12 @@ public class DotOperatorNode extends BinaryNode {
 			if (args[1].getStoreName().contains("!")) {
 				passByReference = true;
 			}
-			MethodNode primitiveMethod = (MethodNode) VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", "")).value;
-			return new Value(VariableTypes.PrimitiveMethod, new BLZPrimitiveMethod(primitiveMethod, object, passByReference));
+			Value primitiveVal = VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", ""));
+			if (primitiveVal.type == VariableTypes.Method) {
+				return new Value(VariableTypes.PrimitiveMethod, new BLZPrimitiveMethod((MethodNode) primitiveVal.value, object, passByReference));
+			} else {
+				return primitiveVal;
+			}
 		}
 		BLZObject obj = (BLZObject) object.value;
 		if (args[1].getOperator() == Operator.arrayLookup){

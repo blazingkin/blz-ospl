@@ -22,7 +22,7 @@ constructor Flag(short_name, flag_type, required, default, message, long_name)
         else if type == "boolean"
             val == "true"
         else
-            val
+            throw FlagException("Invalid flag type: "+type)
         end
     end
 

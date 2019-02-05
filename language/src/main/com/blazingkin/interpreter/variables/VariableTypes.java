@@ -11,30 +11,34 @@ import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 @SuppressWarnings("rawtypes")
 public enum VariableTypes {
 	
-	Array(Value[].class),
-	Boolean(java.lang.Boolean.class),
-	Closure(Closure.class),
-	Constructor(Constructor.class),
-	Double(BigDecimal.class),
-	Hash(HashMap.class),
-	Integer(BigInteger.class),
-	Method(MethodNode.class),
-	Nil(null),
-	Object(BLZObject.class),
-	PrimitiveMethod(BLZPrimitiveMethod.class),
-	Rational(BLZRational.class),
-	Resource(URL.class),
-	String(java.lang.String.class);
+	Array(Value[].class, "Array"),
+	Boolean(java.lang.Boolean.class, "Boolean"),
+	Closure(Closure.class, "Method"),
+	Constructor(Constructor.class, "Constructor"),
+	Double(BigDecimal.class, "Double"),
+	Hash(HashMap.class, "HashMap"),
+	Integer(BigInteger.class, "Integer"),
+	Method(MethodNode.class, "Method"),
+	Nil(null, "Nil"),
+	Object(BLZObject.class, "Object"),
+	PrimitiveMethod(BLZPrimitiveMethod.class, "Method"),
+	Rational(BLZRational.class, "Rational"),
+	Resource(URL.class, "Resource"),
+	String(java.lang.String.class, "String");
 	
 	public final Class dataType;
-	VariableTypes(Class n){
+	public final String typeName;
+	VariableTypes(Class n, String typeName){
 		dataType = n;
+		this.typeName = typeName;
 	}
 
 	public static HashMap<VariableTypes, Context> primitiveContexts = new HashMap<VariableTypes, Context>();
 	public static void initialize() {
 		for (VariableTypes vt : VariableTypes.values()) {
-			primitiveContexts.put(vt, new Context(null));
+			Context primitiveContext = new Context(null);
+			primitiveContext.setValue("type", Value.string(vt.typeName));
+			primitiveContexts.put(vt, primitiveContext);
 		}
 	}
 	public static void clear() {
