@@ -1,0 +1,25 @@
+constructor ClientSocket(host, port)
+
+    :internal_create_socket(host, port)
+        BLZINTERNALSOCKET "create", host, port
+    end
+
+    :internal_get_resources(client_sock)
+        BLZINTERNALSOCKET "get_resource", client_sock
+    end
+
+    :internal_close(sock)
+        BLZINTERNALSOCKET "close", sock
+    end
+
+    :connect
+        this.sock = internal_create_socket(host, port)
+        internal_get_resources(sock)
+    end
+
+    :close
+        internal_close(this.sock)
+    end
+    
+
+end

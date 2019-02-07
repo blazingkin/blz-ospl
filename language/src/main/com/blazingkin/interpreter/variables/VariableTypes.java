@@ -24,6 +24,7 @@ public enum VariableTypes {
 	PrimitiveMethod(BLZPrimitiveMethod.class, "Method"),
 	Rational(BLZRational.class, "Rational"),
 	Resource(URL.class, "Resource"),
+	Socket(BLZSocket.class, "Socket"),
 	String(java.lang.String.class, "String");
 	
 	public final Class dataType;

@@ -1,0 +1,31 @@
+constructor ServerSocket(port)
+
+    :internal_create_socket(host, port)
+        BLZINTERNALSOCKET "create", host, port
+    end
+
+    :internal_accept(sock)
+        BLZINTERNALSOCKET "accept", sock
+    end
+
+    :internal_get_resources(client_sock)
+        BLZINTERNALSOCKET "get_resource", client_sock
+    end
+
+    :internal_close(sock)
+        BLZINTERNALSOCKET "close", sock
+    end
+    
+    sock = internal_create_socket("server", port)
+
+    :accept(callback)
+        new_connection = internal_accept(sock)
+        resource = internal_get_resources(new_connection)
+        async callback(resource)
+    end
+
+    :close
+        internal_close(sock)
+    end
+
+end

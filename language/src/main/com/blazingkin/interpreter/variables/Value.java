@@ -143,6 +143,14 @@ public class Value implements Cloneable {
 	public static Value resource(URI url){
 		return new Value(VariableTypes.Resource, new BLZResource(url));
 	}
+
+	public static Value resource(BLZResource r){
+		return new Value(VariableTypes.Resource, r);
+	}
+
+	public static Value socket(BLZSocket sock) {
+		return new Value(VariableTypes.Socket, sock);
+	}
 	
 	@Override
 	public int hashCode(){
