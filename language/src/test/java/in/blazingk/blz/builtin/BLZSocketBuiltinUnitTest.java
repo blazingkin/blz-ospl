@@ -174,6 +174,41 @@ public class BLZSocketBuiltinUnitTest {
         }
     }
 
+    @Test
+    public void testCreateWithInvalidHost() {
+        SocketBuiltin b = new SocketBuiltin();
+        boolean exceptionThrown = false;
+        try {
+            Value[] args = {Value.string("create"), Value.string("a"), Value.integer(3000)};
+            b.run(args);
+        }catch (BLZRuntimeException e){
+            exceptionThrown = true;
+            UnitTestUtil.assertEqual(e.getMessage(), "Unexpected socket IO exception a");
+        }
+        if (!exceptionThrown) {
+            UnitTestUtil.fail("An exception should have been thrown");
+        }
+    }
+
+    @Test
+    public void testCreateValidClientSocketAndGetResourcesAndClose() throws IOException {
+        SocketBuiltin b = new SocketBuiltin();
+        try {
+            Value[] args = {Value.string("create"), Value.string("example.com"), Value.integer(80)};
+            Value result = b.run(args);
+            UnitTestUtil.assertEqual(result.type, VariableTypes.Socket);
+            BLZSocket sock = (BLZSocket) result.value;
+            UnitTestUtil.assertEqual(sock.type, BLZSocket.SocketType.Client);
+            Value[] args2 = {Value.string("get_resource"), result};
+            Value res = b.run(args2);
+            UnitTestUtil.assertEqual(res.type, VariableTypes.Resource);
+            Value[] args3 = {Value.string("close"), result};
+            b.run(args3);
+        }catch (BLZRuntimeException e){
+            UnitTestUtil.fail("Expected to validly create a client socket");
+        }
+    }
+
 
 
 
