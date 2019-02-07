@@ -7,6 +7,7 @@ import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.variables.Value;
 
 public class UserTestRunner {
@@ -39,6 +40,7 @@ public class UserTestRunner {
     private static boolean loadAndRunTests(String name){
         try {
             Process p = new Process(Paths.get(name));
+            Executor.setEventHandler(new StandAloneEventHandler());
             Executor.getEventHandler().print("Running tests in file "+p.readingFrom.getName()+"\n");
             for (MethodNode method : p.methods){
                 if (method.getStoreName().startsWith("test")){
