@@ -6,6 +6,8 @@ Version 2..7
 - Make object contexts inherit from process context
 - string starts_with?
 - Flag package
+- Socket builtin
+- Socket Package
 
 
 Version 2.6
