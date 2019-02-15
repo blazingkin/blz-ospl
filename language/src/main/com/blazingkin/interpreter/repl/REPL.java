@@ -47,7 +47,7 @@ public class REPL {
 		String in = "";
 		Scanner sc = new Scanner(is);
 		MethodBlockParser methodParser = new MethodBlockParser();
-		Executor.immediateMode = true;
+		Executor.immediateMode.set(true);
 		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
 		try{
 			do{

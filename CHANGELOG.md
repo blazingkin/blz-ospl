@@ -8,6 +8,8 @@ Version 2..7
 - Flag package
 - Socket builtin
 - Socket Package
+- Fix issue with async that would cause threads to mess with each other
+(Need to add hash documentation)
 
 
 Version 2.6
