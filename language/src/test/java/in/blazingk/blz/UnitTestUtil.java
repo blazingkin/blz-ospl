@@ -1,7 +1,5 @@
 package in.blazingk.blz;
 
-import static org.junit.Assert.fail;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
@@ -10,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.expressionabstraction.ExpressionExecutor;
@@ -35,6 +32,7 @@ public class UnitTestUtil {
 			fail("Failed to import core");
 		}
 		Executor.setEventHandler(new TestEventHandler());
+		Executor.initializeThreadLocal();
 		System.setErr(new PrintStream(outStream));
 		clearEnv();
 	}

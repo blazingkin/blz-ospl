@@ -1,3 +1,4 @@
+flags = []
 constructor Flag(short_name, flag_type, required, default, message, long_name)
     value = {blz.nil}
     if detected_flags.has_key?(short_name)
@@ -14,19 +15,52 @@ constructor Flag(short_name, flag_type, required, default, message, long_name)
         value = default
     end
 
+    if short_name != {blz.nil}
+        flags.add!(this)
+    end
+
+    :print_usage
+        flags.each(x -> print(x + "\n"))
+    end
+
+    :show
+        flag_val = "-"+short_name
+        if flag_type != {blz.nil}
+            flag_val = flag_val + " ["+flag_type+"]"
+        end
+        if required
+            flag_val = flag_val + " required"
+        end
+        if default != {blz.nil}
+            flag_val = flag_val + " (default: "+default+")"
+        end
+        if message != {blz.nil}
+            flag_val = message + "\n"+flag_val
+        end
+        if long_name != {blz.nil}
+            flag_val = "--" + long_name + "\n" + flag_val
+        end
+        flag_val
+    end
+
     :format_to_type(val, type)
         if type == "string"
             val
         else if type == "number"
             val.to_number()
-        else if type == "boolean"
+        else if type == "boolean" || type == "bool"
             val == "true"
         else
             throw FlagException("Invalid flag type: "+type)
         end
     end
 
+    :normal_args
+        non_flag_args
+    end
+
 end
+
 
 constructor FlagException(message)
     :show
@@ -36,26 +70,34 @@ end
 
 # A map of flags to their (string) values
 detected_flags = {}
+non_flag_args = []
 arg_length = {arguments}.length()
 
 # Iterate through the flags
 for i = 0; i < arg_length; i++
     arg = {arguments}[i]
+    found_flag = false
     if arg.starts_with?("--")
         flag_name = arg.slice(2, arg.length())
+        found_flag = true
     else if arg.starts_with?("-")
         flag_name = arg.slice(1, arg.length())
+        found_flag = true
     else
-       continue  
+        non_flag_args.add!(arg)
+        found_flag = false
     end
-    if flag_name.contains?("=")
-        split = flag_name.split_on_token("=")
-        # If the flag is --a=b then set a = b
-        detected_flags[split[0]] = split[1]
+    if found_flag
+        if flag_name.contains?("=")
+            split = flag_name.split_on_token("=")
+            # If the flag is --a=b then set a = b
+            detected_flags[split[0]] = split[1]
+        end
+        if i + 1 == arg_length
+            non_flag_args.add!(arg)
+            break
+        end
+        detected_flags[flag_name] = {arguments}[i + 1]
+        i++
     end
-    if i + 1 == arg_length
-        break
-    end
-    detected_flags[flag_name] = {arguments}[i + 1]
-    i++
 end

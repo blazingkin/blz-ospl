@@ -6,6 +6,10 @@ Version 2..7
 - Make object contexts inherit from process context
 - string starts_with?
 - Flag package
+- Socket builtin
+- Socket Package
+- Fix issue with async that would cause threads to mess with each other
+(Need to add hash documentation)
 
 
 Version 2.6

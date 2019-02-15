@@ -28,15 +28,24 @@ public class Executor {
 
 	//State Variables
 	private static long timeStarted = 0;
-	public static boolean immediateMode = false;
-	private static boolean closeRequested = false;
-	private static boolean returnMode = false;
-	private static boolean continueMode = false;
-	private static boolean breakMode = false;
-	private static Value returnBuffer = Value.nil();
+	public static ThreadLocal<Boolean> immediateMode = new ThreadLocal<>();
+	private static ThreadLocal<Boolean> closeRequested = new ThreadLocal<>();
+	private static ThreadLocal<Boolean> returnMode = new ThreadLocal<>();
+	private static ThreadLocal<Boolean> continueMode = new ThreadLocal<>();
+	private static ThreadLocal<Boolean> breakMode =  new ThreadLocal<>();
+	private static ThreadLocal<Value> returnBuffer = new ThreadLocal<>();
+
+	public static void initializeThreadLocal(){
+		immediateMode.set(false);
+		closeRequested.set(false);
+		returnMode.set(false);
+		continueMode.set(false);
+		breakMode.set(false);
+		returnBuffer.set(Value.nil());
+	}
+
 	private static String[] programArguments = {};
 
-	private static Stack<Integer> processLineStack = new Stack<Integer>();
 
 
 	public static Value getProgramArguments(){
@@ -47,13 +56,11 @@ public class Executor {
 		return Value.arr(args);
 	}
 
-	public static Stack<Integer> getProcessLineStack(){
-		return processLineStack;
-	}
 	
 	
 	//Run Executor when running from file
 	public static void run(File runFile, List<String> args) throws BLZRuntimeException {			// runs the executor
+		initializeThreadLocal();
 		setEventHandler(new StandAloneEventHandler());
 		handleArgs(args);
 		// puts the file passed to us as the current process
@@ -69,6 +76,7 @@ public class Executor {
 	}
 	
 	public static void run(String[] code, List<String> args, BlzEventHandler handler) throws BLZRuntimeException {
+		initializeThreadLocal();
 		handleArgs(args);
 		RuntimeStack.push(new Process(code));
 		setEventHandler(handler);
@@ -95,6 +103,7 @@ public class Executor {
 		programArguments = new String[programArgs.size()];
 		programArgs.toArray(programArguments);
 	}
+
 	
 	//This cleans the execution environment so that another BLZ program can be run without restarting the Java program
 	public static void cleanup(){
@@ -137,7 +146,7 @@ public class Executor {
 	
 	
 	public static boolean isImmediateMode(){
-		return immediateMode;
+		return immediateMode.get();
 	}
 	
 	public static BlzEventHandler getEventHandler() {
@@ -150,11 +159,11 @@ public class Executor {
 	
 	
 	public static boolean isCloseRequested() {
-		return closeRequested;
+		return closeRequested.get();
 	}
 	
 	public static void setCloseRequested(boolean closeRequested) {
-		Executor.closeRequested = closeRequested;
+		Executor.closeRequested.set(closeRequested);
 	}
 	
 	public static long getTimeStarted() {
@@ -207,36 +216,40 @@ public class Executor {
 	}
 	
 	public static boolean isReturnMode() {
-		return returnMode;
+		return returnMode.get();
 	}
 
 	public static boolean isBreakMode() {
-		return breakMode;
+		return breakMode.get();
 	}
 
 	public static void setReturnMode(boolean returnMode) {
-		Executor.returnMode = returnMode;
+		Executor.returnMode.set(returnMode);
 	}
 	
 	public static void setReturnBuffer(Value v){
-		returnBuffer = v;
+		returnBuffer.set(v);
 	}
 
 	public static void setContinueMode(boolean continueMode){
-		Executor.continueMode = continueMode;
+		Executor.continueMode.set(continueMode);
 	}
 
 
 	public static boolean shouldBlockBreak(){
-		return returnMode || continueMode || breakMode;
+		return returnMode.get() || continueMode.get() || breakMode.get();
 	}
 
 	public static Value getReturnBuffer(){
-		return returnBuffer;
+		return returnBuffer.get();
 	}
 
 	public static void setBreakMode(boolean bm){
-		breakMode = bm;
+		breakMode.set(bm);
+	}
+
+	class ExecutorState {
+
 	}
 	
 }
