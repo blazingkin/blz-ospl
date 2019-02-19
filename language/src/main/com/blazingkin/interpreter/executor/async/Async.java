@@ -8,6 +8,7 @@ import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
+import com.blazingkin.interpreter.variables.Variable;
 
 public class Async implements InstructionExecutorSemicolonDelimitedNode {
 
@@ -18,8 +19,9 @@ public class Async implements InstructionExecutorSemicolonDelimitedNode {
                 public void run(){
                     try {
                         Executor.initializeThreadLocal();
-                        RuntimeStack.push(currentProcess);
+                        RuntimeStack.pushWithoutExecuting(currentProcess);
                         node.execute(context);
+                        RuntimeStack.cleanup();
                     }catch(BLZRuntimeException e) {
                         System.err.println("Don't have a solution for async errors yet: "+e.getMessage());
                     }

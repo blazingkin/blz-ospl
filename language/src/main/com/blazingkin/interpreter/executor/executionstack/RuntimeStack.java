@@ -20,6 +20,10 @@ public class RuntimeStack {
 		threadProcessStack.get().push(process);
 		process.onBlockStart();
 	}
+
+	public static void pushWithoutExecuting(Process process){
+		threadProcessStack.get().push(process);
+	}
 	
 	public static void pop(){
 		threadProcessStack.get().pop();
