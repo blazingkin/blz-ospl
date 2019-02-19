@@ -1,0 +1,9 @@
+# ""
+print("".replace("", "hi there"))
+# abc
+print("abc".replace("b", "b"))
+
+str = "aaa"
+str.replace!("aa", "TEXT")
+# TEXTa
+print(str)
