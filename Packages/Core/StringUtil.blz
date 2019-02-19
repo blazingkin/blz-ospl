@@ -177,7 +177,7 @@ end
 			posible_replacement = ""
 		end
 	end
-	BLZINTERNALREBIND str,new_str
+	BLZINTERNALREBIND str,(new_str + posible_replacement)
 end
 
 :to_json(str)
