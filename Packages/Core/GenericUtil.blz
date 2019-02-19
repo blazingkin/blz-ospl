@@ -18,3 +18,7 @@ end
 	arr[count - 1] = {blz.nil}
 	arr
 end
+
+:copy(a)
+	a
+end
