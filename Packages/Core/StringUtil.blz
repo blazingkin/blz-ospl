@@ -164,11 +164,17 @@ end
 
 :replace(str, replacing, replace_with)
 	new_str = ""
+	posible_replacement = ""
 	for i = 0; i < str.length(); i++
-		if str[i] == replacing
-			new_str = new_str + replace_with
+		posible_replacement = posible_replacement + str[i]
+		if replacing.starts_with?!(posible_replacement)
+			if replacing == posible_replacement
+				new_str = new_str + replace_with
+				posible_replacement = ""
+			end
 		else
-			new_str = new_str + str[i]
+			new_str = new_str + posible_replacement
+			posible_replacement = ""
 		end
 	end
 	BLZINTERNALREBIND str,new_str
