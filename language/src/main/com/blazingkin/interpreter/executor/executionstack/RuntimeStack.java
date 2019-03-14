@@ -22,6 +22,9 @@ public class RuntimeStack {
 	}
 
 	public static void pushWithoutExecuting(Process process){
+		if (process == null){
+			return;
+		}
 		threadProcessStack.get().push(process);
 	}
 	
