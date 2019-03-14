@@ -28,11 +28,31 @@ public class Executor {
 
 	//State Variables
 	private static long timeStarted = 0;
-	public static ThreadLocal<Boolean> immediateMode = new ThreadLocal<>();
-	private static ThreadLocal<Boolean> closeRequested = new ThreadLocal<>();
-	private static ThreadLocal<Boolean> returnMode = new ThreadLocal<>();
-	private static ThreadLocal<Boolean> continueMode = new ThreadLocal<>();
-	private static ThreadLocal<Boolean> breakMode =  new ThreadLocal<>();
+	public static ThreadLocal<Boolean> immediateMode = new ThreadLocal<Boolean>() {
+		@Override protected Boolean initialValue() {
+			return false;
+		}
+	};
+	private static ThreadLocal<Boolean> closeRequested = new ThreadLocal<Boolean>() {
+		@Override protected Boolean initialValue() {
+			return false;
+		}
+	};
+	private static ThreadLocal<Boolean> returnMode = new ThreadLocal<Boolean>() {
+		@Override protected Boolean initialValue() {
+			return false;
+		}
+	};
+	private static ThreadLocal<Boolean> continueMode = new ThreadLocal<Boolean>() {
+		@Override protected Boolean initialValue() {
+			return false;
+		}
+	};
+	private static ThreadLocal<Boolean> breakMode = new ThreadLocal<Boolean>() {
+		@Override protected Boolean initialValue() {
+			return false;
+		}
+	};
 	private static ThreadLocal<Value> returnBuffer = new ThreadLocal<>();
 
 	public static void initializeThreadLocal(){
