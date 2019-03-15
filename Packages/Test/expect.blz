@@ -86,6 +86,22 @@ constructor Expect(value, exit_on_failure)
 		end
 	end
 
+    :to_raise(exn)
+        try
+            value()
+            FAILTEST
+            print("Assertion Failed! No Exception thrown")
+            print("Expected " + exn + " to be raised")
+        catch raised_exn
+            if exn != raised_exn
+                FAILTEST
+                print("Assertion Failed! Wrong exception")
+                print("Expected " + exn + " to be raised")
+                print("Instead, " + raised_exn + " was raised")
+            end
+        end
+    end
+
 end
 
 :expect(value, exit_on_failure)
