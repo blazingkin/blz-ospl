@@ -144,10 +144,8 @@ end
 	str_len = string.length()
 	for i = 0; i < str_len; i++
 		if string[i] == token
-			if building_string != ""
-				result.add!(building_string)
-				building_string = ""
-			end
+			result.add!(building_string)
+			building_string = ""
 		else
 			building_string = building_string + string[i]
 		end

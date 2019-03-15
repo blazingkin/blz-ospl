@@ -1,2 +1,2 @@
 Error occurred on line 2
-Array Out of bounds exception! Invalid index: 5
+Out Of Bounds! Tried to access index 5 of array [1, 2, 3]
