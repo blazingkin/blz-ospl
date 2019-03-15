@@ -407,27 +407,19 @@ public class Variable {
 			return Value.nil();
 		}
 	}
+
 	
-	public static Value getValueOfArray(String arrayName, BigInteger index, Context con) throws BLZRuntimeException {
-		Value v = con.getValue(arrayName);
-		if (v.value instanceof Value[]){
-			Value[] arr = (Value[]) v.value;
-			try {
-				return arr[index.intValue()];
-			}catch(ArrayIndexOutOfBoundsException e){
-				throw new BLZRuntimeException("Array Out of bounds exception! Invalid index: "+index.intValue());
-			}
-		}
-		throw new BLZRuntimeException("Expected "+v.value+" to be an array of values, but it is not.");
-	}
-	
-	public static Value getValueOfArray(Value value, BigInteger index) {
+	public static Value getValueOfArray(Value value, BigInteger index) throws BLZRuntimeException {
 		if (value.type != VariableTypes.Array){
-			Interpreter.throwError("Tried to access "+value+" as an array, but it is not one.");
+			throw new BLZRuntimeException("Tried to access "+value+" as an array, but it is not one.");
 		}
 		if (value.value instanceof Value[]){
 			Value[] arr = (Value[]) value.value;
-			return arr[index.intValue()];
+			int arrIndex = index.intValue();
+			if (arrIndex >= arr.length){
+				throw new BLZRuntimeException("Out Of Bounds! Tried to access index " + index + " of array " + value);
+			}
+			return arr[arrIndex];
 		}
 		HashMap<?, ?> arr = (HashMap<?, ?>) value.value;
 		return (Value) arr.get(index);
