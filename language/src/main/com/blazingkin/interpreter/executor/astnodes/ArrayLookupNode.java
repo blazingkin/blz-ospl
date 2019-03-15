@@ -47,7 +47,7 @@ public class ArrayLookupNode extends BinaryNode {
 		VariableTypes type = val.type;
 		if (type == VariableTypes.Array){
 			BigInteger index = Variable.getIntValue(args[1].execute(con));
-			return Variable.getValueOfArray(name, index, con);
+			return Variable.getValueOfArray(val, index);
 		}else if (type == VariableTypes.String){ 
 			int index = Variable.getIntValue(args[1].execute(con)).intValue();
 			String s = (String) val.value;
