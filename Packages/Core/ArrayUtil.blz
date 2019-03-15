@@ -196,3 +196,7 @@ end
 :sample(arr)
 	arr[random(arr.length())]
 end
+
+:any?(arr)
+	arr.contains!?(true)
+end

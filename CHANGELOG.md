@@ -11,7 +11,8 @@ Version 2..7
 - Fix issue with async that would cause threads to mess with each other
 (Need to add hash documentation)
 (Need to add string documentation)
-
+(Need to add any? documentation)
+(Need to add expect::to_raise documentation)
 
 Version 2.6
 =====
