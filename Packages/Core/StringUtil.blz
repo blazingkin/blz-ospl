@@ -195,3 +195,7 @@ end
 	end
 	true
 end
+
+:to_bytes(str)
+	BLZINTERNALSTRINGTOBYTES str
+end

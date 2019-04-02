@@ -1,0 +1,21 @@
+
+encoding = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/"]
+:base64_encode(target)
+    result = ""
+    while number > 0
+        mod = number % 64
+        result = result + encoding[mod]
+        number = (number / 64).floor()
+    end
+    result
+end
+
+:base64_decode(string)
+    place = 1
+    result = 0
+    for i = string.length() - 1; i >= 0; i--
+        result = result + (place * encoding.index_of(string[i]))
+        place = place * 64
+    end
+    result
+end
