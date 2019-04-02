@@ -1,7 +1,5 @@
 package com.blazingkin.interpreter.expressionabstraction;
 
-import java.util.HashMap;
-import java.util.HashSet;
 
 public enum Operator{
 	
@@ -17,6 +15,10 @@ public enum Operator{
 	Modulus("%", 2, OperatorType.Binary),
 	Multiplication("*", 3, OperatorType.Binary),
 	Division("/", 3, OperatorType.Binary),
+	ExclusiveOr("^", 3, OperatorType.Binary),
+	BitwiseAnd("&", 3, OperatorType.Binary),
+	LeftShift("<<", 3, OperatorType.Binary),
+	RightShift(">>", 3, OperatorType.Binary),
 	Addition("+", 4, OperatorType.Binary),
 	Subtraction("-", 3, OperatorType.UnaryOrBinary),
 	Exponentiation("**", 5, OperatorType.Binary),
@@ -54,20 +56,4 @@ public enum Operator{
 	}
 	
 	
-	public static HashSet<String> symbols = new HashSet<String>();
-	public static HashMap<String, Operator> symbolLookup = new HashMap<String, Operator>();
-	static{
-		for (Operator op : Operator.values()){
-			if (op.syntax.equals("")){
-				continue;
-			}
-			String building = "";
-			for (char ch : op.syntax.toCharArray()){
-				building += ch;
-				symbols.add(building);
-			}
-			symbolLookup.put(building, op);
-		}
-	}
-
 }

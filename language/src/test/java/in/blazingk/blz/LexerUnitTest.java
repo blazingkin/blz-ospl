@@ -189,16 +189,6 @@ public class LexerUnitTest {
     }
 
     @Test
-    public void expectErrorFromSingleAnd() {
-        try {
-            LineLexer.lexLine("&");
-            UnitTestUtil.fail("A single and is not valid");
-        }catch(SyntaxException e){
-
-        }
-    }
-
-    @Test
     public void expectErrorFromSingleTilde() {
         try {
             LineLexer.lexLine("~");

@@ -101,6 +101,10 @@ public class ExpressionParser {
 				case LessThan:
 				case GreaterThan:
 				case NotEqual:
+				case ExclusiveOr:
+				case BitwiseAnd:
+				case LeftShift:
+				case RightShift:
 				case ApproximateComparison:
 				case LessThanEqual:
 				case GreaterThanEqual:

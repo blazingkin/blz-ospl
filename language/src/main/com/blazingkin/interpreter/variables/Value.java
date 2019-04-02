@@ -107,6 +107,10 @@ public class Value implements Cloneable {
 	public static Value integer(int val){
 		return new Value(VariableTypes.Integer, BigInteger.valueOf(val));
 	}
+
+	public static Value integer(BigInteger val) {
+		return new Value(VariableTypes.Integer, val);
+	}
 	
 	public static Value bool(boolean val){
 		return new Value(VariableTypes.Boolean, val);

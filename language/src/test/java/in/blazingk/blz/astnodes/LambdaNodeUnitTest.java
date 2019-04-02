@@ -8,6 +8,8 @@ import com.blazingkin.interpreter.executor.astnodes.LambdaNode;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.ValueASTNode;
 import com.blazingkin.interpreter.parser.ExpressionParser;
+import com.blazingkin.interpreter.parser.SyntaxException;
+
 import in.blazingk.blz.UnitTestUtil;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
@@ -30,7 +32,7 @@ public class LambdaNodeUnitTest {
     }
 
     @Test
-    public void shouldComplainAboutExpressionInArguments(){
+    public void shouldComplainAboutExpressionInArguments() throws SyntaxException{
         ASTNode addArgs[] = {new ValueASTNode("a"), new ValueASTNode("b")};
         ASTNode args[] = {new AdditionNode(addArgs), new ValueASTNode("a")};
         new LambdaNode(args);

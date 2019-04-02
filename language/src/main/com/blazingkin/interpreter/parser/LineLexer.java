@@ -98,7 +98,7 @@ public class LineLexer {
                         i++;
                         tokens.add(new Token(Operator.LogicalAnd));
                     }else{
-                        throw new SyntaxException("Unexpected & in line: "+line);
+                        tokens.add(new Token(Operator.BitwiseAnd));
                     }
                 break;
                 case '=':
@@ -191,6 +191,9 @@ public class LineLexer {
                 break;
                 case ',':
                     tokens.add(new Token(Operator.CommaDelimit));
+                break;
+                case '^':
+                    tokens.add(new Token(Operator.ExclusiveOr));
                 break;
                 case '"':
                     boolean done = false;

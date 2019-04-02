@@ -6,12 +6,14 @@ import com.blazingkin.interpreter.executor.astnodes.ApproximateComparisonNode;
 import com.blazingkin.interpreter.executor.astnodes.ArrayLiteralNode;
 import com.blazingkin.interpreter.executor.astnodes.ArrayLookupNode;
 import com.blazingkin.interpreter.executor.astnodes.AssignmentNode;
+import com.blazingkin.interpreter.executor.astnodes.BitwiseAndNode;
 import com.blazingkin.interpreter.executor.astnodes.CommaDelimitNode;
 import com.blazingkin.interpreter.executor.astnodes.ComparisonNode;
 import com.blazingkin.interpreter.executor.astnodes.DecrementNode;
 import com.blazingkin.interpreter.executor.astnodes.DivisionNode;
 import com.blazingkin.interpreter.executor.astnodes.DotOperatorNode;
 import com.blazingkin.interpreter.executor.astnodes.EnvironmentVariableLookupNode;
+import com.blazingkin.interpreter.executor.astnodes.ExclusiveOrNode;
 import com.blazingkin.interpreter.executor.astnodes.ExponentiationNode;
 import com.blazingkin.interpreter.executor.astnodes.ExpressionDelimitNode;
 import com.blazingkin.interpreter.executor.astnodes.FunctionCallNode;
@@ -197,6 +199,10 @@ public abstract class OperatorASTNode extends ASTNode {
 			return new SubtractionNode(args);
 		case ExpressionDelimit:
 			return new ExpressionDelimitNode(args);
+		case ExclusiveOr:
+			return new ExclusiveOrNode(args);
+		case BitwiseAnd:
+			return new BitwiseAndNode(args);
 		default:
 			return null;
 		}

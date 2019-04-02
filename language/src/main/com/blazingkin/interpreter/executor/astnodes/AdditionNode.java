@@ -1,10 +1,10 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
-import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.expressionabstraction.ASTNode;
 import com.blazingkin.interpreter.expressionabstraction.BinaryNode;
 import com.blazingkin.interpreter.expressionabstraction.Operator;
+import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -15,10 +15,10 @@ public class AdditionNode extends BinaryNode {
 		return left + right;
 	}
 
-	public AdditionNode(ASTNode[] args) {
+	public AdditionNode(ASTNode[] args) throws SyntaxException {
 		super(Operator.Addition, args);
 		if (args.length != 2){
-			Interpreter.throwError("Addition did not have 2 arguments");
+			throw new SyntaxException("Addition node did not have 2 arguments");
 		}
 	}
 	
