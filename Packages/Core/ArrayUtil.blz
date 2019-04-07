@@ -71,9 +71,9 @@ end
 end
 
 :map(arr, method)
-	length = arr.length()
-	for i = 0; i < length; i++
-		arr[i] = method(arr[i])
+	length = arr.length!()
+	for i = 0; i < arr.length!(); i++
+		arr[i] = method!(arr[i])
 	end
 	arr
 end

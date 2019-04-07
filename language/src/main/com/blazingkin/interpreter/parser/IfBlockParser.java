@@ -32,7 +32,7 @@ public class IfBlockParser implements BlockParseProtocol {
                 elseIndex = i;
                 if (isElseIf(lines.get(i).getLeft().get().line)) {
                     elseIfFound = true;
-                    elseIfLine = lines.get(i).getLeft().get().line.replaceFirst("else if", "").trim();
+                    elseIfLine = lines.get(i).getLeft().get().line.replaceFirst("else if", "if").trim();
                 }
                 if (i == lines.size() - 1){
                     throw new SyntaxException("Else was the last line of an if statement!");

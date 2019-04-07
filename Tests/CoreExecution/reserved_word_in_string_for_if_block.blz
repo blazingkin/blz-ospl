@@ -1,0 +1,6 @@
+str = "if"
+if str == "a"
+    print("a")
+else if str == "if"
+    print("if")
+end
