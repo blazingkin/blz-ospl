@@ -20,6 +20,7 @@ public class UserTestRunner {
 
     public static void runTests(String[] args){
         Executor.importCore();
+        Executor.setEventHandler(new StandAloneEventHandler());
         boolean passedAll = true;
         for (String arg : args){
             if (!arg.startsWith("-")){
@@ -40,8 +41,8 @@ public class UserTestRunner {
     private static boolean loadAndRunTests(String name){
         try {
             Process p = new Process(Paths.get(name));
-            Executor.setEventHandler(new StandAloneEventHandler());
             Executor.getEventHandler().print("Running tests in file "+p.readingFrom.getName()+"\n");
+            Executor.getEventHandler().print("=============\n");
             for (MethodNode method : p.methods){
                 if (method.getStoreName().startsWith("test")){
                     Executor.getEventHandler().print("Running "+method.getStoreName()+"\n");
@@ -60,6 +61,7 @@ public class UserTestRunner {
                     }
                 }
             }
+            Executor.getEventHandler().print("\n");
         }catch(FileNotFoundException exception) {
             Executor.getEventHandler().err("Could not find file "+name+"\n");
             return false;
