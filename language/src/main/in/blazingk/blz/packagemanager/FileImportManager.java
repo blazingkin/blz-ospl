@@ -14,6 +14,7 @@ public class FileImportManager {
 	public static HashMap<Path, Process> importedFiles = new HashMap<Path, Process>();
 	
 	public static Process importFile(Path path) {
+		path = path.toAbsolutePath().normalize();
 		if (importedFiles.containsKey(path)) {
 			return importedFiles.get(path);
 		}
