@@ -61,6 +61,9 @@ public class BLZObject implements Cloneable {
 					}
 				}
 			}
+			if (objectContext.hasValue("type")) {
+				return "<" + objectContext.getValue("type") + " " + hashCode() + ">";
+			}
 		}catch(BLZRuntimeException e){
 			
 		}

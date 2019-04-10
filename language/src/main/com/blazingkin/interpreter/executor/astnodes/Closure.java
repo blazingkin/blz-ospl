@@ -8,20 +8,30 @@ import com.blazingkin.interpreter.variables.Value;
 public class Closure extends MethodNode {
 
 	public Context context;
+	public String source;
 	
-	public Closure(Context con, MethodNode node){
+	public Closure(Context con, MethodNode node, String source){
 		super(node);
 		context = con;
+		this.source = source;
 	}
 
     public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
 		Context methodContext = new Context(context);
 		if (takesVariables){
-            bindArguments(values, passByReference, methodContext);
+			bindArguments(values, passByReference, methodContext);
 		}
-		Value result = body.execute(methodContext);
-		Executor.setReturnMode(false);
-        return result;
+		try {
+			Value result = body.execute(methodContext);
+			Executor.setReturnMode(false);
+			return result;
+		}catch(BLZRuntimeException exception) {
+			if (exception.exceptionValue != null){
+					throw exception;
+			}
+			String message = "In " + source + "\nIn "+toString()+"\n"+exception.getMessage();
+			throw new BLZRuntimeException(message, exception.alreadyCaught);
+		}
 	}
 	
 	

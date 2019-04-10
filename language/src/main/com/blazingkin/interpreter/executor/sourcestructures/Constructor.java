@@ -146,7 +146,7 @@ public class Constructor {
 			newObj.objectContext.setValueInPresent(c.getName(), Value.constructor(c));
 		}
 		for (MethodNode m : constructor.methods){
-			Value closure = Value.closure(new Closure(newObj.objectContext, m));
+			Value closure = Value.closure(new Closure(newObj.objectContext, m, "constructor " + constructor.getName()));
 			newObj.objectContext.setValueInPresent(m.getStoreName(), closure);
 		}
 	}
