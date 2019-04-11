@@ -46,9 +46,13 @@ public class MultiplicationNodeUnitTest {
 
     @Test
     public void shouldFailToMultiplyStrings() throws BLZRuntimeException {
-        ASTNode[] args = {new ValueASTNode("\"asdf\""), new ValueASTNode("3")};
-        new MultiplicationNode(args).execute(new Context());
-        UnitTestUtil.assertLastError("Failed Multiplying Values asdf and 3");
+        try {
+            ASTNode[] args = {new ValueASTNode("\"asdf\""), new ValueASTNode("3")};
+            new MultiplicationNode(args).execute(new Context());
+            UnitTestUtil.fail("Expected an error to be thrown");
+        }catch(BLZRuntimeException e ){
+            UnitTestUtil.assertEqual(e.getMessage(), "Failed Multiplying Values asdf and 3");
+        }
     }
 
 

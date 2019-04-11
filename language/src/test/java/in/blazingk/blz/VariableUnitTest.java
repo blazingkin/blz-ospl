@@ -3,10 +3,11 @@ package in.blazingk.blz;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+
+import org.junit.Test;
 
 public class VariableUnitTest {
 
@@ -53,27 +54,27 @@ public class VariableUnitTest {
 	}
 	
 	@Test
-	public void testAddValuesInt() {
+	public void testAddValuesInt() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.integer(3), Variable.addValues(Value.integer(3), Value.integer(0)));
 		UnitTestUtil.assertEqual(Value.integer(0), Variable.addValues(Value.integer(3), Value.integer(-3)));
 		UnitTestUtil.assertEqual(Value.integer(30), Variable.addValues(Value.integer(3), Value.integer(27)));
 	}
 	
 	@Test
-	public void testAddValuesString() {
+	public void testAddValuesString() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.string("asdf"), Variable.addValues(Value.string("asd"), Value.string("f")));
 		UnitTestUtil.assertEqual(Value.string("asdf123"), Variable.addValues(Value.string("asdf"), Value.integer(123)));
 		UnitTestUtil.assertEqual(Value.string("123asdf"), Variable.addValues(Value.integer(123), Value.string("asdf")));
 	}
 
 	@Test
-	public void testAddingRationals() {
+	public void testAddingRationals() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.rational(3, 4), Variable.addValues(Value.rational(1, 2), Value.rational(1, 4)));
 		UnitTestUtil.assertEqual(Value.integer(1), Variable.addValues(Value.rational(1, 2), Value.rational(1, 2)));
 	}
 	
 	@Test
-	public void testAddingDoubles() {
+	public void testAddingDoubles() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.doub(0.25d), Variable.addValues(Value.doub(0.25d), Value.integer(0)));
 		UnitTestUtil.assertAlmostEqual(Value.doub(0.50d), Variable.addValues(Value.doub(0.25d), Value.doub(0.25d)));
 	}
@@ -119,7 +120,7 @@ public class VariableUnitTest {
 	}
 	
 	@Test
-	public void testGetIntValue() {
+	public void testGetIntValue() throws BLZRuntimeException {
 		UnitTestUtil.assertEqual(Value.integer(2).value, Variable.getIntValue(Value.rational(4, 2)));
 	}
 	

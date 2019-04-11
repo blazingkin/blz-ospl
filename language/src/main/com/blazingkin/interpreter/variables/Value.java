@@ -3,6 +3,7 @@ package com.blazingkin.interpreter.variables;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
+import java.util.HashMap;
 
 import com.blazingkin.interpreter.executor.astnodes.Closure;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
@@ -26,6 +27,8 @@ public class Value implements Cloneable {
 				return new Value(type, ((BLZObject)value).clone());
 			case String:
 				return new Value(type, this.value);
+			case Hash:
+				return new Value(type, new HashMap<Value, Value>((HashMap<Value, Value>)this.value));
 			default:
 				return this;
 		}

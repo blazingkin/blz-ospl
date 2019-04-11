@@ -2,6 +2,8 @@ package com.blazingkin.interpreter.executor.data;
 
 import java.math.BigInteger;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorCommaDelimited;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
@@ -13,7 +15,7 @@ public class RandomImplementor implements InstructionExecutorCommaDelimited {
 	 * 
 	 */
 	@Override
-	public Value run(Value[] args) {
+	public Value run(Value[] args) throws BLZRuntimeException {
 		Value v;
 		if(args.length == 1){
 			BigInteger range = Variable.getIntValue(args[0]);

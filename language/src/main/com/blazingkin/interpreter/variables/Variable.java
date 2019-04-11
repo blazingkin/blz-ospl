@@ -78,7 +78,7 @@ public class Variable {
 	}
 	
 	
-	public static Value addValues(Value v1, Value v2){
+	public static Value addValues(Value v1, Value v2) throws BLZRuntimeException{
 		if (isValInt(v1) && isValInt(v2)){
 			return new Value(VariableTypes.Integer, getIntValue(v1).add(getIntValue(v2)));
 		}
@@ -98,11 +98,10 @@ public class Variable {
 			String s2 = v2.toString();
 			return new Value(VariableTypes.String, s1+s2);
 		}
-		Interpreter.throwError("Failed Adding Values "+v1+" and "+v2);
-		return Value.nil();
+		throw new BLZRuntimeException("Failed Adding Values "+v1+" and "+v2);
 	}
 	
-	public static Value subValues(Value v1, Value v2){
+	public static Value subValues(Value v1, Value v2) throws BLZRuntimeException{
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
 			return new Value(VariableTypes.Integer, (getIntValue(v1)).subtract(getIntValue(v2)));
 		}
@@ -118,11 +117,10 @@ public class Variable {
 			}
 			return new Value(VariableTypes.Rational, rat);
 		}
-		Interpreter.throwError("Failed Subtracting Values "+v1+" and "+v2);
-		return Value.nil();
+		throw new BLZRuntimeException("Failed Subtracting Values "+v1+" and "+v2);
 	}
 	
-	public static Value mulValues(Value v1, Value v2){
+	public static Value mulValues(Value v1, Value v2) throws BLZRuntimeException{
 		if (v1.type == VariableTypes.Integer && v2.type == VariableTypes.Integer){
 			return new Value(VariableTypes.Integer, (getIntValue(v1)).multiply(getIntValue(v2)));
 		}
@@ -136,19 +134,17 @@ public class Variable {
 		if ((isValRational(v1) || isValDouble(v1)) && (isValRational(v2) || isValDouble(v2))){
 			return new Value(VariableTypes.Double, getDoubleVal(v1).multiply(getDoubleVal(v2)));
 		}
-		Interpreter.throwError("Failed Multiplying Values "+v1+" and "+v2);
-		return Value.nil();
+		throw new BLZRuntimeException("Failed Multiplying Values "+v1+" and "+v2);
 	}
 	
-	public static Value modVals(Value val, Value quo) {
+	public static Value modVals(Value val, Value quo) throws BLZRuntimeException {
 		if (val.type == VariableTypes.Integer && quo.type == VariableTypes.Integer){
 			return new Value(VariableTypes.Integer, getIntValue(val).mod(getIntValue(quo)));
 		}
 		if (isDecimalValue(val) && isDecimalValue(quo)){
 			return new Value(VariableTypes.Double, getDoubleVal(val).remainder(getDoubleVal(quo)));
 		}
-		Interpreter.throwError("Attempted to perform a modulus on non-integers, "+val+" and "+quo);
-		return Value.nil();
+		throw new BLZRuntimeException("Attempted to perform a modulus on non-integers, "+val+" and "+quo);
 	}
 	
 	public static Value divVals(Value top, Value bottom) throws BLZRuntimeException {
@@ -179,7 +175,7 @@ public class Variable {
 		return Value.nil();
 	}
 	
-	public static Value expValues(Value v1, Value v2){
+	public static Value expValues(Value v1, Value v2) throws BLZRuntimeException{
 		if (isValInt(v1) && isValInt(v2)){
 			return new Value(VariableTypes.Integer, getIntValue(v1).pow(getIntValue(v2).intValue()));
 		}else if (isValRational(v1) && isValInt(v2)){
@@ -193,8 +189,7 @@ public class Variable {
 			BigDecimal d2 = getDoubleVal(v2);
 			return Value.doub(powerBig(d1, d2));
 		}
-		Interpreter.throwError("Failed Taking an Exponent with "+v1 + " and "+v2);
-		return Value.nil();
+		throw new BLZRuntimeException("Failed Taking an Exponent with "+v1 + " and "+v2);
 	}
 	
 	public static Value logValues(Value v1, Value v2){
@@ -548,7 +543,7 @@ public class Variable {
 			return BigDecimal.ZERO;
 		}
 	}
-	public static BigInteger getIntValue(Value v){
+	public static BigInteger getIntValue(Value v) throws BLZRuntimeException {
 		try{
 			if (v.type == VariableTypes.Double){
 				BigDecimal num = (BigDecimal) v.value;
@@ -560,8 +555,7 @@ public class Variable {
 			}
 			return (BigInteger) v.value;
 		}catch(Exception e){
-			Interpreter.throwError("Attempted to cast "+v+" to an int and failed!");
-			return BigInteger.ZERO;
+			throw new BLZRuntimeException("Attempted to cast "+v+" to an int and failed!");
 		}
 	}
 	

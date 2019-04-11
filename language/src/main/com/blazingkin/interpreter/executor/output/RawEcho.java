@@ -1,4 +1,6 @@
 package com.blazingkin.interpreter.executor.output;
+
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
 import com.blazingkin.interpreter.variables.Value;
@@ -6,7 +8,7 @@ import com.blazingkin.interpreter.variables.Variable;
 
 public class RawEcho implements InstructionExecutorValue {
     
-    public Value run(Value input){
+    public Value run(Value input) throws BLZRuntimeException{
         if (Variable.isValInt(input)){
             char val = (char) Variable.getIntValue(input).intValue();
             Executor.getEventHandler().print(val + "");

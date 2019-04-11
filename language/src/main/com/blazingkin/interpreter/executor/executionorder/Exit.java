@@ -1,5 +1,6 @@
 package com.blazingkin.interpreter.executor.executionorder;
 
+import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.instruction.InstructionExecutorValue;
@@ -9,7 +10,7 @@ import com.blazingkin.interpreter.variables.Variable;
 public class Exit implements InstructionExecutorValue {
 
 	@Override
-	public Value run(Value val) {
+	public Value run(Value val) throws BLZRuntimeException {
 		/*	Exit
 		 * 	sets the closeRequested flag to true
 		 */

@@ -53,9 +53,13 @@ public class SubtractionNodeUnitTest {
 
     @Test
     public void shouldFailToSubtractStrings() throws BLZRuntimeException {
+        try {
         ASTNode args[] = {new ValueASTNode("\"asdf\""), new ValueASTNode("\"asd\"")};
-        new SubtractionNode(args).execute(new Context());
-        UnitTestUtil.assertLastError("Failed Subtracting Values asdf and asd");
+            new SubtractionNode(args).execute(new Context());
+            UnitTestUtil.fail("An error should have been thrown");
+        }catch(BLZRuntimeException e){
+            UnitTestUtil.assertEqual(e.getMessage(), "Failed Subtracting Values asdf and asd");
+        }
     }
 
     @Test
