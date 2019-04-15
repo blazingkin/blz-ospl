@@ -16,6 +16,21 @@ public class BLZObject implements Cloneable {
 	
 	@Override
 	public BLZObject clone(){
+		try {
+			if (objectContext.hasValue("copy")) {
+				Value copyVal = objectContext.getValue("copy");
+				if (copyVal.value instanceof Closure) {
+					Closure copyMethod = (Closure) copyVal.value;
+					Value[] args = {};
+					Value result = copyMethod.execute(copyMethod.context, args, false);
+					if (result.type == VariableTypes.Object) {
+						return (BLZObject) result.value;
+					}
+				}
+			}
+		}catch(BLZRuntimeException e){
+			
+		}
 		BLZObject newObj = new BLZObject();
 		for (String s : objectContext.variables.keySet()){
 			newObj.objectContext.setValue(s, objectContext.variables.get(s));

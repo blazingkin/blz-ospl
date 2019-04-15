@@ -1,0 +1,11 @@
+
+constructor Blah
+
+    :copy
+        this
+    end
+
+end
+
+a = Blah()
+print(a == copy(a))
