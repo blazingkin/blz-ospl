@@ -461,7 +461,7 @@ public class Variable {
 
 	public static Value getValueOfHash(Value hash, Value key) throws BLZRuntimeException {
 		if (hash.type != VariableTypes.Hash){
-			Interpreter.throwError(hash+" was not a hash ("+hash.typedToString()+" instead)");
+			throw new BLZRuntimeException(hash+" was not a hash ("+hash.typedToString()+" instead)");
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
@@ -474,7 +474,7 @@ public class Variable {
 	public static Value getValueOfHash(String hashName, Value key, Context con) throws BLZRuntimeException {
 		Value hash = con.getValue(hashName);
 		if (hash.type != VariableTypes.Hash){
-			Interpreter.throwError(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+			throw new BLZRuntimeException(hash+" was not a hash ("+hash.typedToString()+" instead)");
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;

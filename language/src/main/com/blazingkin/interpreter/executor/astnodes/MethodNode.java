@@ -100,6 +100,14 @@ public class MethodNode extends ASTNode {
                 RuntimeStack.pop();
             }
             throw new BLZRuntimeException(message, exception.alreadyCaught);
+        } catch(StackOverflowError err) {
+            String message = "In "+toString()+"\nStack Overflow!";
+            if (pushedParent){
+                String fileName = RuntimeStack.getProcessStack().peek().toString();
+                message = "In " + fileName + "\n"+message;
+                RuntimeStack.pop();
+            }
+            throw new BLZRuntimeException(message);
         }
     }
 
