@@ -31,6 +31,9 @@ public class Closure extends MethodNode {
 			}
 			String message = "In " + source + "\nIn "+toString()+"\n"+exception.getMessage();
 			throw new BLZRuntimeException(message, exception.alreadyCaught);
+		}catch(StackOverflowError err) {
+			String message = "In " + source + "\nIn "+toString()+"\n Stack Overflow";
+			throw new BLZRuntimeException(message);
 		}
 	}
 	
