@@ -209,3 +209,7 @@ end
 	end
 	-1
 end
+
+:append(arr, second)
+	arr.concatenate!(second)
+end
