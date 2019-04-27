@@ -443,16 +443,9 @@ public class Variable {
 		}
 	}
 	
-	public static void setValueOfHash(String hashName, Value key, Value newVal, Context con) throws BLZRuntimeException {
-		if (!con.variables.containsKey(hashName)){
-			HashMap<Value, Value> newHash = new HashMap<Value, Value>();
-			newHash.put(key, newVal);
-			con.setValue(hashName, new Value(VariableTypes.Hash, newHash));
-			return;
-		}
-		Value hash = con.getValue(hashName);
+	public static void setValueOfHash(Value hash, Value key, Value newVal) throws BLZRuntimeException {
 		if (hash.type != VariableTypes.Hash){
-			throw new BLZRuntimeException(hashName+" was not a hash ("+hash.typedToString()+" instead)");
+			throw new BLZRuntimeException(hash+" was not a hash ("+hash.typedToString()+" instead)");
 		}
 		@SuppressWarnings("unchecked")
 		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;

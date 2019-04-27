@@ -64,7 +64,8 @@ public class AssignmentNode extends BinaryNode {
 				}else{ // Assume it's a hash
 					Value key = lookupNode.args[1].execute(con);
 					Value newVal = args[1].execute(con);
-					Variable.setValueOfHash(arrayName, key, newVal, con);
+					Value hash = lookupNode.args[0].execute(con);
+					Variable.setValueOfHash(hash, key, newVal);
 					return newVal;
 				}
 			}else if (args[0].getOperator() == Operator.DotOperator){
