@@ -42,8 +42,7 @@ public class ArrayLookupNode extends BinaryNode {
 			BigInteger index = Variable.getIntValue(args[1].execute(con));
 			return Variable.getValueOfArray(arr, index);
 		}
-		String name = args[0].getStoreName();
-		Value val = con.getValue(name);
+		Value val = args[0].execute(con);
 		VariableTypes type = val.type;
 		if (type == VariableTypes.Array){
 			BigInteger index = Variable.getIntValue(args[1].execute(con));
@@ -57,7 +56,7 @@ public class ArrayLookupNode extends BinaryNode {
 			return new Value(VariableTypes.String, s.substring(index, index+1));
 		}else{ /* Assume it is a hash */
 			Value key = args[1].execute(con);
-			return Variable.getValueOfHash(name, key, con);
+			return Variable.getValueOfHash(val, key);
 		}
 	}
 

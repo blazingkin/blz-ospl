@@ -420,10 +420,9 @@ public class Variable {
 		return (Value) arr.get(index);
 	}
 	
-	public static void setValueOfArray(String arrayName,BigInteger index, Value value, Context con) throws BLZRuntimeException {
-		Value arr = con.getValue(arrayName);
+	public static void setValueOfArray(Value arr,BigInteger index, Value value, Context con) throws BLZRuntimeException {
 		if (arr.type != VariableTypes.Array){
-			throw new BLZRuntimeException(arrayName+" was not a hash ("+arr.typedToString()+" instead)");
+			throw new BLZRuntimeException(arr+" was not a hash ("+arr.typedToString()+" instead)");
 		}
 		Value[] VArr = (Value[]) arr.value;
 		if (VArr.length <= index.intValue()){
@@ -464,18 +463,6 @@ public class Variable {
 		return hsh.get(key);
 	}
 	
-	public static Value getValueOfHash(String hashName, Value key, Context con) throws BLZRuntimeException {
-		Value hash = con.getValue(hashName);
-		if (hash.type != VariableTypes.Hash){
-			throw new BLZRuntimeException(hash+" was not a hash ("+hash.typedToString()+" instead)");
-		}
-		@SuppressWarnings("unchecked")
-		HashMap<Value, Value> hsh = (HashMap<Value, Value>) hash.value;
-		if (!hsh.containsKey(key)){
-			throw new BLZRuntimeException("Hash did not contain key "+key);
-		}
-		return hsh.get(key);
-	}
 	
 	public static boolean isValInt(Value v){
 		if (v.type == VariableTypes.Integer) {
