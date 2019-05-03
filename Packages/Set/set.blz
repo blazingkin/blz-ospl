@@ -21,6 +21,10 @@ constructor Set(items)
         count()
     end
 
+    :length
+        count()
+    end
+
     :add(item)
         set_items[item] = true
     end
