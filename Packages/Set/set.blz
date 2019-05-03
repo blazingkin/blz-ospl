@@ -1,0 +1,51 @@
+
+constructor Set(items)
+    set_items = {}
+    if items.type == "Array"
+        for i = 0; i < items.length!(); i++
+            set_items[items[i]] = true
+        end
+    end
+
+    :of(arr)
+        for i = 0; i < arr.length!(); i++
+            set_items[arr[i]] = true
+        end
+    end
+
+    :count
+        set_items.values().filter(x -> x).length()
+    end
+
+    :size
+        count()
+    end
+
+    :add(item)
+        set_items[item] = true
+    end
+
+    :remove(item)
+        set_items[item] = false
+    end
+
+    :contains?(item)
+        set_items.has_key?(item) && set_items[item]
+    end
+
+    :union(other)
+        # Get all the keys in this where the key is set to true
+        this_items = set_items.keys().filter(x -> set_items.get(x))
+        other_items = other.set_items.keys().filter(x -> other.set_items.get(x))
+        Set(this_items.append(other_items))
+    end
+
+    :intersect(other)
+        # Get all the keys in this where the key is set to true
+        this_items = set_items.keys().filter(x -> set_items.get(x))
+        other_items = other.set_items.keys().filter(x -> other.set_items.get(x))
+        Set(this_items.filter(x -> other_items.contains?(x)))
+    end
+
+
+end

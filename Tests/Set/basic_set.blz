@@ -1,0 +1,24 @@
+import Set
+import Test
+
+s = Set([1, 2, 3])
+expect(s.contains?(3)).is(true)
+
+expect(s.contains?(5)).is(false)
+
+
+st = Set([3, 4, 5])
+
+union = s.union(st)
+
+# check that union did not modify
+expect(s.contains?(4)).is(false)
+
+expect(union.contains?(1)).is(true)
+expect(union.contains?(5)).is(true)
+
+intersection = s.intersect(st)
+
+expect(intersection.count()).is(1)
+
+expect(intersection.contains?(3)).is(true)
