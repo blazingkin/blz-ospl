@@ -8,6 +8,7 @@
 *.project
 *.class
 *.classpath
+*.factorypath
 target/*
 language/target/*
 launcher/target/*
