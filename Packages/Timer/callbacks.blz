@@ -1,0 +1,47 @@
+
+constructor Callback(n, unit, repeat)
+    time_to_wait = n
+    if unit == {blz.nil}
+        # Assume that they meant seconds
+        time_to_wait = n * 1000
+    else if unit == "milliseconds"
+        time_to_wait = n
+    else if unit == "second" || unit == "seconds"
+        time_to_wait = n * 1000
+    else if unit == "minutes"
+        time_to_wait = n * 1000 * 60
+    else if unit == "hours"
+        time_to_wait = n * 1000 * 60 * 60
+    else if unit == "days"
+        time_to_wait = n * 1000 * 60 * 60 * 24
+    end
+
+    action = {blz.nil}
+
+    :wait_and_call(func)
+        sleep(time_to_wait)
+        func()
+        while repeat
+            sleep(time_to_wait)
+            func()
+        end
+    end
+
+    :do(func)
+        async wait_and_call(func)
+    end
+
+    :then(func)
+        async wait_and_call(func)
+    end
+
+end
+
+
+:every(n, unit)
+    Callback(n, unit, true)
+end
+
+:after(n, unit)
+    Callback(n, unit, false)
+end

@@ -8,7 +8,11 @@ Version 2..7
 - Flag package
 - Socket builtin
 - Socket Package
+- Set Packet
+- string to bytes
+- fix bugs with setting to and reading from hashes
 - Fix issue with async that would cause threads to mess with each other
+- Add `after` and `every` to Timer package (need documentation)
 (Need to add hash documentation)
 (Need to add string documentation)
 (Need to add any? documentation)
