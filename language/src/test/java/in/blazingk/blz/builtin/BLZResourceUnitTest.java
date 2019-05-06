@@ -1,4 +1,4 @@
-package in.blazingk.blz;
+package in.blazingk.blz.builtin;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import com.blazingkin.interpreter.variables.BLZResource;
 
 import org.junit.Test;
+
+import in.blazingk.blz.UnitTestUtil;
 
 public class BLZResourceUnitTest {
 

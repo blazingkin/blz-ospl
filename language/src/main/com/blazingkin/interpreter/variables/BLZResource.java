@@ -2,21 +2,41 @@ package com.blazingkin.interpreter.variables;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.Scanner;
-import java.io.FileWriter;
 
 public class BLZResource {
 
     private URI location;
     private Scanner scanner;
     private BufferedWriter writer;
+    private ResourceType type;
 
     public BLZResource(URI location){
         this.location = location;
+        try {
+            if (location.toURL().getProtocol().equals("file")){
+                type = ResourceType.File;
+            }else{
+                type = ResourceType.Net;
+            }
+        }catch(MalformedURLException e){
+            type = ResourceType.Generic;
+        }
+    }
+
+    public BLZResource(InputStream in, OutputStream out) {
+        scanner = new Scanner(in);
+        scanner.useDelimiter("");
+        writer = new BufferedWriter(new OutputStreamWriter(out));
+        type = ResourceType.Generic;
     }
 
     private void openFile(FileMode mode) throws IOException {
@@ -52,7 +72,11 @@ public class BLZResource {
     }
 
     public String toString(){
-        return "<Resource " + location.toString() + ">";
+        if (location != null){
+            return "<Resource " + location.toString() + ">";
+        }else{
+            return "<Resource>";
+        }
     }
 
     public void write(String s) throws IOException {
@@ -69,22 +93,37 @@ public class BLZResource {
     }
 
     public void open(FileMode mode) throws IOException{
+        switch (type) {
+            case File:
+            {
+                openFile(mode);
+            }
+            break;
+            case Generic:
+            break;
+            case Net:
+            {
+                URLConnection connection = location.toURL().openConnection();
+                switch (mode){
+                    case Read:
+                        openScanner(connection);
+                    break;
+                    case Write:
+                        openWriter(connection);
+                    break;
+                    case ReadWrite:
+                        openScanner(connection);
+                        openWriter(connection);
+                    break;
+                }
+            }
+            break;
+        }
         if (location.toURL().getProtocol().equals("file")){
             openFile(mode);
+            return;
         }
-        URLConnection connection = location.toURL().openConnection();
-        switch (mode){
-            case Read:
-                openScanner(connection);
-            break;
-            case Write:
-                openWriter(connection);
-            break;
-            case ReadWrite:
-                openScanner(connection);
-                openWriter(connection);
-            break;
-        }
+        
     }
 
     private void openScanner(URLConnection connection) throws IOException {
@@ -118,6 +157,12 @@ public class BLZResource {
         Write,
         ReadWrite,
         Create
+    }
+
+    public enum ResourceType {
+        File,
+        Net,
+        Generic
     }
 
 }

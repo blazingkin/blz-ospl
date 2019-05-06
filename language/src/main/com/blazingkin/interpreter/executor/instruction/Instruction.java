@@ -25,6 +25,7 @@ import com.blazingkin.interpreter.executor.output.Echo;
 import com.blazingkin.interpreter.executor.output.FailTest;
 import com.blazingkin.interpreter.executor.output.RawEcho;
 import com.blazingkin.interpreter.executor.output.SameLineEcho;
+import com.blazingkin.interpreter.executor.socket.SocketBuiltin;
 import com.blazingkin.interpreter.executor.string.Length;
 import com.blazingkin.interpreter.executor.string.StringToBytes;
 import com.blazingkin.interpreter.executor.timing.Wait;
@@ -60,7 +61,8 @@ public enum Instruction {
 	FAILTEST("FAILTEST", "Fail test", new FailTest()),
 	THROW("THROW", "throw", new Throw()),
 	ASYNC("ASYNC", "Spawn async", new Async()),
-	STRINGTOBYTES("BLZINTERNALSTRINGTOBYTES", "string to bytes", new StringToBytes());
+	STRINGTOBYTES("BLZINTERNALSTRINGTOBYTES", "string to bytes", new StringToBytes()),
+	SOCKET("BLZINTERNALSOCKET", "Socket operations", new SocketBuiltin());
 	
 	
 	private Instruction(final String ins, final String name, final InstructionExecutor executor){
