@@ -27,10 +27,12 @@ constructor Set(items)
 
     :add(item)
         set_items[item] = true
+        this
     end
 
     :remove(item)
         set_items[item] = false
+        this
     end
 
     :contains?(item)
@@ -39,16 +41,30 @@ constructor Set(items)
 
     :union(other)
         # Get all the keys in this where the key is set to true
-        this_items = set_items.keys().filter(x -> set_items.get(x))
-        other_items = other.set_items.keys().filter(x -> other.set_items.get(x))
+        this_items = this.values()
+        other_items = other.values()
         Set(this_items.append(other_items))
     end
 
     :intersect(other)
         # Get all the keys in this where the key is set to true
-        this_items = set_items.keys().filter(x -> set_items.get(x))
-        other_items = other.set_items.keys().filter(x -> other.set_items.get(x))
+        this_items = this.values()
+        other_items = other.values()
         Set(this_items.filter(x -> other_items.contains?(x)))
+    end
+
+    :minus(other)
+        this_items = this.values()
+        other_items = other.values()
+        Set(this_items.filter(x -> other_items.contains?(x).negate()))
+    end
+
+    :entries
+        this.values()
+    end
+
+    :values
+        set_items.keys().filter(x -> set_items.get(x))
     end
 
 

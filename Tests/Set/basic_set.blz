@@ -22,3 +22,9 @@ intersection = s.intersect(st)
 expect(intersection.count()).is(1)
 
 expect(intersection.contains?(3)).is(true)
+
+minus = s.minus(st)
+expect(minus.count()).is(2)
+expect(minus.contains?(1)).is_true()
+expect(minus.contains?(2)).is_true()
+expect(minus.contains?(3)).is_false()
