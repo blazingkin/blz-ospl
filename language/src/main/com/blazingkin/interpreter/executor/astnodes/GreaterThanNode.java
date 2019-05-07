@@ -16,6 +16,10 @@ public class GreaterThanNode extends BinaryNode {
 			Interpreter.throwError("Greater Than did not have 2 arguments");
 		}
 	}
+
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {

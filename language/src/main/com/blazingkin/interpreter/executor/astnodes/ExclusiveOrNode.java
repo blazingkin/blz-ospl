@@ -21,6 +21,10 @@ public class ExclusiveOrNode extends BinaryNode {
 		}
     }
 
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
+
     @Override
     public Value execute(Context c) throws BLZRuntimeException {
         Value l = args[0].execute(c);

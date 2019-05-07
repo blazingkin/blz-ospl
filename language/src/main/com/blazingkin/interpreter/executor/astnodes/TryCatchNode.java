@@ -16,6 +16,10 @@ public class TryCatchNode extends ASTNode {
         this.catchBinding = catchBinding;
     }
 
+    public boolean canModify() {
+		return mainBlock.canModify() || errorBlock.canModify();
+	}
+
     @Override
     public boolean canCollapse(){
         return false;

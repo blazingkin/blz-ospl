@@ -15,12 +15,18 @@ public class AdditionNode extends BinaryNode {
 		return left + right;
 	}
 
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
+
 	public AdditionNode(ASTNode[] args) throws SyntaxException {
 		super(Operator.Addition, args);
 		if (args.length != 2){
 			throw new SyntaxException("Addition node did not have 2 arguments");
 		}
 	}
+
+
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException { 

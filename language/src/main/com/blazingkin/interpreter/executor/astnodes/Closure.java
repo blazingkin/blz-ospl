@@ -16,7 +16,8 @@ public class Closure extends MethodNode {
 		this.source = source;
 	}
 
-    public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
+
+	public Value execute(Context c, Value[] values, boolean passByReference) throws BLZRuntimeException{
 		Context methodContext = new Context(context);
 		if (takesVariables){
 			bindArguments(values, passByReference, methodContext);

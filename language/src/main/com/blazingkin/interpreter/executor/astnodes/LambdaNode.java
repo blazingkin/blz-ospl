@@ -36,6 +36,10 @@ public class LambdaNode extends BinaryNode {
         }
     }
 
+    public boolean canModify() {
+		return false;
+	}
+
     public Value execute(Context con){
         // TODO Fix lambdas always registering line number as -1
         MethodNode node = new MethodNode(parameterNames, this.args[1], -1);

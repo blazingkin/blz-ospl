@@ -41,6 +41,15 @@ public class BlockNode extends ASTNode {
         this.shouldClearReturns = shouldClearReturns;
     }
 
+    public boolean canModify() {
+		for (RegisteredLine l : body) {
+            if (l.canModify()) {
+                return true;
+            }
+        }
+        return false;
+	}
+
 
     public BlockNode(List<Either<SourceLine, ParseBlock>> body, boolean shouldClearReturns) throws SyntaxException {
         ArrayList<RegisteredLine> lines = new ArrayList<RegisteredLine>();
@@ -55,13 +64,13 @@ public class BlockNode extends ASTNode {
                 /* It is some block, parse it to a blocknode */
                 ParseBlock block = line.getRight().get();
                 if (ifParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(ifParser.parseBlock(block), block.lineNumber));
+                    lines.add(RegisteredLine.build(ifParser.parseBlock(block), block.lineNumber));
                 }else if (forParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(forParser.parseBlock(block), block.lineNumber));
+                    lines.add(RegisteredLine.build(forParser.parseBlock(block), block.lineNumber));
                 }else if (whileParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(whileParser.parseBlock(block), block.lineNumber));
+                    lines.add(RegisteredLine.build(whileParser.parseBlock(block), block.lineNumber));
                 }else if (tryCatchParser.shouldParse(block.getHeader())){
-                    lines.add(new RegisteredLine(tryCatchParser.parseBlock(block), block.lineNumber));
+                    lines.add(RegisteredLine.build(tryCatchParser.parseBlock(block), block.lineNumber));
                 }
             }
         }
@@ -70,7 +79,7 @@ public class BlockNode extends ASTNode {
         lines.toArray(this.body);
         if (lines.isEmpty()){
             this.body = new RegisteredLine[1];
-            this.body[0] = new RegisteredLine(new ValueASTNode(Value.nil()), -1);
+            this.body[0] = RegisteredLine.build(new ValueASTNode(Value.nil()), -1);
         }
     }
 

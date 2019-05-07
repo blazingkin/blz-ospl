@@ -19,6 +19,10 @@ public class ApproximateComparisonNode extends BinaryNode {
 			Interpreter.throwError("Approximate Comparison did not have 2 arguments.");
 		}
 	}
+
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {

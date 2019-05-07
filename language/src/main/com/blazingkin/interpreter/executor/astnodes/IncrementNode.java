@@ -17,6 +17,10 @@ public class IncrementNode extends UnaryNode {
 			Interpreter.throwError("Increment had more than one variable");
 		}
 	}
+
+	public boolean canModify() {
+		return false;
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException{

@@ -20,5 +20,8 @@ end
 end
 
 :copy(a)
+	# Force the language to think that this is a pass by reference
+	# Assign to a dummy variable
+	tmp = ""
 	a
 end

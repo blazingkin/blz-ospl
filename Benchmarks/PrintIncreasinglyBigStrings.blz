@@ -1,0 +1,5 @@
+str = ""
+for i = 0; i < 20000; i++
+    print(str)
+    str = str + i
+end

@@ -17,6 +17,10 @@ public class ArrayLiteralNode extends UnaryNode {
 			Interpreter.throwError("Array Literal did not have 1 argument");
 		}
 	}
+
+	public boolean canModify() {
+		return args[0].canModify();
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {

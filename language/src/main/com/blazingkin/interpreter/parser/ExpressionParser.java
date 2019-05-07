@@ -27,10 +27,10 @@ public class ExpressionParser {
 					if (source.line.trim().isEmpty() || source.line.trim().charAt(0) == ':'){
 						return Optional.empty();
 					}
-					return Optional.of(new RegisteredLine(ExpressionParser.parseExpression(source.line), source.lineNumber));
+					return Optional.of(RegisteredLine.build(ExpressionParser.parseExpression(source.line), source.lineNumber));
 				}
 				String newStr = source.line.replaceFirst(splits[0], "").trim();
-				return Optional.of(new RegisteredLine(instr, newStr, source.lineNumber));
+				return Optional.of(RegisteredLine.build(instr, newStr, source.lineNumber));
 			}catch(SyntaxException e){
 				throw new SyntaxException(e.getMessage()+"\nDid not know how to parse line: "+source.line+" on line "+source.lineNumber);
 			}

@@ -16,6 +16,8 @@ public abstract class ASTNode {
 		}
 		return true;
 	}
+
+	public abstract boolean canModify();
 	
 	public abstract ASTNode collapse();
 	

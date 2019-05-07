@@ -38,6 +38,9 @@ end
 end
 
 :copy(arr)
+	# Force the language to think that this is a pass by reference
+	# Assign to a dummy variable
+	tmp = ""
 	return arr
 end
 

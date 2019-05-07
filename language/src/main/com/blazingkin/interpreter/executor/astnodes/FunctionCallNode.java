@@ -30,6 +30,12 @@ public class FunctionCallNode extends BinaryNode {
 			}
 		}
 	}
+
+	public boolean canModify() {
+		/* This can be optimized further */
+		/* Technically this is dependent on what the left side, but this is not trivial */
+		return true;
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {
@@ -66,7 +72,7 @@ public class FunctionCallNode extends BinaryNode {
 			methodVal = new Value(VariableTypes.Method, pm.m);
 		}
 		MethodNode toCall = (MethodNode) methodVal.value;
-		return toCall.execute(con, args, passByReference);
+		return toCall.execute(con, args, passByReference || !toCall.canModify());
 	}
 
 }

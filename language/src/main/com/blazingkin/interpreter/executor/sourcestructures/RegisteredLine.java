@@ -13,14 +13,33 @@ import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
-public class RegisteredLine{
+public interface RegisteredLine{
+
+	public static RegisteredLine build(ASTNode root, int lineNum) {
+		return new RegisteredLineASTNode(root, lineNum);
+	}
+
+	public static RegisteredLine build(Instruction instr, String line, int lineNum) throws SyntaxException {
+		return new RegisteredLineInstructionExecutor(instr, line, lineNum);
+	}
+	
+	public Instruction getInstr();
+	public String getArgs();
+	
+	public Value run(Context con) throws BLZRuntimeException;
+	
+	public boolean canModify();
+	
+}
+
+class RegisteredLineInstructionExecutor implements RegisteredLine {
 	private ASTNode root;
 	public final Instruction instr;
 	public final String args;
 	private String[] argsArr;
 	private ASTNode[] nodes;
 	private int lineNum;
-	public RegisteredLine(Instruction instr, String line, int lineNum) throws SyntaxException{
+	public RegisteredLineInstructionExecutor(Instruction instr, String line, int lineNum) throws SyntaxException{
 		this.instr = instr;
 		if (instr.executor instanceof InstructionExecutorStringArray){
 			argsArr = line.split(" ");
@@ -32,25 +51,11 @@ public class RegisteredLine{
 		this.args = line;
 		this.lineNum = lineNum;
 	}
-	
-	public RegisteredLine(ASTNode root, int lineNum){
-		this.root = root;
-		this.instr = Instruction.INVALID;
-		this.args = null;
-		this.lineNum = lineNum;
-	}
-	
-	public Instruction getInstr(){
-		return instr;
-	}
-	public String getArgs(){
-		return args;
-	}
-	
+
 	public Value run(Context con) throws BLZRuntimeException{
 		try {
 			if (root != null){
-				if (instr != null && instr != Instruction.INVALID){
+				if (instr != Instruction.INVALID){
 					return ((InstructionExecutorValue)instr.executor).run(root.execute(con));
 				}
 				return root.execute(con);
@@ -79,5 +84,53 @@ public class RegisteredLine{
 		return instr.toString() + " " + args;
 	}
 
-	
+	public Instruction getInstr(){
+		return instr;
+	}
+	public String getArgs(){
+		return args;
+	}
+
+	public boolean canModify() {
+		return instr == Instruction.ARRAYREBIND || instr == Instruction.SOCKET ||
+				instr == Instruction.OPENRESOURCE;
+	}
+
 }
+
+class RegisteredLineASTNode implements RegisteredLine {
+	ASTNode n;
+	int line;
+	public RegisteredLineASTNode(ASTNode n, int line) {
+		this.n = n;
+		this.line = line;
+	}
+
+	public boolean canModify() {
+		return true;
+	}
+
+	public Value run(Context c) throws BLZRuntimeException {
+		try {
+			return n.execute(c);
+		}catch(BLZRuntimeException exception){
+			if (!exception.alreadyCaught && exception.exceptionValue == null){
+				throw new BLZRuntimeException("Error occurred on line "+line+"\n"+exception.getMessage(), true);
+			}else{
+				throw exception;
+			}
+		}
+	}
+
+	public Instruction getInstr(){
+		return null;
+	}
+	public String getArgs(){
+		return null;
+	}
+
+	public String toString() {
+		return n.toString();
+	}
+}
+

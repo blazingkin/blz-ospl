@@ -18,6 +18,10 @@ public class LogicalOrNode extends BinaryNode {
 		}
 	}
 
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
+
 	@Override
 	public Value execute(Context c) throws BLZRuntimeException {
 		Value left = args[0].execute(c);

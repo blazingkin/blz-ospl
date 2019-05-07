@@ -16,6 +16,10 @@ public class WhileNode extends ASTNode {
 		this.term = term;
 		this.block = block;
 	}
+
+	public boolean canModify() {
+		return term.canModify() || block.canModify();
+	}
 	
 	@Override
 	public boolean canCollapse() {

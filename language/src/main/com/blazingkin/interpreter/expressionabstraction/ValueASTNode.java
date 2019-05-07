@@ -23,6 +23,10 @@ public class ValueASTNode extends ASTNode {
 			this.strVal = val;
 		}
 	}
+
+	public boolean canModify() {
+		return false;
+	}
 	
 	public ValueASTNode(Value val){
 		this.val = val;

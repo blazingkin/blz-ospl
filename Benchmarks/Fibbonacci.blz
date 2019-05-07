@@ -1,0 +1,14 @@
+:main
+	print("How many fibbonacci numbers do you want?")
+	iter = number_input()
+	a = [1,1]
+	for i = 2; i < iter; i++
+		a[i] = a[i - 1] + a[i - 2]
+	end
+
+	print("Printing fibbonacci numbers 1-" + iter)
+
+	for i = 0; i < iter; i++
+		print(a[i])
+	end
+end

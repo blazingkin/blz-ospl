@@ -17,6 +17,12 @@ public class DecrementNode extends UnaryNode {
 			Interpreter.throwError("Decrement had more than one variable");
 		}
 	}
+
+	public boolean canModify() {
+		/* This will only ever modify a variable in the local or global scope */
+		/* If it is local, it was a number and copied anyways */
+		return false;
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException{

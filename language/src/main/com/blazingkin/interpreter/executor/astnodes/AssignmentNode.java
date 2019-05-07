@@ -24,6 +24,13 @@ public class AssignmentNode extends BinaryNode {
 			Interpreter.throwError("Assignment did not have 2 arguments");
 		}
 	}
+
+	public boolean canModify() {
+		/* Technically this is not always true */
+		/* It is only true whenever the left side refers to an object or array */
+		/* This can be optimized further */
+		return true;
+	}
 	
 	// TODO handle multiple assignment (e.g a,b = 2,3)
 	@Override

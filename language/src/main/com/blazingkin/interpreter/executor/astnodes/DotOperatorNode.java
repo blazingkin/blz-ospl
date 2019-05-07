@@ -23,6 +23,10 @@ public class DotOperatorNode extends BinaryNode {
 			Interpreter.throwError("Dot Operator did not have 2 arguments");
 		}
 	}
+
+	public boolean canModify() {
+		return args[0].canModify() || args[1].getStoreName().contains("!");
+	}
 	
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {

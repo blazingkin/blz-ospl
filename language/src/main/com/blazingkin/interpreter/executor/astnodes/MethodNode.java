@@ -1,6 +1,7 @@
 package com.blazingkin.interpreter.executor.astnodes;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
@@ -50,6 +51,15 @@ public class MethodNode extends ASTNode {
         this.body = new BlockNode(body, true);
     }
 
+    public Optional<Boolean> canModifyCache = Optional.empty();
+    public boolean canModify() 
+    {
+        if (!canModifyCache.isPresent()) {
+            canModifyCache = Optional.of(takesVariables && this.body.canModify());
+        }
+        return canModifyCache.get();
+	}
+
     /* For initializing anonymous functions */
     public MethodNode(String[] argNames, ASTNode body, int lineNum){
         if (argNames.length != 0) {
@@ -57,7 +67,7 @@ public class MethodNode extends ASTNode {
             variables = argNames;
         }
         name = "λ";
-        this.body = new BlockNode(true, new RegisteredLine(body, lineNum));
+        this.body = new BlockNode(true, RegisteredLine.build(body, lineNum));
     }
 
     public Value execute(Context c) throws BLZRuntimeException {

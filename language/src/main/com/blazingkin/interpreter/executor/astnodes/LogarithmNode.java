@@ -18,6 +18,10 @@ public class LogarithmNode extends BinaryNode {
 		}
 	}
 	
+	public boolean canModify() {
+		return args[0].canModify() || args[1].canModify();
+	}
+
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {
 		return Variable.logValues(args[0].execute(con), args[1].execute(con));

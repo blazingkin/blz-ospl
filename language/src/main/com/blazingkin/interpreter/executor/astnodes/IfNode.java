@@ -21,6 +21,10 @@ public class IfNode extends ASTNode {
 		return condition.canCollapse();
 	}
 
+	public boolean canModify() {
+		return condition.canModify() || mainBlock.canModify() || elseBlock.canModify();
+	}
+
 	@Override
 	public ASTNode collapse() {
 		try {

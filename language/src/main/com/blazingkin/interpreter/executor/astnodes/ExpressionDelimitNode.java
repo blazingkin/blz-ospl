@@ -12,6 +12,15 @@ public class ExpressionDelimitNode extends BinaryNode {
 	public ExpressionDelimitNode(ASTNode[] args) {
 		super(Operator.ExpressionDelimit, args);
 	}
+
+	public boolean canModify() {
+		for (ASTNode arg : args) {
+			if (arg.canModify()) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	@Override
 	public Value execute(Context con){

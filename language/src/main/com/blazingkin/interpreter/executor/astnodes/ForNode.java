@@ -19,6 +19,10 @@ public class ForNode extends ASTNode {
 		this.term = term;
 		this.block = block;
 	}
+
+	public boolean canModify() {
+		return init.canModify() || loop.canModify() || term.canModify() || block.canModify();
+	}
 	
 	@Override
 	public boolean canCollapse() {

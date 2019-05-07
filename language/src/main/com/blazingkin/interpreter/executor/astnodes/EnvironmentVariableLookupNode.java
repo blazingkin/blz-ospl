@@ -20,6 +20,10 @@ public class EnvironmentVariableLookupNode extends UnaryNode {
 			Interpreter.throwError("Environment Variable Lookup did not have 1 argument");
 		}
 	}
+
+	public boolean canModify() {
+		return false;
+	}
 	
 	@Override
 	public Value execute(Context con){
