@@ -1,0 +1,12 @@
+
+constructor Blah
+    x = 0
+    :inc
+        x++
+    end
+
+end
+
+b = Blah()
+b.inc()
+print(b.x)
