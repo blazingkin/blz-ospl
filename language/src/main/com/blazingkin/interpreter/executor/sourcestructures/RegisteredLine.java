@@ -72,7 +72,8 @@ class RegisteredLineInstructionExecutor implements RegisteredLine {
 			return instr.executor.run(args, con);
 		}catch(BLZRuntimeException exception){
 			if (!exception.alreadyCaught && exception.exceptionValue == null){
-				throw new BLZRuntimeException("Error occurred on line "+lineNum+"\n"+exception.getMessage(), true);
+				String filePath = RuntimeStack.getProcessStack().peek().getLocation();
+				throw new BLZRuntimeException("In " + filePath + ":" + lineNum +"Error occurred on line "+lineNum+"\n"+exception.getMessage(), true);
 			}else{
 				throw exception;
 			}
@@ -121,7 +122,8 @@ class RegisteredLineASTNode implements RegisteredLine {
 				throw new BLZRuntimeException("In " + filePath + ":" + this.line + "\n" + exception.getMessage(), exception.alreadyCaught);
 			}
 			if (!exception.alreadyCaught && exception.exceptionValue == null){
-				throw new BLZRuntimeException("Error occurred on line "+line+"\n"+exception.getMessage(), true);
+				String filePath = RuntimeStack.getProcessStack().peek().getLocation();
+				throw new BLZRuntimeException("In " + filePath + ":" + this.line +"\nError occurred on line "+line+"\n"+exception.getMessage(), true);
 			}else{
 				throw exception;
 			}

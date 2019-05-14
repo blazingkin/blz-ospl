@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys
+import os, sys, re
 import filecmp
 import time
 from subprocess import call
@@ -64,6 +64,8 @@ class TestFile:
 		print("Test took: " + str(round((end-start) * 1000) / 1000) + " seconds")
 		if (self.output != None):
 			testout = open(self.output + "ran", "r").read().replace("\r", "")
+			# Remove system specific paths from the output
+			testout = re.sub(r"In [^\n]+:(\d)+\n", "", testout)
 			gt = open(self.output, "r").read().replace("\r", "")
 			if testout != gt:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)
@@ -72,6 +74,8 @@ class TestFile:
 				return 1
 		if self.error != None:
 			testerr = open(self.error + "ran", "r").read().replace("\r", "")
+			# Remove system specific paths from the output
+			testerr = re.sub(r"In [^\n]+\:(\d)+\n", "", testerr)
 			expectederr = open(self.error, "r").read().replace("\r", "")
 			if testerr != expectederr:
 				print(bcolors.FAIL + "Failed" + bcolors.ENDC)

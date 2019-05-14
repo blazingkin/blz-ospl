@@ -94,7 +94,7 @@ public class Constructor {
 		boolean pushedParent = false;
         if (con.parent != null && (RuntimeStack.isEmpty() || RuntimeStack.getProcessStack().peek().UUID != con.parent.UUID)){
             pushedParent = true;
-            RuntimeStack.push(con.parent);
+			RuntimeStack.push(con.parent);
         }
 		BLZObject newObj = new BLZObject(con.parent.processContext);
 		setReferences(con, newObj); 
@@ -141,6 +141,7 @@ public class Constructor {
 	 * as well as global function references */
 	private static void setReferences(Constructor constructor, BLZObject newObj){
 		newObj.objectContext.setValueInPresent("this", Value.obj(newObj));
+		newObj.objectContext.setValueInPresent("self", Value.obj(newObj));
 		newObj.objectContext.setValueInPresent("constructor", Value.constructor(constructor));
 		/* Normally this would be part of the standard library, but */
 		/* This must be added programatically since objects won't look at primitive contexts */
@@ -159,7 +160,7 @@ public class Constructor {
 			newObj.objectContext.setValueInPresent(c.getName(), Value.constructor(c));
 		}
 		for (MethodNode m : constructor.methods){
-			Value closure = Value.closure(new Closure(newObj.objectContext, m, "constructor " + constructor.getName()));
+			Value closure = Value.closure(new Closure(newObj.objectContext, m, constructor.parent, "constructor " + constructor.getName()));
 			newObj.objectContext.setValueInPresent(m.getStoreName(), closure);
 		}
 	}
