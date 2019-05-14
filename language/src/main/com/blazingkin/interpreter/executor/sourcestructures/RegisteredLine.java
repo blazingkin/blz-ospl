@@ -12,6 +12,8 @@ import com.blazingkin.interpreter.parser.SyntaxException;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.VariableTypes;
+import com.blazingkin.interpreter.executor.astnodes.FunctionCallNode;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 
 public interface RegisteredLine{
 
@@ -114,6 +116,10 @@ class RegisteredLineASTNode implements RegisteredLine {
 		try {
 			return n.execute(c);
 		}catch(BLZRuntimeException exception){
+			if (n instanceof FunctionCallNode && exception.alreadyCaught) {
+				String filePath = RuntimeStack.getProcessStack().peek().getLocation();
+				throw new BLZRuntimeException("In " + filePath + ":" + this.line + "\n" + exception.getMessage(), exception.alreadyCaught);
+			}
 			if (!exception.alreadyCaught && exception.exceptionValue == null){
 				throw new BLZRuntimeException("Error occurred on line "+line+"\n"+exception.getMessage(), true);
 			}else{

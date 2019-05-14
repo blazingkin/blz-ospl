@@ -76,6 +76,13 @@ public class Process {
 		}
 		return "<Source File "+hashCode()+">";
 	}
+
+	public String getLocation() {
+		if (readingFrom != null) {
+			return readingFrom.getAbsolutePath();
+		}
+		return "In memory file";
+	}
 	
 	private void setupFileProcess(File runFile) throws FileNotFoundException{
 		runningFromFile = true;

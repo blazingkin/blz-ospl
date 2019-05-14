@@ -99,7 +99,20 @@ public class Constructor {
 		BLZObject newObj = new BLZObject(con.parent.processContext);
 		setReferences(con, newObj); 
 		initializeArguments(con, newObj, args, passByReference);
-		con.blockNode.execute(newObj.objectContext);
+		try {
+			con.blockNode.execute(newObj.objectContext);
+		}catch(BLZRuntimeException exception) {
+            if (exception.exceptionValue != null){
+                throw exception;
+            }
+            String message = "In constructor "+con.getName()+"\n"+exception.getMessage();
+            if (pushedParent){
+                String fileName = RuntimeStack.getProcessStack().peek().toString();
+                message = "In " + fileName + "\n"+message;
+                RuntimeStack.pop();
+            }
+            throw new BLZRuntimeException(message, exception.alreadyCaught);
+        }
 		if(pushedParent){
 			RuntimeStack.pop();
 		}	

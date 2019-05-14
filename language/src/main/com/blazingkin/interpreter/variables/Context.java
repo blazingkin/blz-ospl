@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 
@@ -59,11 +61,25 @@ public class Context {
 			try {
 				return parent.getValue(s);
 			}catch(BLZNoVariableFoundException e){
-				throw new BLZNoVariableFoundException(e, variables.keySet(), s);
+				throw new BLZNoVariableFoundException(e, getAllBoundNames(), s);
 			}
 		}else{
-			throw new BLZNoVariableFoundException("Could not find a value for "+s, variables.keySet(), s);
+			throw new BLZNoVariableFoundException("Could not find a value for "+s, getAllBoundNames(), s);
 		}
+	}
+
+	public Set<String> getAllBoundNames() {
+		if (parent == null || this == parent) {
+			return variables.keySet();
+		}
+		Set<String> result = new HashSet<String>();
+		for (String s : variables.keySet()) {
+			result.add(s);
+		}
+		for (String s : parent.getAllBoundNames()) {
+			result.add(s);
+		}
+		return result;
 	}
 
 

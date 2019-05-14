@@ -7,6 +7,10 @@ constructor Set(items)
         end
     end
 
+    :==(other)
+        return other.type == "Set" && values() == other.values()
+    end
+
     :of(arr)
         for i = 0; i < arr.length!(); i++
             set_items[arr[i]] = true
@@ -36,7 +40,11 @@ constructor Set(items)
     end
 
     :contains?(item)
-        set_items.has_key?(item) && set_items[item]
+        if set_items.has_key?(item)
+            set_items[item]
+        else
+            false
+        end
     end
 
     :union(other)
