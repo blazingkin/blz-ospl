@@ -52,7 +52,7 @@ public class Context {
 	}
 	
 
-	public Value getValue(String s) throws BLZRuntimeException{
+	public Value getValue(String s) throws BLZRuntimeException {
 		if (hasValue(s)){
 			return variables.get(s);
 		}

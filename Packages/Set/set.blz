@@ -17,12 +17,25 @@ constructor Set(items)
         end
     end
 
+    :show
+        "<Set " + values() + ">"
+    end
+
     :count
         set_items.values().filter(x -> x).length()
     end
 
     :size
         count()
+    end
+
+    :pick
+        val = values()
+        if val.length() > 0
+            val[0]
+        else
+            throw "Tried to pick from an empty set"
+        end
     end
 
     :length

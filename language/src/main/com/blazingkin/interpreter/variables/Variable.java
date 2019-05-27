@@ -8,6 +8,11 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
@@ -57,10 +62,24 @@ public class Variable {
 		Context.contexts = new ArrayList<Context>();
 		globalContext = new Context(null);
 	}
+
+	static final ConcurrentLinkedQueue<Context> deathList = new ConcurrentLinkedQueue<>();
+	static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	static final ScheduledFuture<?> beeperHandle;
+	static {
+		final Runnable threadKiller = new Runnable() {
+		public void run() {
+			while (!deathList.isEmpty()) {
+				Context.contexts.remove(deathList.poll());
+				}
+			}
+		};
+		beeperHandle = scheduler.scheduleAtFixedRate(threadKiller, 50, 50, TimeUnit.MILLISECONDS);
+	}
 	
 	public static void killContext(Context con){
 		if (con.getID() != getGlobalContext().getID()){
-			Context.contexts.remove(con);
+			Variable.deathList.offer(con);
 		}
 	}
 	
@@ -411,7 +430,7 @@ public class Variable {
 		if (value.value instanceof Value[]){
 			Value[] arr = (Value[]) value.value;
 			int arrIndex = index.intValue();
-			if (arrIndex >= arr.length){
+			if (arrIndex >= arr.length || arrIndex < 0){
 				throw new BLZRuntimeException("Out Of Bounds! Tried to access index " + index + " of array " + value);
 			}
 			return arr[arrIndex];

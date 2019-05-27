@@ -228,3 +228,16 @@ end
     end
     return result
 end
+
+:least(arr)
+	if arr.length() == 0
+		throw "Cannot find the least element of an empty list"
+	end
+	smallest = arr[0]
+	for i = 1; i < arr.length(); i++
+		if arr[i] < smallest
+			smallest = arr[i]
+		end
+	end
+	return smallest
+end

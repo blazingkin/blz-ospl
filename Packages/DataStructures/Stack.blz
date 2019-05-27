@@ -11,6 +11,14 @@ constructor Stack
         stack[i + 1]
     end
 
+    :length
+        size()
+    end
+
+    :size
+        i + 1
+    end
+
     :show
         if i < 0
             [].show()
