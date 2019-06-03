@@ -31,11 +31,11 @@ public class DotOperatorNode extends BinaryNode {
 	@Override
 	public Value execute(Context con) throws BLZRuntimeException {
 		Value object = args[0].execute(con);
+		boolean passByReference = false;
+		if (args[1].getStoreName() != null && args[1].getStoreName().contains("!")) {
+			passByReference = true;
+		}
 		if (object.type != VariableTypes.Object){
-			boolean passByReference = false;
-			if (args[1].getStoreName().contains("!")) {
-				passByReference = true;
-			}
 			Value primitiveVal = VariableTypes.primitiveContexts.get(object.type).getValue(args[1].getStoreName().replace("!", ""));
 			if (primitiveVal.type == VariableTypes.Method) {
 				return new Value(VariableTypes.PrimitiveMethod, new BLZPrimitiveMethod((MethodNode) primitiveVal.value, object, passByReference));
@@ -49,7 +49,7 @@ public class DotOperatorNode extends BinaryNode {
 			BigInteger index = Variable.getIntValue(arrLookup.args[1].execute(con));
 			return Variable.getValueOfArray(obj.objectContext.getValue(arrLookup.args[0].getStoreName()), index);
 		}
-		return obj.objectContext.getValue(args[1].getStoreName());
+		return obj.objectContext.getValue(args[1].getStoreName().replace("!", ""));
 	}
 
 }

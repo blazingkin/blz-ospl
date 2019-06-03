@@ -28,6 +28,15 @@ public class FunctionCallNode extends BinaryNode {
 				passByReference = true;
 				this.args[0] = new ValueASTNode(fName.getStoreName().replace("!", ""));
 			}
+		} else if (this.args[0] instanceof DotOperatorNode) { 
+			DotOperatorNode left = (DotOperatorNode) this.args[0];
+			ASTNode name = left.args[1];			
+			if (name != null) {
+				String sName = name.getStoreName();
+				if (sName != null && sName.contains("!")) {
+					passByReference = true;
+				}
+			}
 		}
 	}
 
