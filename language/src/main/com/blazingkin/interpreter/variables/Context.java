@@ -42,6 +42,23 @@ public class Context {
 	public int getID(){
 		return contextID;
 	}
+
+	public Context duplicate(int depth) {
+		if (depth > maxDepth) {
+			return this;
+		}
+		Context newParent;
+		if (this.parent == null) {
+			newParent = new Context();
+		}else{
+			newParent = this.parent.duplicate(depth + 1);
+		}
+		Context newContext = new Context(newParent);
+		for (String key : variables.keySet()) {
+			newContext.setValueInPresent(key, variables.get(key));
+		}
+		return newContext;
+	}
 	
 	public Context getParentContext(){
 		return parent;

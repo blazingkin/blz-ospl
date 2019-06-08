@@ -117,7 +117,9 @@ class RegisteredLineASTNode implements RegisteredLine {
 		try {
 			return n.execute(c);
 		}catch(BLZRuntimeException exception){
-			if (n instanceof FunctionCallNode && exception.alreadyCaught) {
+			if (RuntimeStack.getProcessStack().isEmpty()){
+				throw exception;
+			}else if (n instanceof FunctionCallNode && exception.alreadyCaught) {
 				String filePath = RuntimeStack.getProcessStack().peek().getLocation();
 				throw new BLZRuntimeException("In " + filePath + ":" + this.line + "\n" + exception.getMessage(), exception.alreadyCaught);
 			}
