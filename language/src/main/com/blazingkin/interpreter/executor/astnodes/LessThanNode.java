@@ -46,7 +46,7 @@ public class LessThanNode extends BinaryNode {
 					if (lessThan.type == VariableTypes.Closure){
 						Closure node = (Closure) lessThan.value;
 						Value[] args = {v2};
-						return node.execute(node.context, args, false);
+						return node.execute(node.context, args, true);
 					}
 				}
 			}
