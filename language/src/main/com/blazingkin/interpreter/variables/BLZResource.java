@@ -10,14 +10,19 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.io.BufferedInputStream;
+
+
 
 public class BLZResource {
 
     private URI location;
-    private Scanner scanner;
+    private InputStream scanner;
     private BufferedWriter writer;
     private ResourceType type;
+    private boolean canRead = false;
 
     public BLZResource(URI location){
         this.location = location;
@@ -33,8 +38,7 @@ public class BLZResource {
     }
 
     public BLZResource(InputStream in, OutputStream out) {
-        scanner = new Scanner(in);
-        scanner.useDelimiter("");
+        scanner = in;
         writer = new BufferedWriter(new OutputStreamWriter(out));
         type = ResourceType.Generic;
     }
@@ -50,8 +54,8 @@ public class BLZResource {
             break;
             case Read:
                 {
-                    scanner = new Scanner(location.toURL().openStream());
-                    scanner.useDelimiter("");
+                    canRead = true;
+                    scanner = new BufferedInputStream(location.toURL().openStream());
                 }
             break;
             case Write:
@@ -62,8 +66,8 @@ public class BLZResource {
             break;
             case ReadWrite:
                 {
-                    scanner = new Scanner(location.toURL().openStream());
-                    scanner.useDelimiter("");
+                    canRead = true;
+                    scanner = new BufferedInputStream(location.toURL().openStream());
                     File f = new File(location);
                     writer = new BufferedWriter(new FileWriter(f));
                 }
@@ -85,11 +89,17 @@ public class BLZResource {
     }
 
     public String read() throws IOException {
-        return scanner.next();
+        int read = scanner.read();
+        byte[] input = {(byte) read};
+        if (read == -1) {
+            canRead = false;
+            return "";
+        }
+        return new String(input, "UTF-8");
     }
 
     public boolean hasNext() {
-        return scanner != null && scanner.hasNext();
+        return canRead;
     }
 
     public void open(FileMode mode) throws IOException{
@@ -106,12 +116,14 @@ public class BLZResource {
                 URLConnection connection = location.toURL().openConnection();
                 switch (mode){
                     case Read:
+                        canRead = true;
                         openScanner(connection);
                     break;
                     case Write:
                         openWriter(connection);
                     break;
                     case ReadWrite:
+                        canRead = true;
                         openScanner(connection);
                         openWriter(connection);
                     break;
@@ -129,8 +141,7 @@ public class BLZResource {
     private void openScanner(URLConnection connection) throws IOException {
         if (scanner == null){
             connection.setDoInput(true);
-            scanner = new Scanner(connection.getInputStream());
-            scanner.useDelimiter("");
+            scanner = new BufferedInputStream(connection.getInputStream());
         }
     }
 

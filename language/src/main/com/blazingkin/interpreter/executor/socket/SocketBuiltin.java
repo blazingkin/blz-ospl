@@ -1,6 +1,8 @@
 package com.blazingkin.interpreter.executor.socket;
 
 import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -114,7 +116,7 @@ public class SocketBuiltin implements InstructionExecutorCommaDelimited {
         try {
             switch (sock.type) {
                 case Client:
-                BLZResource newResource = new BLZResource(sock.socket.getInputStream(), sock.socket.getOutputStream());
+                BLZResource newResource = new BLZResource(new BufferedInputStream(sock.socket.getInputStream()), new BufferedOutputStream(sock.socket.getOutputStream()));
                     return Value.resource(newResource);
                 case Server:
                     throw new BLZRuntimeException("Cannot get input / output streams for a sever socket. Instead get a client socket using accept");
