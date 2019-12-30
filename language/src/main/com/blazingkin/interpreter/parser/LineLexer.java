@@ -93,7 +93,6 @@ public class LineLexer {
                     }
                 break;
                 case '&':
-                    // Ensure that it is &&
                     if (i + 1 < line.length() && line.charAt(i + 1) == '&'){
                         i++;
                         tokens.add(new Token(Operator.LogicalAnd));
