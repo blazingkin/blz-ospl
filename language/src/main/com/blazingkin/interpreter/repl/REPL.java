@@ -15,6 +15,7 @@ import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
+import com.blazingkin.interpreter.library.BlzEventHandler;
 import com.blazingkin.interpreter.library.StandAloneEventHandler;
 import com.blazingkin.interpreter.parser.BlockParser;
 import com.blazingkin.interpreter.parser.Either;
@@ -37,14 +38,15 @@ public class REPL {
 	public static Context replContext = new Context();
 	public static void immediateModeLoop(InputStream is){
 		Executor.setEventHandler(new StandAloneEventHandler());
-		Executor.getEventHandler().print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
-		Executor.getEventHandler().print("Type 'exit' to exit\n");
+		BlzEventHandler eventHandler = Executor.getEventHandler();
+		eventHandler.print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
+		eventHandler.print("Type 'exit' to exit\n");
 		ArrayList<String> inputBuffer = new ArrayList<String>();
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
-			Executor.getEventHandler().err(e.getMessage());
-			Executor.getEventHandler().exitProgram("Failed to import Core");
+			eventHandler.err(e.getMessage());
+			eventHandler.exitProgram("Failed to import Core");
 		}
 		String in = "";
 		Scanner sc = new Scanner(is);
@@ -54,15 +56,15 @@ public class REPL {
 		try{
 			do{
 				try{
-					Executor.getEventHandler().print("> ");
+					eventHandler.print("> ");
 					in = sc.nextLine();
 					if (in.equals("err")){
 						while (Interpreter.thrownErrors.peek().getMessage() == null &&
 							Interpreter.thrownErrors.size() > 1){
 							Interpreter.thrownErrors.pop();
 						}
-						Executor.getEventHandler().err(Interpreter.thrownErrors.peek().getMessage());
-						Executor.getEventHandler().err("\n");
+						eventHandler.err(Interpreter.thrownErrors.peek().getMessage());
+						eventHandler.err("\n");
 						continue;
 					}
 					else if (in.equals("exit") || in.equals("quit")){
@@ -94,6 +96,8 @@ public class REPL {
 								MethodNode method = (MethodNode) methodParser.parseBlock(bl);
 								replContext.setValueInPresent(method.getStoreName(), Value.method(method));							
 								continue;
+							} else {
+								eventHandler.err("Only method blocks are supported in immediate mode for now");
 							}
 							// Check for constructor
 							// Currently difficult to do since the REPL doesn't have a process
@@ -103,17 +107,17 @@ public class REPL {
 						Value result = new BlockNode(parsed, true).execute(replContext);
 						if (result.type == VariableTypes.Rational) {
 							BLZRational r = (BLZRational) result.value;
-							Executor.getEventHandler().print(result.toString() + " (" + r.toDecimalString() + ")");
+							eventHandler.print(result.toString() + " (" + r.toDecimalString() + ")");
 						} else {
-							Executor.getEventHandler().print(result.toString());
+							eventHandler.print(result.toString());
 						}
 
-						Executor.getEventHandler().print("\n");
+						eventHandler.print("\n");
 						inputBuffer.clear();
 						System.gc();
 					}catch(SyntaxException e){
 						if (!e.getMessage().equals(BlockParser.blocksUnclosedErrorMessage)){
-							Executor.getEventHandler().err(e.getMessage() + "\n");
+							eventHandler.err(e.getMessage() + "\n");
 							inputBuffer.clear();
 						}
 						/* Block was incomplete */
@@ -132,6 +136,7 @@ public class REPL {
 					/* Some error in my code, might want to get a stacktrace */
 					e.printStackTrace();
 					Interpreter.throwError(e.getMessage());
+					eventHandler.err("An exception occured in the blz runtime. Please report this issue to a developer");
 					inputBuffer.clear();
 				}
 			}while (in.toLowerCase() != "exit");
