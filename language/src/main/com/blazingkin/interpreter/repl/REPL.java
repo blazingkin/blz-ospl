@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.blazingkin.interpreter.executor.sourcestructures.Process;
 import com.blazingkin.interpreter.BLZRuntimeException;
 import com.blazingkin.interpreter.Interpreter;
 import com.blazingkin.interpreter.executor.Executor;
 import com.blazingkin.interpreter.executor.astnodes.BlockNode;
 import com.blazingkin.interpreter.executor.astnodes.MethodNode;
+import com.blazingkin.interpreter.executor.executionstack.RuntimeStack;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.library.BlzEventHandler;
@@ -35,24 +37,38 @@ import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
 public class REPL {
 	
-	public static Context replContext = new Context();
-	public static void immediateModeLoop(InputStream is){
+
+	public static void setupRepl() {
 		Executor.setEventHandler(new StandAloneEventHandler());
 		BlzEventHandler eventHandler = Executor.getEventHandler();
-		eventHandler.print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
-		eventHandler.print("Type 'exit' to exit\n");
-		ArrayList<String> inputBuffer = new ArrayList<String>();
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
 			eventHandler.err(e.getMessage());
 			eventHandler.exitProgram("Failed to import Core");
 		}
+		Executor.immediateMode.set(true);
+		String[] nothing = {};
+		Process mockProcess = new REPLMockProcess(nothing);
+		mockProcess.processContext = replContext;
+		try {
+			RuntimeStack.push(mockProcess);
+		}catch(BLZRuntimeException e) {
+			// Handle failure
+		}
+		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
+	}
+
+	public static Context replContext = new Context();
+	public static void immediateModeLoop(InputStream is){
+		setupRepl();
+		BlzEventHandler eventHandler = Executor.getEventHandler();
+		eventHandler.print("blz-ospl "+Variable.getEnvVariable(SystemEnv.version).value +" running in immediate mode:\n");
+		eventHandler.print("Type 'exit' to exit\n");
+		ArrayList<String> inputBuffer = new ArrayList<String>();
 		String in = "";
 		Scanner sc = new Scanner(is);
 		MethodBlockParser methodParser = new MethodBlockParser();
-		Executor.immediateMode.set(true);
-		Interpreter.thrownErrors.add(new Exception("There have been no exceptions"));
 		try{
 			do{
 				try{
@@ -94,7 +110,8 @@ public class REPL {
 							// Check for method
 							if (methodParser.shouldParse(bl.getHeader())) {
 								MethodNode method = (MethodNode) methodParser.parseBlock(bl);
-								replContext.setValueInPresent(method.getStoreName(), Value.method(method));							
+								replContext.setValueInPresent(method.getStoreName(), Value.method(method));	
+								method.parent = RuntimeStack.getProcessStack().peek();
 								continue;
 							} else if (bl.isConstructor()){
 								eventHandler.err("Constructors are currently not supported in immediate mode");
@@ -150,7 +167,7 @@ public class REPL {
 			fileName = fileName + ".blz";
 		}
 		/* Try absolute path */
-		com.blazingkin.interpreter.executor.sourcestructures.Process p = in.blazingk.blz.packagemanager.FileImportManager.importFile(Paths.get(fileName));
+		Process p = in.blazingk.blz.packagemanager.FileImportManager.importFile(Paths.get(fileName));
 		if (p == null) {
 			/* Try path relative to CWD */
 			Path path = Paths.get("");
@@ -158,10 +175,10 @@ public class REPL {
 			p = in.blazingk.blz.packagemanager.FileImportManager.importFile(path);
 		}
 		for (MethodNode m : p.methods) {
-			replContext.setValueInPresent(m.getStoreName(), Value.method(m));
+			replContext.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.constructors) {
-			replContext.setValueInPresent(c.name, Value.constructor(c));
+			replContext.setValue(c.name, Value.constructor(c));
 		}
 	}
 	
@@ -169,10 +186,10 @@ public class REPL {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		in.blazingk.blz.packagemanager.Package p = new in.blazingk.blz.packagemanager.Package(importer.findPackage(packageName));
 		for (MethodNode m : p.getAllMethodsInPackage()) {
-			replContext.setValueInPresent(m.getStoreName(), Value.method(m));
+			replContext.setValue(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.getAllConstructorsInPackage()) {
-			replContext.setValueInPresent(c.name, Value.constructor(c));
+			replContext.setValue(c.name, Value.constructor(c));
 		}
 	}
 

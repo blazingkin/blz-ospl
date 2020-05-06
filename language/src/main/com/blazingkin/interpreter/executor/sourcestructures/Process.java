@@ -81,7 +81,7 @@ public class Process {
 		if (readingFrom != null) {
 			return readingFrom.getAbsolutePath();
 		}
-		return "In memory file";
+		return "";
 	}
 	
 	private void setupFileProcess(File runFile) throws FileNotFoundException{
@@ -118,9 +118,6 @@ public class Process {
 		lines = new String[code.length];
 		for (int i = 0; i < code.length; i++){
 			lines[i] = code[i].split("(?<!\\\\)#")[0].trim();	// Ignore extra whitespace and comments;
-		}
-		if (lines.length == 0){
-			Interpreter.throwError("The code recieved as a library argument did not contain any lines");	
 		}
 		setup();
 	}
