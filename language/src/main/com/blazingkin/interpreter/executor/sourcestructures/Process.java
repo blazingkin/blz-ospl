@@ -152,7 +152,7 @@ public class Process {
 				ParseBlock block = line.getRight().get();
 				if (parser.shouldParse(block.getHeader())){
 					methods.add(line);
-				}else if (block.getHeader().startsWith("constructor")){
+				}else if (block.isConstructor()){
 					constructors.add(line);
 				}
 			}

@@ -96,7 +96,7 @@ public class REPL {
 								MethodNode method = (MethodNode) methodParser.parseBlock(bl);
 								replContext.setValueInPresent(method.getStoreName(), Value.method(method));							
 								continue;
-							} else if (bl.getHeader().startsWith("constructor")){
+							} else if (bl.isConstructor()){
 								eventHandler.err("Constructors are currently not supported in immediate mode");
 							}
 							// Check for constructor

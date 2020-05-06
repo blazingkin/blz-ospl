@@ -37,4 +37,8 @@ public class ParseBlock {
         return lines.stream();
     }
 
+    public boolean isConstructor() {
+        return getHeader().startsWith("constructor");
+    }
+
 }
