@@ -27,6 +27,10 @@ public class BLZRational  {
 	public String toString(){
 		return num+"/"+den;
 	}
+
+	public String toDecimalString(){
+		return "" + (num.doubleValue() / den.doubleValue());
+	}
 	
 	public static BLZRational multiply(BLZRational a, BLZRational b){
 		return new BLZRational(a.num.multiply(b.num), a.den.multiply(b.den));

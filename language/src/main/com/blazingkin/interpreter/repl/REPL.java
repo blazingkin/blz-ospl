@@ -23,10 +23,12 @@ import com.blazingkin.interpreter.parser.ParseBlock;
 import com.blazingkin.interpreter.parser.SourceLine;
 import com.blazingkin.interpreter.parser.SplitStream;
 import com.blazingkin.interpreter.parser.SyntaxException;
+import com.blazingkin.interpreter.variables.BLZRational;
 import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
+import com.blazingkin.interpreter.variables.VariableTypes;
 
 import in.blazingk.blz.packagemanager.ImportPackageInstruction;
 
@@ -98,9 +100,14 @@ public class REPL {
 						}
 
 						// Execute the block if it wasn't a method or constructor
-						Executor.getEventHandler().print(
-							new BlockNode(parsed, true).execute(replContext).toString()
-						);
+						Value result = new BlockNode(parsed, true).execute(replContext);
+						if (result.type == VariableTypes.Rational) {
+							BLZRational r = (BLZRational) result.value;
+							Executor.getEventHandler().print(result.toString() + " (" + r.toDecimalString() + ")");
+						} else {
+							Executor.getEventHandler().print(result.toString());
+						}
+
 						Executor.getEventHandler().print("\n");
 						inputBuffer.clear();
 						System.gc();
