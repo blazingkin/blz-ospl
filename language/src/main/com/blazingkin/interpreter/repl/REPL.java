@@ -96,8 +96,8 @@ public class REPL {
 								MethodNode method = (MethodNode) methodParser.parseBlock(bl);
 								replContext.setValueInPresent(method.getStoreName(), Value.method(method));							
 								continue;
-							} else {
-								eventHandler.err("Only method blocks are supported in immediate mode for now");
+							} else if (bl.getHeader().startsWith("constructor")){
+								eventHandler.err("Constructors are currently not supported in immediate mode");
 							}
 							// Check for constructor
 							// Currently difficult to do since the REPL doesn't have a process
@@ -158,10 +158,10 @@ public class REPL {
 			p = in.blazingk.blz.packagemanager.FileImportManager.importFile(path);
 		}
 		for (MethodNode m : p.methods) {
-			Variable.setValue(m.getStoreName(), Value.method(m), replContext);
+			replContext.setValueInPresent(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.constructors) {
-			Variable.setValue(c.name, Value.constructor(c), replContext);
+			replContext.setValueInPresent(c.name, Value.constructor(c));
 		}
 	}
 	
@@ -169,10 +169,10 @@ public class REPL {
 		ImportPackageInstruction importer = (ImportPackageInstruction) Instruction.IMPORTPACKAGE.executor;
 		in.blazingk.blz.packagemanager.Package p = new in.blazingk.blz.packagemanager.Package(importer.findPackage(packageName));
 		for (MethodNode m : p.getAllMethodsInPackage()) {
-			Variable.setValue(m.getStoreName(), Value.method(m), replContext);
+			replContext.setValueInPresent(m.getStoreName(), Value.method(m));
 		}
 		for (Constructor c : p.getAllConstructorsInPackage()) {
-			Variable.setValue(c.name, Value.constructor(c), replContext);
+			replContext.setValueInPresent(c.name, Value.constructor(c));
 		}
 	}
 
