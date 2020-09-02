@@ -1,0 +1,10 @@
+arr = []
+print(arr.push(3))
+print(arr)
+arr.push!(5)
+arr.push!(6)
+print(arr)
+print(arr.pop())
+print(arr)
+arr.pop!()
+print(arr)

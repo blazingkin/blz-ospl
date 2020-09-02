@@ -241,3 +241,35 @@ end
 	end
 	return smallest
 end
+
+:first(arr)
+	if arr.length() == 0
+		throw "Cannot get the first element of an empty list"
+	end
+	arr[0]
+end
+
+:last(arr)
+	if arr.length() == 0
+		throw "Cannot get the last element of an empty list"
+	end
+	arr[arr.length() - 1]
+end
+
+:push(arr, elem)
+	arr[arr.length()] = elem
+	arr
+end
+
+:pop(arr)
+	if arr.length() == 0
+		throw "Empty array"
+	end
+	last = arr[arr.length() - 1]
+	arr.slice!(0, arr.length() - 1)
+	last
+end
+
+:peek(arr)
+	arr.pop()
+end
