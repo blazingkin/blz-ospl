@@ -26,7 +26,7 @@ public class Variable {
 		return getArray(arrayName, Context.globalSingleton());
 	}
 	public static HashMap<BigInteger, Value> getGlobalArray(String arrayName){
-		return getArray(arrayName, Context.theGlobalContext());
+		return getArray(arrayName, Context.globalSingleton());
 	}
 	public static HashMap<BigInteger, Value> getArray(String arrayName, Context context){
 		if (!context.variables.containsKey(arrayName)){
@@ -259,7 +259,7 @@ public class Variable {
 		if (con.variables.containsKey(line)){
 			return con.variables.get(line);
 		}
-		if (con.getParentContext() != Context.theGlobalContext()){
+		if (con.getParentContext() != Context.globalSingleton()){
 			return getVariableValue(line, con.getParentContext());
 		}
 		Interpreter.throwError("Could not find a value for: "+line);
