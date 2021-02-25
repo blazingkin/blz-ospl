@@ -18,16 +18,36 @@ public class Context {
 	private static int maxDepth = 500;
 	public HashMap<String, Value> variables = new HashMap<String, Value>();
 	
+
+	private Context(int unused) {
+		parent    = null;
+		contextID = getUID();
+		contexts.add(this);
+	}
+
+	static Context theGlobalContext = null;
+	public static Context globalSingleton() {
+		if (theGlobalContext == null) {
+			theGlobalContext = new Context(1);
+			theGlobalContext.setValue("nil", Value.nil());
+		}
+		return theGlobalContext;
+	}
+
+	public static void clearTheGlobalContext() {
+		theGlobalContext = null;
+	}
+
 	public Context(){
-		parent = Variable.getGlobalContext();
+		parent = Context.globalSingleton();
 		Context p = parent;
 		int depth = 0;
-		while (! (p == Variable.getGlobalContext()) && depth < maxDepth){
+		while ((p != Context.globalSingleton()) && depth < maxDepth){
 			p = p.parent;
-			depth ++;
+			depth++;
 		}
 		if (depth == maxDepth){
-			parent = Variable.getGlobalContext();
+			parent = Context.globalSingleton();
 		}
 		contextID = getUID();
 		contexts.add(this);
@@ -113,7 +133,7 @@ public class Context {
 	
 	public void setValue(String storeName, Value value){
 		if (hasValue(storeName) || !inContext(storeName) ||
-			this == Variable.getGlobalContext() || parent == null){
+			this == Context.globalSingleton() || parent == null){
 			variables.put(storeName, value);
 		}else{
 			parent.setValue(storeName, value);

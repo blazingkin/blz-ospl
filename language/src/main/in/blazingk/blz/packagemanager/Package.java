@@ -13,6 +13,7 @@ import com.blazingkin.interpreter.executor.astnodes.MethodNode;
 import com.blazingkin.interpreter.executor.instruction.Instruction;
 import com.blazingkin.interpreter.executor.sourcestructures.Constructor;
 import com.blazingkin.interpreter.executor.sourcestructures.Process;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Value;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
@@ -114,10 +115,10 @@ public class Package {
 					VariableTypes.primitiveContexts.get(VariableTypes.Resource).setValue(m.getStoreName(), Value.method(m));
 				}
 				else{
-					Variable.getGlobalContext().setValue(m.getStoreName(), Value.method(m));
+					Context.globalSingleton().setValue(m.getStoreName(), Value.method(m));
 				}
 			}catch(NullPointerException e) {
-				Variable.getGlobalContext().setValue(m.getStoreName(), Value.method(m));
+				Context.globalSingleton().setValue(m.getStoreName(), Value.method(m));
 			}
 		}
 	}

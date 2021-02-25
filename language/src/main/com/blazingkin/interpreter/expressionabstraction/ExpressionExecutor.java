@@ -11,7 +11,7 @@ import com.blazingkin.interpreter.variables.Variable;
 public class ExpressionExecutor {
 	
 	public static Value runExpression(String line) throws Exception {
-		return ExpressionParser.parseExpression(line).execute(Variable.getGlobalContext());
+		return ExpressionParser.parseExpression(line).execute(Context.globalSingleton());
 	}
 
 	public static Value runExpression(String line, Context con) throws Exception {

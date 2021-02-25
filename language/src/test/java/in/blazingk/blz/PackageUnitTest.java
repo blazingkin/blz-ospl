@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import com.blazingkin.interpreter.executor.Executor;
+import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.Variable;
 import com.blazingkin.interpreter.variables.VariableTypes;
 
@@ -21,14 +22,14 @@ public class PackageUnitTest {
 	
 	@Test
 	public void importingCoreShouldWork() {
-		assertThat(Variable.getGlobalContext().variables.size(), is(0));
+		assertThat(Context.globalSingleton().variables.size(), is(1));
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		assertThat(Variable.getGlobalContext().variables.size(), is(not(0)));
+		assertThat(Context.globalSingleton().variables.size(), is(not(1)));
 		assertThat(VariableTypes.primitiveContexts.size(), is(not(0)));
 		assertThat(VariableTypes.primitiveContexts.get(VariableTypes.Array).variables.size(), is(not(0)));
 		assertThat(VariableTypes.primitiveContexts.get(VariableTypes.String).variables.size(), is(not(0)));
@@ -41,15 +42,15 @@ public class PackageUnitTest {
 	
 	@Test
 	public void coreShouldOnlyBeImportedOnce() {
-		assertThat(Variable.getGlobalContext().variables.size(), is(0));
+		assertThat(Context.globalSingleton().variables.size(), is(1));
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		int count = Variable.getGlobalContext().variables.size();
-		assertThat(count, is(not(0)));
+		int count = Context.globalSingleton().variables.size();
+		assertThat(count, is(not(1)));
 		try {
 			in.blazingk.blz.packagemanager.Package.importCore();
 		} catch (Exception e) {
@@ -57,7 +58,7 @@ public class PackageUnitTest {
 			fail(e.getMessage());
 		}
 		/* The total size should not have changed */
-		assertThat(Variable.getGlobalContext().variables.size(), is(count));
+		assertThat(Context.globalSingleton().variables.size(), is(count));
 	}
 
 }

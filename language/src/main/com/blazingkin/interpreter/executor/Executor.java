@@ -104,7 +104,7 @@ public class Executor {
 		importCore();
 		if (startMethod != null){
 			Value blank[] = {};
-			startMethod.execute(Variable.getGlobalContext(), blank, false);
+			startMethod.execute(Context.globalSingleton(), blank, false);
 		}
 		eventHandler.exitProgram("");
 	}

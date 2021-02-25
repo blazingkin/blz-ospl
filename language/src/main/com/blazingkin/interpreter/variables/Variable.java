@@ -21,16 +21,12 @@ import com.blazingkin.interpreter.executor.Executor;
 import org.nevec.rjm.BigDecimalMath;
 
 public class Variable {
-	private static Context globalContext = new Context();
-	
-	public static Context getGlobalContext(){
-		return globalContext;
-	}	
+
 	public static HashMap<BigInteger, Value> getArray(String arrayName){
-		return getArray(arrayName, Variable.getGlobalContext());
+		return getArray(arrayName, Context.globalSingleton());
 	}
 	public static HashMap<BigInteger, Value> getGlobalArray(String arrayName){
-		return getArray(arrayName, getGlobalContext());
+		return getArray(arrayName, Context.theGlobalContext());
 	}
 	public static HashMap<BigInteger, Value> getArray(String arrayName, Context context){
 		if (!context.variables.containsKey(arrayName)){
@@ -60,7 +56,7 @@ public class Variable {
 			c.variables.clear();
 		}
 		Context.contexts = new ArrayList<Context>();
-		globalContext = new Context(null);
+		Context.clearTheGlobalContext();
 	}
 
 	static final ConcurrentLinkedQueue<Context> deathList = new ConcurrentLinkedQueue<>();
@@ -78,14 +74,14 @@ public class Variable {
 	}
 	
 	public static void killContext(Context con){
-		if (con.getID() != getGlobalContext().getID()){
+		if (con.getID() != Context.globalSingleton().getID()){
 			Variable.deathList.offer(con);
 		}
 	}
 	
 	//Gets a local value (the scope of these variables is the function they are declared in
 	public static Value getValue(String key) throws BLZRuntimeException {
-		return getValue(key, Variable.getGlobalContext());
+		return getValue(key, Context.globalSingleton());
 	}
 	
 	public static Value[] getValueAsArray(Value v){
@@ -256,14 +252,14 @@ public class Variable {
 	}
 	
 	public static Value getVariableValue(String line){
-		return getVariableValue(line, Variable.getGlobalContext());
+		return getVariableValue(line, Context.globalSingleton());
 	}
 	
 	public static Value getVariableValue(String line, Context con){
 		if (con.variables.containsKey(line)){
 			return con.variables.get(line);
 		}
-		if (con.getParentContext() != getGlobalContext()){
+		if (con.getParentContext() != Context.theGlobalContext()){
 			return getVariableValue(line, con.getParentContext());
 		}
 		Interpreter.throwError("Could not find a value for: "+line);
