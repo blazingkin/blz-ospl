@@ -1,0 +1,6 @@
+
+constructor TZInfo(path)
+
+end
+
+tzinfo = ""

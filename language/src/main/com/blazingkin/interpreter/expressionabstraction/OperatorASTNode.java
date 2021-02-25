@@ -35,12 +35,10 @@ import com.blazingkin.interpreter.variables.Context;
 import com.blazingkin.interpreter.variables.SystemEnv;
 
 public abstract class OperatorASTNode extends ASTNode {
-
-	private static double EPSILON = 1E-8; 
 	
 	public Operator op;
 	public ASTNode[] args;
-	public OperatorASTNode(Operator op, ASTNode... args){
+	OperatorASTNode(Operator op, ASTNode... args){
 		this.op = op;
 		this.args = args;
 	}

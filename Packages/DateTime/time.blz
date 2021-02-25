@@ -1,0 +1,7 @@
+
+constructor Time(stamp)
+    # All timestamps are assumed to be UNIX timestamps
+
+    
+
+end

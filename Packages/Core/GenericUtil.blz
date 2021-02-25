@@ -25,3 +25,11 @@ end
 	tmp = ""
 	a
 end
+
+:assert(x)
+	if x
+
+	else
+		throw "Assertion failed: " + x
+	end
+end

@@ -10,11 +10,12 @@ end
 
 # Constructors can take parameters (that automatically become properties)
 constructor Ball(color, radius)
-	
+
 	# Objects can also have functions (closures)
 	:volume
 		return 4/3 * {pi} * (radius ** 3)
 	end
+	
 	:name
 		return "a " + color + " ball with radius " + radius
 	end
